@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-review-ledger-3.json",
+  "title": "Census review ledger for every credited link and identity decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_scope", "decisions"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-review-ledger/3"},
+    "review_scope": {"const": "census_of_every_credited_link_refinement_equivalence_and_positive_distinctness_decision"},
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["decision_key", "decision_kind", "subject", "review_artifacts"],
+        "properties": {
+          "decision_key": {"type": "string", "minLength": 1},
+          "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "mention_status_resolution"]},
+          "subject": {"type": "object", "minProperties": 2},
+          "review_artifacts": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {"$ref": "#/$defs/artifact"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid", "canonical_record_sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "canonical_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

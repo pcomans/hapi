@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-run-result-manifest-1.json",
+  "title": "Post-result manifest binding one exact authenticated candidate run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "release_manifest_sha256", "trusted_run_attestors_canonical_sha256", "runtime", "result_commit", "freeze_commit", "freeze_manifest", "candidate_result", "review_ledger", "run_start_receipt", "run_start_signature", "attestor_key_id"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-run-result-manifest/1"},
+    "contract_version": {"const": "site-graph-v0/4"},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_run_attestors_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "runtime": {"$ref": "#/$defs/runtime"},
+    "result_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_manifest": {"$ref": "#/$defs/artifact"},
+    "candidate_result": {"$ref": "#/$defs/artifact"},
+    "review_ledger": {"$ref": "#/$defs/artifact"},
+    "run_start_receipt": {"$ref": "#/$defs/artifact"},
+    "run_start_signature": {"$ref": "#/$defs/artifact"},
+    "attestor_key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python", "dependency_lock"],
+      "properties": {
+        "python": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["implementation", "implementation_name", "version"],
+          "properties": {
+            "implementation": {"const": "CPython"},
+            "implementation_name": {"const": "cpython"},
+            "version": {"const": "3.12.13"}
+          }
+        },
+        "dependency_lock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "bytes", "sha256"],
+          "properties": {
+            "path": {"const": "pipeline/uv.lock"},
+            "bytes": {"const": 500187},
+            "sha256": {"const": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"}
+          }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,124 @@
+## Reviewed commit
+
+`36c23e7424f3deb901cc86a5019b408d3951c208` (worktree `/tmp/hapi-worktrees/issue-327`), base `97f2e610974f0e89b9c03d409b230dff89edbb1f`.
+
+**Process docs that govern this change:** `AGENTS.md` (fundamental inputs are hard blockers), root `CLAUDE.md` (14 constitutional rules + 4 repo rules), `pipeline/CLAUDE.md`, `docs/adr/`, the playbooks. I read all of them and reviewed every file under `docs/evaluations/site-graph-v0/`. Two limitations you should know: I had no shell in this session, so I could not run `git diff` (scope assessment is from directory contents only) and could not fetch issue #327 (WebFetch permission denied) — I reviewed against the acceptance-criteria mapping in `README.md:250-265` plus the repo rules.
+
+**What's right:** it uses the real 36,245-record corpus, not fixtures (AGENTS.md satisfied); denominators `A_m`/`E_m`/`L_m` are separated and both reported; pairs are reported from both sides with no collection-weighted aggregate; new links and reassignments are distinct partitions; `build_baseline.py` raises loudly on every inconsistency (`:128`, `:140`, `:155`, `:163`, `:178`, `:120`) with zero defensive fallbacks; gzip `mtime=0`; the runner refuses an existing output dir; the 12 hashed outputs exactly match the 12 files the three scripts write. That part is good work.
+
+The problems are that the *verification* layer proves almost nothing, and several decision-gate terms are not evaluable as written.
+
+---
+
+## P1
+
+### P1-1 — The node-scope baseline is never re-derived, though its only input is committed
+`docs/evaluations/site-graph-v0/tests/test_evaluation_contract.py` (whole file) and `scripts/validate_contract.py:150-164`.
+
+`classify_current_nodes()` (`scripts/build_baseline.py:78-121`) is a pure function of `pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl`, which is committed *and* hash-pinned (`input-snapshot.json:53-57`). Nothing recomputes it. `validate_contract.py:156-164` instead asserts `{"broad": 130, "specific_candidate": 835, "unclassified": 35}` — literals copied out of the very file being checked — plus a substring check that `"idai:"` doesn't appear in the *prose rule text*. That check inspects the JSON prose, not `build_baseline.py`, so a per-node override list added to the implementation passes it. This is a test that cannot fail for the reason it exists (rule 5, rule 3).
+
+Fix: in the test, `import build_baseline`, run `classify_current_nodes(read_jsonl(reconciled.jsonl))`, and `assertEqual` against the committed `baseline-node-scope.json` rows.
+
+### P1-2 — Every connectivity/concentration number is asserted against itself
+`tests/test_evaluation_contract.py:61-78`; `scripts/validate_contract.py:202-219`.
+
+47 / 3 / 4 / 48 and `{"broad_only": 786, "specific_candidate_present": 365, ...}` are literals lifted from `baseline-metrics.json` and compared back to `baseline-metrics.json`. A bug in `connectivity_metrics()` or `scope_partition()` produces wrong numbers, the author copies them into the test, and 6/6 passes. These are the headline "reunification" figures of the whole preregistration.
+
+They are also fully recomputable from committed data: `frozen-record-evidence.ndjson.gz` carries `museum` + `baseline_site_target_ids` per record, which is exactly the `(museum, artifact_id, target_id)` triple `connectivity_metrics()` consumes. The uncommitted link file is not needed.
+
+Fix: reconstruct `site_links` from the committed evidence rows, call `build_baseline.connectivity_metrics(...)` and `assertEqual` against `baseline-metrics.json["connectivity"]` wholesale. Same for `build_metrics()["per_museum"]`.
+
+### P1-3 — "credited" is undefined for non-specific links, so new-link counts can be inflated by country-level nodes
+`preregistration.json:100` (`genuinely_new_record_link`: "C_r contains at least one **credited** direct unique site link"), also `:98`, `:106-107`, `:166`.
+
+`specificity_credit` (`:78-89`) defines credit only for *specific* claims. There is no definition of a credited link in general. That matters concretely here: the iDAI type filter excludes `administrative-unit`/country ancestors (`pipeline/pipeline/authority/sources/idai-gazetteer/README.md:19-25,110`), which is why 12,721 Met and 1,735 Brooklyn records are `unmatched_only` (`baseline-metrics.json:715,623`) and why *every* Brooklyn and Harvard evidence record carries an unmatched component (`:616`, `:661`). Adding broad/administrative nodes to the authority layer would mint thousands of "genuinely new record links" — the exact broad-to-specific inflation the issue asks you to prevent — while satisfying the letter of `:100`.
+
+Fix: define `credited_link` explicitly (support contract independent of specificity), and require the new-link partition to be reported stratified by node scope, with broad-node new links excluded from every improvement numerator, same as `uncredited_narrower_assignment` (`:103`).
+
+### P1-4 — Baseline and candidate broad/specific classes use different rules *and* different vocabularies, yet the gate compares them
+`preregistration.json:36-47` (baseline: hyphenated iDAI types `archaeological-site`, `populated-place`, `building-institution`) vs `:55-66` (candidate: underscored, invented tokens `archaeological_site`, `cemetery`, `tomb`, `temple`, …), and the continue condition at `:169`: "broad-only conditional share strictly **decreases**".
+
+Decreases relative to what? The committed baseline `broad_only` counts (`baseline-metrics.json:453,471`) are computed from `specific_candidate` — a descriptive class the document itself says is not credit (`README.md:120-124`) — whereas the candidate side's `broad_only` is defined against *credited* specific nodes (`preregistration.json:69`). Those are two different quantities with two different type vocabularies that cannot even collide (`archaeological-site` ≠ `archaeological_site`). The single most important anti-inflation gate is not evaluable as written, which means it will be resolved by discretion after results exist.
+
+Fix: commit a frozen crosswalk from the concrete iDAI/PM types to the candidate vocabulary, and add to `baseline-metrics.json` a baseline broad-only figure computed under the *candidate* rule (with zero credited specifics) as the explicit comparison anchor.
+
+### P1-5 — The utility gate's denominator is chosen by the party being evaluated
+`preregistration.json:167` ("credited affected records >= max(1, ceil(0.10 * opportunity_records_on_that_side))") with `O_m` defined at `:210-212`.
+
+`O_m` is "records carrying a reviewed expression decision **included in the frozen graph slice**" — and the slice is picked by the same downstream work whose success this gate judges. Pick a 12-record slice and CONTINUE needs 2 credited nodes and 2 records. `ceil(0.10 * O)` is self-normalising: it can never be hard, by construction. Freezing before results does not fix this; the scale is still self-selected.
+
+Fix: add an absolute floor per side (a fixed record count, justified now), and preregister the slice-selection rule itself (which expressions are eligible, by what deterministic criterion) rather than only the freeze time.
+
+### P1-6 — A safety gate depends on an artifact that is nowhere defined
+`preregistration.json:189`: "zero credited new-link or reassignment cases are false/unsupported in **the frozen held-out review**".
+
+There is no held-out review in this contract. No sampling frame, no size, no reviewer independence rule, no disagreement handling, no freeze/hash requirement. "Zero false" on an undefined sample is unfalsifiable, and on a 3-case sample it is trivial. Given `README.md:271-272` explicitly disowns the existing provisional-silver review as a population sample, this gate currently rests on nothing.
+
+Fix: preregister the review design here — frame (all credited decisions), sample size and selection rule, two independent reviewers, disagreement = no credit, ledger hashed before candidate metrics are computed.
+
+### P1-7 — The enforcement is markdown + a manual command, not CI
+`.github/workflows/ci.yml:49-50` runs `uv run pytest` with `working-directory: pipeline`. `docs/evaluations/site-graph-v0/tests/` is never collected; `grep` finds no reference to `evaluations` anywhere under `pipeline/`. So the 6 contract tests run only when a human remembers `python3 -m unittest discover` (`README.md:228`). Constitutional rule 3: "A rule that exists only in markdown is a suggestion, not enforcement." The whole point of a preregistration is that it binds later work — it must run on every PR that touches authority data.
+
+Fix: move the tests to `pipeline/tests/test_site_graph_v0_contract.py` (they need no corpus once P1-1/P1-2 land, only committed files), or add a third CI job. Prefer the former — it is one file move and CI already runs it.
+
+---
+
+## P2
+
+### P2-1 — The verifier writes the evidence it verifies, including when it fails
+`scripts/validate_contract.py:280-302` and `:50-62`.
+
+`validate_contract.py` writes `validation-report.json`, then regenerates `SHA256SUMS` over the directory (including the report it just wrote), *then* raises on failure. Consequences: (a) `sha256sum -c SHA256SUMS` (`README.md:229`) is a tautology — it verifies a manifest produced by the same run, so it can never detect tampering; (b) a *failing* validation silently mutates the supposedly immutable contract directory and leaves a self-consistent checksum file behind. `SHA256SUMS` is also not pinned from anywhere else (`preregistration.json` pins only the record-evidence hash, `:30`).
+
+Fix: split generation from verification. `validate_contract.py --check` verifies against the committed `SHA256SUMS` and exits non-zero *before* writing anything; regeneration is a separate explicit `--write` mode. At minimum, move `write_checksums()`/report writing behind the pass check.
+
+### P2-2 — The immutable-baseline hash is taken over gzip bytes
+`scripts/build_baseline.py:51-59`; `preregistration.json:30`; `input-snapshot.json:49`.
+
+`mtime=0` removes the timestamp, but the compressed byte stream still depends on the zlib build, not only on the data. `input-snapshot.json:49` records `CPython 3.14.6` as prose and nothing enforces it. A different zlib flips the pinned hash and trips `integrity_gate` → `INVALID_OR_BLOCKED` (`preregistration.json:180`) for a reason that has nothing to do with the data.
+
+Fix: pin and check the SHA-256 of the *uncompressed* canonical NDJSON (rows already sorted, `sort_keys`, compact separators); keep gzip as transport only.
+
+### P2-3 — The concentration ceiling equals the observed baseline to five decimals
+`preregistration.json:168` sets `credited effect top-1 node incidence share <= 0.75`. `baseline-metrics.json:353` gives the met–brooklyn baseline top-1 as `0.7499195779450557`; `:134` gives 0.7495 for all shared nodes. A "preregistered" threshold that lands 0.00008 below the number you just measured is not preregistered, it is fitted — and it is applied to a *different* population (credited candidate effects) than the one it was read off. No derivation is documented.
+
+Fix: document where 0.75 comes from, or express the gate relative to the baseline pair concentration measured on the same population (e.g. "credited-effect top-1 share must not exceed the baseline pair value").
+
+### P2-4 — `E_m` is labelled "usable evidence" but measures "has a non-empty location string"
+`README.md:41-43`, `preregistration.json:196`, `baseline-metrics.json:616,661,619-624,664-668`.
+
+Brooklyn and Harvard have `records_with_any_unmatched_expression == |E_m|` exactly (2978/2978, 540/540) and zero `resolved_only` records. Every single evidence record carries an unmatched component — because `run_linkability.py:505-520` resolves each comma component separately and the country/administrative component can never match a type-filtered gazetteer. So `E_m` is a proxy for "this record has some structured place text", and the maximum-effect table (`README.md:147-151`) is built entirely on strings that are largely country/region-level. `README.md:143-146` calls the bound "deliberately optimistic", which is honest but not sufficient — the reader has no way to see what those 12,871/1,743/273 records actually contain.
+
+Fix: report, per museum, the top-N unmatched component strings and their record counts alongside the ceiling table, and rename `E_m` to something that states what it measures (e.g. "extracted-site-text records").
+
+### P2-5 — Broad/specific depends on a truncated snapshot that hides children
+`scripts/build_baseline.py:79-84` builds `children` only from rows inside the filtered 1,000-row file. Per `pipeline/pipeline/authority/sources/idai-gazetteer/README.md:19-25,110`, the type filter keeps only three types, so children typed `building-institution`, `populated-place`, etc. are invisible — a genuinely broad node with only filtered-out children is labelled `specific_candidate`. `README.md:268-270` gestures at this but no one quantifies it, and the class feeds the gate at `preregistration.json:169`.
+
+The unfiltered source is committed: `pipeline/pipeline/authority/sources/idai-gazetteer/raw.json` (2,075 records).
+
+Fix: derive `children` from `raw.json` and pin it in `input-snapshot.json`; or, minimum, emit the count of `specific_candidate` nodes that have a child in `raw.json` and surface it in `baseline-metrics.json`.
+
+### P2-6 — The reassignment ledger records review *outcomes* with no reviewer provenance
+`preregistration.json:112-123` and `:82-85` require `review_1_outcome=supported` / `review_2_outcome=supported` but no reviewer identity and no pointer to the review artifact. If those reviews are produced by an agent — which, given `docs/playbook-agent-teams.md` and the reviewer subagents, is the likely path — constitutional rule 13 requires the complete interaction (model id + snapshot, params, exact prompt, full raw response) persisted and linked to the decision. A bare `supported` boolean is "the model knows" (rule 1).
+
+Fix: add `reviewer_id` and `review_artifact_sha256` to `reassignment_decision_required_fields` and to `specificity_credit.all_required`.
+
+### P2-7 — The pinned corpus has no committed acquisition procedure
+`input-snapshot.json:3-29` pins four files by size and hash but records no provenance; the path only appears as a `/tmp` argument in `README.md:196-202` and `baseline-rerun-evidence.json:3`. When `/tmp/hapi-corpus-2026-08-27` is gone, the integrity gate (`preregistration.json:172`) can never be run again and the entire baseline becomes unverifiable. Rule 1 requires a reproducibly-acquired source on disk; rule 12 means inheriting this from the archived MVP does not excuse it.
+
+Fix: record in `input-snapshot.json` how the corpus is produced — the Dagster asset selection and the pipeline commit that generated it — so it can be regenerated and re-hashed.
+
+---
+
+## P3
+
+- **`scripts/build_baseline.py:119,444`, `scripts/validate_contract.py:15-17`, `tests/test_evaluation_contract.py:42-46`, `README.md:53-57`** — 36,245 / 1,000 / the per-museum triples are hardcoded in four places (rule 4). Read them from `input-snapshot.json`, which already holds `canonical_record_count`, `records_by_museum`, and `site_target_count`.
+- **`scripts/validate_contract.py:195`** — `math.isclose(..., rel_tol=0.0, abs_tol=0.0)` is `==` with ceremony. Write `!=`.
+- **`scripts/build_baseline.py:244, 294-295, 316-317`** — `scope_partition()` smuggles a non-serialisable `set` through a metrics dict that both callers must `pop()` before use. Return `(metrics, artifact_ids)`.
+- **`scripts/run_baseline.py:155-161`** — the wrapper re-serialises the archived inventory JSON (and without `sort_keys`, unlike every other writer here), so the hashed bytes are the wrapper's formatting, not the archived tool's output. Rewrite only the string values and preserve the original dump options, or hash the pre-rewrite bytes as well.
+
+---
+
+Scope itself looks clean: no authority data, graph, normalizer, or matcher behaviour is touched, everything new lives under `docs/evaluations/site-graph-v0/`, and the `/tmp` `pnpm` note in `README.md:245-248` confirms no policy file was edited. I could not confirm this with `git diff` — please verify no stray file outside that directory is in the commit.
+
+REQUEST_CHANGES

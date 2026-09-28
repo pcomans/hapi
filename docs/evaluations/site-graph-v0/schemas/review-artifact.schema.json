@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-4.json",
+  "title": "Authenticated structured independent evidence review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_id", "decision_key", "decision_kind", "subject", "reviewer", "outcome", "method", "citations", "reasoning", "human_provenance", "llm_interaction", "authentication"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-review-artifact/4"},
+    "review_id": {"type": "string", "pattern": "^[^\\s]+$"},
+    "decision_key": {"type": "string", "minLength": 1},
+    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "mention_status_resolution", "correction_support"]},
+    "subject": {"type": "object", "minProperties": 2},
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_id", "independence_group"],
+      "properties": {
+        "reviewer_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "independence_group": {"type": "string", "pattern": "^[^\\s]+$"}
+      }
+    },
+    "outcome": {"enum": ["supported", "unsupported", "uncertain"]},
+    "method": {"enum": ["human", "llm"]},
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "source_kind", "locator", "evidence_summary", "originating_museum", "source_artifact"],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "source_kind": {"type": "string", "minLength": 1},
+          "locator": {"type": "string", "minLength": 1},
+          "evidence_summary": {"type": "string", "minLength": 1},
+          "originating_museum": {"type": "boolean"},
+          "source_commit": {"type": "string", "pattern": "^(?!(?:0{40}|0{64})$)(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+          "source_artifact": {"$ref": "#/$defs/artifact"}
+        }
+      }
+    },
+    "reasoning": {"type": "string", "minLength": 1},
+    "human_provenance": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["review_session_id", "started_at_utc", "completed_at_utc", "reasoning_utf8_sha256"],
+          "properties": {
+            "review_session_id": {"type": "string", "pattern": "^[^\\s]+$"},
+            "started_at_utc": {"type": "string", "format": "date-time"},
+            "completed_at_utc": {"type": "string", "format": "date-time"},
+            "reasoning_utf8_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "llm_interaction": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["review_invocation_id", "invoked_at_utc", "completed_at_utc", "model", "parameters", "prompt", "input", "raw_response", "parsed_response_sha256", "prompt_leakage_audit", "semantic_prompt_audit", "interaction_binding_sha256"],
+          "properties": {
+            "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
+            "invoked_at_utc": {"type": "string", "format": "date-time"},
+            "completed_at_utc": {"type": "string", "format": "date-time"},
+            "model": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["provider", "model_selector", "backend_model_id", "snapshot_exposure", "snapshot_id", "snapshot_date"],
+              "properties": {
+                "provider": {"type": "string", "minLength": 1},
+                "model_selector": {"type": "string", "minLength": 1},
+                "backend_model_id": {"type": "string", "minLength": 1},
+                "snapshot_exposure": {"enum": ["EXPOSED", "NOT_EXPOSED_BY_PROVIDER_API", "NOT_EXPOSED_BY_CLAUDE_CLI"]},
+                "snapshot_id": {"type": "string", "minLength": 1},
+                "snapshot_date": {"type": ["string", "null"], "format": "date"}
+              },
+              "allOf": [
+                {
+                  "if": {"properties": {"snapshot_exposure": {"const": "EXPOSED"}}},
+                  "then": {"properties": {"snapshot_date": {"type": "string", "format": "date"}}}
+                },
+                {
+                  "if": {"properties": {"snapshot_exposure": {"const": "NOT_EXPOSED_BY_PROVIDER_API"}}},
+                  "then": {"properties": {"snapshot_id": {"const": "not_exposed_by_provider_api"}, "snapshot_date": {"type": "null"}}}
+                },
+                {
+                  "if": {"properties": {"snapshot_exposure": {"const": "NOT_EXPOSED_BY_CLAUDE_CLI"}}},
+                  "then": {"properties": {"snapshot_id": {"const": "not_exposed_by_claude_cli"}, "snapshot_date": {"type": "null"}}}
+                }
+              ]
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["reported_parameters", "unexposed_parameters", "completeness_statement"],
+              "properties": {
+                "reported_parameters": {"type": "object", "minProperties": 1},
+                "unexposed_parameters": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                "completeness_statement": {"type": "string", "minLength": 1}
+              }
+            },
+            "prompt": {"$ref": "#/$defs/artifact"},
+            "input": {"$ref": "#/$defs/artifact"},
+            "raw_response": {"$ref": "#/$defs/artifact"},
+            "parsed_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "prompt_leakage_audit": {"$ref": "#/$defs/artifact"},
+            "semantic_prompt_audit": {"$ref": "#/$defs/artifact"},
+            "interaction_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "authentication": {"$ref": "#/$defs/authentication"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision_kind": {"const": "correction_support"}}},
+      "then": {
+        "properties": {
+          "citations": {"items": {"required": ["source_commit"]}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"decision_kind": {"not": {"const": "correction_support"}}}},
+      "then": {
+        "properties": {
+          "citations": {
+            "items": {
+              "properties": {"originating_museum": {"const": false}},
+              "not": {"required": ["source_commit"]}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"method": {"const": "human"}}},
+      "then": {"properties": {"human_provenance": {"type": "object"}, "llm_interaction": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"method": {"const": "llm"}}},
+      "then": {"properties": {"human_provenance": {"type": "null"}, "llm_interaction": {"type": "object"}}}
+    }
+  ],
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_id", "signature_context", "principal_id", "key_id", "signed_at_utc", "statement_sha256", "signature"],
+      "properties": {
+        "registry_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "signature_context": {"const": "hapi-site-graph-v0-review-evidence/1"},
+        "principal_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "signed_at_utc": {"type": "string", "format": "date-time"},
+        "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "signature": {"$ref": "#/$defs/artifact"}
+      }
+    }
+  }
+}

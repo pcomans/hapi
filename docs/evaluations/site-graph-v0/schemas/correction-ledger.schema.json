@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-correction-ledger-4.json",
+  "title": "Private append-only primitive site-mention correction ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "chain_id",
+    "baseline_mutated",
+    "private_record_evidence_canonical_sha256",
+    "private_opportunity_source_canonical_sha256",
+    "corrections"
+  ],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-correction-ledger/4"},
+    "chain_id": {"type": "string", "pattern": "^[^\\s]+$"},
+    "baseline_mutated": {"const": false},
+    "private_record_evidence_canonical_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "private_opportunity_source_canonical_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "corrections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "correction_id",
+          "previous_correction_sha256",
+          "supersedes_correction_id",
+          "artifact_id",
+          "operation",
+          "reason",
+          "citations",
+          "reviewer_ids",
+          "decision_commit",
+          "recorded_at_utc",
+          "record_sha256"
+        ],
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 1},
+          "correction_id": {"type": "string", "pattern": "^[^\\s]+$"},
+          "previous_correction_sha256": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "supersedes_correction_id": {"type": ["string", "null"], "pattern": "^[^\\s]+$"},
+          "artifact_id": {"type": "string", "pattern": "^[^\\s]+$"},
+          "operation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "mention_id",
+              "from_status",
+              "from_target_ids",
+              "to_status",
+              "to_target_ids"
+            ],
+            "properties": {
+              "kind": {"const": "set_site_mention_resolution"},
+              "mention_id": {"type": "string", "pattern": "^[^\\s]+$"},
+              "from_status": {"enum": ["resolved", "ambiguous", "unmatched"]},
+              "from_target_ids": {"$ref": "#/$defs/targetIds"},
+              "to_status": {"enum": ["resolved", "ambiguous", "unmatched"]},
+              "to_target_ids": {"$ref": "#/$defs/targetIds"}
+            }
+          },
+          "reason": {"type": "string", "minLength": 1},
+          "citations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source_id", "source_kind", "locator", "evidence_summary", "originating_museum", "source_commit", "source_artifact"],
+              "properties": {
+                "source_id": {"type": "string", "minLength": 1},
+                "source_kind": {"type": "string", "minLength": 1},
+                "locator": {"type": "string", "minLength": 1},
+                "evidence_summary": {"type": "string", "minLength": 1},
+                "originating_museum": {"type": "boolean"},
+                "source_commit": {"type": "string", "pattern": "^(?!(?:0{40}|0{64})$)(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+                "source_artifact": {"$ref": "#/$defs/artifact"}
+              }
+            }
+          },
+          "reviewer_ids": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^[^\\s]+$"}
+          },
+          "decision_commit": {"type": "string", "pattern": "^(?!(?:0{40}|0{64})$)(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+          "recorded_at_utc": {"type": "string", "format": "date-time"},
+          "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"}
+      }
+    },
+    "targetIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

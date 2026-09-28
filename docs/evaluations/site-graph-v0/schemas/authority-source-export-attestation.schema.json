@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-authority-source-export-attestation-1.json",
+  "title": "Trusted signer attestation for an exact authority source export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "signature_context", "export_invocation_id", "exporter_id", "exporter_key_id", "trusted_source_exporters_canonical_sha256", "source_export_id", "source_export", "detached_signature_path", "record_count", "records_canonical_sha256"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-authority-source-export-attestation/1"},
+    "signature_context": {"const": "hapi-site-graph-v0-authority-source-export/1"},
+    "export_invocation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "exporter_id": {"type": "string", "minLength": 1},
+    "exporter_key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_source_exporters_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_export_id": {"type": "string", "minLength": 1},
+    "source_export": {"$ref": "#/$defs/artifact"},
+    "detached_signature_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "record_count": {"type": "integer", "minimum": 1},
+    "records_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    }
+  }
+}

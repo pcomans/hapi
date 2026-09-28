@@ -1,0 +1,53 @@
+{
+  "schema_version": "site-graph-v0-type-crosswalk/1",
+  "classification_precedence": [
+    "broad_if_any_source_type_maps_broad",
+    "broad_if_node_has_any_child_in_complete_pinned_hierarchy_context",
+    "specific_candidate_if_any_source_type_maps_specific_and_no_broad_rule_applies",
+    "unclassified"
+  ],
+  "credit_policy": {
+    "broad_or_administrative_new_link_improvement_credit": 0,
+    "distinct_identity_required": true,
+    "equivalent_nodes_cannot_count_as_new_or_reassigned": true,
+    "specific_candidate_class_is_not_identity_or_reassignment_support": true
+  },
+  "idai_gazetteer_actual_hyphenated_types": {
+    "administrative-unit": {"candidate_e55_type": "administrative_region", "scope": "broad"},
+    "archaeological-area": {"candidate_e55_type": "archaeological_area", "scope": "broad"},
+    "archaeological-site": {"candidate_e55_type": "archaeological_site", "scope": "specific_candidate"},
+    "building-institution": {"candidate_e55_type": "building", "scope": "specific_candidate"},
+    "hydrography": {"candidate_e55_type": "landscape_feature", "scope": "broad"},
+    "island": {"candidate_e55_type": "landscape_feature", "scope": "broad"},
+    "landcover": {"candidate_e55_type": "landscape_feature", "scope": "broad"},
+    "landform": {"candidate_e55_type": "landscape_feature", "scope": "broad"},
+    "populated-place": {"candidate_e55_type": "settlement", "scope": "specific_candidate"}
+  },
+  "porter_moss_actual_representations": {
+    "porter-moss-memphis:record-with-tomb_id": {"candidate_e55_type": "tomb", "scope": "specific_candidate"},
+    "porter-moss-theban-necropolis:record-with-tomb_id": {"candidate_e55_type": "tomb", "scope": "specific_candidate"}
+  },
+  "candidate_e55_vocabulary": {
+    "broad": [
+      "administrative_region",
+      "archaeological_area",
+      "country",
+      "generic_place",
+      "historical_region",
+      "landscape_feature"
+    ],
+    "specific_candidate": [
+      "archaeological_site",
+      "building",
+      "cemetery",
+      "monument_complex",
+      "palace",
+      "settlement",
+      "temple",
+      "tomb"
+    ],
+    "unclassified": ["unknown", "mixed"]
+  },
+  "complete_hierarchy_rule": "Child context must be supplied from the complete pinned available source hierarchy, never inferred from which nodes appear in an evaluated candidate slice. Any observed child makes the node broad for terminal-specificity credit.",
+  "hierarchy_completeness_limitation": "The pinned iDAI raw acquisition contains 2,075 records and can omit parents or external gazetteer descendants. Counts are reported in baseline-node-scope.json; no claim of global hierarchy completeness is made."
+}

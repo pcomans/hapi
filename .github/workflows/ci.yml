@@ -31,6 +31,21 @@ jobs:
       DATABASE_URL: postgresql://hapi:hapi@localhost:5432/hapi
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Pin the checkout to the actual commit under test. Without this,
+          # actions/checkout's default ref on a `pull_request` event is the
+          # synthetic `refs/pull/<N>/merge` commit -- a merge of this branch's
+          # tip into the base branch's tip -- whose *tree* is the union of
+          # both branches' files. The site-graph-v0 public-boundary scan
+          # (pipeline/tests/test_site_graph_v0_contract.py) walks the entire
+          # current checkout, so under that topology it also sees base-branch
+          # files this PR never touched and can fail on files that were
+          # already reviewed and merged separately. Checking out the PR's own
+          # head SHA makes CI scan exactly what a local checkout of this
+          # branch scans. `github.sha` is the fallback for non-PR (push)
+          # triggers, where `github.event.pull_request` does not exist.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
 
       - name: Create Postgres schemas
         run: psql "$DATABASE_URL" -f ../docker/init-schemas.sql

@@ -1,0 +1,312 @@
+{
+  "schema_version": "site-graph-v0-preregistration/3",
+  "preregistered_at_utc": "2026-08-28",
+  "evaluation_scope": "Bounded site-graph-v0 intent-to-treat slice over the frozen 36,245-record Met/Brooklyn/Harvard baseline; no graph is constructed in issue #327.",
+  "symbols": {
+    "A_m": "All frozen canonical records for museum m.",
+    "X_m": "Records in A_m with at least one site-text mention emitted by the frozen extractor and sent to the frozen resolver. X means extracted site text and makes no independent evidence-quality judgment.",
+    "L_m": "Records in X_m with at least one deduplicated unique supported direct site link.",
+    "O_m": "Fixed private intent-to-treat record membership expanded from the result-blind planned opportunity selection for museum m; only counts and hashes are public.",
+    "O_pair_side": "Exact private pair+museum-side members in O_m whose frozen category is no_baseline_pair_connection or broad_only_pair_connection.",
+    "credited_affected_record": "For pair (m,n), a record on side m is credited affected exactly when the candidate link cites an exact authenticated (opportunity_id, opportunity_binding_sha256) present for that artifact in O_pair_side; it carries a doubly reviewed specific direct link in a distinct reviewed identity class newly shared by m and n and new to that artifact's frozen baseline identity-class set; and it either gains its first pair connection when frozen category=no_baseline_pair_connection or has a supported strict-refinement replacement of a baseline shared broad identity when frozen category=broad_only_pair_connection. An equivalent alias replacement classified unchanged, a different mention on the same artifact, a global event, an unreviewed link, or improvement only on the opposite museum side is insufficient."
+  },
+  "frozen_artifacts": {
+    "input_snapshot": "input-snapshot.json",
+    "baseline_metrics": "baseline-metrics.json",
+    "baseline_node_scope": "baseline-node-scope.json",
+    "private_record_evidence": {
+      "runtime_path": "private-record-evidence.ndjson.gz",
+      "record_count": 36245,
+      "gzip_transport_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+      "canonical_uncompressed_ndjson_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+      "canonical_row_merkle_sha256": "76ce89113febad6b626a608fa58fd998d669f532fce5860e766b8c8f40c577d0",
+      "publicly_redistributed": false
+    },
+    "private_opportunity_ledger": {
+      "runtime_path": "private-opportunity-ledger.json",
+      "canonical_json_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212",
+      "transport_json_sha256": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890",
+      "publicly_redistributed": false
+    },
+    "private_opportunity_source": {
+      "runtime_path": "private-opportunity-source.ndjson.gz",
+      "record_count": 117607,
+      "gzip_transport_sha256": "46db33e1d365be302bf3273909cd62dc9bd23127505f4f22102864cbc7f50117",
+      "canonical_uncompressed_ndjson_sha256": "746cda9908348027ed6b5202f6e7d308776acd472306a6c3535b63c88a545203",
+      "canonical_row_merkle_sha256": "24fd253af1de4faa7a47357f8f30775d829b2905970aea372e9417dafe85ee28",
+      "publicly_redistributed": false
+    },
+    "public_opportunity_summary": {"path": "planned-opportunity-summary.json", "sha256": "b56c4155ed7b3777e729163cda0cf99e60ac1552ea714b1e94c3b059fc3872f5"},
+    "private_ledger_digests": {"path": "private-ledger-digests.json", "sha256": "54d807e7b1deef51ce5c1321de375ad10f78d02b28d94fb4256f67a105cb0b7d"},
+    "type_crosswalk": {
+      "path": "type-crosswalk.json",
+      "sha256": "4509d2944ddb3f0a30efe0faf1b897d567f685d60523f80c6c2b77d869b07183"
+    },
+    "correction_policy": "correction-policy.json",
+    "two_run_evidence": "baseline-rerun-evidence.json"
+  },
+  "primary_record_classification": {
+    "rule": "extracted_site_text_evidence is true exactly when the archived adapter emitted at least one site mention whose status is resolved, ambiguous, or unmatched.",
+    "classification_fields": [
+      "artifact_id",
+      "museum",
+      "extracted_site_text_evidence",
+      "site_mention_count",
+      "site_mention_status_counts",
+      "baseline_resolution_state",
+      "baseline_site_target_ids",
+      "baseline_record_scope",
+      "has_any_ambiguity",
+      "has_blocking_ambiguity",
+      "has_any_unmatched_expression"
+    ],
+    "storage": "The exact record ledger is regenerated only in an authorized private runtime and authenticated by committed canonical content and Merkle hashes; it is not a public release payload.",
+    "post_research_change_permitted": false,
+    "primary_baseline_mutation_permitted": false,
+    "future_factual_corrections": "Append-only schema-validated corrections create separately hashed sensitivity outputs only. They never change, relabel, or replace primary results."
+  },
+  "metric_formulas": {
+    "extracted_site_text_availability": {
+      "expression": "|X_m| / |A_m|",
+      "numerator": "count(extracted_site_text_evidence=true, museum=m)",
+      "denominator": "count(all canonical records, museum=m)"
+    },
+    "overall_linkability": {
+      "expression": "|L_m| / |A_m|",
+      "numerator": "count(nonempty supported direct site target set, museum=m)",
+      "denominator": "count(all canonical records, museum=m)"
+    },
+    "extracted_site_text_conditional_linkability": {
+      "expression": "|L_m| / |X_m|",
+      "numerator": "count(nonempty supported direct site target set, museum=m)",
+      "denominator": "count(extracted_site_text_evidence=true, museum=m)"
+    },
+    "blocking_ambiguity": {
+      "expression": "|{r in X_m: direct targets empty and any site mention ambiguous}| / |X_m|",
+      "numerator": "count(has_blocking_ambiguity=true, museum=m)",
+      "denominator": "count(extracted_site_text_evidence=true, museum=m)",
+      "role": "descriptive prevalence on each arm; it is not the safety-gate numerator"
+    },
+    "newly_blocking_ambiguity_safety": {
+      "expression": "|{r in X_m: baseline blocking=false and candidate blocking=true}| / |X_m|",
+      "numerator": "count(newly blocking records, museum=m); candidate reductions never offset this count",
+      "denominator": "count(extracted_site_text_evidence=true, museum=m)"
+    },
+    "planned_maximum_overall_effect": {
+      "expression": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |A_m|"
+    },
+    "planned_maximum_extracted_site_text_conditional_effect": {
+      "expression": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |X_m|"
+    },
+    "pair_side_coverage_overall": {
+      "expression": "D_(m->n) / |A_m|",
+      "D_definition": "distinct museum-m records directly linked to at least one target directly linked from museum n"
+    },
+    "pair_side_coverage_extracted_site_text_conditional": {
+      "expression": "D_(m->n) / |X_m|"
+    },
+    "top_k_concentration": {
+      "expression": "|union of museum-side records incident on its top-k shared identity classes| / |union of museum-side records incident on all its shared identity classes|",
+      "ordering": "descending distinct museum-side artifact incidence, then deterministic identity-class root",
+      "k": [1, 5, 10]
+    },
+    "hhi": {
+      "expression": "sum_j(I_j^2) / (sum_j I_j)^2",
+      "I_j": "deduplicated artifact-target incidence for one museum side and eligible shared target j"
+    }
+  },
+  "connectivity_definitions": {
+    "incidence": "One direct artifact-target incidence after deduplication; ancestor closure is separately tagged and never treated as a direct specificity claim.",
+    "museum_pair": "For unordered pair (m,n), a shared target has at least one eligible direct linked record from each museum. Pair membership is inclusive of all-three targets.",
+    "pair_keys": ["met__brooklyn", "met__harvard", "brooklyn__harvard"],
+    "all_three": "A target with at least one eligible direct linked record from each of Met, Brooklyn, and Harvard.",
+    "single_pooled_pair_result_prohibited": true,
+    "both_museum_sides_and_both_denominators_required": true
+  },
+  "scope_classification": {
+    "crosswalk": "type-crosswalk.json",
+    "baseline_context": "All 2,075 records in the pinned complete available raw iDAI hierarchy, including children omitted from the filtered 1,000-target baseline file.",
+    "candidate_context": "Every new candidate direct target must be derived from raw source types in nonempty complete authority source exports signed by a release-authenticated exporter, with complete-available hierarchy topology frozen as authenticated Git blobs in a distinct ancestor commit before result generation. Each signed source record supplies its exact preferred label and sorted unique aliases for prompt-leakage enforcement. Raw source types are mapped through the authenticated type-crosswalk; candidate-supplied E55 labels are never accepted as source typing. Parent and child references must be inverse-complete across the exact signed source-record census, and candidate leafness is never inferred from descendants present or absent in the evaluated slice.",
+    "existing_target_rule": "An existing frozen target always retains its baseline type and scope. Candidate snapshots cannot relabel it.",
+    "broad_precedence": "A node is broad if any mapped type is broad or it has any child in complete available hierarchy context.",
+    "specific_candidate": "A node is only a specific candidate if a frozen type maps specific and no broad rule applies.",
+    "not_quality_evidence": "The deterministic class alone is never identity, link-support, or reassignment evidence.",
+    "identity_class_scope": "Before/after broad-only partitions use scope attached to the complete reviewed identity class after automatic same-locator union and reviewed equivalence closure. A candidate alias equivalent to a frozen broad identity remains broad; direct alias labels cannot manufacture a broad-share reduction.",
+    "known_incompleteness": "The available source hierarchy may omit external parents or descendants. Exact observed omissions are reported; no global hierarchy completeness claim is made."
+  },
+  "support_and_credit": {
+    "general_support_for_changed_direct_link": [
+      "candidate artifact, direct target, opportunity ID, and exact frozen opportunity/mention binding hash match the canonical subject-derived link-support decision key",
+      "each review artifact contains at least one structured non-originating-museum independent source citation",
+      "exactly two release-registered reviewers with distinct public keys, reviewer IDs, and independence groups each sign a distinct subject/outcome-bound structured artifact and canonical record hash",
+      "both reviews say supported"
+    ],
+    "llm_review_provenance_required": [
+      "reviewer_id",
+      "exact prompt and exact reviewer input artifacts with SHA-256 and Git blob OIDs",
+      "model selector",
+      "exact backend model ID/snapshot or an explicitly enumerated non-exposure sentinel",
+      "full nonempty parameter object",
+      "full raw response artifact with SHA-256 and Git blob OID",
+      "a unique canonical JSON raw response with exactly assessment and reasoning; both values exactly equal the signed wrapper outcome and reasoning",
+      "unique exact prompt/input artifacts bound to the review ID, decision key, decision kind, and subject",
+      "the prompt task/instructions and decision-kind-specific claim semantics are the immutable release-owned template whose canonical SHA-256 is verified; the exact subject is represented by a canonical hash and caller-supplied task, instruction, example, or hint text is never serialized",
+      "separate registered auditors' signed content-addressed deterministic and human semantic prompt audits for that exact prompt/input/subject, committed in the authenticated freeze ancestor before invocation and never reused",
+      "prompt and input are canonical JSON envelopes whose invocation binding, exact byte linkage, immutable template, and response contract recompute",
+      "every input item has an opaque label derived from its payload hash and a seed fixed by the canonical decision key, kind, and subject (not a caller-chosen invocation value), and is presented in the deterministic non-identity SHA-256-ranked order proven by hidden canonical payload-hash order and presented-order hashes in the signed audit",
+      "opaque labels occur only in schema-defined candidate option slots and the deterministic guard rejects authenticated preferred labels and aliases, answer names, IDs, locators, label-specific directives, and verifier-owned decision/order proxies in the exact prompt/input",
+      "the signed semantic audit is an additional fail-closed review and explicitly does not claim deterministic semantic perfection"
+    ],
+    "review_disagreement": "Unsupported/uncertain disagreement is unresolved, receives no credit, and is counted; it is never adjudicated from candidate performance.",
+    "broad_or_administrative_new_link_improvement_credit": 0,
+    "unclassified_link_improvement_credit": 0,
+    "narrower_node_alone_improvement_credit": 0,
+    "credited_node_distinctness": "The comparator first derives every pair's complete gained-specific shared identity-root set from final links versus that pair's full baseline shared-identity universe, then unions those gained roots before counting utility. Every gained root is censused against every other gained root and every relevant baseline root across all museum sides, including crossed additions and one-sided broad/specific identities, regardless of which side supplied the credited addition. Exact authority-locator string equality auto-unions; no additional locator normalization is implemented in v0. Every non-equivalent separation requires two signed independent reviewed positive-distinctness decisions; omitted or unsupported equivalence/distinctness fails closed. Candidate-declared class IDs are ignored and aliases cannot preserve retention or inflate gains.",
+    "strict_refinement_extra_support": [
+      "baseline and candidate target IDs are distinct",
+      "a relation ledger frozen in the authenticated pre-run Git commit says strict_refinement",
+      "two independent reviews support that exact node relation",
+      "source-derived frozen hierarchy topology lists the baseline broad target as an ancestor, preserving ancestor semantics",
+      "candidate target is supported and specific under complete hierarchy context"
+    ],
+    "equivalence_support": "Every equivalent relation is subject to the same two-review structured evidence census; same-authority locators auto-union. A reviewed equivalent direct-edge replacement is unchanged. Unsupported equivalence neither preserves retention nor changes identity classes.",
+    "review_epistemic_status": "This bounded two-review census is provisional decision support, not a gold standard or a population precision/recall estimate."
+  },
+  "record_event_partition": {
+    "mutually_exclusive": true,
+    "precedence": ["loss", "strict_refinement_reassignment", "new_link", "additional_identity", "uncredited_change", "unchanged"],
+    "new_link": "Baseline direct set empty; candidate has a supported credited specific direct identity.",
+    "strict_refinement_reassignment": "Baseline nonempty; every removed baseline identity is covered by supported strict refinement and no uncovered loss remains. Keeping the old broad direct edge is not required.",
+    "additional_identity": "Baseline nonempty and retained; candidate adds a supported credited identity unrelated to baseline identities.",
+    "unchanged": "No credited change; baseline identities remain through the same direct identity or an authenticated doubly reviewed equivalent replacement.",
+    "loss": "At least one baseline direct identity is neither preserved/equivalent nor covered by supported strict refinement.",
+    "uncredited_change": "A changed link is broad, unclassified, unsupported, disputed, or otherwise fails credit rules.",
+    "direct_edge_vs_ancestor_semantics": "Comparator separately reports old_direct_edge_preserved and old_direct_edge_replaced_ancestor_semantics_preserved. A supported replacement is excluded from ordinary loss.",
+    "candidate_record_post_state": "Each ITT record declares a sorted final supported direct-target set and the exact complementary set of explicitly removed frozen baseline targets. Selected opportunity outcomes justify only new target additions and selected mention states; they never replace the whole record. Unselected frozen mentions and unrelated resolved direct links carry forward. Retention/loss compares baseline and final identity-root sets after authenticated equivalence union; removing one duplicate/equivalent raw direct edge while the identity root remains is unchanged, and raw edge removals are reported separately. Linkability, connectivity, broad-only partitions, and concentration consume the final record-level identity sets."
+  },
+  "opportunity_design": {
+    "selection": "From every unmatched/ambiguous site mention in pinned baseline outputs: group by museum and ordered frozen normalized keys, rank by descending distinct artifacts then museum/key; select top 10 per museum, then globally fill to exactly 50 signatures.",
+    "artifact_expansion": "All distinct artifacts carrying a selected museum-scoped signature are materialized only in the authenticated private ledger before research. Public opportunity rows expose aggregate counts, stable ranks, and ceilings, never per-group expansion hashes, artifact IDs, source text, normalized expression text, or field paths. Existing aggregate and sampled repository data may correlate labels with ranks/counts, so no opacity or unlinkability claim is made.",
+    "museum_protection": "Each museum contributes 10 signatures before global fill; record ceilings remain museum-specific and need not be equal.",
+    "intent_to_treat": "Every expanded record remains in denominators after research failure, abstention, reviewer disagreement, lack of support, or broad/administrative classification.",
+    "pair_side_opportunity": "The private ledger materializes exact pair+museum-side artifact membership, every exact selecting (opportunity_id, opportunity_binding_sha256), and exactly one frozen raw category: no_baseline_pair_connection or broad_only_pair_connection. The comparator independently derives the same category from authenticated baseline identity classes and fails on disagreement. Candidate output must exhaustively report exactly one closed disposition for every required binding; every link/review must cite and intersect that same binding rather than a different mention on the artifact or a global event. Omission, duplication, substitution, or raw-category/identity-class inconsistency is INVALID.",
+    "expected_effect_statement": "No expected effect is estimated. Numeric planned values are maximum measurable upper bounds under the frozen slice, not forecasts, precision/recall estimates, or promises of successful research."
+  },
+  "ambiguity_and_abstention": {
+    "ambiguity": "More than one permitted target remains; no target is selected.",
+    "blocking_record_predicate": "A record is blocking exactly when its final supported direct-target set is empty and at least one site mention in the complete overlaid record population is ambiguous.",
+    "candidate_overlay": "Start from every frozen site-mention status on the record and preserve every unselected status. A selected status changes only when a separate exact mention_status_resolution subject (artifact, opportunity binding, complete mention IDs and prior statuses, proposed status) has two authenticated supporting reviews without disagreement. Linked target support alone is insufficient. Abstained, unresolved, and research_failure are research dispositions and preserve the frozen mention status. An unsupported or disputed link/status claim is unresolved and cannot suppress an existing ambiguous status.",
+    "safety_gate": "For each museum, count newly blocking records (baseline predicate false and candidate predicate true) over fixed X_m. This nonnegative numerator is gated at <=1/200; resolved baseline blockers never offset it. Authenticated resolved-blocking records and the net prevalence change are reported separately as descriptive values.",
+    "abstention_reasons": [
+      "compound_expression",
+      "conflicting_evidence",
+      "insufficient_identity_evidence",
+      "non_place_context",
+      "reviewer_disagreement",
+      "role_not_supported",
+      "uncertain_expression"
+    ],
+    "abstention_denominator_policy": "Abstentions remain in fixed intent-to-treat denominators and are reported by closed reason.",
+    "missing_extracted_text": "Records outside X_m are reported separately; authority-only work cannot move them into X_m."
+  },
+  "concentration_gate": {
+    "unit": "each museum side of every inclusive pair independently",
+    "top_k_limits": "for each k in {1,5,10}, candidate unique-record-union ratio <= comparable baseline side ratio + 0.05",
+    "hhi_limit": "candidate node-incidence HHI <= comparable baseline side HHI + 0.05",
+    "rationale": "A five-percentage-point absolute tolerance is fixed around each comparable museum-side baseline, avoiding both a pooled masking effect and a threshold fitted to the observed 0.75 pooled Met-Brooklyn value.",
+    "pooled_values": "descriptive only and never gate"
+  },
+  "ordered_decision_rule": {
+    "precedence": ["INVALID", "REDESIGN", "CONTINUE", "STOP"],
+    "INVALID": "Any schema, hash, exact-population, exact-inventory, pre-freeze, review-artifact, or other integrity failure. No product conclusion is allowed.",
+    "REDESIGN": "Integrity passes, but any baseline identity-root loss exists; newly blocking records exceed 5/1000 of X_m for any museum (resolved blockers cannot offset them); or any top-1/top-5/top-10 unique-record-union ratio or incidence HHI exceeds its side-specific limit.",
+    "CONTINUE": "Integrity and every safety gate pass, and at least one museum pair gains at least two credited distinct specific identity classes; each side has credited affected records >= max(1, ceil(0.10 * its fixed nonempty O_pair_side)); and broad-only share over X_m strictly decreases on at least one side without increasing on the other.",
+    "STOP": "Integrity and safety pass but no pair satisfies every CONTINUE utility condition.",
+    "raw_link_rate_growth_can_satisfy_continue": false,
+    "museum_equality_required": false,
+    "narrowness_without_support_can_satisfy_continue": false
+  },
+  "machine_thresholds": {
+    "maximum_newly_blocking_fraction": {"numerator": 1, "denominator": 200},
+    "concentration_maximum_increase": {"numerator": 1, "denominator": 20},
+    "minimum_gained_distinct_specific_identity_classes": 2,
+    "minimum_affected_opportunity_fraction": {"numerator": 1, "denominator": 10},
+    "minimum_reviews_per_credited_decision": 2,
+    "opportunity_museum_protection_signatures": 10,
+    "opportunity_total_signatures": 50
+  },
+  "review_census": {
+    "credit_gate": "Census of every credited new-link, strict-refinement, and equivalent decision with two structured independent artifacts.",
+    "citation_subject_binding": "For each review artifact, the exact authenticated non-originating-museum source records cited collectively cover every target_id field in the signed decision subject; unrelated-target citations provide no support.",
+    "reviews_per_decision": 2,
+    "held_out_sample": "Optional descriptive audit only. If used, sort all non-credited candidate decision keys by SHA-256('site-graph-v0-descriptive-audit-v1' + U+0000 + decision_key), then take the first min(100, ceil(0.10*N)); freeze the resulting key list before review.",
+    "held_out_sample_is_pass_gate": false,
+    "population_precision_claim_permitted": false
+  },
+  "correction_policy": {
+    "schema": "schemas/correction-ledger.schema.json",
+    "append_only_hash_chain": true,
+    "primitive_operations_only": ["set_site_mention_resolution"],
+    "nonempty_reviewers_and_structured_citations_required": true,
+    "existing_target_ids_required": true,
+    "rfc3339_timestamps_required": true,
+    "repeated_primitive_requires_explicit_supersession": true,
+    "primary_baseline_mutation_permitted": false,
+    "sensitivity_outputs_separately_hashed": true,
+    "production_chain_trust": "A release-pinned CONFIGURED policy must pin an exact canonical registration artifact by prior Git commit/path/SHA-256/blob. Registration binds the genuine immutable genesis, exact prior ledger commit/SHA-256/blob/head, and both private baseline hashes; verified release-policy activation strictly follows registration and strictly precedes every decision, each ledger follows the decisions, and every extension preserves the registered canonical-entry prefix (semantic canonical JSON entries, not original transport bytes). A caller-selected sequence-one root cannot bootstrap trust. The current release is NOT_CONFIGURED and therefore blocks production correction sensitivity while the primary analysis remains at zero corrections.",
+    "authenticated_review_rule": "Each correction decision is bound to its chain ID and both exact private baseline ledger hashes, cites content-addressed evidence bytes read from a Git commit that is a strict ancestor of the decision, and requires signed supported artifacts from exactly two registered human reviewers in distinct independence groups. Arbitrary reviewer IDs, unresolved citations, same-commit/post-hoc evidence, and zero decision commits are invalid.",
+    "source_realizability": "Each resolved mention has exactly one existing target, each ambiguous mention has at least two, each unmatched mention has none, and record unique direct targets cannot exceed resolved mentions.",
+    "sensitivity_recomputation": "Every dependent record field, headline metric, connectivity metric, concentration metric, and pair-side aggregate is recomputed from corrected primitives. The primary/frozen ITT sensitivity keeps exact frozen membership and denominators; a separately labeled corrected-source counterfactual reports private additions/removals and aggregate denominator changes. Corrected rows and membership remain private."
+  },
+  "threshold_rationale_and_limits": {
+    "queue_10_per_museum_then_50_total": "A bounded product-research workload with minimum museum representation and frequency-based fill. It is a transparent heuristic, not an estimate of an optimal sample size or corpus prevalence.",
+    "minimum_affected_fraction_1_over_10": "A precommitted product decision threshold requiring a nontrivial change relative to each side's own opportunity ceiling. It is not empirically calibrated and does not require equal absolute improvement across museums.",
+    "minimum_two_gained_identity_classes": "A product guard against continuing on a single exceptional identity. Two is a pragmatic floor, not a statistical significance threshold.",
+    "ambiguity_allowance_5_over_1000": "A small precommitted product safety allowance for newly blocking records; reductions never offset new regressions. It is not an uncertainty interval or an empirical truth.",
+    "concentration_allowance_1_over_20": "A five-point tolerance relative to each comparable side baseline, chosen before candidate results to prevent concentration regression without fitting the observed pooled Met-Brooklyn value."
+  },
+  "authenticated_candidate_freeze": {
+    "contract": "schemas/candidate-freeze-manifest.schema.json",
+    "required_roles": ["hierarchy", "relation_ledger", "authority_source_export", "authority_source_export_attestation", "authority_source_export_signature"],
+    "conditional_llm_roles": ["review_prompt", "review_input", "prompt_leakage_audit", "prompt_leakage_audit_signature", "semantic_prompt_audit", "semantic_prompt_audit_signature"],
+    "immutability": "Every file byte SHA-256 and Git blob OID is verified from the declared full freeze commit. Release-authenticated attestor, source-exporter, and reviewer policies are bound by the exact release manifest. A trusted Ed25519-signed run-start receipt binds the exact release, freeze commit/manifest/nonce, candidate, invocation, CPython implementation/version, and dependency-lock bytes before result generation. A second signature from the same trusted attestor binds the same invocation to the distinct descendant result commit and exact result manifest, candidate output, review ledger, and source-export triplets. Self-declared timestamps, Git ancestry, and an unsigned result never establish authentic completion.",
+    "source_export_requirement": "At least one nonempty complete authority source export with explicit provenance and known-incompleteness declarations, exact preferred labels and sorted unique aliases, exact record census/hash, and a valid detached signature from a release-authenticated source exporter is required."
+  },
+  "contract_status_model": {
+    "snapshot_acquisition_integrity": ["PASS", "BLOCKED", "INVALID"],
+    "derived_baseline_reproducibility": ["PASS", "BLOCKED", "INVALID"],
+    "upstream_production_lineage": ["VERIFIED", "UNAVAILABLE_DISCLOSED"],
+    "overall_contract_status": ["READY_SNAPSHOT_CONDITIONAL", "BLOCKED", "INVALID"],
+    "issue_327_downstream_product_verdict": "NOT_RUN",
+    "current_trusted_run_attestor_status": "NOT_CONFIGURED",
+    "current_trusted_source_exporter_status": "NOT_CONFIGURED",
+    "current_trusted_reviewer_status": "NOT_CONFIGURED",
+    "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT",
+    "effect": "The baseline contract may be READY_SNAPSHOT_CONDITIONAL while upstream production lineage remains UNAVAILABLE_DISCLOSED. Production candidate comparison fails closed and downstream_product_verdict stays NOT_RUN until a separately reviewed release migration configures genuine run-attestor, source-exporter, and reviewer trust roots. Test-only keys cannot configure a production verdict."
+  },
+  "public_data_boundary": {
+    "public": ["aggregate metrics", "selection rules", "counts", "canonical whole-ledger content hashes", "Merkle roots", "stable rank IDs"],
+    "boundary_claim": "The v0 release contains no bulk artifact-ID expansion and no raw mention rows. Existing aggregate and sampled repository data can correlate labels with ranks or counts; rank IDs, component identifiers, and counts are not claimed opaque or unlinkable.",
+    "private_runtime_only": ["record evidence rows", "opportunity source text and field paths", "artifact expansion membership", "exact pair-side artifact membership", "corrected sensitivity rows"],
+    "generator": "scripts/run_baseline.py deterministically regenerates private ledgers from the authorized verified external corpus; scripts/private_ledgers.py authenticates them against preregistered hashes."
+  },
+  "prohibited_changes": [
+    "authority acquisition in issue #327",
+    "site graph construction in issue #327",
+    "matching, extraction, or normalization behavior changes",
+    "Wikidata use",
+    "post-result opportunity selection or denominator edits",
+    "post-result per-node scope overrides",
+    "population precision or recall claims from provisional silver review"
+  ],
+  "issue_337_handoff": {
+    "binds_issue_337_thresholds": false,
+    "rationale": "This contract's machine_thresholds are defined over a single-candidate-vs-baseline opportunity-queue comparison: O_pair_side denominators and credited gained identity classes measured against a research census over one candidate arm. Issue #337 is a structurally different two-arm comparison (authority-free vs authority-assisted) with no opportunity-queue of this contract's shape. The thresholds do not translate, so this contract explicitly does not bind machine_thresholds, concentration_gate, or ordered_decision_rule to #337.",
+    "issue_337_policy_status": "NOT_YET_DEFINED",
+    "issue_337_policy_freeze_requirement": "A separately justified #337 policy is required and must be frozen before any #337 adjudication run that depends on it. #327's thresholds may not be silently reused as that policy.",
+    "issue_337_exploratory_outputs_are_evidence": false,
+    "issue_337_exploratory_outputs_date_utc": "2026-09-14",
+    "issue_337_exploratory_outputs_note": "Invalid exploratory #337 outputs already exist from 2026-09-14. They are not evidence and may not tune any future #337 policy.",
+    "issue_337_future_policy_labeling_requirement": "If a #337 policy is first selected after the 2026-09-14 exploratory #337 outputs were produced, it must be labeled and reported as a prospective product decision rule, not as a pristine preregistration."
+  }
+}

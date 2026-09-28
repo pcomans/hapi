@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-trusted-run-attestors-1.json",
+  "title": "Release-pinned trusted run-start attestors",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_scope", "status", "signature_scheme", "signature_context", "configuration_rule", "current_effect", "attestors"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-trusted-run-attestors/1"},
+    "registry_scope": {"enum": ["production_release", "test_only"]},
+    "status": {"enum": ["NOT_CONFIGURED", "CONFIGURED"]},
+    "signature_scheme": {"const": "ed25519"},
+    "signature_context": {"const": "hapi-site-graph-v0-run-start/1"},
+    "configuration_rule": {"type": "string", "minLength": 1},
+    "current_effect": {"type": "string", "minLength": 1},
+    "attestors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["attestor_id", "key_id", "public_key_base64", "trust_basis"],
+        "properties": {
+          "attestor_id": {"type": "string", "pattern": "^[^\\s]+$"},
+          "key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "public_key_base64": {"type": "string", "pattern": "^[A-Za-z0-9+/]{43}=$"},
+          "trust_basis": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "NOT_CONFIGURED"}}},
+      "then": {"properties": {"attestors": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "CONFIGURED"}}},
+      "then": {"properties": {"attestors": {"minItems": 1}}}
+    }
+  ]
+}

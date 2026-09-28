@@ -1,0 +1,83 @@
+{
+  "authentication": "Authenticated distinct run directories, distinct UUID run IDs, exact output sets, and actual output bytes rehashed against each manifest.",
+  "builder_sha256": "c013a7fb0dd8ae14dfca5f0637779653b0a29e129d0d0e86b8fc3534a2fc3ddc",
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "deterministic_output_count": 19,
+  "deterministic_output_hashes": {
+    "adapter_catalog_summary.json": "fe4ab17e1b765e5902ae1e2b2842f55d66b15aea51ad2b1da8e85289465de445",
+    "artifact_authority_links.ndjson.gz": "42978550708d26c9b38d229b8b5dc4b0f061c7344aea6c3cc31a8700f5b22142",
+    "authority_inventory.json": "15599b98431223f966c7364eae1dbc801d8338bea9a3c8d65606a0df3bd9a3a6",
+    "authority_node_connectivity.json": "30e5fc849d27aa00a688b15b79083a0b1928d18eafcc721fe8a88283ac7b92cd",
+    "baseline-metrics.json": "e29ef2e3415fe3e195d46f4dcfc780c8ac66e8829f0aa804a8f2be164abb52fb",
+    "baseline-node-scope.json": "9973bbb7b83244a9bbd194f532f7f4949f98cb203682a46d4e0ae36dedd84493",
+    "connectivity_metrics.json": "a2490b469a20121bc8c3638d71fb6d10d1b76cf8d9657b3f5bd1cb644f1ce7d3",
+    "corpus-archive-attestation.json": "b3503a57e3a5da56508d7e4b53b3bcccefddd17831c69e6dc026baa4b9331bb9",
+    "corpus_inventory.json": "4039fd78e396f62ea6d5c333ea2eb9af30db67f7115ba0c39bd21a68466c4b9d",
+    "linkability_metrics.json": "4ec0a85340b2367a1f63c815d1c31b1497ed7b20cb3a2a68952de1fb8a229b9c",
+    "mentions.ndjson.gz": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
+    "planned-opportunity-summary.json": "b56c4155ed7b3777e729163cda0cf99e60ac1552ea714b1e94c3b059fc3872f5",
+    "private-ledger-digests.json": "54d807e7b1deef51ce5c1321de375ad10f78d02b28d94fb4256f67a105cb0b7d",
+    "private-opportunity-ledger.json": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890",
+    "private-opportunity-source.ndjson.gz": "46db33e1d365be302bf3273909cd62dc9bd23127505f4f22102864cbc7f50117",
+    "private-record-evidence.ndjson.gz": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+    "runtime-attestation.json": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321",
+    "top-unmatched-components.json": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8",
+    "top_gaps.json": "ce6a67dc62abf5d157116547e90b50cf2667b0573a58807113f3d5e7f88c6e66"
+  },
+  "input_snapshot_sha256": "b95a0d9065e2c41a8c15a8bf48aaef2271c3e851600a8c3daefeb42db15a84b4",
+  "metadata_mismatches": {},
+  "orchestration": {
+    "created_fresh_output_root": "<fresh-output-root>",
+    "created_run_directories": [
+      "<fresh-output-root>/run-a",
+      "<fresh-output-root>/run-b"
+    ],
+    "script": "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py"
+  },
+  "output_mismatches": {},
+  "production_lineage": {
+    "missing": [
+      "export_command",
+      "producer_git_revision",
+      "dagster_run_ids"
+    ],
+    "status": "UNAVAILABLE_DISCLOSED"
+  },
+  "run_a": {
+    "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+    "provenance_sha256": "f4e7007810e02dfecf238a2d994a60b3207c05ac68f9357979050847e5504488",
+    "resolved_directory": "/tmp/hapi-327-round6-release-reruns-20260829a/run-a",
+    "run_id": "b5443184-91bd-4351-862d-362bfaf90469"
+  },
+  "run_b": {
+    "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+    "provenance_sha256": "a9cc00b1733211d4a871dc81e13f867203e778ea667808a999b42660e9140d1e",
+    "resolved_directory": "/tmp/hapi-327-round6-release-reruns-20260829a/run-b",
+    "run_id": "261186b5-0cbf-488d-b586-4fdf23023b29"
+  },
+  "runner_sha256": "205a3edad204292d062ea3f85b0e14166536756372c56bb5d296b44f0543a218",
+  "runtime_attestation": {
+    "dependency_lock": {
+      "bytes": 500187,
+      "path": "pipeline/uv.lock",
+      "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+    },
+    "path": "runtime-attestation.json",
+    "python": {
+      "implementation": "CPython",
+      "implementation_name": "cpython",
+      "version": "3.12.13"
+    },
+    "sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321"
+  },
+  "schema_version": "site-graph-v0-baseline-rerun-evidence/3",
+  "scope": "authenticated immutable archive snapshot with 36,245 real private records; no fixtures or proxies; private ledgers remain in the runtime directory; historical producer lineage is unavailable",
+  "status": {
+    "derived_baseline_reproducibility": "PASS",
+    "downstream_product_verdict": "NOT_RUN",
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "snapshot_acquisition_integrity": "PASS",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+  },
+  "terminology": "deterministic_reproduction_not_statistical_independence"
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": "site-graph-v0-implementation-evidence/6",
+  "issue": 327,
+  "status": {
+    "snapshot_acquisition_integrity": "PASS",
+    "derived_baseline_reproducibility": "PASS",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "downstream_product_verdict": "NOT_RUN",
+    "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+    "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT"
+  },
+  "claim_boundary": "The contract and baseline are reproducible from the authenticated private archive snapshot. Historical production export lineage is unavailable, no downstream candidate is evaluated, and checked-in implementer evidence is not external reviewer approval.",
+  "public_bulk_derivatives_committed": false,
+  "private_runtime_authentication": "private-ledger-digests.json",
+  "archive": {
+    "logical_locator": "HAPI_CORPUS_ARCHIVE",
+    "sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+    "sidecar_logical_locator": "HAPI_CORPUS_ARCHIVE_SHA256",
+    "sidecar_sha256": "f57d0605b2d3a169d165e7286ef0d1cfc4855051a569250105d52ec8df51041e"
+  },
+  "private_runtime_ledgers": {
+    "canonical_record_count": 36245,
+    "site_mention_primitive_count": 117607,
+    "selected_signature_count": 50,
+    "pair_side_membership_count": 55455,
+    "private_record_evidence_canonical_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+    "private_opportunity_source_canonical_sha256": "746cda9908348027ed6b5202f6e7d308776acd472306a6c3535b63c88a545203",
+    "private_opportunity_ledger_canonical_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212"
+  },
+  "deterministic_reproduction": {
+    "status": "READY_SNAPSHOT_CONDITIONAL",
+    "evidence": "baseline-rerun-evidence.json",
+    "evidence_sha256": "4b37e080de23841be88ae93554938b6b37ad927e8b1610c4b7a17da406cbd008",
+    "deterministic_output_count": 19,
+    "output_mismatches": 0,
+    "metadata_mismatches": 0,
+    "run_a_manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+    "run_b_manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+    "runtime_attestation_sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321",
+    "fresh_portable_reproduction": {
+      "run_id": "3c4b72c6-ab1b-421a-8fe0-1bdd05cb81ab",
+      "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+      "deterministic_output_count": 19,
+      "different_path_and_uuid_accepted": true,
+      "absolute_runtime_path_is_a_prerequisite": false
+    }
+  },
+  "validation": {
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "checks_passed": 22,
+    "checks_failed": 0,
+    "schema_meta_valid_count": 20,
+    "schema_representative_valid_instance_count": 20,
+    "schema_adversarial_invalid_instance_count": 41,
+    "authenticated_validator_runs": "historical release identity plus two distinct fresh-path/UUID reproductions each recomputed 22/22 checks and matched the committed report"
+  },
+  "tests": {
+    "focused_site_graph_contract": "234 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
+    "full_pipeline": "2613 passed, 2 skipped for the same environment-variable-only archive tests",
+    "authorized_real_archive_tests": "8 passed with HAPI_CORPUS_ARCHIVE and HAPI_CORPUS_ARCHIVE_SHA256 explicitly bound to the verified archive and sidecar",
+    "execution_scope": "local repository-owned uv environment; no pre-PR CI run exists"
+  },
+  "review_gate": {
+    "historical_round_1_and_round_2_outcome": "REQUEST_CHANGES",
+    "historical_reviews_are_current_approval": false,
+    "implementer_dispositions_are_reviewer_approval": false,
+    "exact_head_external_review": "PENDING_OUTSIDE_COMMIT"
+  },
+  "candidate_execution": {
+    "trusted_run_attestors": "NOT_CONFIGURED",
+    "trusted_source_exporters": "NOT_CONFIGURED",
+    "trusted_reviewers_and_auditors": "NOT_CONFIGURED",
+    "trusted_correction_chain": "NOT_CONFIGURED",
+    "production_comparator_effect": "FAIL_CLOSED",
+    "production_correction_sensitivity_effect": "FAIL_CLOSED",
+    "downstream_product_verdict": "NOT_RUN",
+    "required_runtime": {
+      "implementation": "CPython",
+      "implementation_name": "cpython",
+      "version": "3.12.13",
+      "dependency_lock_path": "pipeline/uv.lock",
+      "dependency_lock_sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+    },
+    "review_source_binding": "Every signed review must cite authenticated non-originating-museum source records that collectively cover every target in the signed decision subject.",
+    "trusted_completion_requirement": "The same configured trusted attestor must sign start and completion statements binding one invocation to exact freeze, result, candidate, review, source-export, runtime, and manifest bytes.",
+    "record_post_state_requirement": "Every selected record declares its complete final supported direct-link set and exact removed-baseline partition; retention and loss consume identity roots after authenticated equivalence union, while raw edge removals remain separately reported.",
+    "mention_status_and_safety_requirement": "Candidate dispositions do not rewrite mention state. Any selected status transition requires two authenticated subject-bound reviews; the safety gate counts newly blocking records per museum without offset from resolved blockers.",
+    "gained_identity_census_requirement": "The complete gained-specific root set is derived before credit and each gained root must be positively distinct from every other gained root and every relevant baseline root, including crossed one-sided additions.",
+    "llm_review_requirement": "Raw model bytes must be canonical assessment/reasoning JSON exactly matching the signed wrapper; an immutable release-owned prompt template plus separate signed deterministic and semantic pre-invocation audits are mandatory.",
+    "repository_boundary_requirement": "Validation recursively scans the current tree and every local HEAD ancestor for narrowly forbidden private bulk derivative and dump patterns; unavailable Git metadata fails the historical scan closed.",
+    "validator_preimport_requirement": "A standard-library bootstrap verifies inventory and hashes, then statically rejects unapproved imports, import-time annotation evaluation, non-passive inheritance/metaclasses, callback-bearing or otherwise non-inert initializer shapes, and other executable top-level release syntax before semantic module import.",
+    "correction_chain_requirement": "A separately reviewed release must pin a canonical registration artifact from a strict ancestor commit, binding the genuine Git genesis, exact prior ledger head, and both private baseline hashes. Release activation precedes decisions, cited source bytes come from strict decision ancestors, each ledger preserves the registered prefix, and two registered independent human reviewers sign every correction."
+  }
+}

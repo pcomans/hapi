@@ -1,0 +1,29 @@
+{
+  "schema_version": "site-graph-v0-external-review-provenance/1",
+  "reviewed_commit_sha": "36c23e7424f3deb901cc86a5019b408d3951c208",
+  "review_tool": "claude CLI",
+  "cli_version": "2.1.247",
+  "model_selector": "opus",
+  "backend_model_id": "not_exposed_by_claude_cli",
+  "backend_model_snapshot": "not_exposed_by_claude_cli",
+  "temperature": "not_exposed_by_claude_cli",
+  "max_tokens": "not_exposed_by_claude_cli",
+  "permission_mode": "not_exposed_by_claude_cli",
+  "working_directory": "/tmp/hapi-worktrees/issue-327",
+  "invocation": "claude -p --agent code-reviewer --output-format text --tools 'Read,Glob,Grep,WebFetch,WebSearch' < /tmp/hapi-327-claude-review-prompt.md",
+  "declared_tools": ["Read", "Glob", "Grep", "WebFetch", "WebSearch"],
+  "observed_tool_limits": [
+    "reviewer reported no shell access",
+    "WebFetch permission was denied"
+  ],
+  "invocation_time_evidence": {
+    "kind": "filesystem_metadata_not_authoritative_process_timestamp",
+    "prompt_file_mtime_utc": "2026-08-28 20:55:21.622972022 +0000",
+    "output_file_mtime_utc": "2026-08-28 21:03:08.183193483 +0000"
+  },
+  "raw_artifacts": {
+    "prompt": {"path": "prompt.md", "sha256": "85879a6c8e7b78bfc7eec98a919c152c38beb0d10f0fa2073a9ce2dbf0b0a378"},
+    "output": {"path": "raw-output.txt", "sha256": "166ed8d1a660e90f4ead9c5df8be8d43288e06532eea94ab90158862293d9f18"}
+  },
+  "raw_artifacts_modified": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "site-graph-v0-review-disposition/2",
+  "reviewed_commit": "0ea47dad1e9e415d0fe76ac1fc0157ce218fbdad",
+  "raw_review_sha256": "da6665870ff7665c75aa99e319be06911ff0eb5967fdaa497854d2228981b9e7",
+  "overall_disposition": "accepted_and_repaired_in_follow_up_commit",
+  "findings": {
+    "A_public_data_boundary": {"disposition": "accepted_repaired", "evidence": ["private-ledger-digests.json", "planned-opportunity-summary.json", "scripts/private_ledgers.py"]},
+    "B_production_input_binding": {"disposition": "accepted_repaired", "evidence": ["scripts/compare_candidate.py", "scripts/candidate_git.py"]},
+    "C_pair_side_itt_membership": {"disposition": "accepted_repaired", "evidence": ["scripts/build_baseline.py", "scripts/compare_candidate.py"]},
+    "D_concentration_and_determinism": {"disposition": "accepted_repaired", "evidence": ["scripts/metrics_core.py", "pipeline/tests/test_site_graph_v0_contract.py"]},
+    "E_one_crosswalk_authority": {"disposition": "accepted_repaired", "evidence": ["scripts/build_baseline.py", "scripts/compare_candidate.py"]},
+    "F_authenticated_pre_run_freeze": {"disposition": "accepted_repaired", "evidence": ["scripts/freeze_candidate_inputs.py", "schemas/candidate-freeze-manifest.schema.json"]},
+    "G_identity_equivalence": {"disposition": "accepted_repaired", "evidence": ["scripts/compare_candidate.py", "schemas/relation-ledger.schema.json"]},
+    "H_review_census_evidence": {"disposition": "accepted_repaired", "evidence": ["schemas/review-artifact.schema.json", "schemas/prompt-leakage-audit.schema.json", "scripts/compare_candidate.py"]},
+    "I_release_schema_safety": {"disposition": "accepted_repaired", "evidence": ["scripts/release_contract.py", "scripts/integrity.py", "scripts/freeze_release.py", "scripts/generate_validation_report.py"]},
+    "J_corrections": {"disposition": "accepted_repaired", "evidence": ["correction-policy.json", "schemas/correction-ledger.schema.json", "scripts/apply_corrections.py"]},
+    "K_definitions_rationale": {"disposition": "accepted_repaired", "evidence": ["preregistration.json", "README.md"]},
+    "L_corpus_provenance": {"disposition": "accepted_repaired", "evidence": ["input-snapshot.json", "private-ledger-digests.json", "validation-report.json"]},
+    "M_minor_robustness": {"disposition": "accepted_repaired", "evidence": ["scripts/compare_candidate.py", "scripts/release_contract.py", "baseline-rerun-evidence.json", "README.md"]}
+  },
+  "history_note": "The implementation branch preserves reviewed commits locally as instructed. The orchestrator will construct the final public branch from the base with the final tree so removed private derivatives are absent from public Git history."
+}

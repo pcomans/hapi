@@ -1,0 +1,167 @@
+## Reviewed commit
+
+`0ea47dad1e9e415d0fe76ac1fc0157ce218fbdad`, worktree `/tmp/hapi-worktrees/issue-327`, base `97f2e610974f0e89b9c03d409b230dff89edbb1f`, prior reviewed commit `36c23e7424f3deb901cc86a5019b408d3951c208`.
+
+**Governing process docs read:** `AGENTS.md` (fundamental inputs are hard blockers), root `CLAUDE.md` (14 constitutional rules + 4 repo rules + verification table), `pipeline/CLAUDE.md`. The change is measurement-only under `docs/evaluations/site-graph-v0/` plus one CI test, so the mapper/schema/Drizzle rules don't bite; rules 1, 2, 3, 4, 5, 12, 13 do, and they are where the remaining defects sit.
+
+**Two limitations, stated so you can discount accordingly.** I had no shell in this session, so I could not run `git diff` against either the base or `36c2374…`, and I could not read `.git/`. Scope and the repair delta are reconstructed from `release-manifest.json` (41 declared files), `reviews/round-1/disposition.json`, and file contents. `WebFetch` was denied again, so I could not read issue #327; I reviewed against `README.md:232-248`'s acceptance map, `preregistration.json`, and the repo rules. I also could not recompute any SHA-256, so every hash pin below is assessed for *whether code enforces it*, not for whether the digest is correct.
+
+**What the repair got right.** The verification layer is now real work, not decoration. `pipeline/tests/test_site_graph_v0_contract.py:550-588` genuinely re-derives `classify_current_nodes` from `reconciled.jsonl` + `raw.json` and re-derives `build_metrics` / `build_opportunity_queue` from the committed frozen evidence, then asserts equality with the committed artifacts — that is the fix round 1 asked for, and it runs in CI (`.github/workflows/ci.yml:49-50` collects it). `validate_contract.py` is read-only and authenticates the exact inventory *before* parsing any deliverable (`:396-400`); `freeze_release.py` is the only writer. The opportunity queue is result-blind and derived from the baseline, so the utility denominator is no longer self-selected (`planned-opportunity-queue.json:57713`: Met `O_pair_side` = 21,570, threshold 2,157 — that is a hard bar). The held-out sample is demoted to descriptive and replaced by a census (`preregistration.json:204-208`). `X_m` is honestly renamed. Corpus provenance discloses precisely what cannot be reproduced (`input-snapshot.json:37`) instead of pretending. Logic-only comparator inputs are explicitly labelled as making no corpus claim (`README.md:253-255`, test docstring `:1-6`) — AGENTS.md is respected.
+
+The problem is that the *comparator* — the one artifact that will actually decide CONTINUE/STOP/REDESIGN — is the weakest file in the change, and two of round 1's P1s survive inside it in relocated form.
+
+---
+
+## P1
+
+### P1-1 — The candidate-side top-1 concentration gate is compared against a differently-defined baseline number, and is inert on the Met side
+
+`docs/evaluations/site-graph-v0/scripts/compare_candidate.py:399-406`, gate at `:619-633`; baseline definition at `scripts/build_baseline.py:297-317`; preregistered formula at `preregistration.json:92`.
+
+`build_baseline.concentration()` computes `top_k_unique_record_concentration["1"]["ratio"]` as **union of distinct records on the top node / union of distinct records on any shared node** — which is exactly `preregistration.json:92`.
+
+`compare_candidate.concentration()` computes `top_1_incidence_share` as `top / incidence`, where `incidence = sum(len(node_artifacts[t]) for t in ordered)` (`:399`) — a **sum with multiplicity**, not a union. Line `:631` then compares the second quantity to the first.
+
+The numerators are identical; the denominators are not, and the gap is enormous on real data. `baseline-metrics.json:794-807` (Met side of `met__brooklyn`): `distinct_connected_records` = 14,392, `node_incidence_total` = 34,221, baseline top-1 = 11,417/14,392 = **0.7933**. A candidate reproducing the baseline exactly would score 11,417/34,221 = **0.3336** and pass `<= 0.7933 + 0.05` with 0.46 of slack. The Met-side concentration ceiling — the single gate protecting against "we reunified everything onto Thebes" — cannot fire. Brooklyn's ratio is 1188/1151, so the slack there is only ~0.009; the bug is silent precisely where it matters most.
+
+Note HHI is *not* affected: `:404` and `build_baseline.py:303-306` use the same `sum(I²)/(ΣI)²`. Only top-1 diverges.
+
+Nothing catches this. `test_concentration_is_gated_per_side_against_comparable_baseline` (`pipeline/tests/test_site_graph_v0_contract.py:465-477`) builds a fixture where every artifact links to exactly one shared target (`:217-230`, `_fraction(2, 2)`), so union == sum and the two formulas coincide. That is a rule-5 failure in the test: it asserts the gate fires, not that it measures the preregistered quantity.
+
+**Fix:** in `compare_candidate.concentration()`, return `ratio(len(node_artifacts[ordered[0]]), len(set().union(*node_artifacts.values())))` for top-1 (keep `node_incidence_total` for HHI). Better: import and call `build_baseline.concentration()` on a link list projected from `candidate_links`, so there is one implementation (rule 4). Add a fixture in which one artifact carries two shared targets and assert the candidate's top-1 denominator equals the distinct-record count, not the incidence total.
+
+### P1-2 — A candidate can relabel a frozen broad baseline node as specific, from its own self-attested hierarchy file
+
+`compare_candidate.py:439` seeds `candidate_scope` from the committed baseline classes, then `:453-454` overwrites it for **every** candidate link — including links to targets that already exist in `baseline-node-scope.json` — with the candidate's own `scope_class`. `:345-355` derives the expected scope solely from the candidate-authored `hierarchy` (`child_ids`) and the crosswalk *vocabulary*; `:231-232` "verifies" that hierarchy by hashing the file the candidate itself supplied. There is no check anywhere that `link["scope_class"] == node_scope_by_target[target]` for a target present in both.
+
+`type-crosswalk.json:15-25` exists to bind actual iDAI types to candidate types, but `compare_candidate.py` only ever reads `candidate_e55_vocabulary` (`:282-284`) and never `idai_gazetteer_actual_hyphenated_types` or `porter_moss_actual_representations`. So the binding half of the crosswalk is not executable.
+
+Concretely: `idai:2042921` "Theben" is broad in the frozen baseline. A candidate declares a hierarchy node `{"target_id": "idai:2042921", "candidate_e55_type": "temple", "child_ids": []}`, marks its links `specific_candidate`, and `validate_inputs` passes. `candidate_broad` (`:606-610`) then excludes every record whose only shared target is Theben, `broad_change` goes negative, and the CONTINUE condition "broad-only share over X_m falls" (`preregistration.json:189`) is satisfied by relabelling alone, with zero research. That is the broad-to-specific inflation the whole contract exists to prevent, and `preregistration.json:223` explicitly prohibits "post-result per-node scope overrides" — a rule that exists only in that JSON string (rule 3).
+
+`test_slice_leafness_cannot_override_complete_hierarchy_context` (`test_site_graph_v0_contract.py:446-453`) tests that a *declared link* must agree with the *declared hierarchy*. It does not test that the declared hierarchy agrees with anything committed.
+
+**Fix:** in `validate_inputs`, for every `link["target_id"]` present in `node_scope_by_target`, require `link["scope_class"] == node_scope_by_target[target]` and require `link["candidate_e55_type"]` to equal the crosswalk image of that node's committed `source_types` in `baseline-node-scope.json`; append an integrity error otherwise. Candidate-authored scope may only apply to targets absent from the frozen baseline.
+
+### P1-3 — Baseline broad-only membership is decided by a hash-order-dependent arbitrary pick, under a rule that matches neither the baseline metrics nor the candidate side
+
+`compare_candidate.py:601-605`:
+
+```python
+if node_scope_by_target.get(next(iter(baseline_links[artifact] & base_shared)), "unclassified") == "broad"
+```
+
+`next(iter(set_of_strings))` selects an element by set iteration order, which depends on `PYTHONHASHSEED`. For a record whose shared targets are `{broad_A, unclassified_B}` the record is in `baseline_broad` or not depending on the interpreter run. Constitutional rule 2 names this exactly: "anything that depends on agent order / file iteration order / hash randomisation is a silent failure that produces non-reproducible output." The comparator's headline broad-only delta is therefore not reproducible.
+
+It is also a third, incompatible rule. `build_baseline.scope_partition()` (`build_baseline.py:270-278`) uses precedence `specific → broad → unclassified` over the whole target set; `compare_candidate`'s `candidate_broad` (`:606-610`) uses `any(broad) and not any(specific)`. The baseline arm uses "the arbitrary first target is broad and none is specific". So `sides[m]["baseline_broad_only_conditional_share"]` (`:644`) will not even reproduce `baseline-metrics.json`'s committed `broad_only` counts, and `broad_change` (`:635-638`) subtracts two quantities computed under different definitions.
+
+**Fix:** replace `:601-605` with the same predicate as `:606-610` (`any(... == "broad") and not any(... == "specific_candidate")`), or better, call `build_baseline.scope_partition()` for both arms so there is one definition (rule 4). Add a test asserting the comparator's baseline broad-only counts equal `baseline-metrics.json`'s `mutually_exclusive_scope_counts["broad_only"]` on the real committed data.
+
+### P1-4 — Two committed classification authorities disagree on real baseline nodes
+
+`build_baseline.py:31-32` hardcodes `CURRENT_BROAD_TYPES = {"administrative-unit", "archaeological-area"}` and `CURRENT_SPECIFIC_TYPES = {"archaeological-site", "populated-place", "building-institution"}`. `type-crosswalk.json:20-23` maps `hydrography`, `island`, `landcover`, `landform` to `landscape_feature` / `"scope": "broad"`.
+
+Those four types are in neither `build_baseline` set, so they fall to `unclassified` (`build_baseline.py:117-119`). This is not hypothetical: `baseline-node-scope.json:1252-1266` classifies `idai:2042923` "Wadi Allaqui", `source_types: ["landform"]`, as `unclassified` with reason `no_frozen_scope_rule_applies`, while the frozen crosswalk says it is broad. Those are the 35 `unclassified` nodes.
+
+`README.md:73-76` declares the crosswalk the authority ("maps all actual hyphenated iDAI types … Broad types take precedence"), and `validate_contract.py:270-279` checks only that the crosswalk's *key set* covers the types present in `raw.json` — never that the classifier agrees with the mapping. Rule 4: one fact, two places, already drifted.
+
+The consequence compounds P1-3: a baseline record whose only shared target is a `landform` node is excluded from `baseline_broad` (class `unclassified`) but included in `candidate_broad` (the candidate's crosswalk-derived type is `landscape_feature` → broad), so `broad_change` shows a spurious increase and can flip a legitimate CONTINUE to STOP.
+
+**Fix:** delete `CURRENT_BROAD_TYPES` / `CURRENT_SPECIFIC_TYPES` and drive `classify_current_nodes` from `type-crosswalk.json["idai_gazetteer_actual_hyphenated_types"][t]["scope"]`, raising on any type absent from the crosswalk. Re-run the two baselines and re-freeze `baseline-node-scope.json`, `baseline-metrics.json`, `planned-opportunity-queue.json` and the manifest. Add a test asserting every type in `raw.json` resolves through the crosswalk and that no node is `unclassified` for a type the crosswalk classifies.
+
+### P1-5 — The CONTINUE effect threshold is read from an input file instead of computed, and neither the queue nor the crosswalk is bound to its preregistered hash at comparison time
+
+`compare_candidate.py:618`: `minimum = opportunity["minimum_credited_affected_records_for_continue"]` — taken verbatim from the supplied opportunity ledger. `MINIMUM_AFFECTED_FRACTION` (`:30`) is dead: grep shows it is referenced only by `validate_contract.py:242` and the test at `:632`, never by the decision logic. The preregistered rule `max(1, ceil(0.10 * O_pair_side))` (`preregistration.json:189`) is implemented once, in `build_baseline.py:632-644`, using a *second* encoding of 1/10 (`MINIMUM_AFFECTED_NUMERATOR/DENOMINATOR`, `:26-27`). So the number the gate uses is never checked against the fraction the contract preregisters (rules 3 and 4).
+
+Worse, nothing ties the queue file to the frozen one. `:227-230` checks `candidate["opportunity_ledger_sha256"] == sha256(paths["queue"])` — the candidate declaring the hash of whatever file it handed over. Same for `type_crosswalk_sha256` (`:229`) and `complete_hierarchy_context_sha256` (`:231`). `preregistration.json:24` and `:33` pin the real digests (`7894acc6…`, `4509d294…`), and `compare_candidate.py` never opens `preregistration.json`. A candidate author can supply a queue with smaller denominators and a crosswalk with a wider `specific_candidate` vocabulary, and the comparator will report `integrity: passed`.
+
+That is the round-1 P1-5 failure mode moved one layer down: the queue itself is now result-blind and well-constructed, but the comparator does not require *that* queue.
+
+**Fix:** (a) recompute `minimum = max(1, -(-opportunity["credited_effect_opportunity_denominator"] * MINIMUM_AFFECTED_FRACTION.numerator // MINIMUM_AFFECTED_FRACTION.denominator))` and append an integrity error if it disagrees with the file; (b) load `preregistration.json` in `validate_inputs` and require `sha256(paths["queue"]) == frozen_artifacts.opportunity_ledger.sha256`, `sha256(paths["crosswalk"]) == frozen_artifacts.type_crosswalk.sha256`, and both record-evidence hashes; (c) delete `MINIMUM_AFFECTED_NUMERATOR/DENOMINATOR` and import the single `Fraction`.
+
+---
+
+## P2
+
+### P2-1 — `schemas/*.schema.json` validate nothing; "schema-validated" is an unsupported claim
+
+`validate_contract.py:318-322` is the only code that touches them, and it checks `len(schemas) >= 6` and that each declares `$schema: draft/2020-12`. No `jsonschema` import exists anywhere in the repo (grep confirms). Meanwhile `README.md:177` says `evidence-corrections.json` "is an append-only, schema-validated hash chain", `preregistration.json:210-211` points `correction_policy.schema` at `schemas/correction-ledger.schema.json`, and `README.md:9-11` says "Machine rules in `preregistration.json` and the versioned files in `schemas/` control if prose and code ever disagree."
+
+They control nothing. Every constraint in `schemas/candidate.schema.json:7-65` is independently re-implemented by `compare_candidate.exact_keys` (`:290-297`, `:367-369`), and `schemas/correction-ledger.schema.json` by `apply_corrections.RECORD_FIELDS` (`:22-26`). Two specifications of the same fact, one enforced (rule 4), and a markdown-only claim of enforcement (rule 3).
+
+**Fix:** add `jsonschema` to the pipeline dev dependency, validate each ledger against its schema at the top of `validate_inputs` / `validate_ledger`, and add a test that the committed `evidence-corrections.json` and the logic-only comparator fixtures validate. Or delete the `schemas/` directory and stop claiming it is authoritative — but then remove the sentence at `README.md:9-11`.
+
+### P2-2 — The review ledger does not require LLM parameters or a dated model snapshot (rule 13)
+
+`compare_candidate.py:152-162` requires, for `method == "llm"`, prompt + raw-response artifacts with hashes, a truthy `model_selector` and a truthy `backend_model_id`. `schemas/review-ledger.schema.json:26` lists the same twelve fields. `preregistration.json:125-131` matches.
+
+Rule 13 requires "model id + **dated snapshot**, **parameters**, the exact prompt/input, and the full raw response". There is no field for temperature/top-p/seed/max-tokens and no dated snapshot field. `backend_model_id` accepts any nonempty string, including a sentinel, with no enumerated allowed value. You held *yourselves* to the higher bar — `reviews/round-1/metadata.json:6-11` records `backend_model_snapshot`, `temperature`, `max_tokens`, `permission_mode` — but the preregistered ledger for the decisions that will actually gate credit does not require them. A decision reviewed at temperature 1.0 by an unrecorded snapshot is not replayable.
+
+**Fix:** add `backend_model_snapshot`, `parameters` (object, required non-empty for `method == "llm"`) to `required_review` in `compare_candidate.py:110-114`, to `schemas/review-ledger.schema.json`, and to `preregistration.json:125-131`; enumerate the permitted non-exposure sentinel explicitly rather than accepting any truthy string.
+
+### P2-3 — "credited affected records" is defined only in the comparator, and more narrowly than the preregistered wording
+
+`preregistration.json:189` gates CONTINUE on "each side has credited affected records >= max(1, ceil(0.10 * its fixed nonempty O_pair_side))". The term is never defined in the symbol table (`:5-11`) or anywhere else. `compare_candidate.py:611-616` defines it as records whose event is `new_link` or `strict_refinement_reassignment` **and** whose candidate links intersect `gained_specific` — i.e. only records incident on targets that became *newly shared for that pair*. A record newly linked to an already-shared specific node counts zero.
+
+That may well be the right definition, but `README.md:9-11` declares `preregistration.json` the tie-breaker over code, and `preregistration.json` does not contain it. An undefined term in a preregistration is a term that gets settled by discretion after results exist — the exact failure round 1 flagged for the held-out review.
+
+**Fix:** add `credited_affected_record` to `preregistration.json["symbols"]` with the incident-on-gained-shared-identity condition spelled out, and assert the definition string in `test_every_machine_formula_and_decision_threshold_matches_executable_values`.
+
+### P2-4 — The correction sensitivity path cannot show sensitivity of any headline number, and permits internally inconsistent rows
+
+`apply_corrections.py:18-21` allows corrections to `baseline_site_target_ids` and `baseline_record_scope` as independent fields, and `:139-144` writes each correction in isolation. Correcting `baseline_site_target_ids` leaves `baseline_record_scope`, `baseline_resolution_state`, `site_mention_status_counts` and `has_blocking_ambiguity` stale — the sensitivity artifact is a record set that `build_record_rows` would have raised on (`build_baseline.py:218-221`).
+
+`sensitivity_metrics()` (`:99-125`) then reports only `canonical_records`, `extracted_site_text_evidence_records`, `records_with_unique_site_link`, `records_with_blocking_ambiguity` and two rates. Nothing about connectivity, pair membership, node scope, or concentration — i.e. none of the numbers the contract actually decides on. `README.md:177-181` presents this as the immutable-corrections story; it is a partial one.
+
+**Fix:** derive the sensitivity output by re-running `build_baseline.build_metrics(corrected_records, links_from_corrected_records, scope_by_target)` so the full metric surface is regenerated consistently, and either recompute the dependent fields from the corrected primitives or restrict `ALLOWED_FIELDS` to primitives only and derive the rest.
+
+### P2-5 — The release-time report writer emits a failing report into the release tree, and no check ever reads its status
+
+`scripts/generate_validation_report.py:19-27` calls `semantic_report()` (without `verify_release`), writes `validation-report.json` unconditionally, then exits 1 if status is `fail`. The README release sequence (`README.md:208-218`) runs `freeze_release.py --replace` immediately afterwards, which will hash whatever is on disk into the manifest.
+
+Consequently a release can be frozen and committed containing `"status": "fail"` and still pass every automated gate: `verify_release` only checks bytes match the manifest, and neither `validate_contract.semantic_report()` nor `test_site_graph_v0_contract.py` ever reads `validation-report.json["status"]`. This is round-1 P2-1's shape surviving in the writer half.
+
+**Fix:** in `generate_validation_report.py`, compute the report, exit non-zero *before* writing if `status != "pass"`. Add a check to `semantic_report()` asserting the committed `validation-report.json["status"] == "pass"` and, in CI, add an assertion in `test_site_graph_v0_contract.py` on that field (it is a committed file, no corpus needed).
+
+---
+
+## P3
+
+- **`build_baseline.py:139-140`, `:725-726`** — `1000` and `36_245` still hardcoded. `input-snapshot.json:5` and `:100` already carry `canonical_record_count` and `site_target_count`, and `run_baseline.preflight` already loads the snapshot. `disposition.json:20` claims P3 was repaired with "counts read from input snapshot"; for this file it was not (rule 4, rule 12).
+- **`compare_candidate.py:393-407`** — the candidate report emits only top-1, while `preregistration.json:94` sets `k: [1, 5, 10]` and `README.md:57-58` says top-1/top-5/top-10 are computed per museum side. Only the baseline half does. Either emit all three for the candidate or scope the claim to the baseline.
+- **`compare_candidate.py:175-178`** — `review_decisions` writes `_supported` / `_disagreement` into the caller's ledger dicts. The ledger is hash-pinned upstream; mutating the parsed object in place is a trap waiting for the first person who re-serialises it. Return a parallel dict.
+- **`compare_candidate.py:68-73`** — `parse_time` catches `ValueError` and returns `None`. It funnels into a loud error at `:237-238`, so it is not a swallowed failure, but rule 2 prefers no bare-ish except at all: check the format explicitly.
+- **`integrity.py:13-14, 29-34`** — `README.md:185` calls this "the immutable exact required-file inventory", but `__pycache__/` and `*.py[co]` are excluded from both the manifest and the extra-file check. The exactness claim has a bytecode-shaped hole; say so in the inventory rule string at `freeze_release.py:30-33`.
+- **`pipeline/tests/test_site_graph_v0_contract.py:26`** — `sys.path.insert(0, str(SCRIPTS))` injects nine generically-named top-level modules (`integrity`, `run_baseline`, `compare_candidate`, `build_baseline`, `apply_corrections`, …) at the front of `sys.path` for the entire `pipeline` pytest session. A future third-party or pipeline module named `integrity` will be shadowed silently. Use `importlib.util.spec_from_file_location` under a namespaced name.
+- **`input-snapshot.json:98`** — `parent_references_outside_snapshot: 566` is pinned with no derivation and nothing recomputes it, while `baseline-node-scope.json:10` reports a recomputed `raw_records_with_parent_outside_available_hierarchy: 699` for what reads as the same population. If these are different measures, say which; if not, one is stale. Rule 1: every asserted fact traces to a reproducible method.
+- **`compare_baseline_runs.py:125-128`, `validate_contract.py:297`** — "independent" reruns are enforced only as distinct resolved directories and distinct UUIDs. `baseline-rerun-evidence.json:24-31` shows both runs produced by one sequential `run_two_baselines.py` process on one machine. That is strong *determinism* evidence and worth having; it is not independence. Rename the check id and the `independence` string to `determinism_reproduction`.
+- **`compare_candidate.py:580-585`** — `gained_specific` scans all 27,969 Met artifact IDs per candidate target and, via `credited_link_by_artifact[a]` on a `defaultdict`, materialises ~36k empty sets. Build `museum_by_artifact` once and index. Not a correctness issue at this scale, just gratuitous.
+
+---
+
+## Disposition of every round-1 finding
+
+| Round-1 | Verdict | Evidence |
+|---|---|---|
+| P1-1 node scope never re-derived | **Fixed** | `test_site_graph_v0_contract.py:558-565`; `validate_contract.py:140-153` |
+| P1-2 connectivity asserted against itself | **Fixed** | `test_site_graph_v0_contract.py:566-588` recomputes `build_metrics` from frozen evidence |
+| P1-3 "credited" undefined for non-specific links | **Partly** — credit now requires `specific_candidate` (`compare_candidate.py:467-468`) and broad/unclassified get zero (`preregistration.json:133-135`), but P1-2/P1-4 above let the candidate manufacture that class |
+| P1-4 baseline vs candidate scope rules/vocabularies differ | **Not fixed, relocated** — see new P1-3 and P1-4. A crosswalk was committed but the baseline classifier ignores it and the comparator uses a third rule |
+| P1-5 self-selected utility denominator | **Fixed** as to result-blindness (`planned-opportunity-queue.json:57664-57719`); **new gap** at new P1-5 (threshold read from file, queue not hash-bound) |
+| P1-6 undefined held-out review | **Fixed** — census with two hashed artifacts (`compare_candidate.py:97-181`), held-out demoted (`preregistration.json:206-207`) |
+| P1-7 not enforced in CI | **Fixed** — `.github/workflows/ci.yml:49-50` collects `pipeline/tests/test_site_graph_v0_contract.py` |
+| P2-1 verifier writes what it verifies | **Mostly fixed** (`validate_contract.py:396-400` read-only, verify-before-parse); residual at new P2-5 |
+| P2-2 hash over gzip bytes | **Fixed** — `preregistration.json:20`, checked at `validate_contract.py:115,124` |
+| P2-3 concentration ceiling fitted to 0.75 | **Fixed in design** (`preregistration.json:180-182`), **inert in execution** — see new P1-1 |
+| P2-4 `E_m` mislabelled | **Fixed** — `X_m` (`preregistration.json:7`), plus `top-unmatched-components.json` |
+| P2-5 truncated hierarchy hides children | **Fixed** — `build_baseline.py:95-100` uses `raw.json`; omissions quantified at `baseline-node-scope.json:2-11` |
+| P2-6 no reviewer provenance | **Mostly fixed**; residual at new P2-2 (no parameters/snapshot) |
+| P2-7 no corpus acquisition procedure | **Accepted as disclosed** — `input-snapshot.json:37` and `README.md:20-27` state plainly that the export cannot be regenerated. Correct handling under AGENTS.md |
+| P3 (four items) | `math.isclose` gone; `scope_partition` returns a tuple (`build_baseline.py:279-288`); inventory re-serialisation now preserves key order (`run_baseline.py:169-172`). **Hardcoded counts not fixed** — see P3 above |
+
+## Scope
+
+Everything I can see is confined to `docs/evaluations/site-graph-v0/` plus `pipeline/tests/test_site_graph_v0_contract.py`; `release-manifest.json` declares exactly 41 files and only that one lives outside the evaluation directory. No authority JSON, mapper, model, migration, or web file appears touched, and `.gitignore:2-3` means the `__pycache__/*.pyc` files present on disk under `scripts/` are untracked. The `--corpus /tmp/hapi-corpus-2026-08-27` dependency is disclosed, not hidden. **I could not confirm this with `git diff`** — please verify no stray file outside those two paths is in the commit before merging.
+
+The repair is large and mostly good; the residual defects are concentrated in `compare_candidate.py`, which is also the file with the least real-data test coverage. Fix P1-1 through P1-5 there and this is close.
+
+REQUEST_CHANGES

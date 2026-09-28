@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-freeze-manifest-3.json",
+  "title": "Authenticated pre-run candidate input freeze",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "candidate_id", "run_nonce", "release_manifest_sha256", "private_opportunity_ledger_canonical_sha256", "trusted_run_attestors", "trusted_source_exporters", "created_at_utc", "created_by", "provenance", "files"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-candidate-freeze-manifest/3"},
+    "contract_version": {"const": "site-graph-v0/4"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "run_nonce": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "private_opportunity_ledger_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_run_attestors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "raw_sha256", "git_blob_oid", "canonical_sha256", "status", "attestor_key_ids"],
+      "properties": {
+        "path": {"const": "docs/evaluations/site-graph-v0/trusted-run-attestors.json"},
+        "raw_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "status": {"const": "CONFIGURED"},
+        "attestor_key_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+      }
+    },
+    "trusted_source_exporters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "raw_sha256", "git_blob_oid", "canonical_sha256", "status", "exporter_key_ids"],
+      "properties": {
+        "path": {"const": "docs/evaluations/site-graph-v0/trusted-source-exporters.json"},
+        "raw_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "status": {"const": "CONFIGURED"},
+        "exporter_key_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+      }
+    },
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "created_by": {"type": "string", "minLength": 1},
+    "provenance": {"type": "object", "minProperties": 1},
+    "files": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "source_export_group_id", "path", "sha256", "git_blob_oid", "media_type", "schema_version"],
+        "properties": {
+          "role": {"enum": ["hierarchy", "authority_source_export", "authority_source_export_attestation", "authority_source_export_signature", "relation_ledger", "review_prompt", "review_input", "prompt_leakage_audit", "prompt_leakage_audit_signature", "semantic_prompt_audit", "semantic_prompt_audit_signature"]},
+          "source_export_group_id": {"type": ["string", "null"], "minLength": 1},
+          "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "media_type": {"enum": ["application/json", "application/octet-stream", "text/plain"]},
+          "schema_version": {"type": ["string", "null"]}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"role": {"enum": ["authority_source_export", "authority_source_export_attestation", "authority_source_export_signature"]}}},
+            "then": {"properties": {"source_export_group_id": {"type": "string", "minLength": 1}}},
+            "else": {"properties": {"source_export_group_id": {"type": "null"}}}
+          },
+          {
+            "if": {"properties": {"role": {"enum": ["authority_source_export_signature", "prompt_leakage_audit_signature", "semantic_prompt_audit_signature"]}}},
+            "then": {
+              "properties": {
+                "media_type": {"const": "application/octet-stream"},
+                "schema_version": {"type": "null"}
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

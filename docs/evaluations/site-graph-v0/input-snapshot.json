@@ -1,0 +1,152 @@
+{
+  "baseline_base_commit": "97f2e610974f0e89b9c03d409b230dff89edbb1f",
+  "baseline_base_tree": "ffa9e56fa4df3b46a43f635e49e437c9b9e414c9",
+  "corpus": {
+    "canonical_record_count": 36245,
+    "description": "Verified real Met/Brooklyn/Harvard corpus; fixtures and proxies are forbidden.",
+    "archive_acquisition": {
+      "access_class": "authorized external private prerequisite; never committed or redistributed",
+      "archive_logical_locator": "HAPI_CORPUS_ARCHIVE",
+      "archive_filename": "hapi-museum-corpus-2026-08-27.tar.gz",
+      "archive_bytes": 13788812,
+      "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+      "sidecar_logical_locator": "HAPI_CORPUS_ARCHIVE_SHA256",
+      "sidecar_filename": "hapi-museum-corpus-2026-08-27.tar.gz.sha256",
+      "sidecar_sha256": "f57d0605b2d3a169d165e7286ef0d1cfc4855051a569250105d52ec8df51041e",
+      "sidecar_expected_line": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b  hapi-museum-corpus-2026-08-27.tar.gz\n",
+    "expected_archive_root": "hapi-museum-corpus-2026-08-27",
+    "archive_member_count": 38,
+    "archive_member_inventory_sha256": "a4b1a26943005526fed9fa52099d5974446f8a3569935b0d9c1d35f0c24c0352",
+      "internal_sha256sums_sha256": "d30e0c2c2e07547d4f545b7b7559cfba96199280935e48717de264e36d765e36",
+      "substantive_member_count": 13,
+      "pinned_internal_files": {
+        "manifest.json": "1a188bf191dc2e65b2b60bd1a3dd4b029e6d93d79f44f257a7c917912ebf8f1d",
+        "validation/results.json": "21bf0712ddbaa37f41408a24bd1c765bbb6c66c4b28001979156cd748e9b70c1",
+        "validation/verify_bundle.sh": "c9e36f08145bf68e8e8942aad7d056552558758db231c9140369190c842a11b1"
+      },
+      "bundled_verifier_stdout_sha256": "612910950d6e38da0f0cdbd370b300b070300815e134bce1ab9033d81cfb91ee",
+      "bundled_verifier_required_final_line": "PASS: checksums, compression, JSON shape, counts, uniqueness, and canonical/raw linkage"
+    },
+    "files": {
+      "data/artifacts.ndjson.gz": {
+        "bytes": 2756957,
+        "sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24"
+      },
+      "data/raw_brooklyn.ndjson.gz": {
+        "bytes": 1172655,
+        "sha256": "b68ee05e1f86a664730933ee38b8178c3bcf789a32c017135877f17abf306b31"
+      },
+      "data/raw_harvard.ndjson.gz": {
+        "bytes": 401722,
+        "sha256": "1ac4e06ce7b3859fefdd43039c8ddbee42c6e3a80311d916db7751be79b8178f"
+      },
+      "data/raw_met.ndjson.gz": {
+        "bytes": 2473368,
+        "sha256": "cc81d0f676e63137fbe8575982fbb20b2b997686536d6f2a6a634d924da3394e"
+      }
+    },
+    "records_by_museum": {
+      "brooklyn": 7554,
+      "harvard": 722,
+      "met": 27969
+    },
+  "production_lineage": {
+    "status": "UNAVAILABLE_DISCLOSED",
+      "missing": [
+        "export_command",
+        "producer_git_revision",
+        "dagster_run_ids"
+      ],
+    "effect": "The authenticated archive supports an immutable-snapshot evaluation only. It does not make the upstream historical export reproducible and must never be reported as a passed lineage check.",
+    "prohibited_inferences": [
+      "that any repository commit or Dagster run produced this corpus",
+      "that canonical mappers reproduced the raw source bytes",
+      "that this snapshot is the latest or complete production corpus",
+      "that the historical API export can be regenerated"
+    ]
+    },
+    "provenance": {
+      "bundle_generated_at_utc": "2026-08-28T02:30:52Z",
+      "bundle_kind": "private local Postgres export handoff",
+      "committed_verbatim_metadata_directory": "docs/evaluations/site-graph-v0/corpus-provenance",
+      "database": "PostgreSQL 16.13",
+      "database_alembic_version": "3a1c350217d9",
+      "durability_statement": "Baseline execution must authenticate the external private archive named by HAPI_CORPUS_ARCHIVE and its sidecar, then use only a safe temporary extraction. A pre-existing /tmp extraction is never an authority input.",
+      "known_reproduction_limit": "The archive does not record its export command, producer Git revision, or Dagster run identifiers. Its frozen bytes can be authenticated and extracted deterministically, but the upstream historical export cannot be regenerated bit-for-bit from repository history; baseline_base_commit is the evaluated checkout, not an asserted export-generator commit.",
+      "verified_bundle_manifest_sha256": "1a188bf191dc2e65b2b60bd1a3dd4b029e6d93d79f44f257a7c917912ebf8f1d",
+      "verified_bundle_readme_sha256": "1ef13bdc4dd09bc56e2591abaef0c8e52f206d85204606564407f12c51f516af",
+      "verified_bundle_results_sha256": "21bf0712ddbaa37f41408a24bd1c765bbb6c66c4b28001979156cd748e9b70c1",
+      "verified_bundle_verifier_sha256": "c9e36f08145bf68e8e8942aad7d056552558758db231c9140369190c842a11b1"
+    }
+  },
+  "extractor_and_matcher": {
+    "behavior_change_permitted": false,
+    "files": {
+      "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/inventory_inputs.py": {
+        "bytes": 14242,
+        "role": "corpus and authority inventory",
+        "sha256": "baf469b10f877388a3be8a8b5f2eea4f9eac63970cb18cd7a2e862c9ce96ad08"
+      },
+      "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py": {
+        "bytes": 36234,
+        "role": "frozen extraction, normalization dispatch, resolution, and link generation",
+        "sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0"
+      },
+      "pipeline/pipeline/authority/claimgraph/normalize.py": {
+        "bytes": 7610,
+        "role": "imported committed ruler normalizer; pinned because the archived adapter imports it",
+        "sha256": "ec982b40b246ec08abdfceb84e1fb1dfae4726e0299e88fc83d5dd6da1461cc8"
+      }
+    },
+    "python_baseline_runtime": {
+      "implementation": "CPython",
+      "implementation_name": "cpython",
+      "version": "3.12.13",
+      "dependency_lock": {
+        "path": "pipeline/uv.lock",
+        "bytes": 500187,
+        "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+      }
+    }
+  },
+  "current_authority": {
+    "files": {
+      "pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl": {
+        "bytes": 411346,
+        "role": "current site targets",
+        "sha256": "607c5d6f865b6afe89efc6d7c474a554caa756b3ad723a66ddbcf7ef3219dcfd"
+      },
+      "pipeline/pipeline/authority/sources/idai-gazetteer/raw.json": {
+        "bytes": 3030361,
+        "role": "complete available raw iDAI hierarchy used for parent/child context; 2,075 records",
+        "sha256": "841b1260e794b381f5ceec32734f8028a28007e86b122ced103f778e8f7e6fca"
+      },
+      "pipeline/pipeline/authority/sources/porter-moss-memphis/reconciled.jsonl": {
+        "bytes": 669565,
+        "role": "current tomb targets consumed by the archived adapter",
+        "sha256": "fa497703c1d64a6d734f8255fe9a920cb9c61e44ceb811d4f86b2306fc22e343"
+      },
+      "pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl": {
+        "bytes": 347736,
+        "role": "current tomb targets consumed by the archived adapter",
+        "sha256": "4414c5b4a3004c3b6d6669e45a4708bf2405e0c952620633cc155a6d4478a2ff"
+      },
+      "web-claimgraph/data/claim-graph.json": {
+        "bytes": 4588036,
+        "role": "current ruler targets consumed by the archived adapter",
+        "sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965"
+      }
+    },
+    "site_snapshot": {
+      "closed_graph": false,
+      "complete_available_raw_hierarchy_count": 2075,
+      "complete_available_raw_hierarchy_git_blob": "2b15dbea469ff0bfa8a55af3a4454beb87534ed9",
+      "complete_available_raw_hierarchy_last_commit": "901652ca95d5ae9e976ff3fbc15621e7352e3704",
+      "filtered_targets_with_parent_outside_filtered_1000": 566,
+      "raw_records_with_parent_reference_outside_available_2075": 699,
+      "representation": "1,000 committed filtered iDAI rows, not a canonical site graph",
+      "site_target_count": 1000
+    }
+  },
+  "snapshot_version": "site-graph-v0-preregistration-1"
+}

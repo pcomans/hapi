@@ -1,0 +1,7 @@
+Re-review Hapi GitHub issue #327 at exact repaired commit 0ea47dad1e9e415d0fe76ac1fc0157ce218fbdad in the current worktree. This is read-only: do not edit files or memory.
+
+Read AGENTS.md, CLAUDE.md, https://github.com/pcomans/hapi/issues/327, the full diff from base 97f2e610974f0e89b9c03d409b230dff89edbb1f, and the repair diff from previously reviewed commit 36c23e7424f3deb901cc86a5019b408d3951c208. Review every issue-scoped file, including pipeline/tests/test_site_graph_v0_contract.py. The verbatim prior Claude review is committed under docs/evaluations/site-graph-v0/reviews/round-1/; disposition every prior P1 and P2 finding rather than assuming it is fixed.
+
+Check correctness, simplicity, deterministic enforcement, real-input pinning, exact immutable inventory validation, independent rerun authentication, executable candidate comparison and ordered decision outcome, result-blind intent-to-treat opportunity denominators, mutually exclusive link-change events, museum-side concentration, correction sensitivity, review-census provenance, topology-independent specificity, broad-link non-credit, CI enforcement, and unsupported claims. Look for new defects or scope creep introduced by the large repair.
+
+Return an actual review. Every finding must give P0/P1/P2/P3, exact file and line, violated requirement, and concrete fix. State the exact reviewed SHA. Finish APPROVE only with no P0/P1/P2; otherwise REQUEST_CHANGES.

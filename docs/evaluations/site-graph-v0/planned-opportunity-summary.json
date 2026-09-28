@@ -1,0 +1,786 @@
+{
+  "credit_warning": "Selection is not identity support. Broad or administrative links and unsupported narrower links receive zero improvement credit.",
+  "denominator_policy": "Every expanded artifact remains in its fixed intent-to-treat denominator after research failure, abstention, disagreement, or unsupported scope.",
+  "minimum_affected_opportunity_fraction": {
+    "denominator": 10,
+    "numerator": 1
+  },
+  "opportunities": [
+    {
+      "artifact_count": 26573,
+      "intent_to_treat": true,
+      "mention_count": 26573,
+      "museum": "met",
+      "opportunity_id": "opp-0001",
+      "selection_rank": 1,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 26573
+      }
+    },
+    {
+      "artifact_count": 4634,
+      "intent_to_treat": true,
+      "mention_count": 4634,
+      "museum": "met",
+      "opportunity_id": "opp-0002",
+      "selection_rank": 2,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 4634
+      }
+    },
+    {
+      "artifact_count": 3006,
+      "intent_to_treat": true,
+      "mention_count": 3006,
+      "museum": "met",
+      "opportunity_id": "opp-0003",
+      "selection_rank": 3,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 3006
+      }
+    },
+    {
+      "artifact_count": 2881,
+      "intent_to_treat": true,
+      "mention_count": 3077,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0004",
+      "selection_rank": 4,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 3077
+      }
+    },
+    {
+      "artifact_count": 1927,
+      "intent_to_treat": true,
+      "mention_count": 1927,
+      "museum": "met",
+      "opportunity_id": "opp-0005",
+      "selection_rank": 5,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 1927
+      }
+    },
+    {
+      "artifact_count": 1518,
+      "intent_to_treat": true,
+      "mention_count": 1518,
+      "museum": "met",
+      "opportunity_id": "opp-0006",
+      "selection_rank": 6,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 1518
+      }
+    },
+    {
+      "artifact_count": 1359,
+      "intent_to_treat": true,
+      "mention_count": 1359,
+      "museum": "met",
+      "opportunity_id": "opp-0007",
+      "selection_rank": 7,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 1359
+      }
+    },
+    {
+      "artifact_count": 1125,
+      "intent_to_treat": true,
+      "mention_count": 1125,
+      "museum": "met",
+      "opportunity_id": "opp-0008",
+      "selection_rank": 8,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 1125
+      }
+    },
+    {
+      "artifact_count": 997,
+      "intent_to_treat": true,
+      "mention_count": 997,
+      "museum": "met",
+      "opportunity_id": "opp-0009",
+      "selection_rank": 9,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 997
+      }
+    },
+    {
+      "artifact_count": 997,
+      "intent_to_treat": true,
+      "mention_count": 997,
+      "museum": "met",
+      "opportunity_id": "opp-0010",
+      "selection_rank": 10,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 997
+      }
+    },
+    {
+      "artifact_count": 920,
+      "intent_to_treat": true,
+      "mention_count": 920,
+      "museum": "met",
+      "opportunity_id": "opp-0011",
+      "selection_rank": 11,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 920
+      }
+    },
+    {
+      "artifact_count": 908,
+      "intent_to_treat": true,
+      "mention_count": 908,
+      "museum": "met",
+      "opportunity_id": "opp-0012",
+      "selection_rank": 12,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 908
+      }
+    },
+    {
+      "artifact_count": 717,
+      "intent_to_treat": true,
+      "mention_count": 717,
+      "museum": "met",
+      "opportunity_id": "opp-0013",
+      "selection_rank": 13,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 717
+      }
+    },
+    {
+      "artifact_count": 570,
+      "intent_to_treat": true,
+      "mention_count": 570,
+      "museum": "met",
+      "opportunity_id": "opp-0014",
+      "selection_rank": 14,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 570
+      }
+    },
+    {
+      "artifact_count": 552,
+      "intent_to_treat": true,
+      "mention_count": 552,
+      "museum": "met",
+      "opportunity_id": "opp-0015",
+      "selection_rank": 15,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 552
+      }
+    },
+    {
+      "artifact_count": 534,
+      "intent_to_treat": true,
+      "mention_count": 535,
+      "museum": "harvard",
+      "opportunity_id": "opp-0016",
+      "selection_rank": 16,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 535
+      }
+    },
+    {
+      "artifact_count": 511,
+      "intent_to_treat": true,
+      "mention_count": 512,
+      "museum": "harvard",
+      "opportunity_id": "opp-0017",
+      "selection_rank": 17,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 512
+      }
+    },
+    {
+      "artifact_count": 505,
+      "intent_to_treat": true,
+      "mention_count": 505,
+      "museum": "met",
+      "opportunity_id": "opp-0018",
+      "selection_rank": 18,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 505
+      }
+    },
+    {
+      "artifact_count": 452,
+      "intent_to_treat": true,
+      "mention_count": 452,
+      "museum": "met",
+      "opportunity_id": "opp-0019",
+      "selection_rank": 19,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 452
+      }
+    },
+    {
+      "artifact_count": 430,
+      "intent_to_treat": true,
+      "mention_count": 430,
+      "museum": "met",
+      "opportunity_id": "opp-0020",
+      "selection_rank": 20,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 430
+      }
+    },
+    {
+      "artifact_count": 414,
+      "intent_to_treat": true,
+      "mention_count": 414,
+      "museum": "met",
+      "opportunity_id": "opp-0021",
+      "selection_rank": 21,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 414
+      }
+    },
+    {
+      "artifact_count": 397,
+      "intent_to_treat": true,
+      "mention_count": 397,
+      "museum": "met",
+      "opportunity_id": "opp-0022",
+      "selection_rank": 22,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 397
+      }
+    },
+    {
+      "artifact_count": 397,
+      "intent_to_treat": true,
+      "mention_count": 397,
+      "museum": "met",
+      "opportunity_id": "opp-0023",
+      "selection_rank": 23,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 397
+      }
+    },
+    {
+      "artifact_count": 393,
+      "intent_to_treat": true,
+      "mention_count": 393,
+      "museum": "met",
+      "opportunity_id": "opp-0024",
+      "selection_rank": 24,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 393
+      }
+    },
+    {
+      "artifact_count": 393,
+      "intent_to_treat": true,
+      "mention_count": 393,
+      "museum": "met",
+      "opportunity_id": "opp-0025",
+      "selection_rank": 25,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 393
+      }
+    },
+    {
+      "artifact_count": 393,
+      "intent_to_treat": true,
+      "mention_count": 393,
+      "museum": "met",
+      "opportunity_id": "opp-0026",
+      "selection_rank": 26,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 393
+      }
+    },
+    {
+      "artifact_count": 375,
+      "intent_to_treat": true,
+      "mention_count": 375,
+      "museum": "met",
+      "opportunity_id": "opp-0027",
+      "selection_rank": 27,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 375
+      }
+    },
+    {
+      "artifact_count": 374,
+      "intent_to_treat": true,
+      "mention_count": 374,
+      "museum": "met",
+      "opportunity_id": "opp-0028",
+      "selection_rank": 28,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 374
+      }
+    },
+    {
+      "artifact_count": 327,
+      "intent_to_treat": true,
+      "mention_count": 327,
+      "museum": "met",
+      "opportunity_id": "opp-0029",
+      "selection_rank": 29,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 327
+      }
+    },
+    {
+      "artifact_count": 322,
+      "intent_to_treat": true,
+      "mention_count": 322,
+      "museum": "met",
+      "opportunity_id": "opp-0030",
+      "selection_rank": 30,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 322
+      }
+    },
+    {
+      "artifact_count": 321,
+      "intent_to_treat": true,
+      "mention_count": 321,
+      "museum": "met",
+      "opportunity_id": "opp-0031",
+      "selection_rank": 31,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 321
+      }
+    },
+    {
+      "artifact_count": 321,
+      "intent_to_treat": true,
+      "mention_count": 321,
+      "museum": "met",
+      "opportunity_id": "opp-0032",
+      "selection_rank": 32,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 321
+      }
+    },
+    {
+      "artifact_count": 312,
+      "intent_to_treat": true,
+      "mention_count": 312,
+      "museum": "met",
+      "opportunity_id": "opp-0033",
+      "selection_rank": 33,
+      "selection_reason": "global_frequency_fill_to_50",
+      "unresolved_status_counts": {
+        "unmatched": 312
+      }
+    },
+    {
+      "artifact_count": 187,
+      "intent_to_treat": true,
+      "mention_count": 187,
+      "museum": "harvard",
+      "opportunity_id": "opp-0034",
+      "selection_rank": 34,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 187
+      }
+    },
+    {
+      "artifact_count": 168,
+      "intent_to_treat": true,
+      "mention_count": 168,
+      "museum": "harvard",
+      "opportunity_id": "opp-0035",
+      "selection_rank": 35,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 168
+      }
+    },
+    {
+      "artifact_count": 47,
+      "intent_to_treat": true,
+      "mention_count": 47,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0036",
+      "selection_rank": 36,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 47
+      }
+    },
+    {
+      "artifact_count": 37,
+      "intent_to_treat": true,
+      "mention_count": 38,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0037",
+      "selection_rank": 37,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 38
+      }
+    },
+    {
+      "artifact_count": 35,
+      "intent_to_treat": true,
+      "mention_count": 40,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0038",
+      "selection_rank": 38,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 40
+      }
+    },
+    {
+      "artifact_count": 33,
+      "intent_to_treat": true,
+      "mention_count": 33,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0039",
+      "selection_rank": 39,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 33
+      }
+    },
+    {
+      "artifact_count": 32,
+      "intent_to_treat": true,
+      "mention_count": 32,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0040",
+      "selection_rank": 40,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "ambiguous": 32
+      }
+    },
+    {
+      "artifact_count": 32,
+      "intent_to_treat": true,
+      "mention_count": 33,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0041",
+      "selection_rank": 41,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 33
+      }
+    },
+    {
+      "artifact_count": 31,
+      "intent_to_treat": true,
+      "mention_count": 31,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0042",
+      "selection_rank": 42,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 31
+      }
+    },
+    {
+      "artifact_count": 30,
+      "intent_to_treat": true,
+      "mention_count": 30,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0043",
+      "selection_rank": 43,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 30
+      }
+    },
+    {
+      "artifact_count": 26,
+      "intent_to_treat": true,
+      "mention_count": 26,
+      "museum": "brooklyn",
+      "opportunity_id": "opp-0044",
+      "selection_rank": 44,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 26
+      }
+    },
+    {
+      "artifact_count": 5,
+      "intent_to_treat": true,
+      "mention_count": 5,
+      "museum": "harvard",
+      "opportunity_id": "opp-0045",
+      "selection_rank": 45,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 5
+      }
+    },
+    {
+      "artifact_count": 5,
+      "intent_to_treat": true,
+      "mention_count": 5,
+      "museum": "harvard",
+      "opportunity_id": "opp-0046",
+      "selection_rank": 46,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 5
+      }
+    },
+    {
+      "artifact_count": 4,
+      "intent_to_treat": true,
+      "mention_count": 4,
+      "museum": "harvard",
+      "opportunity_id": "opp-0047",
+      "selection_rank": 47,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 4
+      }
+    },
+    {
+      "artifact_count": 3,
+      "intent_to_treat": true,
+      "mention_count": 3,
+      "museum": "harvard",
+      "opportunity_id": "opp-0048",
+      "selection_rank": 48,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 3
+      }
+    },
+    {
+      "artifact_count": 2,
+      "intent_to_treat": true,
+      "mention_count": 2,
+      "museum": "harvard",
+      "opportunity_id": "opp-0049",
+      "selection_rank": 49,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 2
+      }
+    },
+    {
+      "artifact_count": 2,
+      "intent_to_treat": true,
+      "mention_count": 2,
+      "museum": "harvard",
+      "opportunity_id": "opp-0050",
+      "selection_rank": 50,
+      "selection_reason": "museum_protection_top_10",
+      "unresolved_status_counts": {
+        "unmatched": 2
+      }
+    }
+  ],
+  "pair_side_ceilings": {
+    "brooklyn__harvard": {
+      "sides": {
+        "brooklyn": {
+          "baseline_pair_partition": {
+            "baseline_broad_only": 324,
+            "baseline_specific_present": 8,
+            "no_baseline_pair_connection": 2636
+          },
+          "credited_effect_opportunity_denominator": 2960,
+          "credited_pair_opportunity_membership_sha256": "8a1e6f76344d617932871511625f958583ba82c2f973e0d58dce6c7cc4e967fe",
+          "intent_to_treat_record_count": 2968,
+          "minimum_credited_affected_records_for_continue": 296,
+          "new_pair_connection_ceiling_records": 2636,
+          "strict_refinement_pair_reassignment_ceiling_records": 324
+        },
+        "harvard": {
+          "baseline_pair_partition": {
+            "baseline_broad_only": 5,
+            "baseline_specific_present": 2,
+            "no_baseline_pair_connection": 532
+          },
+          "credited_effect_opportunity_denominator": 537,
+          "credited_pair_opportunity_membership_sha256": "2af99f7708aa3e40ef82fd2c6405c2144c0a661930030beb3919d184be3e07cd",
+          "intent_to_treat_record_count": 539,
+          "minimum_credited_affected_records_for_continue": 54,
+          "new_pair_connection_ceiling_records": 532,
+          "strict_refinement_pair_reassignment_ceiling_records": 5
+        }
+      }
+    },
+    "met__brooklyn": {
+      "sides": {
+        "brooklyn": {
+          "baseline_pair_partition": {
+            "baseline_broad_only": 853,
+            "baseline_specific_present": 298,
+            "no_baseline_pair_connection": 1817
+          },
+          "credited_effect_opportunity_denominator": 2670,
+          "credited_pair_opportunity_membership_sha256": "7dce1c5431582dcf989494071a3e7f9ec0f963628edd5407ef3863294ba372b7",
+          "intent_to_treat_record_count": 2968,
+          "minimum_credited_affected_records_for_continue": 267,
+          "new_pair_connection_ceiling_records": 1817,
+          "strict_refinement_pair_reassignment_ceiling_records": 853
+        },
+        "met": {
+          "baseline_pair_partition": {
+            "baseline_broad_only": 8514,
+            "baseline_specific_present": 5611,
+            "no_baseline_pair_connection": 13056
+          },
+          "credited_effect_opportunity_denominator": 21570,
+          "credited_pair_opportunity_membership_sha256": "370c0b5502acba8fd7355b5f8beade838055e498b99176cd0aebbf186eac36f1",
+          "intent_to_treat_record_count": 27181,
+          "minimum_credited_affected_records_for_continue": 2157,
+          "new_pair_connection_ceiling_records": 13056,
+          "strict_refinement_pair_reassignment_ceiling_records": 8514
+        }
+      }
+    },
+    "met__harvard": {
+      "sides": {
+        "harvard": {
+          "baseline_pair_partition": {
+            "baseline_broad_only": 5,
+            "baseline_specific_present": 1,
+            "no_baseline_pair_connection": 533
+          },
+          "credited_effect_opportunity_denominator": 538,
+          "credited_pair_opportunity_membership_sha256": "99674fa7580c4b2a8cc456ca07638a63d90f140c5eb4d5c74db4b7498d33eb5e",
+          "intent_to_treat_record_count": 539,
+          "minimum_credited_affected_records_for_continue": 54,
+          "new_pair_connection_ceiling_records": 533,
+          "strict_refinement_pair_reassignment_ceiling_records": 5
+        },
+        "met": {
+          "baseline_pair_partition": {
+            "baseline_broad_only": 501,
+            "baseline_specific_present": 1,
+            "no_baseline_pair_connection": 26679
+          },
+          "credited_effect_opportunity_denominator": 27180,
+          "credited_pair_opportunity_membership_sha256": "9b2ce44c0572b3fee10bccd307af5944ddc907719e4b8a64e0abfd60a4ee2433",
+          "intent_to_treat_record_count": 27181,
+          "minimum_credited_affected_records_for_continue": 2718,
+          "new_pair_connection_ceiling_records": 26679,
+          "strict_refinement_pair_reassignment_ceiling_records": 501
+        }
+      }
+    }
+  },
+  "per_museum": {
+    "brooklyn": {
+      "baseline_record_scope_counts": {
+        "broad_only": 864,
+        "no_link": 1733,
+        "specific_candidate_present": 369,
+        "unclassified_only": 2
+      },
+      "intent_to_treat_record_count": 2968,
+      "maximum_credited_affected_records": 2597,
+      "maximum_extracted_site_text_conditional_effect": {
+        "denominator": 2978,
+        "numerator": 2597,
+        "value": 0.8720617864338482
+      },
+      "maximum_overall_effect": {
+        "denominator": 7554,
+        "numerator": 2597,
+        "value": 0.34379136881122585
+      },
+      "new_record_link_ceiling_records": 1733,
+      "selected_signature_count": 10,
+      "strict_refinement_reassignment_ceiling_records": 864
+    },
+    "harvard": {
+      "baseline_record_scope_counts": {
+        "broad_only": 5,
+        "no_link": 272,
+        "specific_candidate_present": 262
+      },
+      "intent_to_treat_record_count": 539,
+      "maximum_credited_affected_records": 277,
+      "maximum_extracted_site_text_conditional_effect": {
+        "denominator": 540,
+        "numerator": 277,
+        "value": 0.512962962962963
+      },
+      "maximum_overall_effect": {
+        "denominator": 722,
+        "numerator": 277,
+        "value": 0.38365650969529086
+      },
+      "new_record_link_ceiling_records": 272,
+      "selected_signature_count": 10,
+      "strict_refinement_reassignment_ceiling_records": 5
+    },
+    "met": {
+      "baseline_record_scope_counts": {
+        "broad_only": 8278,
+        "no_link": 12526,
+        "specific_candidate_present": 6377
+      },
+      "intent_to_treat_record_count": 27181,
+      "maximum_credited_affected_records": 20804,
+      "maximum_extracted_site_text_conditional_effect": {
+        "denominator": 27889,
+        "numerator": 20804,
+        "value": 0.745957187421564
+      },
+      "maximum_overall_effect": {
+        "denominator": 27969,
+        "numerator": 20804,
+        "value": 0.7438235188959205
+      },
+      "new_record_link_ceiling_records": 12526,
+      "selected_signature_count": 30,
+      "strict_refinement_reassignment_ceiling_records": 8278
+    }
+  },
+  "private_ledger_authentication": {
+    "canonical_json_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212",
+    "transport_json_sha256": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890"
+  },
+  "public_data_boundary": "Aggregate-only release: no artifact IDs, per-group artifact-expansion hashes, raw mention text, field paths, or normalized expression text. Exact membership is regenerated privately and authenticated by the committed whole-ledger digests. Stable ranks and counts are not claimed opaque or unlinkable.",
+  "schema_version": "site-graph-v0-opportunity-summary/2",
+  "selected_signature_count": 50,
+  "selection_algorithm": {
+    "eligible_population": "unmatched or ambiguous site mentions emitted by the frozen baseline adapter",
+    "global_fill": "select the next ranked groups until exactly 50 total",
+    "group_key": "(museum, exact ordered normalized_keys joined with U+241F; deterministic normalized mention fallback only when keys are empty)",
+    "museum_protection": "select each museum's first 10 groups before global fill",
+    "ranking": "descending distinct artifact count, then museum, then normalized expression key",
+    "result_blind": "selection uses baseline inputs only and predates candidate research, review, graph, or matching results"
+  }
+}

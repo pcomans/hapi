@@ -1,0 +1,134 @@
+{
+    "checks": {
+        "raw_json_non_objects": {
+            "met": 0,
+            "harvard": 0,
+            "brooklyn": 0
+        },
+        "canonical_without_raw": 0,
+        "duplicate_artifact_ids": 0,
+        "malformed_artifact_ids": 0,
+        "raw_internal_id_mismatches": {
+            "met": 0,
+            "harvard": 0,
+            "brooklyn": 0
+        },
+        "duplicate_artifact_source_keys": 0,
+        "raw_without_canonical_by_museum": {
+            "met": 0,
+            "harvard": 0,
+            "brooklyn": 1278
+        }
+    },
+    "raw_total": 37523,
+    "raw_by_museum": {
+        "met": 27969,
+        "harvard": 722,
+        "brooklyn": 8832
+    },
+    "canonical_total": 36245,
+    "artifact_columns": [
+        "id",
+        "source_museum",
+        "source_url",
+        "source_id",
+        "title",
+        "description",
+        "object_type",
+        "materials",
+        "dimensions",
+        "period",
+        "dynasty",
+        "ruler_id",
+        "ruler_display_name",
+        "date_start",
+        "date_end",
+        "date_display",
+        "origin_site_id",
+        "origin_site_display_name",
+        "origin_site_raw",
+        "origin_certainty",
+        "excavation_id",
+        "tomb_temple_id",
+        "current_location",
+        "accession_number",
+        "credit_line",
+        "image_url",
+        "thumbnail_url",
+        "license",
+        "wikidata_id",
+        "provenance"
+    ],
+    "canonical_by_museum": {
+        "met": 27969,
+        "harvard": 722,
+        "brooklyn": 7554
+    },
+    "logical_fingerprints": {
+        "raw_met": "37bd9d57e7c44e1bb5c3ac1ef207fe92",
+        "algorithm": "md5 of concatenated ordered per-row md5 values",
+        "artifacts": "93f5268a27e32006e68cc52c86cde8f7",
+        "raw_harvard": "cf412be8148e6d11735d33174ef2f4a0",
+        "raw_brooklyn": "7336ebaf0b421a5c72e9fc95b8fdab39"
+    },
+    "artifact_column_count": 30,
+    "nonnull_field_coverage": {
+        "met": {
+            "rows": 27969,
+            "title": 27965,
+            "period": 27968,
+            "dynasty": 23188,
+            "date_end": 27969,
+            "ruler_id": 0,
+            "date_start": 27969,
+            "provenance": 0,
+            "description": 0,
+            "date_display": 27931,
+            "excavation_id": 16403,
+            "origin_site_id": 0,
+            "tomb_temple_id": 0,
+            "origin_site_raw": 27889,
+            "origin_certainty": 27957,
+            "ruler_display_name": 11256,
+            "origin_site_display_name": 0
+        },
+        "harvard": {
+            "rows": 722,
+            "title": 722,
+            "period": 300,
+            "dynasty": 56,
+            "date_end": 239,
+            "ruler_id": 0,
+            "date_start": 242,
+            "provenance": 151,
+            "description": 96,
+            "date_display": 350,
+            "excavation_id": 0,
+            "origin_site_id": 0,
+            "tomb_temple_id": 0,
+            "origin_site_raw": 540,
+            "origin_certainty": 0,
+            "ruler_display_name": 0,
+            "origin_site_display_name": 0
+        },
+        "brooklyn": {
+            "rows": 7554,
+            "title": 7554,
+            "period": 6550,
+            "dynasty": 2891,
+            "date_end": 5821,
+            "ruler_id": 0,
+            "date_start": 5822,
+            "provenance": 708,
+            "description": 2655,
+            "date_display": 5838,
+            "excavation_id": 0,
+            "origin_site_id": 0,
+            "tomb_temple_id": 0,
+            "origin_site_raw": 2978,
+            "origin_certainty": 2978,
+            "ruler_display_name": 0,
+            "origin_site_display_name": 0
+        }
+    }
+}

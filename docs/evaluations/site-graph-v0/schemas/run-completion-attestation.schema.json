@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-run-completion-attestation-1.json",
+  "title": "Trusted attestor statement binding one exact completed candidate run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "signature_context", "release_manifest_sha256", "trusted_run_attestors_canonical_sha256", "trusted_source_exporters_canonical_sha256", "attestor_id", "attestor_key_id", "candidate_id", "invocation_id", "runtime", "run_start_receipt", "run_start_signature", "freeze_commit", "freeze_manifest", "freeze_nonce", "result_commit", "result_manifest", "candidate_output", "review_ledger", "authority_source_exports", "completed_at_utc"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-run-completion-attestation/1"},
+    "contract_version": {"const": "site-graph-v0/4"},
+    "signature_context": {"const": "hapi-site-graph-v0-run-completion/1"},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_run_attestors_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_source_exporters_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "attestor_id": {"type": "string", "pattern": "^[^\\s]+$"},
+    "attestor_key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "invocation_id": {"type": "string", "minLength": 1},
+    "runtime": {"$ref": "#/$defs/runtime"},
+    "run_start_receipt": {"$ref": "#/$defs/artifact"},
+    "run_start_signature": {"$ref": "#/$defs/artifact"},
+    "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_manifest": {"$ref": "#/$defs/artifact"},
+    "freeze_nonce": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "result_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "result_manifest": {"$ref": "#/$defs/artifact"},
+    "candidate_output": {"$ref": "#/$defs/artifact"},
+    "review_ledger": {"$ref": "#/$defs/artifact"},
+    "authority_source_exports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_export_group_id", "export", "trusted_export_attestation", "trusted_export_signature"],
+        "properties": {
+          "source_export_group_id": {"type": "string", "minLength": 1},
+          "export": {"$ref": "#/$defs/artifact"},
+          "trusted_export_attestation": {"$ref": "#/$defs/artifact"},
+          "trusted_export_signature": {"$ref": "#/$defs/artifact"}
+        }
+      }
+    },
+    "completed_at_utc": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python", "dependency_lock"],
+      "properties": {
+        "python": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["implementation", "implementation_name", "version"],
+          "properties": {
+            "implementation": {"const": "CPython"},
+            "implementation_name": {"const": "cpython"},
+            "version": {"const": "3.12.13"}
+          }
+        },
+        "dependency_lock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "bytes", "sha256"],
+          "properties": {
+            "path": {"const": "pipeline/uv.lock"},
+            "bytes": {"const": 500187},
+            "sha256": {"const": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"}
+          }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "site-graph-v0-correction-policy/4",
+  "baseline_policy": "The primary baseline and frozen intent-to-treat membership are immutable. Corrections are append-only exact site-mention resolution transitions and produce a separately hashed sensitivity run.",
+  "allowed_operations": [
+    "set_site_mention_resolution"
+  ],
+  "source_realizability_invariants": [
+    "resolved mentions have exactly one target",
+    "ambiguous mentions have at least two distinct targets",
+    "unmatched mentions have no targets",
+    "unique direct targets never exceed resolved mention count"
+  ],
+  "sensitivity_estimands": {
+    "fixed_frozen_intent_to_treat": "Recompute corrected evidence and outcomes while retaining every original ITT artifact, opportunity binding, pair-side membership, and denominator.",
+    "corrected_source_counterfactual_reselection": "Separately rerun result-blind queue selection from corrected source primitives and report exact private additions/removals plus aggregate denominator changes. This is not the frozen ITT estimand."
+  },
+  "current_primary_corrections_applied": 0,
+  "chain_trust": {
+    "status": "NOT_CONFIGURED",
+    "chain_id": "hapi-site-graph-v0-private-corrections",
+    "ledger_path": "private/corrections/ledger.json",
+    "review_artifact_directory": "private/corrections/reviews",
+    "genesis_commit": null,
+    "registration": null,
+    "prior_head": {
+      "sequence": 0,
+      "record_sha256": null,
+      "ledger_commit": null,
+      "ledger_sha256": null,
+      "ledger_git_blob_oid": null
+    },
+    "configuration_rule": "A separately reviewed release-contract change must pin an exact canonical registration artifact by prior Git commit/path/SHA-256/blob. That artifact binds the genuine genesis, prior ledger head, and both private baseline hashes; release policy activation must strictly postdate registration and predate every review decision. After the first correction, each registration binds the exact prior ledger commit, SHA-256, Git blob OID, sequence, and record hash before any extension can run.",
+    "current_effect": "No production correction sensitivity can run until genuine chain roots and production reviewer identities are registered; the preregistered primary analysis currently applies zero corrections."
+  },
+  "private_ledger_schema": "schemas/correction-ledger.schema.json",
+  "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected mention, record, exact membership, and exact counterfactual change ledgers remain private."
+}

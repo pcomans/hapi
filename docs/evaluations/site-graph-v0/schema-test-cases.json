@@ -1,0 +1,1641 @@
+{
+  "case_policy": "Each schema has one minimally complete representative and two independent attacks: missing required state and an undeclared top-level field.",
+  "cases": {
+    "authority-source-export-attestation.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "detached_signature_path": "fixture/source-export.sig",
+          "export_invocation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exporter_id": "fixture-exporter",
+          "exporter_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "record_count": 1,
+          "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+          "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+          "source_export": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/source-export.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "source_export_id": "fixture-export",
+          "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "valid": {
+        "detached_signature_path": "fixture/source-export.sig",
+        "export_invocation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "exporter_id": "fixture-exporter",
+        "exporter_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "record_count": 1,
+        "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+        "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+        "source_export": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/source-export.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "source_export_id": "fixture-export",
+        "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "authority-source-export.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "acquired_at_utc": "2026-08-28T00:00:00Z",
+          "authority_name": "Fixture authority",
+          "completeness": {
+            "complete_for_candidate_target_derivation": true,
+            "coverage_statement": "Every record in the authenticated export.",
+            "known_incompleteness": [],
+            "record_count": 1,
+            "record_selection_policy": "all_records_in_authenticated_source_export",
+            "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "provenance": {
+            "acquisition_method": "authenticated export",
+            "producer_identity": "fixture-producer",
+            "source_locator": "https://example.invalid/authority"
+          },
+          "records": [
+            {
+              "authority_citations": [
+                "https://example.invalid/authority#record-1"
+              ],
+              "authority_identity_locator": "https://example.invalid/authority#record-1",
+              "aliases": [],
+              "child_ids": [],
+              "parent_ids": [],
+              "raw_source_types": [
+                "settlement"
+              ],
+              "source_record_id": "record-1",
+              "target_id": "target-1",
+              "preferred_label": "Fixture target one"
+            }
+          ],
+          "schema_version": "site-graph-v0-authority-source-export/2",
+          "source_export_id": "fixture-export",
+          "originating_museum": false,
+          "source_kind": "scholarly authority"
+        }
+      ],
+      "valid": {
+        "acquired_at_utc": "2026-08-28T00:00:00Z",
+        "authority_name": "Fixture authority",
+        "completeness": {
+          "complete_for_candidate_target_derivation": true,
+          "coverage_statement": "Every record in the authenticated export.",
+          "known_incompleteness": [],
+          "record_count": 1,
+          "record_selection_policy": "all_records_in_authenticated_source_export",
+          "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "provenance": {
+          "acquisition_method": "authenticated export",
+          "producer_identity": "fixture-producer",
+          "source_locator": "https://example.invalid/authority"
+        },
+        "records": [
+          {
+            "authority_citations": [
+              "https://example.invalid/authority#record-1"
+            ],
+            "authority_identity_locator": "https://example.invalid/authority#record-1",
+            "aliases": [],
+            "child_ids": [],
+            "parent_ids": [],
+            "raw_source_types": [
+              "settlement"
+            ],
+            "source_record_id": "record-1",
+            "target_id": "target-1",
+            "preferred_label": "Fixture target one"
+          }
+        ],
+        "schema_version": "site-graph-v0-authority-source-export/2",
+        "source_export_id": "fixture-export",
+        "originating_museum": false,
+        "source_kind": "scholarly authority"
+      }
+    },
+    "baseline-runtime-attestation.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          },
+          "schema_version": "site-graph-v0-baseline-runtime-attestation/1",
+          "verification": {
+            "dependency_lock_match": "PASS",
+            "executing_interpreter_match": "PASS",
+            "input_snapshot_runtime_binding": "PASS"
+          }
+        }
+      ],
+      "valid": {
+        "dependency_lock": {
+          "bytes": 500187,
+          "path": "pipeline/uv.lock",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "python": {
+          "implementation": "CPython",
+          "implementation_name": "cpython",
+          "version": "3.12.13"
+        },
+        "schema_version": "site-graph-v0-baseline-runtime-attestation/1",
+        "verification": {
+          "dependency_lock_match": "PASS",
+          "executing_interpreter_match": "PASS",
+          "input_snapshot_runtime_binding": "PASS"
+        }
+      }
+    },
+    "candidate-freeze-manifest.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "candidate_id": "fixture-candidate",
+          "contract_version": "site-graph-v0/4",
+          "created_at_utc": "2026-08-28T00:00:00Z",
+          "created_by": "fixture-freezer",
+          "files": [
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/json",
+              "path": "fixture/hierarchy.json",
+              "role": "hierarchy",
+              "schema_version": "site-graph-v0-candidate-hierarchy/4",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": null
+            },
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/json",
+              "path": "fixture/relations.json",
+              "role": "relation_ledger",
+              "schema_version": "site-graph-v0-relation-ledger/2",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": null
+            },
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/json",
+              "path": "fixture/source-export.json",
+              "role": "authority_source_export",
+              "schema_version": "site-graph-v0-authority-source-export/2",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": "fixture-export"
+            },
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/json",
+              "path": "fixture/source-export-attestation.json",
+              "role": "authority_source_export_attestation",
+              "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": "fixture-export"
+            },
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/octet-stream",
+              "path": "fixture/source-export.sig",
+              "role": "authority_source_export_signature",
+              "schema_version": null,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": "fixture-export"
+            }
+          ],
+          "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "provenance": {
+            "fixture": true
+          },
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "run_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "schema_version": "site-graph-v0-candidate-freeze-manifest/3",
+          "trusted_run_attestors": {
+            "attestor_key_ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "docs/evaluations/site-graph-v0/trusted-run-attestors.json",
+            "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "CONFIGURED"
+          },
+          "trusted_source_exporters": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "exporter_key_ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "docs/evaluations/site-graph-v0/trusted-source-exporters.json",
+            "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "CONFIGURED"
+          }
+        }
+      ],
+      "valid": {
+        "candidate_id": "fixture-candidate",
+        "contract_version": "site-graph-v0/4",
+        "created_at_utc": "2026-08-28T00:00:00Z",
+        "created_by": "fixture-freezer",
+        "files": [
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/json",
+            "path": "fixture/hierarchy.json",
+            "role": "hierarchy",
+            "schema_version": "site-graph-v0-candidate-hierarchy/4",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": null
+          },
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/json",
+            "path": "fixture/relations.json",
+            "role": "relation_ledger",
+            "schema_version": "site-graph-v0-relation-ledger/2",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": null
+          },
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/json",
+            "path": "fixture/source-export.json",
+            "role": "authority_source_export",
+            "schema_version": "site-graph-v0-authority-source-export/2",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": "fixture-export"
+          },
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/json",
+            "path": "fixture/source-export-attestation.json",
+            "role": "authority_source_export_attestation",
+            "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": "fixture-export"
+          },
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/octet-stream",
+            "path": "fixture/source-export.sig",
+            "role": "authority_source_export_signature",
+            "schema_version": null,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": "fixture-export"
+          }
+        ],
+        "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "provenance": {
+          "fixture": true
+        },
+        "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "run_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "schema_version": "site-graph-v0-candidate-freeze-manifest/3",
+        "trusted_run_attestors": {
+          "attestor_key_ids": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "docs/evaluations/site-graph-v0/trusted-run-attestors.json",
+          "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "CONFIGURED"
+        },
+        "trusted_source_exporters": {
+          "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exporter_key_ids": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "docs/evaluations/site-graph-v0/trusted-source-exporters.json",
+          "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "CONFIGURED"
+        }
+      }
+    },
+    "candidate-hierarchy.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "coverage": "every_target_and_every_record_from_all_authenticated_complete_authority_source_exports",
+          "known_incompleteness": {
+            "closed_world_claim": false,
+            "derivation_statement": "value-candidate-hierarchy-schema-known_incompleteness-derivation_statement-0",
+            "limitations": [
+              "value-candidate-hierarchy-schema-known_incompleteness-limitations[0]-0"
+            ]
+          },
+          "nodes": [
+            {
+              "ancestor_target_ids": [],
+              "candidate_e55_type": "value-candidate-hierarchy-schema-nodes[0]-candidate_e55_type-0",
+              "child_ids": [],
+              "source_record_ids": [
+                "value-candidate-hierarchy-schema-nodes[0]-source_record_ids[0]-0"
+              ],
+              "source_export_ids": [
+                "fixture-export"
+              ],
+              "target_id": "value-candidate-hierarchy-schema-nodes[0]-target_id-0"
+            }
+          ],
+          "schema_version": "site-graph-v0-candidate-hierarchy/4"
+        }
+      ],
+      "valid": {
+        "coverage": "every_target_and_every_record_from_all_authenticated_complete_authority_source_exports",
+        "known_incompleteness": {
+          "closed_world_claim": false,
+          "derivation_statement": "value-candidate-hierarchy-schema-known_incompleteness-derivation_statement-0",
+          "limitations": [
+            "value-candidate-hierarchy-schema-known_incompleteness-limitations[0]-0"
+          ]
+        },
+        "nodes": [
+          {
+            "ancestor_target_ids": [],
+            "candidate_e55_type": "value-candidate-hierarchy-schema-nodes[0]-candidate_e55_type-0",
+            "child_ids": [],
+            "source_record_ids": [
+              "value-candidate-hierarchy-schema-nodes[0]-source_record_ids[0]-0"
+            ],
+            "source_export_ids": [
+              "fixture-export"
+            ],
+            "target_id": "value-candidate-hierarchy-schema-nodes[0]-target_id-0"
+          }
+        ],
+        "schema_version": "site-graph-v0-candidate-hierarchy/4"
+      }
+    },
+    "candidate.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "candidate_id": "fixture-candidate",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/freeze-manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "records": [
+            {
+              "artifact_id": "met:1",
+              "final_supported_direct_target_ids": ["target-1"],
+              "removed_baseline_target_ids": [],
+              "opportunity_outcomes": [
+                {
+                  "abstention_reason": null,
+                  "direct_links": [
+                    {
+                      "support_decision_key": "link-support:met:1:target-1",
+                      "target_id": "target-1"
+                    }
+                  ],
+              "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "opportunity_id": "opp-0001",
+              "resolution_status": "linked",
+              "status_support_decision_key": null,
+              "uncredited_link_claims": []
+                }
+              ]
+            }
+          ],
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "review_ledger": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review-ledger.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_receipt": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "schema_version": "site-graph-v0-candidate-result/6"
+        }
+      ],
+      "valid": {
+        "candidate_id": "fixture-candidate",
+        "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "freeze_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/freeze-manifest.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "records": [
+          {
+            "artifact_id": "met:1",
+            "final_supported_direct_target_ids": ["target-1"],
+            "removed_baseline_target_ids": [],
+            "opportunity_outcomes": [
+              {
+                "abstention_reason": null,
+                "direct_links": [
+                  {
+                    "support_decision_key": "link-support:met:1:target-1",
+                    "target_id": "target-1"
+                  }
+                ],
+            "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "opportunity_id": "opp-0001",
+            "resolution_status": "linked",
+            "status_support_decision_key": null,
+            "uncredited_link_claims": []
+              }
+            ]
+          }
+        ],
+        "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "review_ledger": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/review-ledger.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_receipt": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start-receipt.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_signature": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start.sig",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "schema_version": "site-graph-v0-candidate-result/6"
+      }
+    },
+    "comparison-report.schema.json": {
+      "invalid": [
+        {},
+        {
+          "ambiguity_and_abstention": {},
+          "event_counts": {},
+          "event_records": [],
+          "integrity": {"errors": [], "passed": true},
+          "ordered_decision_trace": [{}],
+          "outcome": "CONTINUE",
+          "pairs": {},
+          "per_museum": {},
+          "post_candidate_metrics": {},
+          "provenance_status": {
+            "archive_sha256": "fixture",
+            "downstream_product_verdict": "CONTINUE",
+            "evidence_scope": "AUTHENTICATED_RELEASE_SNAPSHOT",
+            "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+            "snapshot_acquisition_integrity": "PASS",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+          },
+          "reassignment_edge_modes": {},
+          "run_binding": {},
+          "safety_gates": {},
+          "schema_version": "site-graph-v0-comparison-report/4"
+        },
+        {
+          "__undeclared_contract_field__": true,
+          "ambiguity_and_abstention": {},
+          "event_counts": {},
+          "event_records": [],
+          "integrity": {
+            "errors": [],
+            "passed": true
+          },
+          "ordered_decision_trace": [
+            {}
+          ],
+          "outcome": "INVALID",
+          "pairs": {},
+          "per_museum": {},
+          "post_candidate_metrics": {},
+          "provenance_status": {
+            "archive_sha256": "value-comparison-report-schema-provenance_status-archive_sha256-0",
+            "downstream_product_verdict": "CONTINUE",
+            "evidence_scope": "AUTHENTICATED_RELEASE_SNAPSHOT",
+            "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+            "snapshot_acquisition_integrity": "PASS",
+            "upstream_production_lineage": "VERIFIED"
+          },
+          "reassignment_edge_modes": {},
+          "run_binding": {},
+          "safety_gates": {},
+          "schema_version": "site-graph-v0-comparison-report/4"
+        }
+      ],
+      "valid": {
+        "ambiguity_and_abstention": {},
+        "event_counts": {},
+        "event_records": [],
+        "integrity": {
+          "errors": [],
+          "passed": true
+        },
+        "ordered_decision_trace": [
+          {}
+        ],
+        "outcome": "INVALID",
+        "pairs": {},
+        "per_museum": {},
+        "post_candidate_metrics": {},
+        "provenance_status": {
+          "archive_sha256": "value-comparison-report-schema-provenance_status-archive_sha256-0",
+          "downstream_product_verdict": "CONTINUE",
+          "evidence_scope": "AUTHENTICATED_RELEASE_SNAPSHOT",
+          "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+          "snapshot_acquisition_integrity": "PASS",
+          "upstream_production_lineage": "VERIFIED"
+        },
+        "reassignment_edge_modes": {},
+        "run_binding": {},
+        "safety_gates": {},
+        "schema_version": "site-graph-v0-comparison-report/4"
+      }
+    },
+    "correction-ledger.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "baseline_mutated": false,
+          "chain_id": "fixture-correction-chain",
+          "corrections": [
+            {
+              "artifact_id": "value-correction-ledger-schema-corrections[0]-artifact_id-0",
+              "citations": [
+                {
+                  "evidence_summary": "value-correction-ledger-schema-corrections[0]-citations[0]-evidence_summary-0",
+                  "locator": "value-correction-ledger-schema-corrections[0]-citations[0]-locator-0",
+                  "originating_museum": false,
+                  "source_artifact": {
+                    "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                    "path": "private/correction-evidence/source-0.json",
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "source_commit": "cccccccccccccccccccccccccccccccccccccccc",
+                  "source_id": "value-correction-ledger-schema-corrections[0]-citations[0]-source_id-0",
+                  "source_kind": "authenticated-correction-source"
+                }
+              ],
+              "correction_id": "value-correction-ledger-schema-corrections[0]-correction_id-0",
+              "decision_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "operation": {
+                "from_status": "resolved",
+                "from_target_ids": [],
+                "kind": "set_site_mention_resolution",
+                "mention_id": "value-correction-ledger-schema-corrections[0]-operation-mention_id-0",
+                "to_status": "resolved",
+                "to_target_ids": []
+              },
+              "previous_correction_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "reason": "value-correction-ledger-schema-corrections[0]-reason-0",
+              "record_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "recorded_at_utc": "2026-08-28T00:00:00Z",
+              "reviewer_ids": [
+                "value-correction-ledger-schema-corrections[0]-reviewer_ids[0]-0",
+                "value-correction-ledger-schema-corrections[0]-reviewer_ids[1]-1"
+              ],
+              "sequence": 1,
+              "supersedes_correction_id": "value-correction-ledger-schema-corrections[0]-supersedes_correction_id-0"
+            }
+          ],
+          "private_opportunity_source_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "private_record_evidence_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "schema_version": "site-graph-v0-correction-ledger/4"
+        }
+      ],
+      "valid": {
+        "baseline_mutated": false,
+        "chain_id": "fixture-correction-chain",
+        "corrections": [
+          {
+            "artifact_id": "value-correction-ledger-schema-corrections[0]-artifact_id-0",
+            "citations": [
+              {
+                "evidence_summary": "value-correction-ledger-schema-corrections[0]-citations[0]-evidence_summary-0",
+                "locator": "value-correction-ledger-schema-corrections[0]-citations[0]-locator-0",
+                "originating_museum": false,
+                "source_artifact": {
+                  "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                  "path": "private/correction-evidence/source-0.json",
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                },
+                "source_commit": "cccccccccccccccccccccccccccccccccccccccc",
+                "source_id": "value-correction-ledger-schema-corrections[0]-citations[0]-source_id-0",
+                "source_kind": "authenticated-correction-source"
+              }
+            ],
+            "correction_id": "value-correction-ledger-schema-corrections[0]-correction_id-0",
+            "decision_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "operation": {
+              "from_status": "resolved",
+              "from_target_ids": [],
+              "kind": "set_site_mention_resolution",
+              "mention_id": "value-correction-ledger-schema-corrections[0]-operation-mention_id-0",
+              "to_status": "resolved",
+              "to_target_ids": []
+            },
+            "previous_correction_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "reason": "value-correction-ledger-schema-corrections[0]-reason-0",
+            "record_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "recorded_at_utc": "2026-08-28T00:00:00Z",
+            "reviewer_ids": [
+              "value-correction-ledger-schema-corrections[0]-reviewer_ids[0]-0",
+              "value-correction-ledger-schema-corrections[0]-reviewer_ids[1]-1"
+            ],
+            "sequence": 1,
+            "supersedes_correction_id": "value-correction-ledger-schema-corrections[0]-supersedes_correction_id-0"
+          }
+        ],
+        "private_opportunity_source_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "private_record_evidence_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "schema_version": "site-graph-v0-correction-ledger/4"
+      }
+    },
+    "opportunity-summary.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "credit_warning": "value-opportunity-summary-schema-credit_warning-0",
+          "denominator_policy": "value-opportunity-summary-schema-denominator_policy-0",
+          "minimum_affected_opportunity_fraction": {
+            "denominator": 1,
+            "numerator": 0
+          },
+          "opportunities": [
+            {
+              "artifact_count": 1,
+              "intent_to_treat": true,
+              "mention_count": 1,
+              "museum": "met",
+              "opportunity_id": "opp-0001",
+              "selection_rank": 1,
+              "selection_reason": "value-opportunity-summary-schema-opportunities[0]-selection_reason-0",
+              "unresolved_status_counts": {
+                "fixture_property_0": 0
+              }
+            }
+          ],
+          "pair_side_ceilings": {
+            "brooklyn__harvard": {},
+            "met__brooklyn": {},
+            "met__harvard": {}
+          },
+          "per_museum": {
+            "brooklyn": {},
+            "harvard": {},
+            "met": {}
+          },
+          "private_ledger_authentication": {
+            "canonical_json_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "transport_json_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "public_data_boundary": "value-opportunity-summary-schema-public_data_boundary-0",
+          "schema_version": "site-graph-v0-opportunity-summary/2",
+          "selected_signature_count": 1,
+          "selection_algorithm": {
+            "fixture_property_0": {}
+          }
+        }
+      ],
+      "valid": {
+        "credit_warning": "value-opportunity-summary-schema-credit_warning-0",
+        "denominator_policy": "value-opportunity-summary-schema-denominator_policy-0",
+        "minimum_affected_opportunity_fraction": {
+          "denominator": 1,
+          "numerator": 0
+        },
+        "opportunities": [
+          {
+            "artifact_count": 1,
+            "intent_to_treat": true,
+            "mention_count": 1,
+            "museum": "met",
+            "opportunity_id": "opp-0001",
+            "selection_rank": 1,
+            "selection_reason": "value-opportunity-summary-schema-opportunities[0]-selection_reason-0",
+            "unresolved_status_counts": {
+              "fixture_property_0": 0
+            }
+          }
+        ],
+        "pair_side_ceilings": {
+          "brooklyn__harvard": {},
+          "met__brooklyn": {},
+          "met__harvard": {}
+        },
+        "per_museum": {
+          "brooklyn": {},
+          "harvard": {},
+          "met": {}
+        },
+        "private_ledger_authentication": {
+          "canonical_json_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "transport_json_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "public_data_boundary": "value-opportunity-summary-schema-public_data_boundary-0",
+        "schema_version": "site-graph-v0-opportunity-summary/2",
+        "selected_signature_count": 1,
+        "selection_algorithm": {
+          "fixture_property_0": {}
+        }
+      }
+    },
+    "private-opportunity-ledger.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "credited_pair_opportunity_memberships": {
+            "brooklyn__harvard": {
+              "sides": {
+                "brooklyn": [],
+                "harvard": []
+              }
+            },
+            "met__brooklyn": {
+              "sides": {
+                "brooklyn": [],
+                "met": []
+              }
+            },
+            "met__harvard": {
+              "sides": {
+                "harvard": [],
+                "met": []
+              }
+            }
+          },
+          "intent_to_treat_records_by_museum": {
+            "brooklyn": [],
+            "harvard": [],
+            "met": []
+          },
+          "opportunities": [
+            {
+              "artifact_count": 1,
+              "artifact_expansion_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "artifact_ids": [],
+              "artifact_memberships": [
+                {
+                  "artifact_id": "value-private-opportunity-ledger-schema-opportunities[0]-artifact_memberships[0]-artifact_id-0",
+                  "mentions": [
+                    {
+                      "field_path": "value-private-opportunity-ledger-schema-opportunities[0]-artifact_memberships[0]-mentions[0]-field_path-0",
+                      "mention_id": "value-private-opportunity-ledger-schema-opportunities[0]-artifact_memberships[0]-mentions[0]-mention_id-0",
+                      "mention_text_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                      "normalized_keys": [],
+                      "status": "resolved",
+                      "target_ids": []
+                    }
+                  ],
+                  "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                }
+              ],
+              "field_paths": [],
+              "intent_to_treat": true,
+              "mention_count": 1,
+              "mention_text_examples": [],
+              "museum": "met",
+              "normalized_expression_key": "value-private-opportunity-ledger-schema-opportunities[0]-normalized_expression_key-0",
+              "opportunity_id": "opp-0001",
+              "selection_rank": 1,
+              "selection_reason": "museum_protection_top_10",
+              "unresolved_status_counts": {}
+            }
+          ],
+          "privacy": "value-private-opportunity-ledger-schema-privacy-0",
+          "schema_version": "site-graph-v0-private-opportunity-ledger/3",
+          "selected_signature_count": 1,
+          "selection_algorithm": {
+            "fixture_property_0": {}
+          }
+        }
+      ],
+      "valid": {
+        "credited_pair_opportunity_memberships": {
+          "brooklyn__harvard": {
+            "sides": {
+              "brooklyn": [],
+              "harvard": []
+            }
+          },
+          "met__brooklyn": {
+            "sides": {
+              "brooklyn": [],
+              "met": []
+            }
+          },
+          "met__harvard": {
+            "sides": {
+              "harvard": [],
+              "met": []
+            }
+          }
+        },
+        "intent_to_treat_records_by_museum": {
+          "brooklyn": [],
+          "harvard": [],
+          "met": []
+        },
+        "opportunities": [
+          {
+            "artifact_count": 1,
+            "artifact_expansion_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "artifact_ids": [],
+            "artifact_memberships": [
+              {
+                "artifact_id": "value-private-opportunity-ledger-schema-opportunities[0]-artifact_memberships[0]-artifact_id-0",
+                "mentions": [
+                  {
+                    "field_path": "value-private-opportunity-ledger-schema-opportunities[0]-artifact_memberships[0]-mentions[0]-field_path-0",
+                    "mention_id": "value-private-opportunity-ledger-schema-opportunities[0]-artifact_memberships[0]-mentions[0]-mention_id-0",
+                    "mention_text_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "normalized_keys": [],
+                    "status": "resolved",
+                    "target_ids": []
+                  }
+                ],
+                "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "field_paths": [],
+            "intent_to_treat": true,
+            "mention_count": 1,
+            "mention_text_examples": [],
+            "museum": "met",
+            "normalized_expression_key": "value-private-opportunity-ledger-schema-opportunities[0]-normalized_expression_key-0",
+            "opportunity_id": "opp-0001",
+            "selection_rank": 1,
+            "selection_reason": "museum_protection_top_10",
+            "unresolved_status_counts": {}
+          }
+        ],
+        "privacy": "value-private-opportunity-ledger-schema-privacy-0",
+        "schema_version": "site-graph-v0-private-opportunity-ledger/3",
+        "selected_signature_count": 1,
+        "selection_algorithm": {
+          "fixture_property_0": {}
+        }
+      }
+    },
+    "prompt-leakage-audit.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "audit_id": "audit-1",
+          "audit_method": "deterministic_prompt_leakage_guard/1",
+          "auditor": {
+            "auditor_id": "auditor-1",
+            "independence_group": "audit-group-1"
+          },
+          "authentication": {
+            "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "principal_id": "auditor-1",
+            "registry_id": "fixture-review-registry",
+            "signature": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/audit.sig",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "signature_context": "hapi-site-graph-v0-review-evidence/1",
+            "signed_at_utc": "2026-08-28T00:00:00Z",
+            "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "decision_key": "link-support:met:1:target-1",
+          "decision_kind": "link_support",
+          "deterministic_guard": {
+            "answer_strings": {
+              "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "count": 1
+            },
+            "candidate_ids": {
+              "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "count": 1
+            },
+            "findings": [],
+            "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/1",
+            "request_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "result": "PASS",
+            "source_ids": {
+              "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "count": 1
+            }
+          },
+          "executed_at_utc": "2026-08-28T00:00:00Z",
+          "input": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review-input.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "prompt": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review-prompt.txt",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "review_id": "review-1",
+          "review_invocation_id": "invocation-1",
+          "schema_version": "site-graph-v0-prompt-leakage-audit/3",
+          "subject": {
+            "artifact_id": "met:1",
+            "target_id": "target-1"
+          }
+        }
+      ],
+      "valid": {
+        "audit_id": "audit-1",
+        "audit_method": "deterministic_prompt_leakage_guard/3",
+        "auditor": {
+          "auditor_id": "auditor-1",
+          "independence_group": "audit-group-1"
+        },
+        "authentication": {
+          "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "principal_id": "auditor-1",
+          "registry_id": "fixture-review-registry",
+          "signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/audit.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "signature_context": "hapi-site-graph-v0-review-evidence/1",
+          "signed_at_utc": "2026-08-28T00:00:00Z",
+          "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "decision_key": "link-support:met:1:target-1",
+        "decision_kind": "link_support",
+        "deterministic_guard": {
+          "aliases": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 0
+          },
+          "answer_names": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "decision_proxies": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "identifiers": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "locators": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "findings": [],
+          "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/3",
+          "preferred_labels": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "request_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "request_envelope": {
+            "input_schema_version": "site-graph-v0-review-input-envelope/2",
+            "item_count": 2,
+            "opaque_labels_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "prompt_schema_version": "site-graph-v0-review-prompt-envelope/2",
+            "prompt_template_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "review_invocation_id": "invocation-1",
+            "shuffle_algorithm": "sha256-ranked-nonidentity/1",
+            "shuffle_provenance_schema_version": "site-graph-v0-review-shuffle-provenance/1",
+            "shuffle_provenance_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "result": "PASS"
+        },
+        "executed_at_utc": "2026-08-28T00:00:00Z",
+        "input": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/review-input.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "prompt": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/review-prompt.txt",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "review_id": "review-1",
+        "review_invocation_id": "invocation-1",
+        "schema_version": "site-graph-v0-prompt-leakage-audit/5",
+        "semantic_assessment": null,
+        "shuffle_provenance": {
+          "algorithm": "sha256-ranked-nonidentity/1",
+          "presented_order_payload_sha256": [
+            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "schema_version": "site-graph-v0-review-shuffle-provenance/1",
+          "seed_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_order_payload_sha256": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          ]
+        },
+        "subject": {
+          "artifact_id": "met:1",
+          "target_id": "target-1"
+        }
+      }
+    },
+    "relation-ledger.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
+          "relations": [],
+          "schema_version": "site-graph-v0-relation-ledger/2",
+          "strict_refinement_direction": "left_target_id_is_narrower_than_right_target_id"
+        }
+      ],
+      "valid": {
+        "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
+        "relations": [],
+        "schema_version": "site-graph-v0-relation-ledger/2",
+        "strict_refinement_direction": "left_target_id_is_narrower_than_right_target_id"
+      }
+    },
+    "review-artifact.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "authentication": {
+            "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "principal_id": "reviewer-1",
+            "registry_id": "fixture-review-registry",
+            "signature": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/review.sig",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "signature_context": "hapi-site-graph-v0-review-evidence/1",
+            "signed_at_utc": "2026-08-28T00:02:00Z",
+            "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "citations": [
+            {
+              "evidence_summary": "The authority record supports the direct link.",
+              "locator": "https://example.invalid/authority#record-1",
+              "originating_museum": false,
+              "source_artifact": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.json",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "source_id": "record-1",
+              "source_kind": "authenticated authority source export"
+            }
+          ],
+          "decision_key": "link-support:met:1:target-1",
+          "decision_kind": "link_support",
+          "human_provenance": {
+            "completed_at_utc": "2026-08-28T00:01:00Z",
+            "reasoning_utf8_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "review_session_id": "session-1",
+            "started_at_utc": "2026-08-28T00:00:00Z"
+          },
+          "llm_interaction": null,
+          "method": "human",
+          "outcome": "supported",
+          "reasoning": "The cited authority record identifies the proposed target.",
+          "review_id": "review-1",
+          "reviewer": {
+            "independence_group": "review-group-1",
+            "reviewer_id": "reviewer-1"
+          },
+          "schema_version": "site-graph-v0-review-artifact/4",
+          "subject": {
+            "artifact_id": "met:1",
+            "target_id": "target-1"
+          }
+        }
+      ],
+      "valid": {
+        "authentication": {
+          "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "principal_id": "reviewer-1",
+          "registry_id": "fixture-review-registry",
+          "signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "signature_context": "hapi-site-graph-v0-review-evidence/1",
+          "signed_at_utc": "2026-08-28T00:02:00Z",
+          "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "citations": [
+          {
+            "evidence_summary": "The authority record supports the direct link.",
+            "locator": "https://example.invalid/authority#record-1",
+            "originating_museum": false,
+            "source_artifact": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.json",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "source_id": "record-1",
+            "source_kind": "authenticated authority source export"
+          }
+        ],
+        "decision_key": "link-support:met:1:target-1",
+        "decision_kind": "link_support",
+        "human_provenance": {
+          "completed_at_utc": "2026-08-28T00:01:00Z",
+          "reasoning_utf8_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "review_session_id": "session-1",
+          "started_at_utc": "2026-08-28T00:00:00Z"
+        },
+        "llm_interaction": null,
+        "method": "human",
+        "outcome": "supported",
+        "reasoning": "The cited authority record identifies the proposed target.",
+        "review_id": "review-1",
+        "reviewer": {
+          "independence_group": "review-group-1",
+          "reviewer_id": "reviewer-1"
+        },
+        "schema_version": "site-graph-v0-review-artifact/4",
+        "subject": {
+          "artifact_id": "met:1",
+          "target_id": "target-1"
+        }
+      }
+    },
+    "review-ledger.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "decisions": [],
+          "review_scope": "census_of_every_credited_link_refinement_equivalence_and_positive_distinctness_decision",
+          "schema_version": "site-graph-v0-review-ledger/3"
+        }
+      ],
+      "valid": {
+        "decisions": [],
+        "review_scope": "census_of_every_credited_link_refinement_equivalence_and_positive_distinctness_decision",
+        "schema_version": "site-graph-v0-review-ledger/3"
+      }
+    },
+    "run-completion-attestation.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "attestor_id": "fixture-run-attestor",
+          "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "authority_source_exports": [
+            {
+              "export": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.json",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "source_export_group_id": "fixture-export",
+              "trusted_export_attestation": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.attestation.json",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "trusted_export_signature": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.attestation.sig",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            }
+          ],
+          "candidate_id": "fixture-candidate",
+          "candidate_output": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/candidate-result.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "completed_at_utc": "2026-08-29T00:02:00Z",
+          "contract_version": "site-graph-v0/4",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/freeze-manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "invocation_id": "fixture-invocation",
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "result_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "result_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "review_ledger": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review-ledger.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_receipt": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "runtime": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            }
+          },
+          "schema_version": "site-graph-v0-run-completion-attestation/1",
+          "signature_context": "hapi-site-graph-v0-run-completion/1",
+          "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "valid": {
+        "attestor_id": "fixture-run-attestor",
+        "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authority_source_exports": [
+          {
+            "export": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.json",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "source_export_group_id": "fixture-export",
+            "trusted_export_attestation": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.attestation.json",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "trusted_export_signature": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.attestation.sig",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          }
+        ],
+        "candidate_id": "fixture-candidate",
+        "candidate_output": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/candidate-result.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "completed_at_utc": "2026-08-29T00:02:00Z",
+        "contract_version": "site-graph-v0/4",
+        "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "freeze_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/freeze-manifest.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "invocation_id": "fixture-invocation",
+        "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "result_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "result_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "review_ledger": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/review-ledger.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_receipt": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start-receipt.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_signature": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start-receipt.sig",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "runtime": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          }
+        },
+        "schema_version": "site-graph-v0-run-completion-attestation/1",
+        "signature_context": "hapi-site-graph-v0-run-completion/1",
+        "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "run-result-manifest.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "candidate_result": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest-schema-candidate_result-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "contract_version": "site-graph-v0/4",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest-schema-freeze_manifest-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "result_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "review_ledger": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest-schema-review_ledger-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_receipt": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest-schema-run_start_receipt-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest-schema-run_start_signature-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "runtime": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            }
+          },
+          "schema_version": "site-graph-v0-run-result-manifest/1",
+          "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "valid": {
+        "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "candidate_result": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest-schema-candidate_result-path-0",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "contract_version": "site-graph-v0/4",
+        "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "freeze_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest-schema-freeze_manifest-path-0",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "result_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "review_ledger": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest-schema-review_ledger-path-0",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_receipt": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest-schema-run_start_receipt-path-0",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_signature": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest-schema-run_start_signature-path-0",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "runtime": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          }
+        },
+        "schema_version": "site-graph-v0-run-result-manifest/1",
+        "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "run-start-receipt.schema.json": {
+      "invalid": [
+        {
+          "attestor_id": "fixture/run-start-receipt-schema-attestor_id-0",
+          "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "candidate_id": "value-run-start-receipt-schema-candidate_id-0",
+          "contract_version": "site-graph-v0/4",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt-schema-freeze_manifest-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "invocation_id": "value-run-start-receipt-schema-invocation_id-0",
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "schema_version": "site-graph-v0-run-start-receipt/1",
+          "signature_context": "hapi-site-graph-v0-run-start/1",
+          "started_at_utc": "2026-08-28T00:00:00Z",
+          "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "__undeclared_contract_field__": true,
+          "attestor_id": "fixture/run-start-receipt-schema-attestor_id-0",
+          "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "candidate_id": "value-run-start-receipt-schema-candidate_id-0",
+          "contract_version": "site-graph-v0/4",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt-schema-freeze_manifest-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "invocation_id": "value-run-start-receipt-schema-invocation_id-0",
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "runtime": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            }
+          },
+          "schema_version": "site-graph-v0-run-start-receipt/1",
+          "signature_context": "hapi-site-graph-v0-run-start/1",
+          "started_at_utc": "2026-08-28T00:00:00Z",
+          "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "valid": {
+        "attestor_id": "fixture/run-start-receipt-schema-attestor_id-0",
+        "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "candidate_id": "value-run-start-receipt-schema-candidate_id-0",
+        "contract_version": "site-graph-v0/4",
+        "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "freeze_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start-receipt-schema-freeze_manifest-path-0",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "invocation_id": "value-run-start-receipt-schema-invocation_id-0",
+        "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "runtime": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          }
+        },
+        "schema_version": "site-graph-v0-run-start-receipt/1",
+        "signature_context": "hapi-site-graph-v0-run-start/1",
+        "started_at_utc": "2026-08-28T00:00:00Z",
+        "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "trusted-reviewers.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "configuration_rule": "Production reviewers require externally verified identities.",
+          "current_effect": "Candidate review credit is unavailable until configured.",
+          "identities": [],
+          "registry_id": "site-graph-v0-production-reviewers",
+          "schema_version": "site-graph-v0-trusted-reviewers/1",
+          "signature_context": "hapi-site-graph-v0-review-evidence/1",
+          "signature_scheme": "ed25519",
+          "status": "NOT_CONFIGURED",
+          "trust_tier": "PRODUCTION"
+        }
+      ],
+      "valid": {
+        "configuration_rule": "Production reviewers require externally verified identities.",
+        "current_effect": "Candidate review credit is unavailable until configured.",
+        "identities": [],
+        "registry_id": "site-graph-v0-production-reviewers",
+        "schema_version": "site-graph-v0-trusted-reviewers/1",
+        "signature_context": "hapi-site-graph-v0-review-evidence/1",
+        "signature_scheme": "ed25519",
+        "status": "NOT_CONFIGURED",
+        "trust_tier": "PRODUCTION"
+      }
+    },
+    "trusted-run-attestors.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "attestors": [],
+          "configuration_rule": "value-trusted-run-attestors-schema-configuration_rule-0",
+          "current_effect": "value-trusted-run-attestors-schema-current_effect-0",
+          "registry_scope": "production_release",
+          "schema_version": "site-graph-v0-trusted-run-attestors/1",
+          "signature_context": "hapi-site-graph-v0-run-start/1",
+          "signature_scheme": "ed25519",
+          "status": "NOT_CONFIGURED"
+        }
+      ],
+      "valid": {
+        "attestors": [],
+        "configuration_rule": "value-trusted-run-attestors-schema-configuration_rule-0",
+        "current_effect": "value-trusted-run-attestors-schema-current_effect-0",
+        "registry_scope": "production_release",
+        "schema_version": "site-graph-v0-trusted-run-attestors/1",
+        "signature_context": "hapi-site-graph-v0-run-start/1",
+        "signature_scheme": "ed25519",
+        "status": "NOT_CONFIGURED"
+      }
+    },
+    "trusted-source-exporters.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "configuration_rule": "Production exporters require externally verified signing keys.",
+          "current_effect": "Candidate source exports are unavailable until configured.",
+          "exporters": [],
+          "registry_scope": "production_release",
+          "schema_version": "site-graph-v0-trusted-source-exporters/1",
+          "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+          "signature_scheme": "ed25519",
+          "status": "NOT_CONFIGURED"
+        }
+      ],
+      "valid": {
+        "configuration_rule": "Production exporters require externally verified signing keys.",
+        "current_effect": "Candidate source exports are unavailable until configured.",
+        "exporters": [],
+        "registry_scope": "production_release",
+        "schema_version": "site-graph-v0-trusted-source-exporters/1",
+        "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+        "signature_scheme": "ed25519",
+        "status": "NOT_CONFIGURED"
+      }
+    }
+  },
+  "schema_version": "site-graph-v0-schema-test-cases/1",
+  "scope": "Purpose-built schema control-flow instances only; these fixtures make no corpus, evaluation, or product claim."
+}
