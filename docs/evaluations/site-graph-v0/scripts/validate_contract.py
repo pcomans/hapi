@@ -1522,7 +1522,9 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
 
     This deliberately narrow check covers path names across the repository. It does
     not claim that aggregate ranks/counts are unlinkable, inspect file contents, or
-    cover unreachable/pruned Git objects.
+    cover unreachable/pruned Git objects. A shallow clone (as CI's default checkout
+    produces) cannot expose every local HEAD ancestor, so it fails closed with
+    `UNABLE_GIT_HISTORY_SHALLOW` instead of silently scanning only the tip commit.
     """
     repo_root = repo_root.resolve()
     current_paths = sorted(
@@ -1607,6 +1609,54 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
             "inability_reason": "repo-root is not inside a Git work tree",
         }
 
+    shallow_result = _run_git(repo_root, "rev-parse", "--is-shallow-repository")
+    if shallow_result.returncode != 0:
+        return {
+            "passed": False,
+            "status": "UNABLE_GIT_HISTORY_QUERY_FAILED",
+            "claim_scope": claim_scope,
+            "git_metadata_available": True,
+            "current_tree": {
+                "recursive_scan_completed": True,
+                "violations": current_violations,
+            },
+            "git_history": {
+                "all_trees_reachable_from_head_scanned": False,
+                "violations": [],
+            },
+            "scanned_commit_count": 0,
+            "inability_reason": (
+                shallow_result.stderr.strip() or shallow_result.stdout.strip()
+            ),
+        }
+    if shallow_result.stdout.strip() == "true":
+        shallow_commit_count = len(
+            [line for line in commits_result.stdout.splitlines() if line]
+        )
+        return {
+            "passed": False,
+            "status": "UNABLE_GIT_HISTORY_SHALLOW",
+            "claim_scope": claim_scope,
+            "git_metadata_available": True,
+            "current_tree": {
+                "recursive_scan_completed": True,
+                "violations": current_violations,
+            },
+            "git_history": {
+                "all_trees_reachable_from_head_scanned": False,
+                "violations": [],
+            },
+            "scanned_commit_count": shallow_commit_count,
+            "inability_reason": (
+                "repo-root is a shallow Git clone (git rev-parse "
+                "--is-shallow-repository reported true); only "
+                f"{shallow_commit_count} locally present commit(s) would be "
+                "examined, so the historical public-boundary claim cannot be "
+                "made across every local HEAD ancestor and the scan fails "
+                "closed instead of silently degrading to a tip-only scan"
+            ),
+        }
+
     commits = [line for line in commits_result.stdout.splitlines() if line]
     history_violations: set[tuple[str, str, str]] = set()
     for commit in commits:
@@ -1677,6 +1727,7 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
         "status": "PASS" if passed else "FAIL",
         "claim_scope": claim_scope,
         "git_metadata_available": True,
+        "scanned_commit_count": len(commits),
         "current_tree": {
             "recursive_scan_completed": True,
             "violations": current_violations,

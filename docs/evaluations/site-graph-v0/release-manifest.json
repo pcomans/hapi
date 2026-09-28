@@ -2,8 +2,8 @@
   "contract_version": "site-graph-v0-release/4",
   "files": {
     "docs/evaluations/site-graph-v0/README.md": {
-      "bytes": 28403,
-      "sha256": "50e97913aabe247c7ed408ed1db95bb8bccc98e4e50ca331c5c46f8e07af9f3f"
+      "bytes": 29874,
+      "sha256": "da46d1f6814cee67965c8daad0e20d5255836c9c391ff61a834c68ac58457b54"
     },
     "docs/evaluations/site-graph-v0/baseline-metrics.json": {
       "bytes": 46789,
@@ -62,8 +62,8 @@
       "sha256": "b56c4155ed7b3777e729163cda0cf99e60ac1552ea714b1e94c3b059fc3872f5"
     },
     "docs/evaluations/site-graph-v0/preregistration.json": {
-      "bytes": 31392,
-      "sha256": "a582015a09179b0b567f20b0c44ec70f615c826fcf211bb0bbc987cd9b45e049"
+      "bytes": 32837,
+      "sha256": "08b9a4137609bc3229401d7dbb077cf2b2388cd693580d83b6df4deb3810fc5b"
     },
     "docs/evaluations/site-graph-v0/private-ledger-digests.json": {
       "bytes": 4451,
@@ -270,8 +270,8 @@
       "sha256": "8fe6348b6598a1d73fa95c7b8cf3f66b57b1c30b929025ad4d78f42d3d3be08b"
     },
     "docs/evaluations/site-graph-v0/scripts/validate_contract.py": {
-      "bytes": 111937,
-      "sha256": "270cba814eed8721f72c6715112206c58c6832aa52b4923ebcd65195cfb5e5e8"
+      "bytes": 114151,
+      "sha256": "a2254ee2e292639b9a74141e84ba83db2d0e2b04eaf3bd3d4fcf8a50b262d0ef"
     },
     "docs/evaluations/site-graph-v0/top-unmatched-components.json": {
       "bytes": 12176,
@@ -310,8 +310,8 @@
       "sha256": "974129745ad15383d8ac68c147778ce7ef950eab52947afefa65c33048873061"
     },
     "pipeline/tests/test_site_graph_v0_contract.py": {
-      "bytes": 112779,
-      "sha256": "9e38f9f456a12b4a40a25c4b57ddd8fdc4875b4cde6931b88d958ff10a9c3a52"
+      "bytes": 115237,
+      "sha256": "17c986436a72672445d67f6ef67c19bf34b450cc271d92f51545c52e369862b1"
     },
     "pipeline/tests/test_site_graph_v0_corrections.py": {
       "bytes": 42832,

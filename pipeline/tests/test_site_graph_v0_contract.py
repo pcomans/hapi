@@ -863,6 +863,49 @@ def test_repository_boundary_rejects_deleted_dump_in_non_tip_ancestor(
     )
 
 
+def test_repository_boundary_fails_closed_on_shallow_clone(tmp_path: Path) -> None:
+    """A depth-1 clone must never silently degrade to a tip-only PASS.
+
+    CI's checkout step defaults to a shallow clone. This reproduces that exact
+    shape: a real `git clone --depth 1` of this worktree's current branch,
+    scanned with the same function CI relies on for public-boundary enforcement.
+    """
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    shallow_clone = tmp_path / "shallow-clone"
+    subprocess.run(
+        [
+            "git",
+            "clone",
+            "--depth",
+            "1",
+            "--branch",
+            branch,
+            "--single-branch",
+            f"file://{REPO_ROOT}",
+            str(shallow_clone),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    try:
+        evidence = scan_public_repository_boundary(shallow_clone)
+        assert evidence["passed"] is False
+        assert evidence["status"] == "UNABLE_GIT_HISTORY_SHALLOW"
+        assert evidence["git_metadata_available"] is True
+        assert evidence["scanned_commit_count"] == 1
+        assert evidence["git_history"]["all_trees_reachable_from_head_scanned"] is False
+        assert "shallow" in evidence["inability_reason"]
+    finally:
+        shutil.rmtree(shallow_clone, ignore_errors=True)
+
+
 def _fraction(numerator: int, denominator: int) -> dict:
     return {
         "numerator": numerator,
@@ -2832,3 +2875,23 @@ def test_every_machine_formula_and_decision_threshold_matches_executable_values(
     assert prereg["ordered_decision_rule"]["raw_link_rate_growth_can_satisfy_continue"] is False
     assert prereg["ordered_decision_rule"]["museum_equality_required"] is False
     assert prereg["ordered_decision_rule"]["narrowness_without_support_can_satisfy_continue"] is False
+
+
+def test_issue_337_thresholds_do_not_bind_and_require_a_future_frozen_policy() -> None:
+    prereg = json.loads((EVAL_ROOT / "preregistration.json").read_text())
+    handoff = prereg["issue_337_handoff"]
+    assert handoff["binds_issue_337_thresholds"] is False
+    assert handoff["issue_337_policy_status"] == "NOT_YET_DEFINED"
+    assert handoff["issue_337_exploratory_outputs_are_evidence"] is False
+    assert handoff["issue_337_exploratory_outputs_date_utc"] == "2026-09-14"
+    assert "prospective product decision rule" in handoff[
+        "issue_337_future_policy_labeling_requirement"
+    ]
+    assert "not as a pristine preregistration" in handoff[
+        "issue_337_future_policy_labeling_requirement"
+    ]
+    assert "frozen" in handoff["issue_337_policy_freeze_requirement"]
+    readme = (EVAL_ROOT / "README.md").read_text()
+    assert "#337" in readme
+    assert "NOT_YET_DEFINED" in readme
+    assert "prospective product decision rule" in readme

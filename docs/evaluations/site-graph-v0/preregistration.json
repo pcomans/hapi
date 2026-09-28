@@ -298,5 +298,15 @@
     "post-result opportunity selection or denominator edits",
     "post-result per-node scope overrides",
     "population precision or recall claims from provisional silver review"
-  ]
+  ],
+  "issue_337_handoff": {
+    "binds_issue_337_thresholds": false,
+    "rationale": "This contract's machine_thresholds are defined over a single-candidate-vs-baseline opportunity-queue comparison: O_pair_side denominators and credited gained identity classes measured against a research census over one candidate arm. Issue #337 is a structurally different two-arm comparison (authority-free vs authority-assisted) with no opportunity-queue of this contract's shape. The thresholds do not translate, so this contract explicitly does not bind machine_thresholds, concentration_gate, or ordered_decision_rule to #337.",
+    "issue_337_policy_status": "NOT_YET_DEFINED",
+    "issue_337_policy_freeze_requirement": "A separately justified #337 policy is required and must be frozen before any #337 adjudication run that depends on it. #327's thresholds may not be silently reused as that policy.",
+    "issue_337_exploratory_outputs_are_evidence": false,
+    "issue_337_exploratory_outputs_date_utc": "2026-09-14",
+    "issue_337_exploratory_outputs_note": "Invalid exploratory #337 outputs already exist from 2026-09-14. They are not evidence and may not tune any future #337 policy.",
+    "issue_337_future_policy_labeling_requirement": "If a #337 policy is first selected after the 2026-09-14 exploratory #337 outputs were produced, it must be labeled and reported as a prospective product decision rule, not as a pristine preregistration."
+  }
 }

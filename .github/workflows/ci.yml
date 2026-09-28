@@ -31,6 +31,8 @@ jobs:
       DATABASE_URL: postgresql://hapi:hapi@localhost:5432/hapi
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Create Postgres schemas
         run: psql "$DATABASE_URL" -f ../docker/init-schemas.sql

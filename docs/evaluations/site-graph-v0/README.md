@@ -297,6 +297,27 @@ The comparator applies one ordered result:
 
 Raw link growth, narrowness alone, or equal-museum assumptions cannot pass.
 
+## Issue #337 handoff
+
+This contract's `machine_thresholds`, `concentration_gate`, and
+`ordered_decision_rule` do **not** bind issue #337. They are defined over this
+contract's single-candidate-vs-baseline opportunity-queue shape (`O_pair_side`
+denominators, credited gained identity classes measured against a research
+census over one candidate arm). #337 is a structurally different two-arm
+comparison (authority-free vs authority-assisted) with no opportunity-queue of
+this shape, so #327's numeric thresholds do not translate and are not reused as
+#337's policy by default or by silence.
+
+#337 requires its own separately justified policy, and that policy is
+`NOT_YET_DEFINED` as of this contract. It must be frozen before any real #337
+adjudication run that depends on it. Invalid exploratory #337 outputs already
+exist from 2026-09-14; they are not evidence and may not tune any future #337
+policy. If a #337 policy is ever first selected after those 2026-09-14
+exploratory outputs, it must be described honestly as a prospective product decision rule,
+not as a pristine preregistration. `preregistration.json`'s `issue_337_handoff`
+block states this machine-checkable disposition and is covered by
+`test_issue_337_thresholds_do_not_bind_and_require_a_future_frozen_policy`.
+
 ## Immutable corrections
 
 `correction-policy.json` defines the immutable primary policy. An actual correction
@@ -446,6 +467,7 @@ removed private derivatives never enter public Git history.
 | Precommitted continue/stop/redesign | ordered executable comparator outcome and adversarial tests |
 | Two deterministic reproductions | exact-output/rehash/provenance evidence in `baseline-rerun-evidence.json` |
 | Corpus provenance limits | verbatim handoff metadata/verifier and explicit missing export/run provenance |
+| #337 threshold non-binding and policy handoff | `preregistration.json` `issue_337_handoff` block; asserted by `test_issue_337_thresholds_do_not_bind_and_require_a_future_frozen_policy` |
 
 ## Limitations
 
