@@ -87,20 +87,21 @@ the top one and aren't independently artifact-sized:
 | Rank | Defect | Impact | Category | Tracked as |
 |---|---|---|---|---|
 | 1 | Live iDAI Egypt root excluded from the committed target file | 29,964 artifacts unmatched | Coverage | #329, #330 |
-| 2 | Excavation has no canonical target | 16,403 Met mentions unresolved | New entity type | **not filed** |
-| 3 | Duplicate ruler-cluster candidates (Amenhotep III / Akhenaten / Ramesses II) | 4,185 artifacts ambiguous | Reconciliation | **not filed** |
-| 4 | Temple has no canonical target | 570 artifacts (Temple of Hatshepsut alone) | New entity type | **not filed** |
+| 2 | Excavation has no canonical target | 16,403 Met mentions unresolved | New entity type | #343 |
+| 3 | Duplicate ruler-cluster candidates (Amenhotep III / Akhenaten / Ramesses II) | 4,185 artifacts ambiguous | Reconciliation | #342 |
+| 4 | Temple has no canonical target | 570 artifacts (Temple of Hatshepsut alone) | New entity type | #343 |
 | →1 | 566 iDAI parent IDs live outside the filtered file | structural prerequisite for #1 | Coverage | #330 |
 | →1 | No canonical site graph — only a filtered iDAI source table | structural prerequisite for #1 | Structural | #334 |
 
-**Ruler-cluster reconciliation and the two missing entity types (rows 2–4)
-have no GitHub issue at all**, despite explaining most of what's left after
-the site-graph coverage work (rows 1, →1, →1) is done. Epic #326's ten-issue
-plan only covers the *site* side — it was never scoped to cover ruler
-reconciliation or new entity types. Filing issues for rows 2–4 before #337's
-real review runs would remove the biggest confound in that comparison:
-right now, some of the authority arm's "losses" are unfinished reconciliation
-masquerading as the resolver being wrong.
+**Issues [#342](https://github.com/pcomans/hapi/issues/342) (ruler-cluster
+reconciliation) and [#343](https://github.com/pcomans/hapi/issues/343)
+(temple + excavation entity types) were filed on 2026-09-28** — rows 2–4
+are now tracked, though neither has started. Epic #326's ten-issue plan
+only covers the *site* side, so these two live outside it deliberately.
+Closing them before #337's real review runs would remove the biggest
+confound in that comparison: right now, some of the authority arm's
+"losses" are unfinished reconciliation masquerading as the resolver being
+wrong.
 
 ## The traceability methodology (why the review is this expensive to unblock)
 
@@ -189,16 +190,16 @@ fix. See PR #341 for the full account.
 | #327 — evaluation contract | **Merged** | Closed via PR #341. |
 | #328 — feasibility pilot | **Unblocked, next step** | Its `blocked` label was removed once #327 merged — it's the actual next open item in the #326 chain. |
 | #329–#336 | Blocked | Strict chain; each depends on the previous closing. |
-| Ruler-cluster reconciliation | **No issue filed** | Explains most of the ruler-side losses in #337; not in #326's scope (site-only). File before trusting #337's ruler-side comparison. |
-| Temple / excavation entity types | **No issue filed** | Explains most of the excavation-side losses; same caveat. |
+| #342 — ruler-cluster reconciliation | **Filed 2026-09-28, not started** | Explains most of the ruler-side losses in #337; deliberately outside #326's scope (site-only). |
+| #343 — temple/excavation entity types | **Filed 2026-09-28, not started** | Explains most of the excavation-side losses; same caveat. |
 | #337 — authority vs. literal A/B | Harness done (PR #339, #340 merged); review not run | Blocked on authorizing use of a real API credential for a paid, hundreds-of-calls review — not blocked on missing infrastructure. |
 
 ## Recommended next step
 
 Pick up **#328** (the feasibility pilot) — it's the actual unblocked next
 item, not #329 (acquisition scope should be informed by the pilot first,
-per the pre-registered contract's own design). In parallel, consider filing
-issues for ruler-cluster reconciliation and the temple/excavation entity
-types before #337's real review is authorized to run — those two gaps are
-currently invisible in the issue tracker but explain most of what a real
-#337 verdict would otherwise misattribute to "the resolver is wrong."
+per the pre-registered contract's own design). In parallel, **#342 and
+#343 are filed but not started** — closing them before #337's real review
+is authorized to run would remove the biggest confound in that comparison,
+since right now a real #337 verdict would otherwise misattribute both gaps
+to "the resolver is wrong" rather than "the graph isn't finished."
