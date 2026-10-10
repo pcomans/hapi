@@ -31,11 +31,26 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 AUTHORITY_ROOT = REPO_ROOT / "pipeline" / "pipeline" / "authority" / "sources"
 WEB_DATA_DIR = REPO_ROOT / "web-claimgraph" / "data"
 
+DEFAULT_MODEL = {
+    "anthropic": "claude-sonnet-5",
+    "openrouter": "z-ai/glm-5.2",
+    "vercel": "deepseek/deepseek-v4.1-flash",
+}
+KEY_ENV = {
+    "anthropic": "ANTHROPIC_API_KEY",
+    "openrouter": "OPENROUTER_API_KEY",
+    "vercel": "AI_GATEWAY_API_KEY",
+}
+
 
 def load_env_local() -> None:
     """Load a gitignored .env.local (pipeline/ or web-claimgraph/) into os.environ so the
     key never has to pass through the command line or an agent transcript."""
-    for env_path in (REPO_ROOT / "pipeline" / ".env.local", WEB_DATA_DIR.parent / ".env.local"):
+    for env_path in (
+        REPO_ROOT / "pipeline" / ".env.local",
+        WEB_DATA_DIR.parent / ".env.local",
+        REPO_ROOT / ".env.local",
+    ):
         if not env_path.exists():
             continue
         for line in env_path.read_text(encoding="utf-8").splitlines():
@@ -51,15 +66,18 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--deterministic", action="store_true",
                     help="explicitly use the deterministic policy instead of the live reviewer")
-    ap.add_argument("--provider", choices=("anthropic", "openrouter"), default="anthropic",
-                    help="live-reviewer backend: anthropic (ANTHROPIC_API_KEY) or "
-                         "openrouter (OPENROUTER_API_KEY, e.g. GLM 5.2)")
+    ap.add_argument("--provider", choices=tuple(DEFAULT_MODEL), default="anthropic",
+                    help="live-reviewer backend: anthropic (ANTHROPIC_API_KEY), "
+                         "openrouter (OPENROUTER_API_KEY, e.g. GLM 5.2) or vercel "
+                         "(AI_GATEWAY_API_KEY, DeepSeek V4.1 Flash pinned to DeepSeek)")
     ap.add_argument("--model", default=None,
-                    help="reviewer model id; defaults per provider "
-                         "(claude-sonnet-5 / z-ai/glm-5.2)")
+                    help=f"reviewer model id; defaults per provider {DEFAULT_MODEL}")
     ap.add_argument("--workers", type=int, default=10)
     ap.add_argument("--limit", type=int, default=None,
                     help="cap candidates reviewed (thin-slice validation)")
+    ap.add_argument("--focus-records", default=None,
+                    help="comma-separated record ids; review only candidates touching them "
+                         "(targeted pilot — the artifact is marked partial)")
     ap.add_argument("--out", default=str(WEB_DATA_DIR / "claim-graph.json"))
     ap.add_argument("--fresh", action="store_true",
                     help="ignore/clear the resumable verdict cache and re-review from scratch")
@@ -68,10 +86,9 @@ def main() -> int:
     load_env_local()
     mode = "deterministic" if args.deterministic else "llm"
     provider = args.provider
-    model = args.model or (
-        "z-ai/glm-5.2" if provider == "openrouter" else "claude-sonnet-5"
-    )
-    key_env = "OPENROUTER_API_KEY" if provider == "openrouter" else "ANTHROPIC_API_KEY"
+    model = args.model or DEFAULT_MODEL[provider]
+    key_env = KEY_ENV[provider]
+    focus = set(args.focus_records.split(",")) if args.focus_records else None
 
     if mode == "llm" and not os.environ.get(key_env):
         sys.stderr.write(
@@ -91,7 +108,7 @@ def main() -> int:
     client = None
     api_key = None
     if mode == "llm":
-        if provider == "openrouter":
+        if provider in ("openrouter", "vercel"):
             api_key = os.environ[key_env]
         else:
             from anthropic import Anthropic  # lazy so deterministic mode needs no dep
@@ -146,6 +163,7 @@ def main() -> int:
         model=model,
         max_workers=args.workers,
         limit=args.limit,
+        focus_records=focus,
         cache_path=cache_path if mode == "llm" else None,
         on_progress=on_progress,
     )
@@ -154,7 +172,7 @@ def main() -> int:
         f"{len(resolved.approved_edges)} approved links, {len(resolved.escalations)} escalated"
     )
 
-    clusters = compute_clusters(doc.rulers, resolved.approved_edges)
+    clusters = compute_clusters(doc.rulers, resolved.approved_edges, doc.intra_source_identities)
     multi = [c for c in clusters if c.source_count > 1]
     print(f"[build-graph] identity clusters: {len(clusters)} total, {len(multi)} span >1 source")
 
@@ -164,7 +182,7 @@ def main() -> int:
             "reviewer": resolved.mode,
             "provider": provider if mode == "llm" else None,
             "model": model if mode == "llm" else None,
-            "partial": args.limit is not None,
+            "partial": args.limit is not None or focus is not None,
             "sources": {
                 sid: {"label": SOURCE_LABEL.get(sid, sid), "rulers": n}
                 for sid, n in load.per_source.items()

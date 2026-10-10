@@ -96,15 +96,31 @@ def test_committed_sources_have_unique_prefixed_local_ids():
 
 
 def test_committed_intra_source_identities_all_resolve():
-    """Kitchen's four `same_person_as` assertions must all resolve to loaded records —
-    build_documentary_graph raises on a dangling one, so this pins that they do."""
+    """Kitchen's four `same_person_as` assertions and Leprohon's titulary-stage siblings
+    must all resolve to loaded records — build_documentary_graph raises on a dangling one,
+    so this pins that they do. The Leprohon pairs are exactly the 9 same-king stage rows
+    the source README lists (Mentuhotep II a/b/c, Amenemhat I a/b, Thutmose III a/b,
+    Amenhotep IV / Akhenaten a/b); the 4 Chapter-X consort sub-entries are absent."""
     load = load_all_sources(AUTHORITY_ROOT)
     doc = build_documentary_graph(load.records)
+    lep = "leprohon-leprohon-"
     assert sorted((i.subject_id, i.object_id) for i in doc.intra_source_identities) == [
         ("kitchen-21H.03", "kitchen-21H.04"),
         ("kitchen-21H.04", "kitchen-21H.03"),
         ("kitchen-24.01", "kitchen-24E.04"),
         ("kitchen-24E.04", "kitchen-24.01"),
+        (f"{lep}11b.05a", f"{lep}11b.05b"),
+        (f"{lep}11b.05a", f"{lep}11b.05c"),
+        (f"{lep}11b.05b", f"{lep}11b.05a"),
+        (f"{lep}11b.05b", f"{lep}11b.05c"),
+        (f"{lep}11b.05c", f"{lep}11b.05a"),
+        (f"{lep}11b.05c", f"{lep}11b.05b"),
+        (f"{lep}12.01a", f"{lep}12.01b"),
+        (f"{lep}12.01b", f"{lep}12.01a"),
+        (f"{lep}18.05a", f"{lep}18.05b"),
+        (f"{lep}18.05b", f"{lep}18.05a"),
+        (f"{lep}18.10a", f"{lep}18.10b"),
+        (f"{lep}18.10b", f"{lep}18.10a"),
     ]
 
 

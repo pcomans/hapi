@@ -1,0 +1,96 @@
+{
+  "after": {
+    "artifacts_by_status": {
+      "abstained": 2232,
+      "ambiguous": 683,
+      "resolved": 8222,
+      "unmatched": 330
+    },
+    "mentions_by_status": {
+      "abstained": 2241,
+      "ambiguous": 689,
+      "resolved": 8279,
+      "unmatched": 346
+    }
+  },
+  "before": {
+    "artifacts_by_status": {
+      "abstained": 2232,
+      "ambiguous": 5027,
+      "resolved": 3878,
+      "unmatched": 330
+    },
+    "mentions_by_status": {
+      "abstained": 2241,
+      "ambiguous": 5037,
+      "resolved": 3931,
+      "unmatched": 346
+    }
+  },
+  "inputs": {
+    "after_graph_sha256": "15aec4a0d9fa80216e99584aec6bd5a4499c0a0886761c02fec40cf64e36eb6a",
+    "before_graph_sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965",
+    "mention_ledger": {
+      "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
+      "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    },
+    "resolver_sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
+    "script_sha256": "541a80cefb700ccbefba5c2b709fab5c2de49ad007b6d75763e6b8e4ceddd0bc"
+  },
+  "kings": {
+    "Akhenaten": {
+      "artifacts_after": {
+        "resolved": 923
+      },
+      "artifacts_before": {
+        "ambiguous": 923
+      },
+      "mentions_after": {
+        "resolved": 924
+      },
+      "mentions_before": {
+        "ambiguous": 924
+      }
+    },
+    "Amenhotep III": {
+      "artifacts_after": {
+        "resolved": 2750
+      },
+      "artifacts_before": {
+        "ambiguous": 2750
+      },
+      "mentions_after": {
+        "resolved": 2750
+      },
+      "mentions_before": {
+        "ambiguous": 2750
+      }
+    },
+    "Ramesses II": {
+      "artifacts_after": {
+        "resolved": 520
+      },
+      "artifacts_before": {
+        "ambiguous": 520
+      },
+      "mentions_after": {
+        "resolved": 520
+      },
+      "mentions_before": {
+        "ambiguous": 520
+      }
+    }
+  },
+  "resolved_mentions_moved_to_a_different_king": 0,
+  "ruler_mentions": 11555,
+  "schema_version": "hapi-342-ruler-ambiguity/1",
+  "status_transitions": {
+    "abstained->abstained": 2241,
+    "ambiguous->ambiguous": 689,
+    "ambiguous->resolved": 4348,
+    "resolved->resolved": 3931,
+    "unmatched->unmatched": 346
+  }
+}

@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from .absence import ABSENCE_KEY, Absence, iter_absence_fields, parse_absence
@@ -346,6 +346,26 @@ def _append(forms: list[NameForm], surface: str | None) -> None:
         forms.append(form)
 
 
+# Leprohon prints some titularies with an "Epithets added to the Throne name:" / "... Birth
+# name:" block; the transcription convention (leprohon-2013-titulary/prompt-dyn18.md,
+# prompt-dyn19.md, prompt-dyn20.md) emits each such epithet as an ``is_variant`` entry whose
+# ``source_note`` opens with one of these phrases. Matched as a prefix of the note because
+# some notes continue with a citation ("... from the king's twenty-second year onward").
+_ADDED_EPITHET_NOTE_PREFIXES = ("Epithet added to the ", "An epithet added posthumously to the ")
+
+
+def _is_added_epithet(e: dict, item: str, *, source: str, row_id: str) -> bool:
+    note = _opt_str(e, "source_note", source=source, row_id=row_id)
+    if note is None or not note.startswith(_ADDED_EPITHET_NOTE_PREFIXES):
+        return False
+    if _opt_bool(e, "is_variant", source=source, row_id=row_id) is not True:
+        # The convention emits an added epithet only as a VARIANT of the name it is added
+        # to. On the primary entry it would mean the row has no name of that type at all.
+        raise _err(source, row_id, item, f"is marked as an added epithet ({note!r}) but is "
+                   f"not a variant; the primary name of a slot cannot be an epithet.")
+    return True
+
+
 def _from_titulary_list(row: dict, path: str, *, source: str, row_id: str) -> list[NameForm]:
     """A Leprohon/pharaoh.se-style titulary list → NameForms. Every entry must be an object
     carrying at least one of an anglicised/native surface form or a transliteration; an
@@ -382,6 +402,8 @@ def _from_titulary_list(row: dict, path: str, *, source: str, row_id: str) -> li
             raise _err(source, row_id, item, f"has neither a name nor a transliteration: {e!r}")
         form = _name_form(surface, translit)
         if form is not None:
+            if _is_added_epithet(e, item, source=source, row_id=row_id):
+                form = replace(form, is_added_epithet=True)
             out.append(form)
     return out
 
@@ -402,6 +424,7 @@ def load_leprohon(root: Path) -> SourceLoad:
     src = "leprohon"
     auth = SOURCE_AUTHORITY[src]
     out = []
+    stage_rows: dict[str, list[str]] = {}  # parent king entry id → its stage rows' local ids
     for i, r in enumerate(_read_jsonl(root, "leprohon-2013-titulary"), 1):
         # The stable source id is REQUIRED (Rule 2): a ruler node with no stable id can't
         # be provenance-attributed, and every id-less row would collapse onto the same
@@ -449,7 +472,33 @@ def load_leprohon(root: Path) -> SourceLoad:
                 ),
             )
         )
+        if stage_suffix and _opt_str(r, "printed_under", source=src, row_id=rid) is None:
+            if not rid.endswith(stage_suffix):
+                raise _err(src, rid, "stage_suffix", f"is {stage_suffix!r} but the id does "
+                           f"not end with it, so the parent king entry cannot be derived.")
+            stage_rows.setdefault(rid[: -len(stage_suffix)], []).append(f"{src}-{rid}")
+    _link_titulary_stages(out, stage_rows)
     return SourceLoad(source_id=src, records=out)
+
+
+def _link_titulary_stages(records: list[RulerRecord], stage_rows: dict[str, list[str]]) -> None:
+    """Leprohon's own identity assertion: rows printed as stages of ONE numbered king
+    entry (``10a. AMENHOTEP IV``, ``10b. AKHENATEN``) are one person. The source README's
+    reading rule (2) — ``printed_under`` null AND ``stage_suffix`` set ⇒ same-king titulary
+    stage, together with the unsuffixed parent row when one exists — is applied verbatim;
+    the consort sub-entries (``printed_under`` set) are distinct persons and never linked.
+    """
+    by_id = {r.local_id: r for r in records}
+    for base, stage_ids in sorted(stage_rows.items()):
+        group = sorted(stage_ids + ([f"leprohon-{base}"] if f"leprohon-{base}" in by_id else []))
+        if len(group) < 2:
+            raise ValueError(
+                f"[leprohon] titulary stage {stage_ids} of king entry {base!r} has no "
+                f"sibling stage and no parent row: a stage of nothing is a transcription "
+                f"error, not a king."
+            )
+        for local_id in group:
+            by_id[local_id].intra_source_same_as = [o for o in group if o != local_id]
 
 
 def load_beckerath(root: Path) -> SourceLoad:

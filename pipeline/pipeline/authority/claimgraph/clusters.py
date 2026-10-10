@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field
 
-from .graph_ir import RulerNode
+from .graph_ir import IntraSourceIdentity, RulerNode
 from .verdicts import MatchEdge
 
 
@@ -50,28 +50,41 @@ class _DSU:
                 self.parent[ra] = rb
 
 
+INTRA_SOURCE_BASIS = "intra_source"
+
+
 def compute_clusters(
-    rulers: list[RulerNode], approved_edges: list[MatchEdge]
+    rulers: list[RulerNode],
+    approved_edges: list[MatchEdge],
+    intra_source_identities: list[IntraSourceIdentity],
 ) -> list[IdentityCluster]:
+    """Components over approved cross-source links AND the sources' own identity
+    statements (Leprohon's titulary stages, Kitchen's ``same_person_as``): a king a source
+    prints as two rows is one person to that source, so its rows belong to one component.
+    Each intra-source pair is listed once, as an edge with basis ``intra_source``."""
+    links = [(e.a_id, e.b_id, e.basis) for e in approved_edges] + sorted(
+        {
+            (min(i.subject_id, i.object_id), max(i.subject_id, i.object_id), INTRA_SOURCE_BASIS)
+            for i in intra_source_identities
+        }
+    )
     dsu = _DSU()
     ruler_by_id = {r.id: r for r in rulers}
-    for e in approved_edges:
-        dsu.union(e.a_id, e.b_id)
+    for a_id, b_id, _ in links:
+        dsu.union(a_id, b_id)
 
     members_by_root: dict[str, list[str]] = {}
-    for e in approved_edges:
-        for _id in (e.a_id, e.b_id):
+    for a_id, b_id, _ in links:
+        for _id in (a_id, b_id):
             root = dsu.find(_id)
             lst = members_by_root.setdefault(root, [])
             if _id not in lst:
                 lst.append(_id)
 
     edges_by_root: dict[str, list[dict]] = {}
-    for e in approved_edges:
-        root = dsu.find(e.a_id)
-        edges_by_root.setdefault(root, []).append(
-            {"a_id": e.a_id, "b_id": e.b_id, "basis": e.basis}
-        )
+    for a_id, b_id, basis in links:
+        root = dsu.find(a_id)
+        edges_by_root.setdefault(root, []).append({"a_id": a_id, "b_id": b_id, "basis": basis})
 
     clusters: list[IdentityCluster] = []
     for root, member_ids in members_by_root.items():

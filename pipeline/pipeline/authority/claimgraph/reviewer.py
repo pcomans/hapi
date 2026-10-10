@@ -29,6 +29,7 @@ VERDICT_ESCALATED = "hapi:verdict_escalated"
 
 PROVIDER_ANTHROPIC = "anthropic"
 PROVIDER_OPENROUTER = "openrouter"
+PROVIDER_VERCEL = "vercel"
 
 # The request parameters are committed constants, not caller-tunable knobs: the persisted
 # provenance record (and the cache digest built from it) must describe the request that was
@@ -37,10 +38,31 @@ PROVIDER_OPENROUTER = "openrouter"
 # tokens on reasoning before emitting the JSON answer.
 ANTHROPIC_PARAMETERS: dict[str, Any] = {"max_tokens": 600}
 OPENROUTER_PARAMETERS: dict[str, Any] = {"max_tokens": 3000, "temperature": 0}
+# Vercel AI Gateway, for DeepSeek V4.1 Flash at max reasoning effort (#342, 2026-10-10).
+# The model id is an alias with no dated snapshot, and the gateway serves it from ~18
+# upstream providers; to keep a run attributable to ONE deployment the request is pinned
+# to DeepSeek's own endpoint with no fallback, and every response is checked to have been
+# served there (VERCEL_PINNED_PROVIDER). The budget covers max-effort reasoning tokens,
+# which count against max_tokens before the JSON answer is emitted. No temperature: the
+# model ignores it in reasoning mode, and recording one would misdescribe the request.
+VERCEL_PINNED_PROVIDER = "deepseek"
+VERCEL_PARAMETERS: dict[str, Any] = {
+    "max_tokens": 32000,
+    "reasoning": {"effort": "max"},
+    "providerOptions": {
+        "gateway": {"only": [VERCEL_PINNED_PROVIDER], "order": [VERCEL_PINNED_PROVIDER]}
+    },
+}
 PROVIDER_PARAMETERS: dict[str, dict[str, Any]] = {
     PROVIDER_ANTHROPIC: ANTHROPIC_PARAMETERS,
     PROVIDER_OPENROUTER: OPENROUTER_PARAMETERS,
+    PROVIDER_VERCEL: VERCEL_PARAMETERS,
 }
+_CHAT_COMPLETIONS_URL = {
+    PROVIDER_OPENROUTER: "https://openrouter.ai/api/v1/chat/completions",
+    PROVIDER_VERCEL: "https://ai-gateway.vercel.sh/v1/chat/completions",
+}
+_PROVIDER_LABEL = {PROVIDER_OPENROUTER: "OpenRouter", PROVIDER_VERCEL: "Vercel AI Gateway"}
 
 
 @dataclass
@@ -115,6 +137,12 @@ class ReviewerHttpError(ReviewerCallError, RuntimeError):
     captured, never thrown away by a status check that ran before the body was read."""
 
 
+class ReviewerProvenanceError(ReviewerCallError, RuntimeError):
+    """The response did not come from the deployment the request was pinned to. Its
+    verdict would be attributed to a model run that did not produce it, so it is never
+    used — the run fails loud, with the response attached (Rule 13)."""
+
+
 @dataclass
 class Verdict:
     candidate_id: str
@@ -134,6 +162,12 @@ class Verdict:
 
 def review_deterministic(candidate: Candidate, forced_escalate: bool) -> Verdict:
     base = dict(candidate_id=candidate.id, reviewer="deterministic")
+    if candidate.era_conflict:
+        return Verdict(
+            **base,
+            outcome=VERDICT_REJECTED,
+            reason=f"Era gate (ADR-020 amendment 2026-10-10): {candidate.era_conflict}",
+        )
     if forced_escalate:
         return Verdict(
             **base,
@@ -425,12 +459,49 @@ def review_with_openrouter(
 
     The full body — including the model's ``reasoning``/``reasoning_details``, or the error
     payload on a 4xx/5xx — is captured as the replayable provenance record."""
+    return _review_with_chat_completions(PROVIDER_OPENROUTER, api_key, candidate, a, b, model)
+
+
+def review_with_vercel(
+    api_key: str,
+    candidate: Candidate,
+    a: RulerRecord,
+    b: RulerRecord,
+    model: str = "deepseek/deepseek-v4.1-flash",
+) -> Verdict:
+    """Same contract as :func:`review_with_openrouter`, through the Vercel AI Gateway with
+    the request pinned to :data:`VERCEL_PINNED_PROVIDER`. A response the gateway reports as
+    served by any other upstream raises :class:`ReviewerProvenanceError`."""
+    return _review_with_chat_completions(PROVIDER_VERCEL, api_key, candidate, a, b, model)
+
+
+def _served_by(body: dict) -> str | None:
+    """The upstream provider the Vercel gateway reports having served this response from
+    (``choices[0].message.provider_metadata.gateway.routing.finalProvider``)."""
+    try:
+        return body["choices"][0]["message"]["provider_metadata"]["gateway"]["routing"][
+            "finalProvider"
+        ]
+    except (KeyError, IndexError, TypeError):
+        return None
+
+
+def _review_with_chat_completions(
+    provider: str,
+    api_key: str,
+    candidate: Candidate,
+    a: RulerRecord,
+    b: RulerRecord,
+    model: str,
+) -> Verdict:
+    """One OpenAI-compatible chat-completions review (OpenRouter or the Vercel gateway)."""
     import httpx
 
+    label = _PROVIDER_LABEL[provider]
     user_prompt = _build_user_prompt(candidate, a, b)
-    parameters = dict(OPENROUTER_PARAMETERS)
+    parameters = dict(PROVIDER_PARAMETERS[provider])
     resp = httpx.post(
-        "https://openrouter.ai/api/v1/chat/completions",
+        _CHAT_COMPLETIONS_URL[provider],
         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
         json={
             "model": model,
@@ -443,13 +514,13 @@ def review_with_openrouter(
         timeout=180,
     )
     digest = request_digest(
-        candidate, a, b, provider=PROVIDER_OPENROUTER, model=model, parameters=parameters
+        candidate, a, b, provider=provider, model=model, parameters=parameters
     )
 
     def _interaction(raw: Any, snapshot: str | None) -> ReviewerInteraction:
         return ReviewerInteraction(
             attempt=1,
-            provider=PROVIDER_OPENROUTER,
+            provider=provider,
             requested_model=model,
             model_snapshot=snapshot,
             parameters=parameters,
@@ -476,10 +547,10 @@ def review_with_openrouter(
     if resp.status_code >= 400:
         interaction = _interaction(raw_body, body.get("model") if isinstance(body, dict) else None)
         interaction.call_error = (
-            f"OpenRouter returned HTTP {resp.status_code}; error body captured above."
+            f"{label} returned HTTP {resp.status_code}; error body captured above."
         )
         raise ReviewerHttpError(
-            f"OpenRouter returned HTTP {resp.status_code} for candidate {candidate.id}: "
+            f"{label} returned HTTP {resp.status_code} for candidate {candidate.id}: "
             f"{str(raw_body)[:400]}",
             interaction=interaction,
             request_digest=digest,
@@ -491,24 +562,34 @@ def review_with_openrouter(
     # exception with the response dropped on the floor.
     if json_error is not None:
         interaction = _interaction(raw_body, None)
-        interaction.parse_error = f"OpenRouter response body was not JSON: {json_error}"
+        interaction.parse_error = f"{label} response body was not JSON: {json_error}"
         raise ReviewerParseError(
             interaction.parse_error, interaction=interaction, request_digest=digest
         )
     interaction = _interaction(body, body.get("model") if isinstance(body, dict) else None)
+    if provider == PROVIDER_VERCEL and _served_by(body) != VERCEL_PINNED_PROVIDER:
+        interaction.call_error = (
+            f"{label} served this response from {_served_by(body)!r}, not the pinned "
+            f"{VERCEL_PINNED_PROVIDER!r}."
+        )
+        raise ReviewerProvenanceError(
+            f"{interaction.call_error} Candidate {candidate.id}; refusing its verdict.",
+            interaction=interaction,
+            request_digest=digest,
+        )
     try:
         choice = body["choices"][0]
         text = (choice["message"].get("content") or "").strip()
     except (KeyError, IndexError, TypeError, AttributeError) as err:
         interaction.parse_error = (
-            f"OpenRouter response had an unexpected structure: {type(err).__name__}: {err}"
+            f"{label} response had an unexpected structure: {type(err).__name__}: {err}"
         )
         raise ReviewerParseError(
             interaction.parse_error, interaction=interaction, request_digest=digest
         ) from err
     if not text:
         interaction.parse_error = (
-            f"OpenRouter returned empty content (finish_reason={choice.get('finish_reason')})"
+            f"{label} returned empty content (finish_reason={choice.get('finish_reason')})"
         )
         raise ReviewerParseError(
             interaction.parse_error, interaction=interaction, request_digest=digest

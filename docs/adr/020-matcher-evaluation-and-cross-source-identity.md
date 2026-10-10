@@ -347,3 +347,50 @@ the ratified design).
   leaves open. ADR-020 is the evaluation + ground-truth + matching-policy record;
   #306 is the design. A reader should not take the POC's per-pair resolution /
   connected-components mechanics as the settled architecture.
+
+## Amendment 2026-10-10 — ruler-cluster reconciliation (#342)
+
+Issue [#342](https://github.com/pcomans/hapi/issues/342) found the three highest-frequency
+ambiguous ruler clusters (Amenhotep III, Akhenaten, Ramesses II; ~4,200 museum artifacts)
+abstaining for reasons the committed data itself resolves. The project owner decided the
+following on 2026-10-10. Each rule is implemented in `pipeline/authority/claimgraph/` and
+pinned by `pipeline/tests/test_claimgraph_ruler_reconciliation.py`.
+
+1. **Era gate — supersedes "Reign-span disjointness … must escalate, not block" for large
+   gaps.** A candidate pair is **rejected** at stage 1, without a reviewer call, when the
+   reign starts are ≥ 200 years apart, or when the dynasty numbers are more than one apart
+   and the two dynasties do not fall in the same *contested numbering band*: Dynasties
+   13–17 (Second Intermediate Period) and 21–26 (Third Intermediate / Late Period), where
+   sources number parallel lines differently (Takelot III: Dyn 22 Beckerath vs Dyn 23
+   Kitchen; Necho I: Dyn 24 Kitchen vs Dyn 26 Leprohon). Smaller gaps still escalate or go
+   to review as before. Evidence (2026-10-10, committed sources): of the 228 links then
+   approved, **none** fails the gate; every rejected pair inspected is two distinct kings
+   (Ramesses II vs the Dyn 22/23 kings who reused his throne name; Amenhotep III vs
+   Ramesses VI and the Dyn 16 Nebmaatra; Pepi II vs the Dyn 8 Neferkare kings). Absent era
+   evidence never rejects.
+2. **Stage-suffix phase siblings are one person** (already policy under "Same-source
+   distinctness"; now loaded). Leprohon rows with `stage_suffix` set and `printed_under`
+   null are linked as one person per the source README's reading rule (2) — Amenhotep IV /
+   Akhenaten, Mentuhotep II a–c, Amenemhat I a–b, Thutmose III a–b — and contribute
+   `intra_source` edges to clusters. The Chapter-X consort sub-entries are never linked.
+3. **Added epithets are not names.** A titulary entry the source records as an epithet
+   *added to* a name never matches on its own; the name and its added epithet are matched
+   as the compound they form (Leprohon's `wsr mꜣꜥt rꜥ` + `stp.n rꜥ` = the
+   *Usermaatre-setepenre* Beckerath and pharaoh.se print).
+4. **The homonym exception list is scoped by dynasty.** A shared reused throne name stops
+   forcing escalation only when both records carry the same dynasty, outside the contested
+   bands, and no other record from either source bears that name in that dynasty or
+   without a dynasty (Amenhotep III is the only Nebmaatre of Dynasty 18 in every source).
+   The pair is still judged by the reviewer.
+5. **A uniqueness clash resolves to the sole same-dynasty target** when exactly one
+   competing target shares the record's dynasty outside the contested bands and every
+   other target has a known, different dynasty; otherwise the whole clash escalates as
+   before. Two rows the other source declares one person are one target, not a clash.
+6. **Model-decided identity.** Contrary to #306's "no LLM in the decision path", the
+   reviewer model decides corroborated pairs, and the deterministic guards above still
+   override it. The reviewer for the #342 rebuild is DeepSeek V4.1 Flash at max reasoning
+   effort through the Vercel AI Gateway, pinned to DeepSeek's own endpoint with fallback
+   disabled; every response is checked to have been served there and is persisted in
+   full, reasoning included (Rule 13). The model id is an alias with **no dated snapshot**:
+   accepted for this research build, and to be revisited before identity links become
+   production authority data.

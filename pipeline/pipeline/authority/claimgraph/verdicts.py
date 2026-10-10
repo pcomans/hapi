@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, replace
 from typing import Callable
 
-from .matcher import Candidate, generate_candidates, uniqueness_clashes
+from .matcher import Candidate, generate_candidates, same_person_groups, uniqueness_clashes
 from .reviewer import (
     PROVIDER_PARAMETERS,
     SYSTEM_PROMPT,
@@ -27,6 +27,7 @@ from .reviewer import (
     review_deterministic,
     review_with_llm,
     review_with_openrouter,
+    review_with_vercel,
 )
 
 # A name-only candidate (similar names, no shared throne-name/Horus-name to corroborate)
@@ -304,6 +305,7 @@ def resolve_matches(
     retries_per_candidate: int = 2,
     max_workers: int = 10,
     limit: int | None = None,
+    focus_records: set[str] | None = None,
     cache_path: str | None = None,
     on_progress: Callable[[int, int], None] | None = None,
 ) -> ResolveResult:
@@ -316,22 +318,31 @@ def resolve_matches(
     "llm" mode, name-only candidates are escalated deterministically and NEVER sent to the
     reviewer — only prenomen/Horus-corroborated candidates cost a call. Reviews run
     concurrently (``max_workers`` threads); any candidate still failing after retries fails
-    the whole run loudly. ``limit`` caps the candidates for a thin-slice validation.
+    the whole run loudly. ``limit`` caps the candidates for a thin-slice validation;
+    ``focus_records`` keeps only candidates touching those record ids (a targeted pilot).
+    Uniqueness clashes are computed over the FULL candidate set before either cut, so a
+    slice never sees a pair as clean that the full run would escalate.
     """
     candidates = generate_candidates(records)
+    forced = uniqueness_clashes(candidates, same_person_groups(records))
+    if focus_records is not None:
+        unknown = focus_records - {r.local_id for r in records}
+        if unknown:
+            raise ValueError(f"focus_records names unloaded record(s): {sorted(unknown)}")
+        candidates = [c for c in candidates if {c.a_id, c.b_id} & focus_records]
     if limit is not None:
         candidates = candidates[:limit]
-    forced = uniqueness_clashes(candidates)
     by_id = {r.local_id: r for r in records}
 
     if mode == "llm" and reviewer_fn is None:
-        if provider == "openrouter":
+        if provider in ("openrouter", "vercel"):
             if not api_key:
                 raise RuntimeError(
-                    "resolve_matches called in 'llm'/openrouter mode without an api_key. "
+                    f"resolve_matches called in 'llm'/{provider} mode without an api_key. "
                     "Refusing to run — the live reviewer must decide the matches."
                 )
-            reviewer_fn = lambda c, a, b: review_with_openrouter(api_key, c, a, b, model=model)  # noqa: E731
+            review = review_with_openrouter if provider == "openrouter" else review_with_vercel
+            reviewer_fn = lambda c, a, b: review(api_key, c, a, b, model=model)  # noqa: E731
         else:
             if client is None:
                 raise RuntimeError(
@@ -383,7 +394,11 @@ def resolve_matches(
         parameters = PROVIDER_PARAMETERS[provider]
         verdicts_by_id: dict[str, Verdict] = {}
         for c in candidates:
-            if c.id in cached:
+            if c.era_conflict:
+                # Settled by the committed era gate before any reviewer is consulted — and
+                # ahead of the cache, so no earlier verdict can resurrect the pair.
+                verdicts_by_id[c.id] = review_deterministic(c, c.id in forced)
+            elif c.id in cached:
                 # A cached verdict may ONLY be reused if the request that produced it is
                 # byte-for-byte the request we would send now — same records, same prompts,
                 # same provider/model/parameters. Otherwise the artifact would claim one
