@@ -8,7 +8,7 @@ final text, fetched pages), the served model, token usage, and the validated dec
 be re-executed to reproduce a decision; this record is what is re-read.
 
 Fail loud (Rule 2): a refusal, an unparseable or schema-invalid answer, a wrong case ID or
-evidence hash, a case decided without any web search, or an exhausted pause_turn budget
+evidence hash, a case decided without any web search or successful web fetch, or an exhausted pause_turn budget
 stops the run after the case's record is written. No automatic fallback to another model:
 a refusal must not silently change which model reviewed a case.
 
@@ -128,9 +128,14 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
         b.get("input", {}).get("code") for r in rounds for b in _blocks(r, "server_tool_use")
         if b.get("name") == "code_execution"
     ]
+    # A failed fetch's result carries no URL, so the URL comes from the fetch call itself.
+    fetch_urls = {
+        b["id"]: b.get("input", {}).get("url") for r in rounds for b in _blocks(r, "server_tool_use")
+        if b.get("name") == "web_fetch"
+    }
     record["web_fetches"] = [
         {
-            "url": (b.get("content") or {}).get("url"),
+            "url": fetch_urls[b["tool_use_id"]],
             "retrieved_at": (b.get("content") or {}).get("retrieved_at"),
             "error_code": (b.get("content") or {}).get("error_code"),
         }
@@ -162,8 +167,11 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
     if decision["case_id"] != case["case_id"] or decision["evidence_sha256"] != case["evidence_sha256"]:
         record["failure"] = "decision does not echo the case ID and evidence hash exactly"
         return record
-    if not record["web_searches"]:
-        record["failure"] = "case decided without any web search (the role prompt requires research)"
+    if not record["web_searches"] and not any(f["error_code"] is None for f in record["web_fetches"]):
+        record["failure"] = (
+            "case decided without any web search or successful web fetch "
+            "(the role prompt requires research)"
+        )
         return record
     record["decision"] = decision
     return record

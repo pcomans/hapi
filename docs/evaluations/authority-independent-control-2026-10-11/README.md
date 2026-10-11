@@ -48,7 +48,8 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 - **No automatic fallback** to another model on a refusal: a refusal stops the run, so a
   case's reviewer can never change silently.
 - **Fail loud:** an unparseable or schema-invalid answer, a wrong case ID or evidence hash, or
-  a case decided without any web search stops the run after the record is written.
+  a case decided without any web search or successful
+  web fetch stops the run after the record is written.
 - **Prompt:** `prompts/stage-1-reviewer-v3.txt`, response schema
   `raw-response-contracts/stage-1-reviewer-case-v1.schema.json`. Leak-audited before use
   (Rule 14; `prompt-audit-2026-10-11.md`).
