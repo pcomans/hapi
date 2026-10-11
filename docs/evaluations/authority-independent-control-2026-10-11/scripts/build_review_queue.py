@@ -17,6 +17,10 @@ PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard"))
 OPAQUE_ORDER_SEED = "hapi-authority-independent-control-2026-10-11-stage-1-v1"
 CONTROL_RATIO_NUMERATOR = 9
 CONTROL_RATIO_DENOMINATOR = 10
+# Records shown per museum side, so the reviewer can open the museum's own record pages and
+# read the full field that holds each mention. Chosen in an opaque seeded order, not by
+# record ID, mention count or arm.
+RECORDS_SHOWN_PER_SIDE = 5
 STAGE_1_FORBIDDEN_KEYS = {
     "artifact_id",
     "artifact_ids",
@@ -56,21 +60,21 @@ CANONICAL_IDENTITY_OUTCOMES = ("exact_identity", "different_identity", "insuffic
 EVALUATION_ROOT = Path("docs/evaluations/authority-independent-control-2026-10-11")
 PROMPT_PATHS = {
     "prompt_auditor": EVALUATION_ROOT / "prompts/prompt-auditor-v2.txt",
-    "stage_1_reviewer": EVALUATION_ROOT / "prompts/stage-1-reviewer-v2.txt",
+    "stage_1_reviewer": EVALUATION_ROOT / "prompts/stage-1-reviewer-v3.txt",
     "stage_1_reconciler": EVALUATION_ROOT / "prompts/stage-1-reconciler-v2.txt",
     "stage_2_reviewer": EVALUATION_ROOT / "prompts/stage-2-reviewer-v2.txt",
     "stage_2_reconciler": EVALUATION_ROOT / "prompts/stage-2-reconciler-v2.txt",
 }
 RAW_RESPONSE_CONTRACT_PATHS = {
     "prompt_auditor": EVALUATION_ROOT / "raw-response-contracts/prompt-auditor-v1.schema.json",
-    "stage_1_reviewer": EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-v1.schema.json",
+    "stage_1_reviewer": EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v1.schema.json",
     "stage_1_reconciler": EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-v1.schema.json",
     "stage_2_reviewer": EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-v1.schema.json",
     "stage_2_reconciler": EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-v1.schema.json",
 }
 LAUNCHER_SYSTEM_PROMPT_PATHS = {
     "prompt_auditor": EVALUATION_ROOT / "launcher-instructions/prompt-auditor-system-v1.txt",
-    "review": EVALUATION_ROOT / "launcher-instructions/review-system-v1.txt",
+    "review": EVALUATION_ROOT / "launcher-instructions/review-system-v2.txt",
 }
 REVIEW_SCHEMA_PATH = EVALUATION_ROOT / "review-artifact.schema.json"
 
@@ -189,11 +193,60 @@ def validate_run(run: Path) -> tuple[dict, dict]:
     return manifest, report
 
 
+def load_source_urls(repo_root: Path, archive: Path) -> dict[str, str]:
+    """Map every canonical artifact ID to its museum's public record URL.
+
+    Read from the frozen corpus archive's canonical records (the required `source_url`
+    field), verified by the extractor's archive and member SHA-256 checks.
+    """
+    path = repo_root / EVALUATION_ROOT / "scripts/extract_mentions.py"
+    spec = importlib.util.spec_from_file_location("_authority_control_extractor_for_queue", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("cannot load mention extractor module")
+    extractor = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = extractor
+    spec.loader.exec_module(extractor)
+    members = extractor.read_exact_archive_members(archive)
+    canonical = extractor.load_gzip_ndjson(members["data/artifacts.ndjson.gz"], "canonical")
+    urls: dict[str, str] = {}
+    for row in canonical:
+        url = row.get("source_url")
+        if not isinstance(url, str) or not url.startswith(("https://", "http://")):
+            raise ValueError(f"canonical record has no public source_url: {row.get('id')}")
+        if row["id"] in urls:
+            raise ValueError(f"duplicate canonical record: {row['id']}")
+        urls[row["id"]] = url
+    return urls
+
+
+def shown_records(rows: list[dict], source_urls: dict[str, str]) -> list[dict]:
+    fields_by_artifact: dict[str, set[tuple[str, str]]] = collections.defaultdict(set)
+    for row in rows:
+        fields_by_artifact[row["artifact_id"]].add((row["field_path"], row["field_value"]))
+    chosen = sorted(
+        fields_by_artifact,
+        key=lambda artifact_id: hashlib.sha256(
+            f"{OPAQUE_ORDER_SEED}|shown-record|{artifact_id}".encode("utf-8")
+        ).hexdigest(),
+    )[:RECORDS_SHOWN_PER_SIDE]
+    return [
+        {
+            "source_url": source_urls[artifact_id],
+            "fields": [
+                {"field_path": path, "field_text": value}
+                for path, value in sorted(fields_by_artifact[artifact_id])
+            ],
+        }
+        for artifact_id in chosen
+    ]
+
+
 def surface_groups(
     mention_ids: list[str],
     mentions: dict[str, dict],
     literal_rows: dict[str, dict],
     side_index: int,
+    source_urls: dict[str, str],
 ) -> list[dict]:
     rows = []
     for mention_id in mention_ids:
@@ -214,6 +267,7 @@ def surface_groups(
         "distinct_record_count": len({row["artifact_id"] for row in rows}),
         "field_paths": sorted({row["field_path"] for row in rows}),
         "evidence_roles": sorted({row["evidence_role"] for row in rows}),
+        "shown_records": shown_records(rows, source_urls),
     }]
 
 
@@ -300,7 +354,8 @@ def review_unit_binding(pair: list[str], entity_type: str, node: dict) -> dict:
 
 
 def review_unit_evidence(
-    binding: dict, mentions: dict[str, dict], literal_rows: dict[str, dict]
+    binding: dict, mentions: dict[str, dict], literal_rows: dict[str, dict],
+    source_urls: dict[str, str],
 ) -> dict:
     return {
         "museum_pair": binding["museum_pair"],
@@ -311,6 +366,7 @@ def review_unit_evidence(
                 mentions,
                 literal_rows,
                 side_index,
+                source_urls,
             )
             for side_index, museum in enumerate(binding["museum_pair"], 1)
         },
@@ -531,6 +587,21 @@ def evidence_sufficiency_failures(evidence: dict) -> list[str]:
                     isinstance(value, str) and value for value in values
                 ):
                     failures.append(f"{prefix}.{key}")
+            records = group.get("shown_records")
+            if not isinstance(records, list) or not (
+                0 < len(records) == min(RECORDS_SHOWN_PER_SIDE, group.get("distinct_record_count", 0))
+            ) or not all(
+                isinstance(record.get("source_url"), str) and record["source_url"]
+                and isinstance(record.get("fields"), list) and record["fields"]
+                and all(
+                    set(field) == {"field_path", "field_text"}
+                    and field["field_path"] in group.get("field_paths", [])
+                    and isinstance(field["field_text"], str) and field["field_text"]
+                    for field in record["fields"]
+                )
+                for record in records
+            ):
+                failures.append(f"{prefix}.shown_records")
     return failures
 
 
@@ -605,6 +676,7 @@ def stage_1_blinding_check(stage_1: dict, answer_key: dict) -> dict:
     expected_block_keys = {
         "evidence_group", "representative_exact_mention", "exact_mention_variants",
         "mention_count", "distinct_record_count", "field_paths", "evidence_roles",
+        "shown_records",
     }
     for case in stage_1["cases"]:
         pair = case["museum_pair"]
@@ -719,8 +791,11 @@ def arm_native_inventory(answer_cases: list[dict]) -> dict:
     }
 
 
-def build(repo_root: Path, run: Path, out: Path, public_digest: Path | None = None) -> dict:
+def build(
+    repo_root: Path, run: Path, archive: Path, out: Path, public_digest: Path | None = None
+) -> dict:
     candidates, exhaustive, inputs, mentions, literal_rows = derive_candidates(repo_root, run)
+    source_urls = load_source_urls(repo_root, archive)
     protocol_inputs = review_protocol_inputs(repo_root)
     review_units_by_binding: dict[str, dict] = {}
     for candidate in candidates:
@@ -731,7 +806,7 @@ def build(repo_root: Path, run: Path, out: Path, public_digest: Path | None = No
                     hidden["museum_pair"], hidden["entity_type"], node
                 )
                 binding_sha = canonical_sha256(binding)
-                evidence = review_unit_evidence(binding, mentions, literal_rows)
+                evidence = review_unit_evidence(binding, mentions, literal_rows, source_urls)
                 value = {
                     "binding_sha256": binding_sha,
                     "evidence": evidence,
@@ -1128,6 +1203,7 @@ def main() -> None:
     build_parser = subparsers.add_parser("build")
     build_parser.add_argument("--repo-root", type=Path, required=True)
     build_parser.add_argument("--run", type=Path, required=True)
+    build_parser.add_argument("--archive", type=Path, required=True)
     build_parser.add_argument("--out", type=Path, required=True)
     build_parser.add_argument("--public-digest", type=Path)
     release_parser = subparsers.add_parser("release-stage-2")
@@ -1141,7 +1217,7 @@ def main() -> None:
     release_parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "build":
-        result = build(args.repo_root.resolve(), args.run, args.out, args.public_digest)
+        result = build(args.repo_root.resolve(), args.run, args.archive, args.out, args.public_digest)
     else:
         result = release_stage_2(
             args.repo_root.resolve(), args.stage_1_queue, args.stage_2_custodian,

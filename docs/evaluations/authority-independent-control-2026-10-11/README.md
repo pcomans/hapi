@@ -55,6 +55,14 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
   case evidence records about the records counts only through a named artifact-evidence
   exception. The schema requires at least one institutional `http(s)` citation on every
   decision, including `insufficient_evidence`.
+- **Each side shows up to 5 of its records** (`shown_records`): the museum's public record
+  URL, taken from the frozen corpus's canonical `source_url`, and the full text of each field
+  that holds a mention. They are chosen in an opaque seeded order over record IDs. The original
+  registration showed only the mention strings. In the mini-pilot both reviewers then took a
+  title-field "Horemheb" for "Stela of Lady Horemheb" (a private woman). The ledger record is
+  "Fragment of a Statue of King Horemheb", so one reviewer answered `different_entity` on a
+  real match. Adding the records changes no case membership, case ID or other evidence field
+  (`results/real-review-population-digest.json`, `results/real-rerun-proof.json`).
 - **Up to 99 web searches per case** (`max_uses`), so a case is never decided from general
   knowledge because a search cap ran out (the 5-search cap of the first pilot did).
 
@@ -79,5 +87,12 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
   institutional source for a variant spelling is harder to find than one for an identical
   string, so differing-string cases may draw more `insufficient_evidence`. Read the f counts
   with this in mind.
+- **Field text helps some cases more than others.** A shown record's field text can carry
+  context the bare mention lacks (both the "Hurbeit" and "Horbeit" records read
+  "(Pharbaethos)"); this is the museums' own text and the reason the records are shown, but it
+  helps differing-string cases more than identical ones.
+- **Record pages may not open.** Whether a museum's page loads for the reviewer can vary by
+  site. A record that cannot be opened may be used only through an artifact-evidence exception
+  saying so, the same for every case.
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
   behaviour (#338).

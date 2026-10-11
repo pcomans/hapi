@@ -11,8 +11,8 @@
         "sha256": "b6a074377058587671f42e90e882d8ecdc8a8ed44aa7a2dfdd5b60b046e745fe"
       },
       "review": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v1.txt",
-        "sha256": "1e594d29f147dac9a7e583fa3b0d1b53e3d14a04800483d0390995118a6b5916"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v2.txt",
+        "sha256": "a7e2c5ac953cfd959414b5946200f0b48c23f336146887c0d0735e022e9955f8"
       }
     },
     "prompts": {
@@ -25,8 +25,8 @@
         "sha256": "4e1acd575d28c9e1c1b982834e8b351aadd4e180ef76b7eb698f9103a6890040"
       },
       "stage_1_reviewer": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v2.txt",
-        "sha256": "1dfef886aa223464cf9f02fc64946c65c16c3e54342eb409e6221dc48530e4df"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v3.txt",
+        "sha256": "f46f703bcabed54e66d59abb752490834d285582fdc0b12ad7ec4a3833ccf38c"
       },
       "stage_2_reconciler": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v2.txt",
@@ -48,8 +48,8 @@
         "sha256": "985587ba23f19c58a7593ddf02b4f57f6be3c3cb2e0703a49e49e261a00a5463"
       },
       "stage_1_reviewer": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-v1.schema.json",
-        "sha256": "0bde720f8312d34091cfa76dc2df0bf3f55aea68bc6b87fe67b7506f68188525"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v1.schema.json",
+        "sha256": "13a7a6b8df76160b02809412449cfacd69e54b04890d575b10922e6d9e5faf43"
       },
       "stage_2_reconciler": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-v1.schema.json",
@@ -75,8 +75,8 @@
   },
   "quality_conclusion_status": "NOT_AVAILABLE",
   "queue_inputs": {
-    "stage_1_queue_sha256": "66f237d1fb7031244cb18ead412a5e84b475204deb8dc8efab664eda57ab6aab",
-    "stage_2_custodian_sha256": "52ee97a46cbf2edd2ba99df733a501f2a93a0771ec1ef0f0270cd6da184a0d8a"
+    "stage_1_queue_sha256": "dd98d4c901167f0f4a3e336fcb37f0c59fa9cb0caed902a9d18d88805b7f017e",
+    "stage_2_custodian_sha256": "ee44cf6bf4f83911efed539acee75dc69736dec680fee54fca0e94992da7929d"
   },
   "reason": "Review is blocked: no genuine immutable provider snapshot is exposed for gpt-5.6-sol and no authorized direct Responses API credential is available.",
   "required_sequence": [

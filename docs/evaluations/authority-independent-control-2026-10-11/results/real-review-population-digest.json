@@ -1,9 +1,9 @@
 {
   "arm_native_inventory": {
-    "different_membership_case_binding_set_sha256": "c63a50f199b57f43d10944fc66e1e64bf01a9bf28b8c73c822d5702dc3a2064c",
-    "distinct_accounting_case_binding_set_sha256": "c50c53b7adf487f8a7702ebfc47ad39d25ac4e6c6af86a6c6a1c0b1e0c445989",
+    "different_membership_case_binding_set_sha256": "5218d5e2e3f36ab08940a45915e0a25298db7134a2c7b3db69d7c08352c40f11",
+    "distinct_accounting_case_binding_set_sha256": "e69d2f3c86b508cd86839454fc772c36ed6710749b7d608907a470b692ca3656",
     "literal_nodes_represented_by_retained_controls": 51,
-    "multiple_literal_case_binding_set_sha256": "50e70a36cdda065840ef5e5b5b44823c9d28418d44143b6677082a234c1a1859",
+    "multiple_literal_case_binding_set_sha256": "bcc54f0edc6611501733b709157311d7fe3cd45e3243de106490a7127dc7f1b2",
     "retained_authority_control_cases": 50,
     "retained_controls_requiring_distinct_arm_native_accounting": 9,
     "retained_controls_with_different_arm_native_record_membership": 8,
@@ -88,7 +88,7 @@
     "literal_links_sha256": "78f8b221ca3325ad5908bb9b479b374de82345f59ea6357981739b097068b237",
     "mention_ledger_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
     "report_sha256": "7c1b61c5cb640ce52de1ad87572cfd14dd013482870d1e21d889e9380f3a404a",
-    "review_population_builder_sha256": "d141f99ec905132119b30466a08e724811ab57f44c05b2152be77ad00bdbdb34",
+    "review_population_builder_sha256": "6128e1b5b6ce43b60ca963db4739dcd3f5680628bbcede89e30bbc16d4d66494",
     "review_protocol": {
       "artifact_schema": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/review-artifact.schema.json",
@@ -100,8 +100,8 @@
           "sha256": "b6a074377058587671f42e90e882d8ecdc8a8ed44aa7a2dfdd5b60b046e745fe"
         },
         "review": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v1.txt",
-          "sha256": "1e594d29f147dac9a7e583fa3b0d1b53e3d14a04800483d0390995118a6b5916"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v2.txt",
+          "sha256": "a7e2c5ac953cfd959414b5946200f0b48c23f336146887c0d0735e022e9955f8"
         }
       },
       "prompts": {
@@ -114,8 +114,8 @@
           "sha256": "4e1acd575d28c9e1c1b982834e8b351aadd4e180ef76b7eb698f9103a6890040"
         },
         "stage_1_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v2.txt",
-          "sha256": "1dfef886aa223464cf9f02fc64946c65c16c3e54342eb409e6221dc48530e4df"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v3.txt",
+          "sha256": "f46f703bcabed54e66d59abb752490834d285582fdc0b12ad7ec4a3833ccf38c"
         },
         "stage_2_reconciler": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v2.txt",
@@ -137,8 +137,8 @@
           "sha256": "985587ba23f19c58a7593ddf02b4f57f6be3c3cb2e0703a49e49e261a00a5463"
         },
         "stage_1_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-v1.schema.json",
-          "sha256": "0bde720f8312d34091cfa76dc2df0bf3f55aea68bc6b87fe67b7506f68188525"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v1.schema.json",
+          "sha256": "13a7a6b8df76160b02809412449cfacd69e54b04890d575b10922e6d9e5faf43"
         },
         "stage_2_reconciler": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-v1.schema.json",
@@ -165,11 +165,11 @@
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
-    "private_answer_key_sha256": "936e326850f747943299aa8909dccbad2d873f4e2747609646ad08faea083fd1",
-    "private_population_manifest_sha256": "88e6b31f32d91402e90951f99e66f4b81755cb7e0b667231afd9e360b9cd0453",
-    "review_protocol_manifest_sha256": "cd76e05387ea7a24cd2ab8649f4a7613f59db291832773622f82c11ab2d06ebc",
-    "stage_1_queue_sha256": "66f237d1fb7031244cb18ead412a5e84b475204deb8dc8efab664eda57ab6aab",
-    "stage_2_custodian_sha256": "52ee97a46cbf2edd2ba99df733a501f2a93a0771ec1ef0f0270cd6da184a0d8a"
+    "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
+    "private_population_manifest_sha256": "14572cedd3c8e0201976a48e2f9149a583c6b8716d924006f12349106740ec23",
+    "review_protocol_manifest_sha256": "e6dd243e51728d135f3c50c01a71c6cb6b3b5627202b309e3b2e8fec4755e262",
+    "stage_1_queue_sha256": "dd98d4c901167f0f4a3e336fcb37f0c59fa9cb0caed902a9d18d88805b7f017e",
+    "stage_2_custodian_sha256": "ee44cf6bf4f83911efed539acee75dc69736dec680fee54fca0e94992da7929d"
   },
   "population_counts": {
     "by_class": {
@@ -202,7 +202,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "cd76e05387ea7a24cd2ab8649f4a7613f59db291832773622f82c11ab2d06ebc",
+    "protocol_manifest_sha256": "e6dd243e51728d135f3c50c01a71c6cb6b3b5627202b309e3b2e8fec4755e262",
     "quality_conclusion_status": "NOT_AVAILABLE",
     "runtime_readiness": "BLOCKED",
     "status": "NOT_RUN",
