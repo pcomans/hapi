@@ -97,10 +97,16 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
         "rounds": rounds,
     }
     for _ in range(MAX_CONTINUATIONS + 1):
-        with client.messages.stream(
-            model=MODEL, system=system_prompt, messages=messages, **PARAMETERS
-        ) as stream:
-            message = stream.get_final_message()
+        # An API error (e.g. exhausted credit) stops the run; record it, with any rounds
+        # already returned, so the interrupted case still leaves a record.
+        try:
+            with client.messages.stream(
+                model=MODEL, system=system_prompt, messages=messages, **PARAMETERS
+            ) as stream:
+                message = stream.get_final_message()
+        except anthropic.APIError as err:
+            record["failure"] = f"API error: {type(err).__name__}: {err}"
+            return record
         response = message.model_dump(mode="json")
         rounds.append(response)
         if message.stop_reason != "pause_turn":
