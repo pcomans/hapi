@@ -423,4 +423,6 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    interaction records DeepSeek's reported serving build (`systemFingerprint`) with it, and
    a committed test requires one build per run. The project owner accepted the missing
    dated snapshot for this research build (2026-10-10); it is to be revisited before
-   identity links become production authority data.
+   identity links become production authority data. Because such a run is not "completely
+   determined by its digital input", it is typed `hapi:LLMReviewerRun` (CRMdig D7), not D10
+   (ADR-018 amendment 2026-10-11).

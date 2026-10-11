@@ -13,7 +13,7 @@
       Hapi project's RDFS extensions on top of CIDOC CRM 7.1.3 + CRMdig 5.0.
       The manifest declares three structurally different kinds of extension:
         (a) rdfs:subClassOf / rdfs:subPropertyOf narrowing declarations
-            (e.g. hapi:MatcherRun ⊂ crmdig:D10, hapi:derived_by_run ⊂ P15,
+            (e.g. hapi:MatcherRun ⊂ crmdig:D7, hapi:derived_by_run ⊂ P15,
             hapi:same_entity_as ⊂ L54). These follow the standard CIDOC
             extension idiom — narrowing within the parent's domain/range,
             never violating — and strict CIDOC readers running RDFS
@@ -69,8 +69,21 @@
 
   <rdfs:Class rdf:about="#MatcherRun">
     <rdfs:label xml:lang="en">Matcher run</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D7_Digital_Machine_Event"/>
+    <rdfs:comment xml:lang="en">A specific execution in the matcher pipeline: a stage-1 matcher, a stage-2 LLM reviewer, or a committed deterministic verdict rule that settles a candidate before any reviewer call (the ADR-020 era gate, amendment 2026-10-10). Every run is typed as one of the two subclasses, hapi:DeterministicMatcherRun or hapi:LLMReviewerRun; the run's hapi:MatcherAlgorithm (D14) records which role it played. IS-A chain: hapi:MatcherRun ⊂ crmdig:D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. D7 — "events that happen on physical digital devices following a human activity that intentionally caused its immediate or delayed initiation and results in the creation of a new instance of D1 Digital Object on behalf of the human actor" (crmdig_v5.0.rdf) — covers every run; the narrower D10 Software Execution only the deterministic ones (see the subclasses). NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. Carries run-reproducibility metadata (run_id, parameters_hash, started_at, completed_at) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional. There is NO reviewer_status / reviewer_id / reviewed_at field on the MatcherRun itself: verdicts from the stage-2 reviewer are their own E13s whose P140 subject IS the matcher's E13 and whose hapi:derived_by_run points at the reviewer's MatcherRun (see ADR-018 schema sketch case 4b).</rdfs:comment>
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="#DeterministicMatcherRun">
+    <rdfs:label xml:lang="en">Deterministic matcher run</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#MatcherRun"/>
     <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D10_Software_Execution"/>
-    <rdfs:comment xml:lang="en">A specific execution of a software run in the matcher pipeline — a deterministic stage-1 matcher, a stage-2 LLM reviewer, OR a committed deterministic verdict rule that settles a candidate before any reviewer call (the ADR-020 era gate, amendment 2026-10-10). All are hapi:MatcherRun instances; the run's hapi:MatcherAlgorithm (D14) records which role it played. IS-A chain: hapi:MatcherRun ⊂ crmdig:D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. D10's scope note: a D10 "runs a software program … as a single task, which is completely determined by its digital input, the software and the generic properties of the device" (crmdig_v5.0.rdf). A deterministic matcher or verdict rule fits it exactly; for an LLM reviewer run the fit rests on the D10/D11 contrast (no intended environmental influence) and is an open modelling question for runs of a model alias without a dated snapshot (ADR-020 amendment 2026-10-10, item 7). Carries run-reproducibility metadata (run_id, parameters_hash, started_at, completed_at) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional. There is NO reviewer_status / reviewer_id / reviewed_at field on the MatcherRun itself: verdicts from the stage-2 reviewer are their own E13s whose P140 subject IS the matcher's E13 and whose hapi:derived_by_run points at the reviewer's MatcherRun (see ADR-018 schema sketch case 4b).</rdfs:comment>
+    <rdfs:comment xml:lang="en">A matcher-pipeline run whose output is fixed by its input and code: the stage-1 candidate matcher, and committed deterministic verdict rules (the ADR-020 era gate; the name-only escalation rule). This is exactly CRMdig D10 Software Execution: a run "completely determined by its digital input, the software and the generic properties of the device" (crmdig_v5.0.rdf). IS-A chain: hapi:DeterministicMatcherRun ⊂ crmdig:D10 ⊂ D7, and ⊂ hapi:MatcherRun ⊂ D7.</rdfs:comment>
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="#LLMReviewerRun">
+    <rdfs:label xml:lang="en">LLM reviewer run</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#MatcherRun"/>
+    <rdfs:comment xml:lang="en">A stage-2 reviewer run in which a large language model judges candidates. Deliberately NOT a crmdig:D10 Software Execution: its output is not "completely determined by its digital input, the software and the generic properties of the device" (D10 scope note) — the model is served by a provider, may be an alias with no dated snapshot, and samples its answer (ADR-020 amendment 2026-10-10, item 7). It is a crmdig:D7 Digital Machine Event through hapi:MatcherRun: a human-initiated machine event producing a digital object (the verdicts), which D7 covers without a determinism requirement. Not a D11 Digital Measurement Event either — nothing physical is measured, and D11 depends on CRMsci, outside the consumed subset. The complete request and response of every call are persisted (Constitutional Rule 13), which is what makes the run replayable even though it is not deterministic. IS-A chain: hapi:LLMReviewerRun ⊂ hapi:MatcherRun ⊂ crmdig:D7 Digital Machine Event.</rdfs:comment>
   </rdfs:Class>
 
   <rdfs:Class rdf:about="#MatcherAlgorithm">
@@ -82,7 +95,7 @@
   <rdfs:Class rdf:about="#SourceData">
     <rdfs:label xml:lang="en">Source data file</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D1_Digital_Object"/>
-    <rdfs:comment xml:lang="en">A reconciled.jsonl file or other digital input/output of a matcher run. IS-A chain: hapi:SourceData ⊂ crmdig:D1 Digital Object ⊂ crm:E73 Information Object. Referenced from hapi:MatcherRun via crmdig:L10_had_input (input data the matcher consumed) and crmdig:L11_had_output (output data the matcher produced). L10/L11 are D7-level properties inherited by D10; we deliberately do NOT use L21/L22 (D3-specific properties for "version-of" derivations).</rdfs:comment>
+    <rdfs:comment xml:lang="en">A reconciled.jsonl file or other digital input/output of a matcher run. IS-A chain: hapi:SourceData ⊂ crmdig:D1 Digital Object ⊂ crm:E73 Information Object. Referenced from hapi:MatcherRun via crmdig:L10_had_input (input data the matcher consumed) and crmdig:L11_had_output (output data the matcher produced). L10/L11 are D7-level properties, so they apply to every hapi:MatcherRun; we deliberately do NOT use L21/L22 (D3-specific properties for "version-of" derivations).</rdfs:comment>
   </rdfs:Class>
 
   <!-- ============================================================
@@ -94,7 +107,7 @@
     <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E13_Attribute_Assignment"/>
     <rdfs:range  rdf:resource="#MatcherRun"/>
     <rdfs:subPropertyOf rdf:resource="http://www.cidoc-crm.org/cidoc-crm/P15_was_influenced_by"/>
-    <rdfs:comment xml:lang="en">Attaches an E13 Attribute Assignment to the hapi:MatcherRun (CRMdig D10 Software Execution) that produced it. Declared rdfs:subPropertyOf crm:P15_was_influenced_by — strict CIDOC readers interpret this as "the assignment was influenced by the software-execution event." Hapi readers interpret it more specifically as "the assignment was produced by this matcher run." Domain (E13) is in P15's domain via E13 ⊂ E7. Range (hapi:MatcherRun) is in P15's range via hapi:MatcherRun ⊂ D10 ⊂ D7 ⊂ E11/E65 ⊂ E7 ⊂ ... ⊂ E1 (all chains in CRM/CRMdig RDFS).</rdfs:comment>
+    <rdfs:comment xml:lang="en">Attaches an E13 Attribute Assignment to the hapi:MatcherRun (CRMdig D7 Digital Machine Event — D10 Software Execution when the run is deterministic) that produced it. Declared rdfs:subPropertyOf crm:P15_was_influenced_by — strict CIDOC readers interpret this as "the assignment was influenced by the software-execution event." Hapi readers interpret it more specifically as "the assignment was produced by this matcher run." Domain (E13) is in P15's domain via E13 ⊂ E7. Range (hapi:MatcherRun) is in P15's range via hapi:MatcherRun ⊂ D7 ⊂ E11/E65 ⊂ E7 ⊂ ... ⊂ E1 (all chains in CRM/CRMdig RDFS).</rdfs:comment>
   </rdf:Property>
 
   <!-- ============================================================

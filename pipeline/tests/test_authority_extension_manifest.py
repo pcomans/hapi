@@ -54,6 +54,8 @@ SYMMETRIC = "http://www.w3.org/2002/07/owl#SymmetricProperty"
 EXPECTED_TYPING: dict[str, tuple[str, frozenset[str]]] = {
     # Classes (CRMdig-narrowed) — rdfs:Class element, no explicit rdf:type
     "#MatcherRun": (RDFS_CLASS, frozenset()),
+    "#DeterministicMatcherRun": (RDFS_CLASS, frozenset()),
+    "#LLMReviewerRun": (RDFS_CLASS, frozenset()),
     "#MatcherAlgorithm": (RDFS_CLASS, frozenset()),
     "#SourceData": (RDFS_CLASS, frozenset()),
     # E13-internal direct-edge properties — rdf:Property, NO E55 pun
@@ -192,16 +194,21 @@ class TestManifestTermResolution:
 
     def test_narrowing_declarations_target_pinned_parents(self, manifest_root):
         decls = manifest_declarations(manifest_root)
+        # Every run is a D7 Digital Machine Event; only deterministic runs are D10
+        # Software Execution, whose scope note requires a run "completely determined by
+        # its digital input" — an LLM reviewer run is not (ADR-018, amendment 2026-10-11).
         expected_parents = {
-            "#MatcherRun": CRMDIG_PREFIX + "D10_Software_Execution",
-            "#MatcherAlgorithm": CRMDIG_PREFIX + "D14_Software",
-            "#SourceData": CRMDIG_PREFIX + "D1_Digital_Object",
-            "#derived_by_run": CRM_PREFIX + "P15_was_influenced_by",
-            "#same_entity_as": CRMDIG_PREFIX + "L54_is_same_as",
-            "#original_burial_in": CRM_PREFIX + "P53_has_former_or_current_location",
-            "#cache_context_at": CRM_PREFIX + "P53_has_former_or_current_location",
+            "#MatcherRun": {CRMDIG_PREFIX + "D7_Digital_Machine_Event"},
+            "#DeterministicMatcherRun": {"#MatcherRun", CRMDIG_PREFIX + "D10_Software_Execution"},
+            "#LLMReviewerRun": {"#MatcherRun"},
+            "#MatcherAlgorithm": {CRMDIG_PREFIX + "D14_Software"},
+            "#SourceData": {CRMDIG_PREFIX + "D1_Digital_Object"},
+            "#derived_by_run": {CRM_PREFIX + "P15_was_influenced_by"},
+            "#same_entity_as": {CRMDIG_PREFIX + "L54_is_same_as"},
+            "#original_burial_in": {CRM_PREFIX + "P53_has_former_or_current_location"},
+            "#cache_context_at": {CRM_PREFIX + "P53_has_former_or_current_location"},
         }
-        for term, parent in expected_parents.items():
+        for term, parents in expected_parents.items():
             declared = {
                 el.attrib[f"{RDF_NS}resource"]
                 for tag in ("subClassOf", "subPropertyOf")
@@ -209,4 +216,4 @@ class TestManifestTermResolution:
             }
             # Exact equality, not membership: a spurious second (real-but-wrong)
             # parent pin would slip past an `in` check and term-resolution.
-            assert declared == {parent}, (term, declared)
+            assert declared == parents, (term, declared)
