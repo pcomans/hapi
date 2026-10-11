@@ -1,10 +1,10 @@
-"""#337 re-registration: per-case Stage 1 review with Claude Sonnet 5.5 and web search.
+"""#337 re-registration: per-case Stage 1 review with Claude Sonnet 5.5, web search and web fetch.
 
 One API conversation per case per reviewer. Every reviewer is an independent run over the
 same queue (separate calls, no shared context). Each case's complete record is persisted
 before its decision is used (Constitutional Rule 13): the request parameters, system prompt,
 user content, every response round verbatim (thinking, web-search queries and results,
-final text), the served model, token usage, and the validated decision. An LLM call cannot
+final text, fetched pages), the served model, token usage, and the validated decision. An LLM call cannot
 be re-executed to reproduce a decision; this record is what is re-read.
 
 Fail loud (Rule 2): a refusal, an unparseable or schema-invalid answer, a wrong case ID or
@@ -37,12 +37,21 @@ RESPONSE_SCHEMA = EVALUATION_ROOT / "raw-response-contracts" / "stage-1-reviewer
 MODEL = "claude-sonnet-5-5"
 # Committed request parameters. Thinking is adaptive (the model thinks when the case calls
 # for it) with display "summarized" so the reasoning text is returned; effort is set
-# explicitly so the record states it. Web search is the current server tool.
+# explicitly so the record states it. Web search finds pages; web fetch opens the shown
+# museum record URLs directly, and its page text is returned (and recorded) in plain text.
+# Blocked on both tools, enforcing the role prompt: "Never use Wikidata", and "Do not search
+# for, open or cite this evaluation's repository" (the repository is public on GitHub).
+BLOCKED_DOMAINS = ["wikidata.org", "github.com", "raw.githubusercontent.com"]
 PARAMETERS = {
     "max_tokens": 32000,
     "thinking": {"type": "adaptive", "display": "summarized"},
     "output_config": {"effort": "high"},
-    "tools": [{"type": "web_search_20260209", "name": "web_search", "max_uses": 99}],
+    "tools": [
+        {"type": "web_search_20260209", "name": "web_search", "max_uses": 99,
+         "blocked_domains": BLOCKED_DOMAINS},
+        {"type": "web_fetch_20260209", "name": "web_fetch", "max_uses": 99,
+         "max_content_tokens": 20000, "blocked_domains": BLOCKED_DOMAINS},
+    ],
 }
 # pause_turn resumptions per case: the server pauses every 10 sampling iterations, and up to
 # 99 searches can need about 10 resumptions.
@@ -119,6 +128,14 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
         b.get("input", {}).get("code") for r in rounds for b in _blocks(r, "server_tool_use")
         if b.get("name") == "code_execution"
     ]
+    record["web_fetches"] = [
+        {
+            "url": (b.get("content") or {}).get("url"),
+            "retrieved_at": (b.get("content") or {}).get("retrieved_at"),
+            "error_code": (b.get("content") or {}).get("error_code"),
+        }
+        for r in rounds for b in _blocks(r, "web_fetch_tool_result")
+    ]
     record["web_search_results"] = [
         {"title": res.get("title"), "url": res.get("url"), "page_age": res.get("page_age")}
         for r in rounds for b in _blocks(r, "web_search_tool_result")
@@ -153,7 +170,7 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
 
 
 def usage_cost(record: dict) -> dict:
-    totals = {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0, "web_search": 0}
+    totals = {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0, "web_search": 0, "web_fetch": 0}
     for r in record["rounds"]:
         u = r.get("usage") or {}
         totals["input"] += u.get("input_tokens") or 0
@@ -161,6 +178,8 @@ def usage_cost(record: dict) -> dict:
         totals["cache_read"] += u.get("cache_read_input_tokens") or 0
         totals["cache_write"] += u.get("cache_creation_input_tokens") or 0
         totals["web_search"] += ((u.get("server_tool_use") or {}).get("web_search_requests") or 0)
+        # Web fetch has no per-request fee; fetched pages are billed as input tokens.
+        totals["web_fetch"] += ((u.get("server_tool_use") or {}).get("web_fetch_requests") or 0)
     usd = (
         (totals["input"] + totals["cache_write"]) * PRICE["input"]
         + totals["output"] * PRICE["output"]
@@ -212,7 +231,7 @@ def main() -> int:
             f"{record['decision']['same_entity']} / {record['decision']['useful_granularity']}"
         )
         print(f"[{args.reviewer}] {case['case_id']}: {status} | searches "
-              f"{len(record['web_searches'])} | ${record['usage']['estimated_usd']:.3f}", flush=True)
+              f"{len(record['web_searches'])} | fetches {len(record.get('web_fetches', []))} | ${record['usage']['estimated_usd']:.3f}", flush=True)
         if "failure" in record:
             raise ReviewFailure(f"{case['case_id']}: {record['failure']} (record: {path})")
     print(f"[{args.reviewer}] {len(cases)} cases, estimated ${total_usd:.2f}")

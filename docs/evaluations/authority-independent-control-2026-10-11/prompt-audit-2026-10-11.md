@@ -57,3 +57,14 @@ field text gives some differing-string cases disambiguating context (e.g. both H
 Horbeit records read "(Pharbaethos)") — real source text, disclosed in `README.md`; whether
 a museum page opens may vary by museum site, which the fallback treats identically for
 every case (noise, not class-linked bias).
+
+## Round 9: web fetch (2026-10-11)
+
+The project owner added `web_fetch_20260209` so the reviewer can open the shown record URLs.
+Prompt changes: "public web search and web fetch" (system prompt); "Open these records with
+web fetch" and "public web research (web search and web fetch)" (role prompt). Both web tools
+block `wikidata.org`.
+
+| Round | Prompt state | Verdict | Findings acted on |
+|---|---|---|---|
+| 9 | web fetch added | PASS on text; P2 gate | P2 gate: brooklynmuseum.org refuses fetches (HTTP 429), so a class that involves Brooklyn more often would get a weaker evidence path. Checked against the private answer key: a Brooklyn side appears in 14/15 authority-only gains (93%), 29/33 literal-only losses (88%) and 47/50 retained controls (94%), and always on the same side within a pair — class-neutral, so the gate passes and it is disclosed as a limitation. P3 the repository rule was convention only: `github.com` and `raw.githubusercontent.com` added to `blocked_domains` on both tools (the repository is public); the change only enforces an existing rule and is identical for every case, so it was not re-audited. Per-URL fetch outcomes are recorded (`web_fetches`). |

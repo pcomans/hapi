@@ -34,7 +34,9 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 ## Review protocol (changes from the original)
 
 - **Reviewer:** Claude Sonnet 5.5 through the Anthropic API, **one case per call**, with
-  adaptive thinking (display `summarized`), effort `high`, and the `web_search_20260209` tool
+  adaptive thinking (display `summarized`), effort `high`, and the `web_search_20260209` and
+  `web_fetch_20260209` tools (Wikidata and GitHub, where this public repository lives, blocked on both by
+  `blocked_domains`)
   (`scripts/run_claude_review.py`). Two independent reviewers are two separate runs. One call
   per case keeps each decision's record separate; a whole-queue call with web search would
   exceed the context window.
@@ -87,6 +89,15 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
   institutional source for a variant spelling is harder to find than one for an identical
   string, so differing-string cases may draw more `insufficient_evidence`. Read the f counts
   with this in mind.
+- **Fetched pages are recorded in plain text, but may be cached.** Web fetch returns each
+  page's text, kept verbatim in the record (`web_fetches` lists URL, retrieval time, error).
+  Anthropic serves fetches from a cache: `retrieved_at` can predate the review (a Met page
+  fetched on 2026-10-11 reported 2026-08-13).
+- **Brooklyn record pages cannot be fetched.** brooklynmuseum.org answers fetches with HTTP 429
+  (`url_not_accessible`), so Brooklyn records are read through search results or used only
+  through the "could not be opened" exception, while Met and Harvard pages are read directly.
+  This depends on the museum, not on the case type: a Brooklyn side appears in 14 of 15
+  authority-only gains, 29 of 33 literal-only losses and 47 of 50 retained controls.
 - **Field text helps some cases more than others.** A shown record's field text can carry
   context the bare mention lacks (both the "Hurbeit" and "Horbeit" records read
   "(Pharbaethos)"); this is the museums' own text and the reason the records are shown, but it

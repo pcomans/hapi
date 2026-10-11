@@ -101,7 +101,7 @@
         },
         "review": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v2.txt",
-          "sha256": "a7e2c5ac953cfd959414b5946200f0b48c23f336146887c0d0735e022e9955f8"
+          "sha256": "03344b313c62b3bcc481f5172f5683e1421ced0c8e99b16fd0e8b6b9c273ef7a"
         }
       },
       "prompts": {
@@ -115,7 +115,7 @@
         },
         "stage_1_reviewer": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v3.txt",
-          "sha256": "f46f703bcabed54e66d59abb752490834d285582fdc0b12ad7ec4a3833ccf38c"
+          "sha256": "e9eda8a3b4a010f90c6206ae4a0476bdefbce38c7f6100c64104eab749c54bf3"
         },
         "stage_2_reconciler": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v2.txt",
@@ -166,9 +166,9 @@
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "14572cedd3c8e0201976a48e2f9149a583c6b8716d924006f12349106740ec23",
-    "review_protocol_manifest_sha256": "e6dd243e51728d135f3c50c01a71c6cb6b3b5627202b309e3b2e8fec4755e262",
-    "stage_1_queue_sha256": "dd98d4c901167f0f4a3e336fcb37f0c59fa9cb0caed902a9d18d88805b7f017e",
+    "private_population_manifest_sha256": "f4a4e04c576843a7d358d7d977de875286ab8825e85ca6bdb80b9a637a7362ff",
+    "review_protocol_manifest_sha256": "9f7551e90c180c06885c82fa92a5b272bf47695881b558f439dec3101b0dff27",
+    "stage_1_queue_sha256": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
     "stage_2_custodian_sha256": "ee44cf6bf4f83911efed539acee75dc69736dec680fee54fca0e94992da7929d"
   },
   "population_counts": {
@@ -202,7 +202,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "e6dd243e51728d135f3c50c01a71c6cb6b3b5627202b309e3b2e8fec4755e262",
+    "protocol_manifest_sha256": "9f7551e90c180c06885c82fa92a5b272bf47695881b558f439dec3101b0dff27",
     "quality_conclusion_status": "NOT_AVAILABLE",
     "runtime_readiness": "BLOCKED",
     "status": "NOT_RUN",

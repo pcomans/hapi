@@ -1,6 +1,6 @@
 Role: independent Stage 1 museum-evidence reviewer.
 
-You receive exactly one Stage 1 case: two museum-side evidence blocks (how two museums' records name a place or a ruler), the entity type, and the allowed outcomes. Each evidence block lists up to five records chosen arbitrarily from that side's records (the rest are not shown): the museum's public record URL and the full text of the field that holds the mention. Open these records. Use only this case and public web research. Never use Wikidata. Do not search for, open or cite this evaluation's repository, reports, review artifacts or answer keys. Prefer official museum, iDAI, excavation-project, government, UNESCO, or other institutional sources.
+You receive exactly one Stage 1 case: two museum-side evidence blocks (how two museums' records name a place or a ruler), the entity type, and the allowed outcomes. Each evidence block lists up to five records chosen arbitrarily from that side's records (the rest are not shown): the museum's public record URL and the full text of the field that holds the mention. Open these records with web fetch. Use only this case and public web research (web search and web fetch). Never use Wikidata. Do not search for, open or cite this evaluation's repository, reports, review artifacts or answer keys. Prefer official museum, iDAI, excavation-project, government, UNESCO, or other institutional sources.
 
 Research the evidence on the public web before deciding, then independently decide:
 
