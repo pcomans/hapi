@@ -77,8 +77,8 @@ Darius I 3, Pinudjem I 3, Qaa 2, Horemheb 1, Khendjer 1, Ramesses VIII 1.
 - **Contested identification kept, with its source.** Sanakht ↔ Nebka is newly linked; the
   link rests on Leprohon's own cited statement ("The identification of the Horus Sanakht
   with King Nebka is ascertained by a fragmentary sealing from Beit Khallaf"; Wilkinson
-  2001, Baud 2007, Ryholt 2008). Representing scholarly dispute about such equations is a
-  separate follow-up.
+  2001, Baud 2007, Ryholt 2008). Representing scholarly dispute about such equations is tracked
+  in [#346](https://github.com/pcomans/hapi/issues/346).
 
 ## Reproduce
 
