@@ -8,8 +8,8 @@
 * The live LLM reviewers — :func:`review_with_llm` (Anthropic), :func:`review_with_openrouter`
   and :func:`review_with_vercel` (the #342 rebuild: DeepSeek V4.1 Flash pinned to
   DeepSeek's endpoint). Each sees the FULL structured record of both sides (never just
-  display names, ADR-020 §6) and its complete interaction is captured for replay
-  (Constitutional Rule 13).
+  display names, ADR-020 §6) and its complete interaction is persisted as the record of
+  the decision (Constitutional Rule 13; an LLM call itself cannot be re-executed).
 
 A verdict never silently drops a candidate: everything resolves to approved / rejected /
 escalated, and doubt routes to escalated.
@@ -72,10 +72,11 @@ _PROVIDER_LABEL = {PROVIDER_OPENROUTER: "OpenRouter", PROVIDER_VERCEL: "Vercel A
 class ReviewerInteraction:
     """ONE complete request/response round-trip with the reviewer model.
 
-    Constitutional Rule 13: a stored interaction must be enough to *reconstruct and replay
-    the request* — so it holds the provider, the requested model id AND the dated snapshot
-    the provider actually served, every request parameter, the full system prompt, the full
-    user prompt, and the complete raw response body. Every attempt made for a candidate is
+    Constitutional Rule 13: the stored interaction is the record of the decision — the call
+    cannot be re-executed to reproduce it — so it holds the provider, the requested model id
+    AND whatever model/build the provider reports serving, every request parameter, the full
+    system prompt, the full user prompt, and the complete raw response body (including the
+    model's reasoning). Every attempt made for a candidate is
     persisted, not just the one that happened to parse: a malformed attempt influenced the
     decision (it consumed a retry, and after the last retry it *is* the decision).
     """
@@ -113,7 +114,7 @@ def _serialisable(value: Any) -> Any:
 class ReviewerCallError(Exception):
     """Base for reviewer failures that carry the complete :class:`ReviewerInteraction`, so
     the request and whatever the provider returned are still persisted (Constitutional
-    Rule 13): a decision — or a failed attempt that shaped one — must be replayable."""
+    Rule 13): a decision — or a failed attempt that shaped one — must stay on the record."""
 
     def __init__(
         self,
@@ -156,7 +157,7 @@ class Verdict:
     # Reasoning capture (Rule 13) — populated on the llm path. ``interactions`` holds EVERY
     # attempt in order; the last one produced ``outcome``. ``request_digest`` pins the exact
     # request (records + prompts + provider + model + parameters) the verdict was reached
-    # under, so a cached verdict can never be replayed under a different configuration.
+    # under, so a cached verdict can never be reused under a different configuration.
     request_digest: str | None = None
     interactions: list[ReviewerInteraction] = field(default_factory=list)
 
@@ -437,7 +438,7 @@ def review_with_llm(
     try:
         outcome, reason = _parse_verdict_json(text)
     except ValueError as err:
-        # Attach the full interaction so a parse-driven escalation stays replayable (R13).
+        # Attach the full interaction so a parse-driven escalation stays on the record (R13).
         interaction.parse_error = str(err)
         raise ReviewerParseError(
             str(err), interaction=interaction, request_digest=digest
@@ -467,7 +468,7 @@ def review_with_openrouter(
     unparseable or empty response so the caller escalates that candidate.
 
     The full body — including the model's ``reasoning``/``reasoning_details``, or the error
-    payload on a 4xx/5xx — is captured as the replayable provenance record."""
+    payload on a 4xx/5xx — is captured as the provenance record."""
     return _review_with_chat_completions(PROVIDER_OPENROUTER, api_key, candidate, a, b, model)
 
 
@@ -589,7 +590,7 @@ def _review_with_chat_completions(
         )
 
     # From here every failure escalates through the parse-error path carrying that response
-    # verbatim, so the call stays replayable (Rule 13). A body that is not JSON, or is JSON
+    # verbatim, so the call stays on the record (Rule 13). A body that is not JSON, or is JSON
     # of an unexpected shape, is exactly such a failure — it must not surface as a bare
     # exception with the response dropped on the floor.
     if json_error is not None:

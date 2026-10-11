@@ -217,7 +217,7 @@ def main() -> int:
     # + user prompt, provider, requested model, served snapshot, request parameters and the
     # full raw response, one record per attempt (retries included) — plus the digest of the
     # request the verdict was reached under. Written separately so the app-facing artifact
-    # stays lean. This is the replayable provenance record.
+    # stays lean. This is the provenance record.
     run_path = out_path.with_name(out_path.stem + ".reviewer-run.jsonl")
     with run_path.open("w", encoding="utf-8") as fh:
         for v in resolved.verdicts:

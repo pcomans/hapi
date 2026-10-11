@@ -105,7 +105,7 @@ class ReviewerRunAborted(ReviewerAbortError):
     """ONE candidate exhausted its retries on a blocking error (credits, auth, rate limit,
     network). The run MUST stop — but not silently: the accumulated interactions travel
     with the exception so the caller can persist them before the run dies. These are the
-    calls that ended the run; they are exactly the ones that must stay replayable."""
+    calls that ended the run; they are exactly the ones that must stay on the record."""
 
     def __init__(
         self,

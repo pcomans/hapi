@@ -49,7 +49,7 @@ uv run python -m pipeline.authority.claimgraph.build_graph --provider openrouter
 ```
 
 - Writes `web-claimgraph/data/claim-graph.json` (served) + `claim-graph.reviewer-run.jsonl`
-  (the full reviewer interaction — incl. the model's reasoning — for replay, Constitutional Rule 13).
+  (the full reviewer interaction — incl. the model's reasoning — as the record of each decision, Constitutional Rule 13).
 - **No key → the build STOPS** loudly; it will not silently fall back (that would ship a
   compromised graph). `meta.reviewer` records `llm` vs `deterministic`, `meta.provider`/`meta.model`
   record the backend, and the app shows a DRAFT banner whenever the data was not live-reviewed.

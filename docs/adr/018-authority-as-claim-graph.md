@@ -523,7 +523,8 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
 //                                          IS-A chain: D1 ⊂ E73 Information Object.
 // Every confidence/score on a derived Statement is reproducible by replaying the
 // deterministic MatcherRun (D10) against its L10 input source files with its parameters_hash;
-// an LLM reviewer run is replayed from its persisted requests and responses (Rule 13).
+// an LLM reviewer run cannot be re-executed; its persisted record (prompt, thinking,
+// runtime sources, response) is what is re-read (Rule 13).
 (:MatcherAlgorithm:D14 {id, version, algorithm, hyperparameters_json})
 (:MatcherRun:D7        {run_id, input_dataset_commit, parameters_hash,
                         started_at, completed_at})
