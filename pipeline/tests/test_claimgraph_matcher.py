@@ -434,7 +434,7 @@ def test_unparseable_after_retries_escalates_with_every_attempt_persisted():
     for i in v.interactions:
         assert i.provider == PROVIDER_ANTHROPIC
         assert i.requested_model == "claude-sonnet-5"
-        assert i.parameters == {"max_tokens": 600}
+        assert i.parameters == dict(ANTHROPIC_PARAMETERS)
         assert i.system_prompt == SYSTEM_PROMPT
         assert i.user_prompt == "the exact user prompt"
 
@@ -489,7 +489,7 @@ def test_retry_persists_the_superseded_attempts_alongside_the_successful_one():
     for i in v.interactions:
         assert i.system_prompt == SYSTEM_PROMPT
         assert i.user_prompt == "the exact user prompt"
-        assert i.parameters == {"max_tokens": 600}
+        assert i.parameters == dict(ANTHROPIC_PARAMETERS)
         assert i.provider == PROVIDER_ANTHROPIC
         assert i.requested_model == "claude-sonnet-5"
 
@@ -561,11 +561,15 @@ def test_live_reviewer_persists_the_whole_request_and_response():
     assert v.reviewer == "llm"
     assert len(v.interactions) == 1
     i = v.interactions[0]
+    assert ANTHROPIC_PARAMETERS == {
+        "max_tokens": 16000,
+        "thinking": {"type": "adaptive", "display": "summarized"},
+    }
     assert i.attempt == 1
     assert i.provider == PROVIDER_ANTHROPIC
     assert i.requested_model == "claude-sonnet-5"
     assert i.model_snapshot == "claude-sonnet-5-20260101"
-    assert i.parameters == {"max_tokens": 600}
+    assert i.parameters == dict(ANTHROPIC_PARAMETERS)
     assert i.system_prompt == SYSTEM_PROMPT
     assert i.user_prompt == _build_user_prompt(cand, a, b)
     assert i.raw_response == {
@@ -577,7 +581,8 @@ def test_live_reviewer_persists_the_whole_request_and_response():
     # what was persisted IS what was sent
     assert client.seen == {
         "model": "claude-sonnet-5",
-        "max_tokens": 600,
+        "max_tokens": 16000,
+        "thinking": {"type": "adaptive", "display": "summarized"},
         "system": SYSTEM_PROMPT,
         "messages": [{"role": "user", "content": i.user_prompt}],
     }
@@ -589,7 +594,7 @@ def test_live_reviewer_persists_the_whole_request_and_response():
 
 def test_live_reviewer_malformed_output_raises_with_the_interaction_attached():
     """A truncated 'approved' must NOT become a verdict — it raises, carrying the full
-    interaction so the escalation it drives is still replayable."""
+    interaction so the escalation it drives is still on the record."""
     a = _rec("leprohon", "leprohon-21", "Amasis", prenomina=["Khnemibre"])
     b = _rec("beckerath", "beckerath-21", "Amasis", prenomina=["Chnem-ib-rê"])
     cand = generate_candidates([a, b])[0]
@@ -696,7 +701,7 @@ def test_non_parse_error_attempt_is_still_persisted_when_a_later_attempt_succeed
     assert failed.provider == PROVIDER_ANTHROPIC
     assert failed.requested_model == "claude-sonnet-5"
     assert failed.model_snapshot is None
-    assert failed.parameters == {"max_tokens": 600}
+    assert failed.parameters == dict(ANTHROPIC_PARAMETERS)
     assert failed.system_prompt == SYSTEM_PROMPT
     assert failed.user_prompt == _build_user_prompt(cand, a, b)
     assert ok.call_error is None
@@ -739,7 +744,7 @@ def test_openrouter_malformed_body_escalates_with_the_response_attached(
 ):
     """A response that ARRIVED must never be lost. A body of unexpected shape used to raise
     a bare KeyError, discarding the provider's reply — now it raises ReviewerParseError
-    carrying that reply verbatim, so the escalation it drives stays replayable (Rule 13)."""
+    carrying that reply verbatim, so the escalation it drives stays on the record (Rule 13)."""
     import httpx
 
     a = _rec("leprohon", "leprohon-45", "Amasis", prenomina=["Khnemibre"])
@@ -1168,6 +1173,6 @@ def test_cache_round_trip_preserves_every_interaction(tmp_path):
     assert isinstance(i, ReviewerInteraction)
     assert i.provider == PROVIDER_ANTHROPIC
     assert i.requested_model == "claude-sonnet-5"
-    assert i.parameters == {"max_tokens": 600}
+    assert i.parameters == dict(ANTHROPIC_PARAMETERS)
     assert i.system_prompt == SYSTEM_PROMPT
     assert i.raw_response == {"content": [{"type": "text", "text": "garbled"}]}

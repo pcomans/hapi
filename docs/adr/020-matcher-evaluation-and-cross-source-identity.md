@@ -424,8 +424,8 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    every response is checked to have been served there and is persisted in full,
    reasoning included (Rule 13). The model id is an alias with **no dated snapshot**; each
    interaction records DeepSeek's reported serving build (`systemFingerprint`) with it, and
-   a committed test requires one build per run. *(2026-10-11: no revisit is needed — Rule 13
-   no longer asks for a dated snapshot, since no LLM call can be re-executed to reproduce a
-   decision; the persisted thinking and inputs are the record.)* *(Added 2026-10-11:)* Because such a run is not "completely
-   determined by its digital input", it is typed `hapi:LLMReviewerRun` (CRMdig D7), not D10
-   (ADR-018 amendment 2026-10-11).
+   a committed test requires one build per run. *(2026-10-11: no revisit is needed — Rule
+   13 no longer asks for a dated snapshot, since no LLM call can be re-executed to
+   reproduce a decision; the persisted thinking and inputs are the record.)* *(Added
+   2026-10-11:)* Because such a run is not "completely determined by its digital input",
+   it is typed `hapi:LLMReviewerRun` (CRMdig D7), not D10 (ADR-018 amendment 2026-10-11).

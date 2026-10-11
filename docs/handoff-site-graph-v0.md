@@ -67,7 +67,8 @@ reasons:
    is 570 artifacts stuck as unlinked site-string evidence).
 
 **The actual comparative verdict is still blocked**, and not on code: the
-review protocol requires a genuine, provider-verified, dated model snapshot
+frozen, pre-registered #337 review protocol (its own rule, not Rule 13 — see the
+2026-10-11 note below) requires a genuine, provider-verified, dated model snapshot
 behind an authorized API credential, live web search per decision, two
 independent reviewers, and a reconciler that can only resolve disagreement
 via an explicit cited override — never a majority vote. That review has
@@ -106,10 +107,14 @@ wrong.
 ## The traceability methodology (why the review is this expensive to unblock)
 
 Constitutional rules 13/14 require every LLM call that influences data to be
-fully replayable (exact prompt, exact raw response, exact model snapshot,
-persisted) and every prompt leak-audited before use — because a matcher
-prompt once let source IDs align across the records being matched and
-silently inflated its own benchmark. The `#337` review protocol
+fully on the record (exact prompt, served model and build info, full raw
+response, thinking transcript, every runtime source, persisted verbatim) and
+every prompt leak-audited before use — because a matcher prompt once let
+source IDs align across the records being matched and silently inflated its
+own benchmark. *(2026-10-11: Rule 13 no longer asks for a dated model snapshot —
+an LLM call cannot be re-executed to reproduce a decision; the persisted record
+is what is re-read. The dated-snapshot check below belongs to the frozen #337
+protocol only; the #337 re-registration drops it.)* The `#337` review protocol
 (`docs/evaluations/authority-independent-control-2026-09-13/`) enforces this
 structurally: blinded evidence (no artifact/mention IDs, no arm labels
 visible to the reviewer), two independent reviewers with disagreement

@@ -20,7 +20,7 @@ pipeline/pipeline/authority/claimgraph/   (Python — the generator; runs at bui
   sources.py     per-source adapters  -> canonical ruler records (5 sources)
   normalize.py   committed cross-convention name normalization table (ADR-020)
   matcher.py     stage-1 candidate generation + set-valued prenomen corroboration
-  reviewer.py    stage-2 LIVE Anthropic reviewer (precision-first) + Rule-13 capture
+  reviewer.py    stage-2 live LLM reviewer (precision-first) + Rule-13 capture
   verdicts.py    verdict + gated same_entity_as shortcut emission
   clusters.py    connected components (navigation/visualization only)
   build_graph.py entrypoint -> web-claimgraph/data/claim-graph.json  (+ .reviewer-run.jsonl)
@@ -39,23 +39,27 @@ The live LLM reviewer is the matcher. Run it from the repo's `pipeline/`:
 
 ```bash
 cd pipeline
-echo 'ANTHROPIC_API_KEY=sk-ant-...' > .env.local      # gitignored; never on the command line
-uv run python -m pipeline.authority.claimgraph.build_graph                       # Anthropic (default)
+# Default: DeepSeek V4.1 Flash via the Vercel AI Gateway, pinned to DeepSeek's endpoint
+# (the reviewer of the committed #342 graph). The key goes in the repo-root .env.local.
+echo 'AI_GATEWAY_API_KEY=...' > ../.env.local         # gitignored; never on the command line
+uv run python -m pipeline.authority.claimgraph.build_graph                       # Vercel (default)
 
-# …or a cheaper OpenRouter reviewer (GLM 5.2). In a benchmark it matched Sonnet 5 on every
-# throne-name-corroborated case and was stricter on name-only pairs — see the ADR-020 note.
+# …or Claude (adaptive thinking, summarized) or GLM 5.2 via OpenRouter:
+echo 'ANTHROPIC_API_KEY=sk-ant-...' >> .env.local
+uv run python -m pipeline.authority.claimgraph.build_graph --provider anthropic
 echo 'OPENROUTER_API_KEY=sk-or-...' >> .env.local
-uv run python -m pipeline.authority.claimgraph.build_graph --provider openrouter  # GLM 5.2
+uv run python -m pipeline.authority.claimgraph.build_graph --provider openrouter
 ```
 
 - Writes `web-claimgraph/data/claim-graph.json` (served) + `claim-graph.reviewer-run.jsonl`
-  (the full reviewer interaction — incl. the model's reasoning — as the record of each decision, Constitutional Rule 13).
+  (the full reviewer interaction — incl. the model's reasoning — as the record of each
+  decision, Constitutional Rule 13).
 - **No key → the build STOPS** loudly; it will not silently fall back (that would ship a
   compromised graph). `meta.reviewer` records `llm` vs `deterministic`, `meta.provider`/`meta.model`
   record the backend, and the app shows a DRAFT banner whenever the data was not live-reviewed.
 - Only prenomen/Horus-corroborated candidates cost a reviewer call; **name-only pairs are escalated
   deterministically without one** (see "What it demonstrates").
-- Options: `--provider {anthropic,openrouter}`, `--model <id>`, `--limit N` (thin-slice),
+- Options: `--provider {vercel,anthropic,openrouter}`, `--model <id>`, `--limit N` (thin-slice),
   `--workers N`, `--fresh` (ignore the resume cache), `--deterministic` (explicit non-LLM mode).
 
 ## Run the app locally

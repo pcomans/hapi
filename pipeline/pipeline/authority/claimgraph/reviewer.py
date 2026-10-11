@@ -39,7 +39,14 @@ PROVIDER_VERCEL = "vercel"
 # actually sent, and a per-call override would let those two drift apart (Rule 4/13).
 # OpenRouter's budget is generous because reasoning models (GLM 5.2) spend completion
 # tokens on reasoning before emitting the JSON answer.
-ANTHROPIC_PARAMETERS: dict[str, Any] = {"max_tokens": 600}
+# Adaptive thinking with display "summarized": current Claude models always think, but
+# return the reasoning text only when asked (the default display is "omitted"), and Rule 13
+# requires the thinking transcript on the record. The raw chain of thought is never exposed;
+# the summary is what the provider returns. max_tokens leaves room for thinking.
+ANTHROPIC_PARAMETERS: dict[str, Any] = {
+    "max_tokens": 16000,
+    "thinking": {"type": "adaptive", "display": "summarized"},
+}
 OPENROUTER_PARAMETERS: dict[str, Any] = {"max_tokens": 3000, "temperature": 0}
 # Vercel AI Gateway, for DeepSeek V4.1 Flash at max reasoning effort (#342, 2026-10-10).
 # The model id is an alias with no dated snapshot, and the gateway serves it from ~18

@@ -11,7 +11,7 @@ next-env.d.ts
 bld.log
 srv.log
 # NOTE: data/*.reviewer-run.jsonl is deliberately NOT ignored. It is the full LLM
-# interaction (prompt + raw response + model snapshot) behind every approved link and is
-# committed as the replayable provenance record (Constitutional Rule 13). Only the
+# interaction (prompt + raw response incl. reasoning + served model/build) behind every
+# decision and is committed as the record of each decision (Constitutional Rule 13). Only the
 # transient resume cache below is ignored.
 data/*.verdict-cache.jsonl
