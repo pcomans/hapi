@@ -208,7 +208,12 @@ class TestManifestTermResolution:
             "#original_burial_in": {CRM_PREFIX + "P53_has_former_or_current_location"},
             "#cache_context_at": {CRM_PREFIX + "P53_has_former_or_current_location"},
         }
-        for term, parents in expected_parents.items():
+        # Exhaustive over every declared term: a term absent from the table must declare
+        # NO parent, so a new rdfs:subClassOf / subPropertyOf on, say, hapi:tomb_owner
+        # fails here instead of slipping past term resolution.
+        assert set(expected_parents) <= set(decls)
+        for term in decls:
+            parents = expected_parents.get(term, set())
             declared = {
                 el.attrib[f"{RDF_NS}resource"]
                 for tag in ("subClassOf", "subPropertyOf")
