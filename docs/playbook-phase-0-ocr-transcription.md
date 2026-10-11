@@ -60,6 +60,8 @@ If the PDF uses double-page spreads (each physical page renders two printed page
 
 ## Step 3 — OCR via a Claude Code subagent
 
+> **Known Rule 13 gap ([#350](https://github.com/pcomans/hapi/issues/350)).** The OCR (Step 3) and extraction (Step 4) subagent runs keep only their output text, not the full Rule 13 record (served model, raw response, thinking). Until #350 lands, note in the PR body that this source's LLM steps carry that gap.
+
 Spawn a general-purpose subagent with a prompt that:
 
 - Names the book and the target physical-page range.

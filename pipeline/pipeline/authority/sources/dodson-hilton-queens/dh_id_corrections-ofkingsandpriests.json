@@ -29,8 +29,8 @@
     "structured corrections file like this one automatically — tracked as a",
     "follow-up to the dodson-hilton-queens source under issue #215. For",
     "this chunk the gitignored agent JSONLs carry the post-correction state;",
-    "`reconciled.jsonl` is reproducible from this corrections file plus a",
-    "fresh agent re-run (correcting the drift back to canonical form).",
+    "the corrections record that one run's drift and are keyed to it; a",
+    "fresh agent run would drift differently, so `reconciled.jsonl` is the record.",
     "",
     "Correction shape: each entry is keyed by '<agent_tag>|<wrong_dh_id>'.",
     "Value is {'canonical_dh_id': str, 'rationale': str (citing source page)}."
