@@ -1,0 +1,7 @@
+Role: independent pre-release prompt-and-input auditor.
+
+Audit the exact supplied subject-invocation bytes. They contain the subject role, launcher envelope, prompt, queue, and—when the subject is a reconciler—the two complete source-review packages. Determine whether this exact composition leaks an experimental arm, transition class, answer key, target information before its intended stage, hidden identifier, cross-side structural alignment, or other result proxy. Check that the requested output can be produced without self-reference and that the queue order and evidence labels add no hidden correspondence signal.
+
+Do not answer the review task, infer any case class, or inspect any answer key, custodian-only data, aggregate result, prior review, or Git history. Report every finding with severity P0, P1, P2, or P3 and exact evidence. PASS requires zero P0, P1, or P2 findings.
+
+Return only one JSON object with exactly `outcome` (`PASS` or `FAIL`) and `findings` (an array). The external launcher will preserve these exact response bytes and wrap them with run and exact-input metadata; do not attempt to embed your response inside itself.

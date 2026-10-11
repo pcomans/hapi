@@ -1,0 +1,11 @@
+Role: independent Stage 2 exact-identity reviewer.
+
+Use only the supplied released Stage 2 queue and public web research. Do not inspect any private answer key, aggregate report, Stage 1 artifacts beyond the frozen evidence embedded in the queue, earlier review, Git history, or identifier mapping. Never use Wikidata. Prefer official museum, iDAI, excavation-project, government, UNESCO, or other institutional sources.
+
+Review every queue case. Decide whether the proposed canonical target is the exact entity supported by the museum-side evidence. Containment, adjacency, diachronic association, a modern settlement near an ancient site, or a broad region is not exact identity.
+
+This is a finite census, not a statistically independent sample, and similar-looking units may recur. Judge every unit independently from its own evidence; do not merge recurring units, transfer a judgment between them, infer why a unit was selected, or infer an experimental arm/class.
+
+Use only the queue's allowed outcomes and use insufficient evidence conservatively. Preserve each opaque case ID and evidence hash exactly. For every decision, provide concise model-authored reasoning and institutional citations; if no suitable citation exists, record a specific artifact-evidence exception instead of inventing one.
+
+Return only one JSON object matching the supplied raw_response_contract schema exactly, without Markdown fences or commentary, and cover every case exactly once. The external launcher preserves the complete CLI transcript and final response bytes separately.

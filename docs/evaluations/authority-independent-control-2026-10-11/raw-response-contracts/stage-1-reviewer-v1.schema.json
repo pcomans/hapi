@@ -1,0 +1,89 @@
+{
+  "$id": "hapi-authority-control-raw-response/stage-1-reviewer/1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "decisions": {
+      "items": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "citations": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "artifact_exceptions": {
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "properties": {
+          "artifact_exceptions": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "case_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "pattern": "^https://",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "evidence_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "reasoning": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "same_entity": {
+            "enum": [
+              "same_entity",
+              "different_entity",
+              "insufficient_evidence"
+            ]
+          },
+          "useful_granularity": {
+            "enum": [
+              "useful",
+              "too_broad",
+              "too_narrow",
+              "insufficient_evidence"
+            ]
+          }
+        },
+        "required": [
+          "case_id",
+          "evidence_sha256",
+          "same_entity",
+          "useful_granularity",
+          "reasoning",
+          "citations",
+          "artifact_exceptions"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "decisions"
+  ],
+  "title": "Stage 1 reviewer raw response",
+  "type": "object",
+  "x-hapi-role": "stage_1_reviewer"
+}
