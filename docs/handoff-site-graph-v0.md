@@ -114,7 +114,7 @@ source IDs align across the records being matched and silently inflated its
 own benchmark. *(2026-10-11: Rule 13 no longer asks for a dated model snapshot —
 an LLM call cannot be re-executed to reproduce a decision; the persisted record
 is what is re-read. The dated-snapshot check below belongs to the frozen #337
-protocol only; the #337 re-registration drops it.)* The `#337` review protocol
+protocol only; the planned #337 re-registration is to drop it — not yet done.)* The `#337` review protocol
 (`docs/evaluations/authority-independent-control-2026-09-13/`) enforces this
 structurally: blinded evidence (no artifact/mention IDs, no arm labels
 visible to the reviewer), two independent reviewers with disagreement

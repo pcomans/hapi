@@ -1,6 +1,6 @@
 # Transcription method — Beckerath 1997 Chronologie
 
-Reproducible protocol per ADR-017 (Claude Code subagent OCR, followed by three-subagent structured extraction and deterministic majority-vote merge).
+Documented protocol per ADR-017 (Claude Code subagent OCR, followed by three-subagent structured extraction and deterministic majority-vote merge).
 
 ## Inputs
 

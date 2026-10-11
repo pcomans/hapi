@@ -39,10 +39,11 @@ PROVIDER_VERCEL = "vercel"
 # actually sent, and a per-call override would let those two drift apart (Rule 4/13).
 # OpenRouter's budget is generous because reasoning models (GLM 5.2) spend completion
 # tokens on reasoning before emitting the JSON answer.
-# Adaptive thinking with display "summarized": current Claude models always think, but
-# return the reasoning text only when asked (the default display is "omitted"), and Rule 13
-# requires the thinking transcript on the record. The raw chain of thought is never exposed;
-# the summary is what the provider returns. max_tokens leaves room for thinking.
+# Adaptive thinking with display "summarized": current Claude models think when the task
+# calls for it (thinking is optional — a simple case may get no thinking block at all) and
+# return the reasoning text only when asked (the default display is "omitted"). Rule 13
+# requires the thinking on the record whenever the model thinks; the raw chain of thought is
+# never exposed, so the summary is what the provider returns. max_tokens leaves room for it.
 ANTHROPIC_PARAMETERS: dict[str, Any] = {
     "max_tokens": 16000,
     "thinking": {"type": "adaptive", "display": "summarized"},
@@ -396,7 +397,7 @@ def review_with_llm(
     candidate: Candidate,
     a: RulerRecord,
     b: RulerRecord,
-    model: str = "claude-opus-4-8",
+    model: str,
 ) -> Verdict:
     """Review one candidate with the live Anthropic API. Raises on any error (no silent
     fallback — Constitutional Rule 2); the caller decides retry/stop policy.

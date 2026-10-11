@@ -1,6 +1,6 @@
 # Transcription method — Kitchen 1996 TIPE
 
-Reproducible protocol per ADR-017 (Claude Code subagent OCR, followed by three-subagent structured extraction and deterministic majority-vote merge).
+Documented protocol per ADR-017 (Claude Code subagent OCR, followed by three-subagent structured extraction and deterministic majority-vote merge).
 
 ## Inputs
 

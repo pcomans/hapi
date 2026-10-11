@@ -2,7 +2,7 @@
 
 This is the verbatim prompt used to run the OCR pass on `raw/source-p126-p130.pdf` via Google Gemini, because Claude Opus 4.6 refused the task on copyright grounds (see `transcribe.md` § "Model deviation" and ADR-017 § "Amendment 2026-04-15: external-model fallback for copyright-refusal"). The Gemini model version and the output chunk (`raw/chunk-p126-p130.md`) are recorded in `transcribe.md`.
 
-The prompt below is the scholarly-extraction framing used. It is committed so a future reproducer can re-run the OCR step against the same source PDF (SHA-256 `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07008a0`) and diff their output against ours.
+The prompt below is the scholarly-extraction framing used. It is committed as part of the record of the OCR step against the source PDF (SHA-256 `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07008a0`). Re-running it will not reproduce our output (Constitutional Rule 13); the committed `reconciled.jsonl` is the source of truth.
 
 ---
 
