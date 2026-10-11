@@ -69,6 +69,22 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 - **Up to 99 web searches per case** (`max_uses`), so a case is never decided from general
   knowledge because a search cap ran out (the 5-search cap of the first pilot did).
 
+## Reviewer runtime (2026-10-11)
+
+The Anthropic API credit ran out during the mini-pilot. On the project owner's decision, the
+Stage 1 reviewer runs through headless Claude Code on the subscription instead
+(`scripts/run_harness_review.py`): the same model (Claude Sonnet 5.5, effort `high`), the same
+audited prompts, schema, cases and validation. Each case is a separate `claude -p` process in
+a fresh empty directory with only the WebSearch and WebFetch tools, no MCP servers and no API
+key; the driver refuses any other setup. The full event stream is the record. A DeepSeek V4
+Pro / V4.1 Flash trial through the Vercel AI Gateway (`scripts/run_gateway_review.py`) was
+rejected: 4 of 5 calls ended with the model's tool call emitted as text.
+
+Harness-specific limitations: the thinking is not returned (only the model's stated text
+and its JSON `reasoning`); a fetch returns Claude Code's summary of the page, recorded with
+the HTTP status and page size, not the page itself; search results are recorded as titles
+and URLs.
+
 ## Known limitations (disclosed)
 
 - **Search result text is not fully readable.** Anthropic's web search returns each result's
