@@ -257,7 +257,8 @@ the ratified design).
   *(Spec follow-up: that normalization
   table, plus the prenomen/Horus-match predicate and a committed homonym exception
   list — see decision 3 — for the cases where one prenomen is shared across distinct
-  kings: Menkheperre, Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.)*
+  kings: Menkheperre, Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.
+  Scoped by dynasty in the 2026-10-10 amendment, item 5.)*
 - **Structured cannot-link / escalation constraints.** Identity decisions must
   honour deterministic structured discriminators (never surface-string similarity,
   ADR-009). *How* these are applied — as guards over a pairwise-edge graph (the
@@ -267,13 +268,13 @@ the ratified design).
   - **Same-source distinctness:** two rows from one source are presumptively
     different people unless the source links them (documentary `same_person_as`) or
     they are stage-suffix phase siblings of one record.
-  - **Reign-span disjointness** is a discriminator **only within a single
+  - *(Superseded for large gaps by the 2026-10-10 amendment, item 1.)* **Reign-span disjointness** is a discriminator **only within a single
     chronological framework** (a source never dates one person to two disjoint
     spans); cross-framework it must **escalate, not block**, on a period-scaled
     tolerance, because absolute chronology is framework-relative and the divergence
     grows with antiquity (Beckerath opens Dynasty 1 ~3032 BCE vs Hornung–Krauss–
     Warburton ~2900 — a ~century offset on the same kings).
-  - **Uniqueness:** if two *distinct* rulers from one source both claim a single
+  - *(Refined by the 2026-10-10 amendment, item 6.)* **Uniqueness:** if two *distinct* rulers from one source both claim a single
     target (and aren't the same person), the clash **escalates** — never resolved by
     an order-dependent "incumbent" (catches the Ninetjer/Nebre → Kaiëchós error).
   - **Regnal-number divergence escalates, never blocks.** Numbering is
@@ -313,6 +314,7 @@ the ratified design).
   linked to the decision it produced. This policy holds regardless of the architecture
   #306 settles on: a matcher decision that cannot be replayed from a stored
   request/response is not reproducible (Rule 1: "the model knows" is not a source).
+  *(The #342 rebuild's model has no dated snapshot; see the 2026-10-10 amendment, item 7.)*
 - **Metrics:** precision is the primary reported number; recall is secondary and is
   always reported with the abstention/escalation rate (per decision 3).
 
@@ -347,3 +349,78 @@ the ratified design).
   leaves open. ADR-020 is the evaluation + ground-truth + matching-policy record;
   #306 is the design. A reader should not take the POC's per-pair resolution /
   connected-components mechanics as the settled architecture.
+
+## Amendment 2026-10-10 — ruler-cluster reconciliation (#342)
+
+Issue [#342](https://github.com/pcomans/hapi/issues/342) found the three highest-frequency
+ambiguous ruler clusters (Amenhotep III, Akhenaten, Ramesses II; ~4,200 museum artifacts)
+abstaining for reasons the committed data itself resolves. The project owner decided the
+following on 2026-10-10; review corrections are folded in (2026-10-11). Each rule is
+implemented in `pipeline/authority/claimgraph/` and pinned by
+`pipeline/tests/test_claimgraph_ruler_reconciliation.py`.
+
+1. **Era gate — supersedes "Reign-span disjointness … must escalate, not block" for large
+   gaps.** A candidate pair is **rejected** by a committed deterministic verdict rule,
+   before any LLM call, when (a) the reign starts differ by at least 200 years AND by more
+   than the period-scaled cross-chronology tolerance (`150 + |BCE|/20` years — the same
+   tolerance as the far-apart escalation hint, so there is one chronology rule), or (b)
+   the dynasty numbers are more than one apart and the two dynasties do not fall in the
+   same *contested numbering band*: Dynasties 6–10 (von Beckerath's unplaced kings of the
+   Dyn 8 era — Handbuch 1999, 70–71, a–h — are Leprohon's "Dynasty 8a" but filed by
+   pharaoh.se under Dynasty 10, pharaoh.se's own placement rather than a scholarly
+   renumbering; Ryholt derives the Turin list's Neith-iqerti, Leprohon's Dyn 6 entry, from
+   Netjerkare Siptah, pharaoh.se's Dyn 8), 13–17 (Ryholt vs Beckerath), and 21–26 (Takelot
+   III Dyn 22 Beckerath / Dyn 23 Kitchen; Necho I Dyn 24 Kitchen / Dyn 26 Leprohon). Absent
+   era evidence never rejects. Evidence: no link approved before the rebuild fails the
+   gate, and **every pair the gate rejects is listed** in
+   `docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected.json` (all 448,
+   test-pinned), each tagged with the earlier graph's verdict for it, and reviewed per
+   `era-rejected-review.md`. The first version of the gate omitted the Dyn 6–10 band and
+   rejected seven genuine same-king pairs (Wadjkare, Sekhemkare, Imhotep, Hotep, Khui, Isu,
+   Iytjenu); review caught it before merge. (The eighth king of that series, Leprohon's
+   Iti / pharaoh.se's Ity, is never a candidate: `iti` and `ity` do not match.)
+2. **Sources' own identity statements join clusters** (stage-suffix phase siblings were
+   already policy under "Same-source distinctness"; now loaded). Leprohon rows with
+   `stage_suffix` set and `printed_under` null are one person per the source README's
+   reading rule (2) — Amenhotep IV / Akhenaten, Mentuhotep II a–c, Amenemhat I a–b,
+   Thutmose III a–b — and, with Kitchen's `same_person_as` pairs (decision 1), contribute
+   `intra_source` edges to clusters. The Chapter-X consort sub-entries are never linked.
+3. **Added epithets are not names.** An entry the source records as an epithet *added to*
+   a name is published under its own claim predicate (`hapi:prenomen_epithet`,
+   `hapi:nomen_epithet`, `hapi:horus_name_epithet`; ADR-018 manifest), shown to the
+   reviewer on its own line, and never matches on its own. For matching only, the
+   source's primary throne name is also matched together with each added throne-name
+   epithet, as the compound cartouche (Leprohon's `wsr mꜣꜥt rꜥ` + `stp.n rꜥ` = the
+   *Usermaatre-setepenre* Beckerath and pharaoh.se print). Variant throne names and birth
+   names are never compounded: an epithet is not attested with every variant, and birth
+   name + epithet can spell another king's nomen (Amenhotep II + ḥqꜣ wꜣst).
+4. **Fragmentary names never corroborate.** A throne or Horus name in which the source
+   marks a gap (`///`, `//`, `...`, `[..]`, `[...]`) is excluded from the corroborating
+   keys; such pairs stay name-only and escalate. With the gap stripped, `Senefer[...]re`
+   would key to Piye's complete Sneferre.
+5. **The homonym exception list is scoped by dynasty.** A shared reused throne name is
+   *unambiguous for a pair* when both records carry the same dynasty, outside the bands
+   where a shared dynasty number is unreliable — 8–10 (Leprohon files all Herakleopolitan
+   kings as Dyn 9 where pharaoh.se splits them between 9 and 10, and pharaoh.se's Dyn 10
+   also holds the Dyn 8-era unplaced kings), 13–17 and 21–26 — and no other
+   *person* from either source bears that name in that dynasty (a source's own stage rows
+   are one bearer; a bearer with no dynasty does not block, because its own pairs stay
+   trapped). The pair stops being forced to escalate when ANY shared reused name is
+   unambiguous for it — Thutmose III's full Menkheperre is, though the vowel-less skeleton
+   it shares with Thutmose IV's Menkheperure is not — and is still judged by the reviewer.
+   *(Refines decision 3's homonym exception list above.)*
+6. **A uniqueness clash resolves to the sole same-dynasty target** when exactly one
+   competing target shares the record's dynasty outside the bands of item 5 and every
+   other target has a known, different dynasty; otherwise the whole clash escalates as
+   before. Two rows the other source declares one person are one target, not a clash.
+7. **Model-decided identity.** Contrary to #306's "no LLM in the decision path", the
+   reviewer model decides corroborated pairs, and the deterministic guards above still
+   override it. The reviewer for the #342 rebuild is DeepSeek V4.1 Flash through the
+   Vercel AI Gateway, with maximum reasoning effort *requested* (the provider does not
+   report the effort it applied), pinned to DeepSeek's own endpoint with fallback disabled;
+   every response is checked to have been served there and is persisted in full,
+   reasoning included (Rule 13). The model id is an alias with **no dated snapshot**; each
+   interaction records DeepSeek's reported serving build (`systemFingerprint`) with it, and
+   a committed test requires one build per run. The project owner accepted the missing
+   dated snapshot for this research build (2026-10-10); it is to be revisited before
+   identity links become production authority data.

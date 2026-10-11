@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, replace
 from typing import Callable
 
-from .matcher import Candidate, generate_candidates, uniqueness_clashes
+from .matcher import Candidate, generate_candidates, same_person_groups, uniqueness_clashes
 from .reviewer import (
     PROVIDER_PARAMETERS,
     SYSTEM_PROMPT,
@@ -27,6 +27,7 @@ from .reviewer import (
     review_deterministic,
     review_with_llm,
     review_with_openrouter,
+    review_with_vercel,
 )
 
 # A name-only candidate (similar names, no shared throne-name/Horus-name to corroborate)
@@ -39,6 +40,11 @@ _NAME_ONLY_ESCALATION_REASON = (
     "corroboration. Escalated for manual review — confirming this identity requires "
     "external documented evidence (a cited scholarly identification), not a model's "
     "unsourced assertion (Constitutional Rule 1)."
+)
+# The reason a candidate is escalated when every retry returned output that could not be
+# parsed into a verdict. One constant, so a committed run's escalation reason is checkable.
+_PARSE_FAILURE_ESCALATION_REASON = (
+    "Reviewer output could not be parsed after retries; escalated for manual review."
 )
 from .sources import RulerRecord
 
@@ -190,9 +196,9 @@ def _review_with_retry(
     reviewer_fn, c, a, b, retries: int, *, model: str, provider: str
 ) -> Verdict:
     """``reviewer_fn(candidate, a, b) -> Verdict`` is the provider-bound live reviewer
-    (Anthropic or OpenRouter). Retries on any error; a persistent parse failure escalates
-    THIS candidate (with every attempt's full interaction), any other error fails the run
-    loud (Rule 2).
+    (Anthropic, OpenRouter or the Vercel gateway). Retries on any error; a persistent parse
+    failure escalates THIS candidate (with every attempt's full interaction), any other
+    error fails the run loud (Rule 2).
 
     EVERY attempt is retained, in order, on the returned verdict — the malformed ones a
     later successful attempt superseded, AND the ones that raised without a response. Each
@@ -248,7 +254,7 @@ def _review_with_retry(
     return Verdict(
         candidate_id=c.id,
         outcome=VERDICT_ESCALATED,
-        reason="Reviewer output could not be parsed after retries; escalated for manual review.",
+        reason=_PARSE_FAILURE_ESCALATION_REASON,
         reviewer="llm",
         request_digest=digest,
         interactions=interactions,
@@ -304,6 +310,7 @@ def resolve_matches(
     retries_per_candidate: int = 2,
     max_workers: int = 10,
     limit: int | None = None,
+    focus_records: set[str] | None = None,
     cache_path: str | None = None,
     on_progress: Callable[[int, int], None] | None = None,
 ) -> ResolveResult:
@@ -311,27 +318,38 @@ def resolve_matches(
     repeated error — no silent fallback) or "deterministic" (the committed corroborate-or-
     escalate policy; an explicitly-chosen mode, never an auto-substitute).
 
-    ``provider`` selects the live reviewer backend: "anthropic" (needs ``client``) or
-    "openrouter" (needs ``api_key``); ``reviewer_fn`` overrides both (used by tests). In
+    ``provider`` selects the live reviewer backend: "anthropic" (needs ``client``),
+    "openrouter" or "vercel" (each needs ``api_key``); ``reviewer_fn`` overrides all of
+    them (used by tests). Era-gated candidates are rejected deterministically and, like
+    name-only candidates, never reach the reviewer. In
     "llm" mode, name-only candidates are escalated deterministically and NEVER sent to the
     reviewer — only prenomen/Horus-corroborated candidates cost a call. Reviews run
     concurrently (``max_workers`` threads); any candidate still failing after retries fails
-    the whole run loudly. ``limit`` caps the candidates for a thin-slice validation.
+    the whole run loudly. ``limit`` caps the candidates for a thin-slice validation;
+    ``focus_records`` keeps only candidates touching those record ids (a targeted pilot).
+    Uniqueness clashes are computed over the FULL candidate set before either cut, so a
+    slice never sees a pair as clean that the full run would escalate.
     """
     candidates = generate_candidates(records)
+    forced = uniqueness_clashes(candidates, same_person_groups(records))
+    if focus_records is not None:
+        unknown = focus_records - {r.local_id for r in records}
+        if unknown:
+            raise ValueError(f"focus_records names unloaded record(s): {sorted(unknown)}")
+        candidates = [c for c in candidates if {c.a_id, c.b_id} & focus_records]
     if limit is not None:
         candidates = candidates[:limit]
-    forced = uniqueness_clashes(candidates)
     by_id = {r.local_id: r for r in records}
 
     if mode == "llm" and reviewer_fn is None:
-        if provider == "openrouter":
+        if provider in ("openrouter", "vercel"):
             if not api_key:
                 raise RuntimeError(
-                    "resolve_matches called in 'llm'/openrouter mode without an api_key. "
+                    f"resolve_matches called in 'llm'/{provider} mode without an api_key. "
                     "Refusing to run — the live reviewer must decide the matches."
                 )
-            reviewer_fn = lambda c, a, b: review_with_openrouter(api_key, c, a, b, model=model)  # noqa: E731
+            review = review_with_openrouter if provider == "openrouter" else review_with_vercel
+            reviewer_fn = lambda c, a, b: review(api_key, c, a, b, model=model)  # noqa: E731
         else:
             if client is None:
                 raise RuntimeError(
@@ -383,7 +401,11 @@ def resolve_matches(
         parameters = PROVIDER_PARAMETERS[provider]
         verdicts_by_id: dict[str, Verdict] = {}
         for c in candidates:
-            if c.id in cached:
+            if c.era_conflict:
+                # Settled by the committed era gate before any reviewer is consulted — and
+                # ahead of the cache, so no earlier verdict can resurrect the pair.
+                verdicts_by_id[c.id] = review_deterministic(c, c.id in forced)
+            elif c.id in cached:
                 # A cached verdict may ONLY be reused if the request that produced it is
                 # byte-for-byte the request we would send now — same records, same prompts,
                 # same provider/model/parameters. Otherwise the artifact would claim one
@@ -435,7 +457,9 @@ def resolve_matches(
             )
             return c.id, v
 
-        aborted_fh = open(aborted_path, "a", encoding="utf-8") if aborted_path else None
+        # Opened on the first abort only: an empty evidence file for a run that had no
+        # failed attempts is noise that looks like (missing) evidence.
+        aborted_fh = None
         try:
             with ThreadPoolExecutor(max_workers=max_workers) as pool:
                 futures = {pool.submit(work, c): c for c in todo}
@@ -448,7 +472,9 @@ def resolve_matches(
                         # still dies — it just does not die with the evidence unwritten.
                         with lock:
                             aborted.append(err)
-                            if aborted_fh:
+                            if aborted_path:
+                                if aborted_fh is None:
+                                    aborted_fh = open(aborted_path, "a", encoding="utf-8")
                                 aborted_fh.write(
                                     json.dumps(err.as_record(), ensure_ascii=False) + "\n"
                                 )

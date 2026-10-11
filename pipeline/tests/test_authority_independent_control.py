@@ -4,9 +4,13 @@ import ast
 import copy
 import importlib.util
 import inspect
+import io
 import json
 import shlex
+import subprocess
 import sys
+import tarfile
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -502,12 +506,58 @@ def test_ledger_transport_is_deterministic_and_binds_ordered_mentions(tmp_path: 
     assert first["ordered_mention_ids_sha256"] == second["ordered_mention_ids_sha256"]
 
 
-def test_frozen_current_resolver_inputs_match_the_registered_base() -> None:
-    comparison.verify_current_inputs(ROOT)
+@pytest.fixture(scope="module")
+def registered_base(tmp_path_factory) -> Path:
+    """The repository as the #337 protocol registered it (``compare_arms.BASE_COMMIT``).
+
+    The current-authority arm is frozen at registration: its resolver and authority
+    inputs are the bytes at that commit, which ``verify_current_inputs`` pins by SHA-256.
+    Authority work merged later (e.g. #342's matcher changes) legitimately changes the
+    working tree, so the frozen arm is checked against the registered commit instead —
+    a rerun of #337 runs from that commit for the same reason."""
+    dest = tmp_path_factory.mktemp("registered-base")
+    archive = subprocess.run(
+        [
+            "git", "-C", str(ROOT), "archive", comparison.BASE_COMMIT,
+            "pipeline/pipeline",
+            "web-claimgraph/data/claim-graph.json",
+            "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts",
+        ],
+        check=True,
+        capture_output=True,
+    ).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+        tar.extractall(dest, filter="data")
+    return dest
 
 
-def test_current_arm_loads_and_uses_the_committed_resolver() -> None:
-    _module, resolvers, catalogs = comparison.load_current_resolvers(ROOT)
+@contextmanager
+def registered_pipeline_package():
+    """The frozen resolver imports ``pipeline.authority.claimgraph.normalize`` by name.
+    In this test process that name is already bound to the WORKING-TREE package, so a
+    plain load would silently pair frozen data with current code. Unbind it for the load,
+    then restore the working-tree package and ``sys.path`` exactly."""
+    stashed = {n: m for n, m in sys.modules.items() if n == "pipeline" or n.startswith("pipeline.")}
+    saved_path = list(sys.path)
+    for name in stashed:
+        del sys.modules[name]
+    try:
+        yield
+    finally:
+        for name in [n for n in sys.modules if n == "pipeline" or n.startswith("pipeline.")]:
+            del sys.modules[name]
+        sys.modules.update(stashed)
+        sys.path[:] = saved_path
+
+
+def test_frozen_current_resolver_inputs_match_the_registered_base(registered_base: Path) -> None:
+    comparison.verify_current_inputs(registered_base)
+
+
+def test_current_arm_loads_and_uses_the_committed_resolver(registered_base: Path) -> None:
+    with registered_pipeline_package():
+        module, resolvers, catalogs = comparison.load_current_resolvers(registered_base)
+    assert Path(inspect.getfile(module.keys_for_form)).is_relative_to(registered_base)
     assert {entity: len(rows) for entity, rows in catalogs.items()} == {
         "ruler": 974,
         "site": 1000,

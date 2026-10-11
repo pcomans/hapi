@@ -175,6 +175,9 @@ class NameForm:
 
     surface: str
     translit: str | None = None
+    # The source records this form as an epithet ADDED to a name, not as a name (Leprohon's
+    # "Epithets added to the Throne name" blocks). Kept as a claim; never a matching key.
+    is_added_epithet: bool = False
 
 
 def keys_for_form(form: NameForm, *, skeleton: bool = False) -> set[str]:

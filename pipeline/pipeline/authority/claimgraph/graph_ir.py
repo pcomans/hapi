@@ -14,6 +14,12 @@ PRED_DISPLAY_NAME = "hapi:display_name"
 PRED_PRENOMEN = "hapi:prenomen"
 PRED_HORUS_NAME = "hapi:horus_name"
 PRED_NOMEN = "hapi:nomen"
+# An epithet the source records as ADDED to a name of that kind, not a name itself
+# (Leprohon's "Epithets added to the Throne name" blocks). Typed by its own P177 target,
+# because ADR-018 encoding convention #2 forbids a node-level kind tag on the value.
+PRED_PRENOMEN_EPITHET = "hapi:prenomen_epithet"
+PRED_NOMEN_EPITHET = "hapi:nomen_epithet"
+PRED_HORUS_NAME_EPITHET = "hapi:horus_name_epithet"
 PRED_IN_DYNASTIC_PERIOD = "hapi:in_dynastic_period"
 
 
@@ -62,18 +68,23 @@ class DocumentaryGraph:
 
 
 def _name_claims(
-    rec: RulerRecord, forms: list[NameForm], predicate: str, seq
+    rec: RulerRecord, forms: list[NameForm], predicate: str, seq, epithet_predicate=None
 ) -> list[Claim]:
     claims: list[Claim] = []
     for i, f in enumerate(forms):
         value_text = f.surface or f.translit or ""
         if not value_text:
             continue
+        if f.is_added_epithet and epithet_predicate is None:
+            raise ValueError(
+                f"{rec.local_id}: added epithet {value_text!r} in a slot with no epithet "
+                f"predicate ({predicate}); it would be published as a name."
+            )
         claims.append(
             Claim(
                 id=seq(),
                 subject_id=rec.local_id,
-                predicate=predicate,
+                predicate=epithet_predicate if f.is_added_epithet else predicate,
                 value_text=f.surface or "",
                 value_translit=f.translit,
                 is_variant=i > 0,
@@ -117,9 +128,11 @@ def build_documentary_graph(records: list[RulerRecord]) -> DocumentaryGraph:
             )
         )
         claims += _name_claims(rec, [NameForm(surface=rec.display_name)], PRED_DISPLAY_NAME, seq)
-        claims += _name_claims(rec, rec.prenomina, PRED_PRENOMEN, seq)
-        claims += _name_claims(rec, rec.horus_names, PRED_HORUS_NAME, seq)
-        claims += _name_claims(rec, rec.nomina, PRED_NOMEN, seq)
+        claims += _name_claims(rec, rec.prenomina, PRED_PRENOMEN, seq, PRED_PRENOMEN_EPITHET)
+        claims += _name_claims(
+            rec, rec.horus_names, PRED_HORUS_NAME, seq, PRED_HORUS_NAME_EPITHET
+        )
+        claims += _name_claims(rec, rec.nomina, PRED_NOMEN, seq, PRED_NOMEN_EPITHET)
 
         if rec.dynasty is not None:
             claims.append(

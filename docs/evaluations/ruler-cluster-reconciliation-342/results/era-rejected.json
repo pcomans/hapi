@@ -1,0 +1,3589 @@
+{
+  "registered_base_commit": "97f2e610974f0e89b9c03d409b230dff89edbb1f",
+  "pairs": [
+    {
+      "candidate_id": "cand-beckerath-01.02|leprohon-leprohon-8a.03",
+      "previously": "escalated",
+      "a": "beckerath-01.02 (Iti)",
+      "b": "leprohon-leprohon-8a.03 (Iti)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 1 and 8 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-02.06|pharaoh_se-Neferkara-II",
+      "previously": "escalated",
+      "a": "beckerath-02.06 (Nefer-ka-rê)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 2 and 8 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-02.06|pharaoh_se-Neferkara-III",
+      "previously": "escalated",
+      "a": "beckerath-02.06 (Nefer-ka-rê)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 2 and 9 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-02.06|pharaoh_se-Pepi-II",
+      "previously": "escalated",
+      "a": "beckerath-02.06 (Nefer-ka-rê)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 483 years apart (-2699 vs -2216); >= 285 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-02.06|pharaoh_se-Shabaka",
+      "previously": "escalated",
+      "a": "beckerath-02.06 (Nefer-ka-rê)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 1977 years apart (-2699 vs -722); >= 285 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.02|pharaoh_se-Khendjer",
+      "previously": "escalated",
+      "a": "beckerath-06.02 (User-ka-rê)",
+      "b": "pharaoh_se-Khendjer (Khendjer)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 555 years apart (-2287 vs -1732); >= 265 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|kitchen-25.04",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "kitchen-25.04 (Shabako)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1513 years apart (-2229 vs -716); >= 262 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|leprohon-leprohon-20.08",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 20 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|leprohon-leprohon-21.03",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "leprohon-leprohon-21.03 (Amenemnisu)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 21 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|leprohon-leprohon-23a.02",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "leprohon-leprohon-23a.02 (Peftjauabastet)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 23 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|leprohon-leprohon-25.04",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "leprohon-leprohon-25.04 (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 25 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 3 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-06.05|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "beckerath-06.05 (Pepi II.)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1507 years apart (-2229 vs -722); >= 262 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.02|leprohon-leprohon-16a.05",
+      "previously": "escalated",
+      "a": "beckerath-12.02 (Sesostris I.)",
+      "b": "leprohon-leprohon-16a.05 (Senwosret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.02|leprohon-leprohon-18.03",
+      "previously": "rejected",
+      "a": "beckerath-12.02 (Sesostris I.)",
+      "b": "leprohon-leprohon-18.03 (Thutmose I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 18 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.02|leprohon-leprohon-30.01",
+      "previously": "rejected",
+      "a": "beckerath-12.02 (Sesostris I.)",
+      "b": "leprohon-leprohon-30.01 (Nakhtnebef)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 30 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.02|pharaoh_se-Nectanebo-I",
+      "previously": "rejected",
+      "a": "beckerath-12.02 (Sesostris I.)",
+      "b": "pharaoh_se-Nectanebo-I (Nectanebo I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1576 years apart (-1956 vs -380); >= 248 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.02|pharaoh_se-Thutmose-I",
+      "previously": "rejected",
+      "a": "beckerath-12.02 (Sesostris I.)",
+      "b": "pharaoh_se-Thutmose-I (Thutmose I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 463 years apart (-1956 vs -1493); >= 248 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.03|pharaoh_se-Nebkaura-Khety-IV",
+      "previously": "rejected",
+      "a": "beckerath-12.03 (Ammenemes II.)",
+      "b": "pharaoh_se-Nebkaura-Khety-IV (Nebkaura Khety IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 10 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.04|leprohon-leprohon-21a.01",
+      "previously": "rejected",
+      "a": "beckerath-12.04 (Sesostris II.)",
+      "b": "leprohon-leprohon-21a.01 (Pinodjem I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 21 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-12.06|leprohon-leprohon-25.02",
+      "previously": "rejected",
+      "a": "beckerath-12.06 (Ammenemes III.)",
+      "b": "leprohon-leprohon-25.02 (Kashta)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 25 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.03|leprohon-leprohon-12.02",
+      "previously": "rejected",
+      "a": "beckerath-18.03 (Tuthmosis I.)",
+      "b": "leprohon-leprohon-12.02 (Senwosret I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 12 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.03|leprohon-leprohon-30.01",
+      "previously": "rejected",
+      "a": "beckerath-18.03 (Tuthmosis I.)",
+      "b": "leprohon-leprohon-30.01 (Nakhtnebef)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 30 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.03|pharaoh_se-Nectanebo-I",
+      "previously": "rejected",
+      "a": "beckerath-18.03 (Tuthmosis I.)",
+      "b": "pharaoh_se-Nectanebo-I (Nectanebo I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1124 years apart (-1504 vs -380); >= 226 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.03|pharaoh_se-Senusret-I",
+      "previously": "rejected",
+      "a": "beckerath-18.03 (Tuthmosis I.)",
+      "b": "pharaoh_se-Senusret-I (Senusret I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 416 years apart (-1504 vs -1920); >= 247 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.05|pharaoh_se-Djedkara-Isesi",
+      "previously": "rejected",
+      "a": "beckerath-18.05 (Kgin.Hat-schepsut)",
+      "b": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 892 years apart (-1473 vs -2365); >= 269 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.06|kitchen-24P.04",
+      "previously": "rejected",
+      "a": "beckerath-18.06 (Tuthmosis III.)",
+      "b": "kitchen-24P.04 (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 807 years apart (-1479 vs -672); >= 224 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.06|leprohon-leprohon-25.03",
+      "previously": "rejected",
+      "a": "beckerath-18.06 (Tuthmosis III.)",
+      "b": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 25 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.06|pharaoh_se-Necho-I",
+      "previously": "rejected",
+      "a": "beckerath-18.06 (Tuthmosis III.)",
+      "b": "pharaoh_se-Necho-I (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 26 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.07|kitchen-22.10",
+      "previously": "rejected",
+      "a": "beckerath-18.07 (Amenophis II.)",
+      "b": "kitchen-22.10 (Shoshenq V)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 661 years apart (-1428 vs -767); >= 222 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.07|leprohon-leprohon-21.04",
+      "previously": "rejected",
+      "a": "beckerath-18.07 (Amenophis II.)",
+      "b": "leprohon-leprohon-21.04 (Pa-Seba-Kha-En-Niut I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 21 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.07|leprohon-leprohon-21.06",
+      "previously": "rejected",
+      "a": "beckerath-18.07 (Amenophis II.)",
+      "b": "leprohon-leprohon-21.06 (Osorkon (the Elder))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 21 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.07|leprohon-leprohon-22.12",
+      "previously": "rejected",
+      "a": "beckerath-18.07 (Amenophis II.)",
+      "b": "leprohon-leprohon-22.12 (Sheshonq V)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.07|leprohon-leprohon-22.13",
+      "previously": "rejected",
+      "a": "beckerath-18.07 (Amenophis II.)",
+      "b": "leprohon-leprohon-22.13 (Osorkon IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.07|pharaoh_se-Shoshenq-V",
+      "previously": "rejected",
+      "a": "beckerath-18.07 (Amenophis II.)",
+      "b": "pharaoh_se-Shoshenq-V (Shoshenq V)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 650 years apart (-1428 vs -778); >= 222 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.08|kitchen-24P.04",
+      "previously": "rejected",
+      "a": "beckerath-18.08 (Tuthmosis IV.)",
+      "b": "kitchen-24P.04 (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 725 years apart (-1397 vs -672); >= 220 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.08|leprohon-leprohon-25.03",
+      "previously": "rejected",
+      "a": "beckerath-18.08 (Tuthmosis IV.)",
+      "b": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 25 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.08|pharaoh_se-Necho-I",
+      "previously": "rejected",
+      "a": "beckerath-18.08 (Tuthmosis IV.)",
+      "b": "pharaoh_se-Necho-I (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 26 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.09|leprohon-leprohon-20.05",
+      "previously": "rejected",
+      "a": "beckerath-18.09 (Amenophis III.)",
+      "b": "leprohon-leprohon-20.05 (Ramesses VI)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.09|pharaoh_se-Nebmaatra",
+      "previously": "rejected",
+      "a": "beckerath-18.09 (Amenophis III.)",
+      "b": "pharaoh_se-Nebmaatra (Nebmaatra)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 16 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-18.13|ryholt-17.4",
+      "previously": "rejected",
+      "a": "beckerath-18.13 (Tut-anch-amun)",
+      "b": "ryholt-17.4 (Antef VII)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 238 years apart (-1333 vs -1571); >= 229 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-19.03|pharaoh_se-Osorkon-II",
+      "previously": "rejected",
+      "a": "beckerath-19.03 (Ramses II.)",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 407 years apart (-1279 vs -872); >= 214 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-19.03|pharaoh_se-Pami",
+      "previously": "rejected",
+      "a": "beckerath-19.03 (Ramses II.)",
+      "b": "pharaoh_se-Pami (Pami)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 494 years apart (-1279 vs -785); >= 214 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-19.03|pharaoh_se-Shoshenq-III",
+      "previously": "rejected",
+      "a": "beckerath-19.03 (Ramses II.)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 442 years apart (-1279 vs -837); >= 214 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.01|kitchen-22.07",
+      "previously": "rejected",
+      "a": "beckerath-21.01 (Smendes)",
+      "b": "kitchen-22.07 (Takeloth II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 219 years apart (-1069 vs -850); >= 204 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.01|pharaoh_se-Takelot-II",
+      "previously": "rejected",
+      "a": "beckerath-21.01 (Smendes)",
+      "b": "pharaoh_se-Takelot-II (Takelot II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 229 years apart (-1069 vs -840); >= 204 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.04|pharaoh_se-Pami",
+      "previously": "rejected",
+      "a": "beckerath-21.04 (Amen-em-opet)",
+      "b": "pharaoh_se-Pami (Pami)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 210 years apart (-995 vs -785); >= 200 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.04|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "beckerath-21.04 (Amen-em-opet)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 236 years apart (-995 vs -759); >= 200 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.04|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "beckerath-21.04 (Amen-em-opet)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 221 years apart (-995 vs -774); >= 200 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.05|pharaoh_se-Shoshenq-V",
+      "previously": "rejected",
+      "a": "beckerath-21.05 (Osochor)",
+      "b": "pharaoh_se-Shoshenq-V (Shoshenq V)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 206 years apart (-984 vs -778); >= 200 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-21.06|ryholt-17.7",
+      "previously": "escalated",
+      "a": "beckerath-21.06 (Si-amun)",
+      "b": "ryholt-17.7 (Siamun (?))",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 581 years apart (-978 vs -1559); >= 228 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.05|pharaoh_se-Ramesses-IV",
+      "previously": "rejected",
+      "a": "beckerath-22.05 (Osorkon II.)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 281 years apart (-875 vs -1156); >= 208 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.06|pharaoh_se-Ramesses-II",
+      "previously": "rejected",
+      "a": "beckerath-22.06 (Schoschenq III.)",
+      "b": "pharaoh_se-Ramesses-II (Ramesses II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 442 years apart (-837 vs -1279); >= 214 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.07|pharaoh_se-Smendes-I",
+      "previously": "rejected",
+      "a": "beckerath-22.07 ((Schoschenq IIIa.))",
+      "b": "pharaoh_se-Smendes-I (Smendes I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 278 years apart (-798 vs -1076); >= 204 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.08|pharaoh_se-Ramesses-II",
+      "previously": "rejected",
+      "a": "beckerath-22.08 (Pe-mu)",
+      "b": "pharaoh_se-Ramesses-II (Ramesses II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 494 years apart (-785 vs -1279); >= 214 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.09|pharaoh_se-Osochor",
+      "previously": "rejected",
+      "a": "beckerath-22.09 (Schoschenq V.)",
+      "b": "pharaoh_se-Osochor (Osochor)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 218 years apart (-774 vs -992); >= 200 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.10|pharaoh_se-Smendes-I",
+      "previously": "rejected",
+      "a": "beckerath-22.10 (Har-si-êset)",
+      "b": "pharaoh_se-Smendes-I (Smendes I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 206 years apart (-870 vs -1076); >= 204 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.11|pharaoh_se-Smendes-I",
+      "previously": "rejected",
+      "a": "beckerath-22.11 (Takelot II.)",
+      "b": "pharaoh_se-Smendes-I (Smendes I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 235 years apart (-841 vs -1076); >= 204 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.12|pharaoh_se-Ramesses-II",
+      "previously": "rejected",
+      "a": "beckerath-22.12 (Petubastis I.)",
+      "b": "pharaoh_se-Ramesses-II (Ramesses II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 449 years apart (-830 vs -1279); >= 214 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.15|pharaoh_se-Amenemope",
+      "previously": "rejected",
+      "a": "beckerath-22.15 (Osorkon III.)",
+      "b": "pharaoh_se-Amenemope (Amenemope)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 212 years apart (-790 vs -1002); >= 201 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.15|pharaoh_se-Ramesses-IV",
+      "previously": "rejected",
+      "a": "beckerath-22.15 (Osorkon III.)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 366 years apart (-790 vs -1156); >= 208 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.16|pharaoh_se-Amenemope",
+      "previously": "rejected",
+      "a": "beckerath-22.16 (Takelot III.)",
+      "b": "pharaoh_se-Amenemope (Amenemope)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 235 years apart (-767 vs -1002); >= 201 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.16|pharaoh_se-Ramesses-IV",
+      "previously": "rejected",
+      "a": "beckerath-22.16 (Takelot III.)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 389 years apart (-767 vs -1156); >= 208 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.17|pharaoh_se-Amenemope",
+      "previously": "rejected",
+      "a": "beckerath-22.17 (Rud-amun)",
+      "b": "pharaoh_se-Amenemope (Amenemope)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 247 years apart (-755 vs -1002); >= 201 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.17|pharaoh_se-Ramesses-IV",
+      "previously": "rejected",
+      "a": "beckerath-22.17 (Rud-amun)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 401 years apart (-755 vs -1156); >= 208 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|leprohon-leprohon-13.34",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "leprohon-leprohon-13.34 (Ini (I))",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 13 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|leprohon-leprohon-13a.01",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "leprohon-leprohon-13a.01 (Ini II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 13 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|leprohon-leprohon-18.05a",
+      "previously": "rejected",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|leprohon-leprohon-18.05b",
+      "previously": "rejected",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|leprohon-leprohon-18.08",
+      "previously": "rejected",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "leprohon-leprohon-18.08 (Thutmose IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|leprohon-leprohon-5.06",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "leprohon-leprohon-5.06 (Niuserre)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 5 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|pharaoh_se-Ini-I",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "pharaoh_se-Ini-I (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 925 years apart (-735 vs -1660); >= 234 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|pharaoh_se-Niuserra-Ini",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "pharaoh_se-Niuserra-Ini (Niuserra Ini)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 1667 years apart (-735 vs -2402); >= 271 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|pharaoh_se-Thutmose-III",
+      "previously": "rejected",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 744 years apart (-735 vs -1479); >= 224 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|pharaoh_se-Thutmose-IV",
+      "previously": "rejected",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "pharaoh_se-Thutmose-IV (Thutmose IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 665 years apart (-735 vs -1400); >= 221 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|ryholt-13.34",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "ryholt-13.34 (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 942 years apart (-735 vs -1677); >= 234 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-22.18|ryholt-13.a",
+      "previously": "escalated",
+      "a": "beckerath-22.18 (Ini)",
+      "b": "ryholt-13.a (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 942 years apart (-735 vs -1677); >= 234 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-23.01|pharaoh_se-Amenemope",
+      "previously": "rejected",
+      "a": "beckerath-23.01 (Petubastis II.)",
+      "b": "pharaoh_se-Amenemope (Amenemope)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 246 years apart (-756 vs -1002); >= 201 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-23.01|pharaoh_se-Ramesses-IV",
+      "previously": "rejected",
+      "a": "beckerath-23.01 (Petubastis II.)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 400 years apart (-756 vs -1156); >= 208 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-23.02|pharaoh_se-Amenemope",
+      "previously": "rejected",
+      "a": "beckerath-23.02 (Auput II.)",
+      "b": "pharaoh_se-Amenemope (Amenemope)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 246 years apart (-756 vs -1002); >= 201 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-23.02|pharaoh_se-Ramesses-IV",
+      "previously": "rejected",
+      "a": "beckerath-23.02 (Auput II.)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 400 years apart (-756 vs -1156); >= 208 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-23.03|pharaoh_se-Psusennes-I",
+      "previously": "rejected",
+      "a": "beckerath-23.03 (Osorkon IV.)",
+      "b": "pharaoh_se-Psusennes-I (Psusennes I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 321 years apart (-730 vs -1051); >= 203 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-24.02|leprohon-leprohon-9-10b.01",
+      "previously": "rejected",
+      "a": "beckerath-24.02 (Bokchoris)",
+      "b": "leprohon-leprohon-9-10b.01 (Wahkare Khety (V))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 9 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-24.02|pharaoh_se-Wahkara-Khety-II",
+      "previously": "rejected",
+      "a": "beckerath-24.02 (Bokchoris)",
+      "b": "pharaoh_se-Wahkara-Khety-II (Wahkara Khety II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 9 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.02|pharaoh_se-Senusret-IV",
+      "previously": "rejected",
+      "a": "beckerath-25.02 (Pije)",
+      "b": "pharaoh_se-Senusret-IV (Senusret IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 16 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|leprohon-leprohon-20.08",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 20 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|leprohon-leprohon-6.05",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "leprohon-leprohon-6.05 (Pepy II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 6 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|leprohon-leprohon-8.04",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "leprohon-leprohon-8.04 (Neferkare Nebi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|leprohon-leprohon-8.10",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "leprohon-leprohon-8.10 (Neferkare Tereru)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|leprohon-leprohon-8.15",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "leprohon-leprohon-8.15 (Neferkaure)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|leprohon-leprohon-9-10a.03",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "leprohon-leprohon-9-10a.03 (Neferkare (III))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 9 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 3 are 22 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|pharaoh_se-Neferkara-II",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|pharaoh_se-Neferkara-III",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 9 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|pharaoh_se-Neferkaura",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "pharaoh_se-Neferkaura (Neferkaura)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1413 years apart (-713 vs -2126); >= 257 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-25.03|pharaoh_se-Pepi-II",
+      "previously": "rejected",
+      "a": "beckerath-25.03 (Schabako)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1503 years apart (-713 vs -2216); >= 261 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-26.01|leprohon-leprohon-13.32",
+      "previously": "rejected",
+      "a": "beckerath-26.01 (Psametik I.)",
+      "b": "leprohon-leprohon-13.32 (Ib-Iau)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 13 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-26.01|pharaoh_se-Wahibra-Jaib",
+      "previously": "rejected",
+      "a": "beckerath-26.01 (Psametik I.)",
+      "b": "pharaoh_se-Wahibra-Jaib (Wahibra Jaib)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1031 years apart (-664 vs -1695); >= 235 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-26.01|ryholt-13.32",
+      "previously": "rejected",
+      "a": "beckerath-26.01 (Psametik I.)",
+      "b": "ryholt-13.32 (Ibiaw)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1048 years apart (-664 vs -1712); >= 236 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-26.03|leprohon-leprohon-14.28",
+      "previously": "rejected",
+      "a": "beckerath-26.03 (Psametik II.)",
+      "b": "leprohon-leprohon-14.28 (Neferibre)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 14 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-26.03|pharaoh_se-Neferibra",
+      "previously": "rejected",
+      "a": "beckerath-26.03 (Psametik II.)",
+      "b": "pharaoh_se-Neferibra (Neferibra)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 14 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-26.03|ryholt-14.28",
+      "previously": "rejected",
+      "a": "beckerath-26.03 (Psametik II.)",
+      "b": "ryholt-14.28 (Neferibre)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 14 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-29.02|pharaoh_se-Tutankhamun",
+      "previously": "escalated",
+      "a": "beckerath-29.02 (Achoris)",
+      "b": "pharaoh_se-Tutankhamun (Tutankhamun)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 939 years apart (-393 vs -1332); >= 217 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-30.01|leprohon-leprohon-12.02",
+      "previously": "rejected",
+      "a": "beckerath-30.01 (Nektanebês)",
+      "b": "leprohon-leprohon-12.02 (Senwosret I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 30 and 12 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-30.01|leprohon-leprohon-18.03",
+      "previously": "rejected",
+      "a": "beckerath-30.01 (Nektanebês)",
+      "b": "leprohon-leprohon-18.03 (Thutmose I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 30 and 18 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-beckerath-30.01|pharaoh_se-Senusret-I",
+      "previously": "rejected",
+      "a": "beckerath-30.01 (Nektanebês)",
+      "b": "pharaoh_se-Senusret-I (Senusret I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1540 years apart (-380 vs -1920); >= 247 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-30.01|pharaoh_se-Thutmose-I",
+      "previously": "rejected",
+      "a": "beckerath-30.01 (Nektanebês)",
+      "b": "pharaoh_se-Thutmose-I (Thutmose I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1113 years apart (-380 vs -1493); >= 225 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-beckerath-31.02|pharaoh_se-Artaxerxes-II",
+      "previously": "escalated",
+      "a": "beckerath-31.02 (Arses)",
+      "b": "pharaoh_se-Artaxerxes-II (Artaxerxes II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 31 and 27 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-21.06|ryholt-17.7",
+      "previously": "escalated",
+      "a": "kitchen-21.06 (Siamun)",
+      "b": "ryholt-17.7 (Siamun (?))",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 581 years apart (-978 vs -1559); >= 228 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-21H.07|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "kitchen-21H.07 (Menkheperre)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 434 years apart (-1045 vs -1479); >= 224 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-22.07|pharaoh_se-Smendes-I",
+      "previously": "rejected",
+      "a": "kitchen-22.07 (Takeloth II)",
+      "b": "pharaoh_se-Smendes-I (Smendes I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 226 years apart (-850 vs -1076); >= 204 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-22.10|leprohon-leprohon-18.07",
+      "previously": "rejected",
+      "a": "kitchen-22.10 (Shoshenq V)",
+      "b": "leprohon-leprohon-18.07 (Amenhotep II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-22.10|pharaoh_se-Amenhotep-II",
+      "previously": "rejected",
+      "a": "kitchen-22.10 (Shoshenq V)",
+      "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 658 years apart (-767 vs -1425); >= 222 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-22.11|pharaoh_se-Psusennes-I",
+      "previously": "rejected",
+      "a": "kitchen-22.11 (Osorkon IV)",
+      "b": "pharaoh_se-Psusennes-I (Psusennes I)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 321 years apart (-730 vs -1051); >= 203 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-24.02|leprohon-leprohon-9-10b.01",
+      "previously": "rejected",
+      "a": "kitchen-24.02 (Bakenranef)",
+      "b": "leprohon-leprohon-9-10b.01 (Wahkare Khety (V))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 9 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-24.02|pharaoh_se-Wahkara-Khety-II",
+      "previously": "rejected",
+      "a": "kitchen-24.02 (Bakenranef)",
+      "b": "pharaoh_se-Wahkara-Khety-II (Wahkara Khety II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 9 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-24P.04|leprohon-leprohon-18.05a",
+      "previously": "rejected",
+      "a": "kitchen-24P.04 (Necho I)",
+      "b": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 18 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-24P.04|leprohon-leprohon-18.05b",
+      "previously": "rejected",
+      "a": "kitchen-24P.04 (Necho I)",
+      "b": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 18 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-24P.04|leprohon-leprohon-18.08",
+      "previously": "rejected",
+      "a": "kitchen-24P.04 (Necho I)",
+      "b": "leprohon-leprohon-18.08 (Thutmose IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 18 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-24P.04|pharaoh_se-Thutmose-III",
+      "previously": "rejected",
+      "a": "kitchen-24P.04 (Necho I)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 807 years apart (-672 vs -1479); >= 224 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-24P.04|pharaoh_se-Thutmose-IV",
+      "previously": "rejected",
+      "a": "kitchen-24P.04 (Necho I)",
+      "b": "pharaoh_se-Thutmose-IV (Thutmose IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 728 years apart (-672 vs -1400); >= 221 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.03|pharaoh_se-Senusret-IV",
+      "previously": "rejected",
+      "a": "kitchen-25.03 (Piankhy)",
+      "b": "pharaoh_se-Senusret-IV (Senusret IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 16 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|leprohon-leprohon-20.08",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 20 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|leprohon-leprohon-6.05",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "leprohon-leprohon-6.05 (Pepy II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 6 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|leprohon-leprohon-8.04",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "leprohon-leprohon-8.04 (Neferkare Nebi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|leprohon-leprohon-8.10",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "leprohon-leprohon-8.10 (Neferkare Tereru)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|leprohon-leprohon-8.15",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "leprohon-leprohon-8.15 (Neferkaure)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|leprohon-leprohon-9-10a.03",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "leprohon-leprohon-9-10a.03 (Neferkare (III))",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 9 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 3 are 22 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|pharaoh_se-Neferkara-II",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|pharaoh_se-Neferkara-III",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 9 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|pharaoh_se-Neferkaura",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "pharaoh_se-Neferkaura (Neferkaura)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1410 years apart (-716 vs -2126); >= 257 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.04|pharaoh_se-Pepi-II",
+      "previously": "rejected",
+      "a": "kitchen-25.04 (Shabako)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1500 years apart (-716 vs -2216); >= 261 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.05|leprohon-leprohon-14.33",
+      "previously": "rejected",
+      "a": "kitchen-25.05 (Shebitku)",
+      "b": "leprohon-leprohon-14.33 (Anati)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 14 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.05|leprohon-leprohon-5.08",
+      "previously": "rejected",
+      "a": "kitchen-25.05 (Shebitku)",
+      "b": "leprohon-leprohon-5.08 (Djedkare)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 5 are 20 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.05|pharaoh_se-Djedkara-Isesi",
+      "previously": "rejected",
+      "a": "kitchen-25.05 (Shebitku)",
+      "b": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1663 years apart (-702 vs -2365); >= 269 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-kitchen-25.05|ryholt-14.33",
+      "previously": "rejected",
+      "a": "kitchen-25.05 (Shebitku)",
+      "b": "ryholt-14.33 (‘Anati)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 14 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.01|pharaoh_se-Mentuhotepi",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.01 (Mentuhotep I)",
+      "b": "pharaoh_se-Mentuhotepi (Mentuhotepi)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 16 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.02|pharaoh_se-Sankhibra-Amenemhat",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.02 (Intef I)",
+      "b": "pharaoh_se-Sankhibra-Amenemhat (Sankhibra Amenemhat)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 13 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.02|ryholt-13.24",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.02 (Intef I)",
+      "b": "ryholt-13.24 (Antef V)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 13 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.02|ryholt-17.3",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.02 (Intef I)",
+      "b": "ryholt-17.3 (Antef VI)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 17 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.02|ryholt-17.5",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.02 (Intef I)",
+      "b": "ryholt-17.5 (Antef VIII)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 17 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.03|pharaoh_se-Rahotep",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.03 (Intef II)",
+      "b": "pharaoh_se-Rahotep (Rahotep)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 17 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11a.03|ryholt-17.1",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11a.03 (Intef II)",
+      "b": "ryholt-17.1 (Rahotep)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 17 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11b.05c|pharaoh_se-Cambyses-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11b.05c (Mentuhotep II (c))",
+      "b": "pharaoh_se-Cambyses-II (Cambyses II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 27 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11b.05c|pharaoh_se-Sobekhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11b.05c (Mentuhotep II (c))",
+      "b": "pharaoh_se-Sobekhotep-II (Sobekhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 13 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-11b.05c|ryholt-13.13",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-11b.05c (Mentuhotep II (c))",
+      "b": "ryholt-13.13 (Sobkhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 13 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.02|pharaoh_se-Nectanebo-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.02 (Senwosret I)",
+      "b": "pharaoh_se-Nectanebo-I (Nectanebo I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 30 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.02|pharaoh_se-Senusret-IV",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-12.02 (Senwosret I)",
+      "b": "pharaoh_se-Senusret-IV (Senusret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.02|pharaoh_se-Thutmose-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.02 (Senwosret I)",
+      "b": "pharaoh_se-Thutmose-I (Thutmose I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 18 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.02|ryholt-16.e",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-12.02 (Senwosret I)",
+      "b": "ryholt-16.e (Senwosret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.03|pharaoh_se-Nebka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.03 (Amenemhat II)",
+      "b": "pharaoh_se-Nebka (Nebka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 3 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.03|pharaoh_se-Nebkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.03 (Amenemhat II)",
+      "b": "pharaoh_se-Nebkara (Nebkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 3 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.03|pharaoh_se-Nebkaura-Khety-IV",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.03 (Amenemhat II)",
+      "b": "pharaoh_se-Nebkaura-Khety-IV (Nebkaura Khety IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 10 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.04|pharaoh_se-Senusret-IV",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-12.04 (Senwosret II)",
+      "b": "pharaoh_se-Senusret-IV (Senusret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.04|ryholt-16.e",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-12.04 (Senwosret II)",
+      "b": "ryholt-16.e (Senwosret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.05|pharaoh_se-Khakara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.05 (Senwosret III)",
+      "b": "pharaoh_se-Khakara (Khakara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 14 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.05|pharaoh_se-Senusret-IV",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-12.05 (Senwosret III)",
+      "b": "pharaoh_se-Senusret-IV (Senusret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.05|ryholt-14.30",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-12.05 (Senwosret III)",
+      "b": "ryholt-14.30 (Khakare)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 14 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-12.05|ryholt-16.e",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-12.05 (Senwosret III)",
+      "b": "ryholt-16.e (Senwosret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.02|pharaoh_se-Sekhemkara-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-13.02 (Senbef)",
+      "b": "pharaoh_se-Sekhemkara-I (Sekhemkara I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 13 and 10 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.04|pharaoh_se-Sekhemkara-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.04 (Amenemhat V)",
+      "b": "pharaoh_se-Sekhemkara-I (Sekhemkara I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 13 and 10 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.08|pharaoh_se-Intef-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.08 (Amenemhat VI)",
+      "b": "pharaoh_se-Intef-I (Intef I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 11 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.13|pharaoh_se-Cambyses-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.13 (Sobekhotep II)",
+      "b": "pharaoh_se-Cambyses-II (Cambyses II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 27 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.13|pharaoh_se-Mentuhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.13 (Sobekhotep II)",
+      "b": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 11 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.22|pharaoh_se-Userkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-13.22 (Khendjer)",
+      "b": "pharaoh_se-Userkara (Userkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 13 and 6 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.29|pharaoh_se-Neferefra-Isi",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-13.29 (Sobekhotep IV)",
+      "b": "pharaoh_se-Neferefra-Isi (Neferefra Isi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 13 and 5 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.32|pharaoh_se-Psamtik-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-13.32 (Ib-Iau)",
+      "b": "pharaoh_se-Psamtik-I (Psamtik I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 13 and 26 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.34|pharaoh_se-Niuserra-Ini",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.34 (Ini (I))",
+      "b": "pharaoh_se-Niuserra-Ini (Niuserra Ini)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 5 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.38|pharaoh_se-Merikara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-13.38 (Sobekhotep VII)",
+      "b": "pharaoh_se-Merikara (Merikara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 13 and 10 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.50|pharaoh_se-Mentuhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.50 (Mentuhotep V)",
+      "b": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 11 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.50|pharaoh_se-Mentuhotep-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.50 (Mentuhotep V)",
+      "b": "pharaoh_se-Mentuhotep-III (Mentuhotep III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 11 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.50|pharaoh_se-Mentuhotep-IV",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.50 (Mentuhotep V)",
+      "b": "pharaoh_se-Mentuhotep-IV (Mentuhotep IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 11 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13.52|pharaoh_se-Qakara-Ibi",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13.52 (Ibi II)",
+      "b": "pharaoh_se-Qakara-Ibi (Qakara Ibi)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 8 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13a.01|pharaoh_se-Niuserra-Ini",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13a.01 (Ini II)",
+      "b": "pharaoh_se-Niuserra-Ini (Niuserra Ini)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 5 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13a.05|pharaoh_se-Nectanebo-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13a.05 (Horus Merytawy)",
+      "b": "pharaoh_se-Nectanebo-II (Nectanebo II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 30 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-13a.05|pharaoh_se-Pepi-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-13a.05 (Horus Merytawy)",
+      "b": "pharaoh_se-Pepi-I (Pepi I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 13 and 6 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-14.28|pharaoh_se-Psamtik-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-14.28 (Neferibre)",
+      "b": "pharaoh_se-Psamtik-II (Psamtik II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 14 and 26 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-14.30|pharaoh_se-Senusret-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-14.30 (Khakare)",
+      "b": "pharaoh_se-Senusret-III (Senusret III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 14 and 12 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-14.33|pharaoh_se-Djedkara-Isesi",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-14.33 (Anati)",
+      "b": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 14 and 5 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-14.33|pharaoh_se-Shebitko",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-14.33 (Anati)",
+      "b": "pharaoh_se-Shebitko (Shebitko)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 14 and 25 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-15.05|pharaoh_se-Teti",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-15.05 (Apepi)",
+      "b": "pharaoh_se-Teti (Teti)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 15 and 6 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-16a.04|pharaoh_se-Mentuhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-16a.04 (Mentuhotep VII)",
+      "b": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 16 and 11 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-16a.04|pharaoh_se-Mentuhotep-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-16a.04 (Mentuhotep VII)",
+      "b": "pharaoh_se-Mentuhotep-III (Mentuhotep III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 16 and 11 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-16a.04|pharaoh_se-Mentuhotep-IV",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-16a.04 (Mentuhotep VII)",
+      "b": "pharaoh_se-Mentuhotep-IV (Mentuhotep IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 16 and 11 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-16a.05|pharaoh_se-Senusret-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-16a.05 (Senwosret IV)",
+      "b": "pharaoh_se-Senusret-II (Senusret II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 16 and 12 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-16a.05|pharaoh_se-Senusret-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-16a.05 (Senwosret IV)",
+      "b": "pharaoh_se-Senusret-III (Senusret III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 16 and 12 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-17.19|pharaoh_se-Menkauhor-Kaiu",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-17.19 (Senaaib)",
+      "b": "pharaoh_se-Menkauhor-Kaiu (Menkauhor Kaiu)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 17 and 5 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-17.20|pharaoh_se-Intef-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-17.20 (Rahotep)",
+      "b": "pharaoh_se-Intef-II (Intef II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 17 and 11 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-17.22|pharaoh_se-Intef-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-17.22 (Intef V)",
+      "b": "pharaoh_se-Intef-II (Intef II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 17 and 11 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-17.23|pharaoh_se-Amenemhat-IV",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-17.23 (Intef VI)",
+      "b": "pharaoh_se-Amenemhat-IV (Amenemhat IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 17 and 12 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-17.24|pharaoh_se-Intef-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-17.24 (Intef VII)",
+      "b": "pharaoh_se-Intef-II (Intef II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 17 and 11 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-17.26|pharaoh_se-Amasis",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-17.26 (Senakhtenre Ahmose (I))",
+      "b": "pharaoh_se-Amasis (Amasis)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 17 and 26 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.01|pharaoh_se-Amasis",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.01 (Ahmose (II))",
+      "b": "pharaoh_se-Amasis (Amasis)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 26 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.01|pharaoh_se-Radjedef",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.01 (Ahmose (II))",
+      "b": "pharaoh_se-Radjedef (Radjedef)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 4 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.03|pharaoh_se-Nectanebo-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.03 (Thutmose I)",
+      "b": "pharaoh_se-Nectanebo-I (Nectanebo I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 30 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.03|pharaoh_se-Osorkon-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.03 (Thutmose I)",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.03|pharaoh_se-Senusret-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.03 (Thutmose I)",
+      "b": "pharaoh_se-Senusret-I (Senusret I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 12 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.03|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.03 (Thutmose I)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.03|pharaoh_se-Siamun",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.03 (Thutmose I)",
+      "b": "pharaoh_se-Siamun (Siamun)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 21 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05a|pharaoh_se-Necho-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "b": "pharaoh_se-Necho-I (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 26 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05a|pharaoh_se-Osorkon-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05a|pharaoh_se-Osorkon-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 23 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05a|pharaoh_se-Piye",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 25 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05a|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05a|pharaoh_se-Takelot-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
+      "b": "pharaoh_se-Takelot-II (Takelot II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 23 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Necho-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Necho-I (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 26 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Osorkon-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Osorkon-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 23 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Piye",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 25 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Ramesses-XI",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Ramesses-XI (Ramesses XI)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.05b|pharaoh_se-Takelot-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.05b (Thutmose III (b))",
+      "b": "pharaoh_se-Takelot-II (Takelot II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 23 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.06|pharaoh_se-Djedkara-Isesi",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.06 (Hatshepsut)",
+      "b": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 5 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.07|pharaoh_se-Setnakht",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.07 (Amenhotep II)",
+      "b": "pharaoh_se-Setnakht (Setnakht)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.07|pharaoh_se-Shoshenq-V",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.07 (Amenhotep II)",
+      "b": "pharaoh_se-Shoshenq-V (Shoshenq V)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 22 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.08|pharaoh_se-Necho-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.08 (Thutmose IV)",
+      "b": "pharaoh_se-Necho-I (Necho I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 26 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.09|pharaoh_se-Nebmaatra",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-18.09 (Amenhotep III)",
+      "b": "pharaoh_se-Nebmaatra (Nebmaatra)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 18 and 16 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-18.14|pharaoh_se-Aya",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-18.14 (Ay)",
+      "b": "pharaoh_se-Aya (Aya)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 18 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.02|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-19.02 (Sety I)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 19 and 22 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Osorkon-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 22 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Osorkon-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 23 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Pami",
+      "previously": "new",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Pami (Pami)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 22 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Piye",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 25 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 23 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 22 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Siamun",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Siamun (Siamun)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 19 and 21 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.03|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.03 (Ramesses II)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 23 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.04|pharaoh_se-Neferites-I",
+      "previously": "new",
+      "a": "leprohon-leprohon-19.04 (Merenptah/Merneptah)",
+      "b": "pharaoh_se-Neferites-I (Neferites I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 29 are 10 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.05|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-19.05 (Sety II)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 19 and 22 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.07|pharaoh_se-Sekhaenra",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.07 (Siptah)",
+      "b": "pharaoh_se-Sekhaenra (Sekhaenra)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 13 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.07|pharaoh_se-Yakbim",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.07 (Siptah)",
+      "b": "pharaoh_se-Yakbim (Yakbim)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 14 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.07|ryholt-13.d",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.07 (Siptah)",
+      "b": "ryholt-13.d (Sekhaenre)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 13 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-19.07|ryholt-14.1",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-19.07 (Siptah)",
+      "b": "ryholt-14.1 (Yakbim)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 19 and 14 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-2.09|pharaoh_se-Neferkamin-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-2.09 (Seneferka)",
+      "b": "pharaoh_se-Neferkamin-I (Neferkamin I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 2 and 8 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.01|pharaoh_se-Amenhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.01 (Sethnakht)",
+      "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 18 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.02|pharaoh_se-Osorkon-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.02 (Ramesses III)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.02|pharaoh_se-Piye",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.02 (Ramesses III)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.02|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.02 (Ramesses III)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.02|pharaoh_se-Shoshenq-VI",
+      "previously": "new",
+      "a": "leprohon-leprohon-20.02 (Ramesses III)",
+      "b": "pharaoh_se-Shoshenq-VI (Shoshenq VI)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.02|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.02 (Ramesses III)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Osorkon-II",
+      "previously": "new",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 22 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Osorkon-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Pami",
+      "previously": "new",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Pami (Pami)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 22 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Pedubast-I",
+      "previously": "new",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Pedubast-I (Pedubast I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Pedubast-II",
+      "previously": "new",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Pedubast-II (Pedubast II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 22 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Piye",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Shoshenq-III",
+      "previously": "new",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 22 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.03|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.03 (Ramesses IV)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.04|pharaoh_se-Osorkon-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.04 (Ramesses V)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.04|pharaoh_se-Piye",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.04 (Ramesses V)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.04|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.04 (Ramesses V)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.04|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.04 (Ramesses V)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.05|pharaoh_se-Amenhotep-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.05 (Ramesses VI)",
+      "b": "pharaoh_se-Amenhotep-III (Amenhotep III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 18 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.05|pharaoh_se-Nebmaatra",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.05 (Ramesses VI)",
+      "b": "pharaoh_se-Nebmaatra (Nebmaatra)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.05|ryholt-17.a",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.05 (Ramesses VI)",
+      "b": "ryholt-17.a (Nebmaatre)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 17 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.06|pharaoh_se-Osorkon-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.06 (Ramesses VII)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.06|pharaoh_se-Piye",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.06 (Ramesses VII)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.06|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.06 (Ramesses VII)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.06|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.06 (Ramesses VII)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.07|pharaoh_se-Osorkon-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.07 (Ramesses VIII)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.07|pharaoh_se-Piye",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.07 (Ramesses VIII)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.07|pharaoh_se-Rudamun",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.07 (Ramesses VIII)",
+      "b": "pharaoh_se-Rudamun (Rudamun)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.07|pharaoh_se-Takelot-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.07 (Ramesses VIII)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 3 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Neferkara-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 8 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Neferkara-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 9 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Neferkaura",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Neferkaura (Neferkaura)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 8 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Osorkon-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 22 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Osorkon-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Osorkon-III (Osorkon III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Pepi-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 6 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Piye",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Piye (Piye)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 20 and 25 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Takelot-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Takelot-II (Takelot II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 23 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.08|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.08 (Ramesses IX)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 18 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.10|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.10 (Ramesses XI)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 22 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-20.10|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-20.10 (Ramesses XI)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 20 and 18 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.03|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.03 (Amenemnisu)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 3 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.03|pharaoh_se-Neferkara-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.03 (Amenemnisu)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 8 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.03|pharaoh_se-Neferkara-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.03 (Amenemnisu)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 9 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.03|pharaoh_se-Neferkaura",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.03 (Amenemnisu)",
+      "b": "pharaoh_se-Neferkaura (Neferkaura)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 8 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.03|pharaoh_se-Pepi-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.03 (Amenemnisu)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 6 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.04|pharaoh_se-Amenhotep-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.04 (Pa-Seba-Kha-En-Niut I)",
+      "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 18 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.06|pharaoh_se-Amenhotep-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21.06 (Osorkon (the Elder))",
+      "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 18 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.07|ryholt-17.7",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-21.07 (Siamun)",
+      "b": "ryholt-17.7 (Siamun (?))",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 21 and 17 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.08|pharaoh_se-Hor-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-21.08 (Pa-Seba-Kha-En-Niut II)",
+      "b": "pharaoh_se-Hor-I (Hor I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 21 and 13 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21.08|ryholt-13.53",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-21.08 (Pa-Seba-Kha-En-Niut II)",
+      "b": "ryholt-13.53 (Hor(..?))",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 21 and 13 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21a.01|pharaoh_se-Senusret-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-21a.01 (Pinodjem I)",
+      "b": "pharaoh_se-Senusret-II (Senusret II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 21 and 12 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21a.01|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-21a.01 (Pinodjem I)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 21 and 18 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-21a.02|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-21a.02 (Menkheperre)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 21 and 18 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.06|pharaoh_se-Ramesses-II",
+      "previously": "new",
+      "a": "leprohon-leprohon-22.06 (Osorkon II)",
+      "b": "pharaoh_se-Ramesses-II (Ramesses II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 19 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.06|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-22.06 (Osorkon II)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.06|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.06 (Osorkon II)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.06|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.06 (Osorkon II)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.07|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.07 (Takelot II)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.07|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.07 (Takelot II)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Ramesses-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Ramesses-II (Ramesses II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 19 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Ramesses-XI",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Ramesses-XI (Ramesses XI)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Seti-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Seti-II (Seti II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 19 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Tausret",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Tausret (Tausret)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 19 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Thutmose-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Thutmose-I (Thutmose I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.09|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.09 (Sheshonq III)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.11|pharaoh_se-Ramesses-II",
+      "previously": "new",
+      "a": "leprohon-leprohon-22.11 (Pamiu)",
+      "b": "pharaoh_se-Ramesses-II (Ramesses II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 19 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.11|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-22.11 (Pamiu)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.12|pharaoh_se-Amenhotep-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-22.12 (Sheshonq V)",
+      "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.12|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.12 (Sheshonq V)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.12|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22.12 (Sheshonq V)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22.13|pharaoh_se-Amenhotep-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-22.13 (Osorkon IV)",
+      "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22a.01|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22a.01 (Harsiese)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 20 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-22a.01|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-22a.01 (Harsiese)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 22 and 18 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.01|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-23.01 (Padibastet (Pedubastis) I)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.04|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-23.04 (Osorkon III)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.04|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-23.04 (Osorkon III)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.04|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-23.04 (Osorkon III)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 23 and 18 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.05|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-23.05 (Takelot III)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.05|pharaoh_se-Unas",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-23.05 (Takelot III)",
+      "b": "pharaoh_se-Unas (Unas)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 23 and 5 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.06|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-23.06 (Rudamun)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23.08|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-23.08 (Iuput II)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23a.01|pharaoh_se-Ramesses-IV",
+      "previously": "new",
+      "a": "leprohon-leprohon-23a.01 (Padibastet (Pedubastis) II)",
+      "b": "pharaoh_se-Ramesses-IV (Ramesses IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 20 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23a.02|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-23a.02 (Peftjauabastet)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 3 are 20 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23a.02|pharaoh_se-Neferkara-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-23a.02 (Peftjauabastet)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 8 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23a.02|pharaoh_se-Neferkara-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-23a.02 (Peftjauabastet)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 9 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23a.02|pharaoh_se-Neferkaura",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-23a.02 (Peftjauabastet)",
+      "b": "pharaoh_se-Neferkaura (Neferkaura)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 8 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-23a.02|pharaoh_se-Pepi-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-23a.02 (Peftjauabastet)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 23 and 6 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-24.02|pharaoh_se-Wahkara-Khety-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-24.02 (Bakenrenef (Bocchoris))",
+      "b": "pharaoh_se-Wahkara-Khety-II (Wahkara Khety II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 24 and 9 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.02|pharaoh_se-Amenemhat-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.02 (Kashta)",
+      "b": "pharaoh_se-Amenemhat-III (Amenemhat III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 12 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Cambyses-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Cambyses-II (Cambyses II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 27 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Mentuhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 11 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 20 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Senusret-IV",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Senusret-IV (Senusret IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 16 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Sobekhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Sobekhotep-II (Sobekhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 13 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Thutmose-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 18 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|pharaoh_se-Thutmose-IV",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "pharaoh_se-Thutmose-IV (Thutmose IV)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 18 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.03|ryholt-13.13",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+      "b": "ryholt-13.13 (Sobkhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 13 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.04|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.04 (Shabaka)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 3 are 22 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.04|pharaoh_se-Neferkara-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.04 (Shabaka)",
+      "b": "pharaoh_se-Neferkara-II (Neferkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.04|pharaoh_se-Neferkara-III",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.04 (Shabaka)",
+      "b": "pharaoh_se-Neferkara-III (Neferkara III)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 9 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.04|pharaoh_se-Neferkaura",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.04 (Shabaka)",
+      "b": "pharaoh_se-Neferkaura (Neferkaura)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 8 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.04|pharaoh_se-Pepi-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.04 (Shabaka)",
+      "b": "pharaoh_se-Pepi-II (Pepi II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 6 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.05|pharaoh_se-Djedkara-Isesi",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.05 (Shabataka/Shebitko)",
+      "b": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 5 are 20 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.05|pharaoh_se-Ramesses-IX",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.05 (Shabataka/Shebitko)",
+      "b": "pharaoh_se-Ramesses-IX (Ramesses IX)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 20 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.05|pharaoh_se-Thutmose-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-25.05 (Shabataka/Shebitko)",
+      "b": "pharaoh_se-Thutmose-III (Thutmose III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 25 and 18 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-25.05|ryholt-14.33",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-25.05 (Shabataka/Shebitko)",
+      "b": "ryholt-14.33 (‘Anati)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 14 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.01|pharaoh_se-Neferites-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-26.01 (Psamtek I)",
+      "b": "pharaoh_se-Neferites-I (Neferites I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 26 and 29 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.01|pharaoh_se-Wahibra-Jaib",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-26.01 (Psamtek I)",
+      "b": "pharaoh_se-Wahibra-Jaib (Wahibra Jaib)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 13 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.01|ryholt-13.32",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-26.01 (Psamtek I)",
+      "b": "ryholt-13.32 (Ibiaw)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 13 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.03|pharaoh_se-Neferibra",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-26.03 (Psamtek II)",
+      "b": "pharaoh_se-Neferibra (Neferibra)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 14 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.03|ryholt-14.28",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-26.03 (Psamtek II)",
+      "b": "ryholt-14.28 (Neferibre)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 14 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.04|pharaoh_se-Wahibra-Jaib",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-26.04 (Wahibre)",
+      "b": "pharaoh_se-Wahibra-Jaib (Wahibra Jaib)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 26 and 13 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.05|pharaoh_se-Ahmose-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-26.05 (Ahmose III)",
+      "b": "pharaoh_se-Ahmose-I (Ahmose I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 26 and 18 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-26.05|pharaoh_se-Senakhtenra",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-26.05 (Ahmose III)",
+      "b": "pharaoh_se-Senakhtenra (Senakhtenra)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 26 and 17 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-27.01|pharaoh_se-Mentuhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-27.01 (Cambyses)",
+      "b": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 27 and 11 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-27.01|pharaoh_se-Sobekhotep-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-27.01 (Cambyses)",
+      "b": "pharaoh_se-Sobekhotep-II (Sobekhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 27 and 13 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-27.01|ryholt-13.13",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-27.01 (Cambyses)",
+      "b": "ryholt-13.13 (Sobkhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 27 and 13 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-27.02|pharaoh_se-Darius-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-27.02 (Darius I)",
+      "b": "pharaoh_se-Darius-III (Darius III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 27 and 31 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-29.01|pharaoh_se-Merenptah",
+      "previously": "new",
+      "a": "leprohon-leprohon-29.01 (Nefaarudu I)",
+      "b": "pharaoh_se-Merenptah (Merenptah)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 29 and 19 are 10 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-29.01|pharaoh_se-Psamtik-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-29.01 (Nefaarudu I)",
+      "b": "pharaoh_se-Psamtik-I (Psamtik I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 29 and 26 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-29.02|pharaoh_se-Apepi",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-29.02 (Pasherimut)",
+      "b": "pharaoh_se-Apepi (Apepi)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 29 and 15 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-29.02|pharaoh_se-Psamtik-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-29.02 (Pasherimut)",
+      "b": "pharaoh_se-Psamtik-II (Psamtik II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 29 and 26 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-29.02|ryholt-15.5",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-29.02 (Pasherimut)",
+      "b": "ryholt-15.5 (Apophis)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 29 and 15 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-29.03|pharaoh_se-Tutankhamun",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-29.03 (Hakor)",
+      "b": "pharaoh_se-Tutankhamun (Tutankhamun)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 29 and 18 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-30.01|pharaoh_se-Senusret-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-30.01 (Nakhtnebef)",
+      "b": "pharaoh_se-Senusret-I (Senusret I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 30 and 12 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-30.01|pharaoh_se-Thutmose-I",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-30.01 (Nakhtnebef)",
+      "b": "pharaoh_se-Thutmose-I (Thutmose I)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 30 and 18 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-30.03|pharaoh_se-Pepi-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-30.03 (Nakhthorhebyt)",
+      "b": "pharaoh_se-Pepi-I (Pepi I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 30 and 6 are 24 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-31.02|pharaoh_se-Artaxerxes-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-31.02 (Arses)",
+      "b": "pharaoh_se-Artaxerxes-II (Artaxerxes II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 31 and 27 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-31.03|pharaoh_se-Darius-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-31.03 (Darius III)",
+      "b": "pharaoh_se-Darius-I (Darius I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 31 and 27 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|pharaoh_se-Osorkon-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "pharaoh_se-Osorkon-II (Osorkon II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 22 are 10 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|pharaoh_se-Shoshenq-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 22 are 10 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|pharaoh_se-Siamun",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "pharaoh_se-Siamun (Siamun)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 21 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|pharaoh_se-Sobekhotep-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "pharaoh_se-Sobekhotep-III (Sobekhotep III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 13 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|pharaoh_se-Tausret",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "pharaoh_se-Tausret (Tausret)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 19 are 13 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|pharaoh_se-Thutmose-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "pharaoh_se-Thutmose-I (Thutmose I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 18 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-32.02|ryholt-13.26",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-32.02 (Philip Arrhidaeus)",
+      "b": "ryholt-13.26 (Sobkhotep III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 32 and 13 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-33.02|pharaoh_se-Khendjer",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-33.02 (Ptolemy II Philadelphus)",
+      "b": "pharaoh_se-Khendjer (Khendjer)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 33 and 13 are 20 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-33.02|pharaoh_se-Userkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-33.02 (Ptolemy II Philadelphus)",
+      "b": "pharaoh_se-Userkara (Userkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 33 and 6 are 27 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-33.02|ryholt-13.22",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-33.02 (Ptolemy II Philadelphus)",
+      "b": "ryholt-13.22 (Khendjer)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 33 and 13 are 20 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-4.03|pharaoh_se-Ahmose-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-4.03 (Radjedef)",
+      "b": "pharaoh_se-Ahmose-I (Ahmose I)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 4 and 18 are 14 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-4.06|pharaoh_se-Menkara",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-4.06 (Menkaure)",
+      "b": "pharaoh_se-Menkara (Menkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 4 and 8 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.03|pharaoh_se-Neferirkara-II",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-5.03 (Neferirkare (I))",
+      "b": "pharaoh_se-Neferirkara-II (Neferirkara II)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 5 and 8 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.06|pharaoh_se-Ini-I",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-5.06 (Niuserre)",
+      "b": "pharaoh_se-Ini-I (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 5 and 13 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.06|ryholt-13.34",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-5.06 (Niuserre)",
+      "b": "ryholt-13.34 (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 5 and 13 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.06|ryholt-13.a",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-5.06 (Niuserre)",
+      "b": "ryholt-13.a (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 5 and 13 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.08|pharaoh_se-Shebitko",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-5.08 (Djedkare)",
+      "b": "pharaoh_se-Shebitko (Shebitko)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 5 and 25 are 20 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.08|ryholt-14.33",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-5.08 (Djedkare)",
+      "b": "ryholt-14.33 (‘Anati)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 5 and 14 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-5.09|pharaoh_se-Takelot-III",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-5.09 (Unas)",
+      "b": "pharaoh_se-Takelot-III (Takelot III)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 5 and 23 are 18 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.01|pharaoh_se-Apepi",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-6.01 (Teti)",
+      "b": "pharaoh_se-Apepi (Apepi)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 6 and 15 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.01|ryholt-15.5",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-6.01 (Teti)",
+      "b": "ryholt-15.5 (Apophis)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 6 and 15 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.02|pharaoh_se-Khendjer",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-6.02 (Userkare (I))",
+      "b": "pharaoh_se-Khendjer (Khendjer)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 13 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.02|ryholt-13.22",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-6.02 (Userkare (I))",
+      "b": "ryholt-13.22 (Khendjer)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 13 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.03|pharaoh_se-Nectanebo-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-6.03 (Pepy I)",
+      "b": "pharaoh_se-Nectanebo-II (Nectanebo II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 6 and 30 are 24 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.05|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-6.05 (Pepy II)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 3 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-6.05|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-6.05 (Pepy II)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 25 are 19 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.02|pharaoh_se-Menkaura",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-8.02 (Menkare)",
+      "b": "pharaoh_se-Menkaura (Menkaura)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 8 and 4 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.04|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8.04 (Neferkare Nebi)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 3 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.04|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8.04 (Neferkare Nebi)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 25 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.09|pharaoh_se-Nikara-II",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-8.09 (Nikare)",
+      "b": "pharaoh_se-Nikara-II (Nikara II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 8 and 16 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.10|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8.10 (Neferkare Tereru)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 3 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.10|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8.10 (Neferkare Tereru)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 25 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.14|pharaoh_se-Ibi",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-8.14 (Qakare Ibi I)",
+      "b": "pharaoh_se-Ibi (Ibi)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.14|ryholt-13.52",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-8.14 (Qakare Ibi I)",
+      "b": "ryholt-13.52 (Ibi)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.15|pharaoh_se-Aha",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-8.15 (Neferkaure)",
+      "b": "pharaoh_se-Aha (Aha)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 8 and 1 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.15|pharaoh_se-Neferkara",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8.15 (Neferkaure)",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 3 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8.15|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8.15 (Neferkaure)",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 25 are 17 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8a.01|pharaoh_se-Sekhemkara-Amenemhat",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8a.01 (Sekhemkare)",
+      "b": "pharaoh_se-Sekhemkara-Amenemhat (Sekhemkara Amenemhat)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8a.01|pharaoh_se-Sonbef",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8a.01 (Sekhemkare)",
+      "b": "pharaoh_se-Sonbef (Sonbef)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8a.01|ryholt-13.2",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-8a.01 (Sekhemkare)",
+      "b": "ryholt-13.2 (Sonbef)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8a.01|ryholt-13.4",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8a.01 (Sekhemkare)",
+      "b": "ryholt-13.4 (Amenemhet V)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8a.03|pharaoh_se-Aha",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8a.03 (Iti)",
+      "b": "pharaoh_se-Aha (Aha)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 1 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-8a.03|pharaoh_se-Djet",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-8a.03 (Iti)",
+      "b": "pharaoh_se-Djet (Djet)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 1 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-9-10a.03|pharaoh_se-Neferkara",
+      "previously": "escalated",
+      "a": "leprohon-leprohon-9-10a.03 (Neferkare (III))",
+      "b": "pharaoh_se-Neferkara (Neferkara)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 9 and 3 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-9-10a.03|pharaoh_se-Shabaka",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-9-10a.03 (Neferkare (III))",
+      "b": "pharaoh_se-Shabaka (Shabaka)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 9 and 25 are 16 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-leprohon-leprohon-9-10b.01|pharaoh_se-Bakenrenef",
+      "previously": "rejected",
+      "a": "leprohon-leprohon-9-10b.01 (Wahkare Khety (V))",
+      "b": "pharaoh_se-Bakenrenef (Bakenrenef)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 9 and 24 are 15 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Ay|ryholt-13.33",
+      "previously": "escalated",
+      "a": "pharaoh_se-Ay (Ay)",
+      "b": "ryholt-13.33 (Aya)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 378 years apart (-1323 vs -1701); >= 236 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Cambyses-II|ryholt-13.13",
+      "previously": "escalated",
+      "a": "pharaoh_se-Cambyses-II (Cambyses II)",
+      "b": "ryholt-13.13 (Sobkhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 1255 years apart (-525 vs -1780); >= 240 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Djedkara-Isesi|ryholt-14.33",
+      "previously": "rejected",
+      "a": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
+      "b": "ryholt-14.33 (‘Anati)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 5 and 14 are 9 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Intef-II|ryholt-17.1",
+      "previously": "escalated",
+      "a": "pharaoh_se-Intef-II (Intef II)",
+      "b": "ryholt-17.1 (Rahotep)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 486 years apart (-2066 vs -1580); >= 254 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Intef-II|ryholt-17.3",
+      "previously": "escalated",
+      "a": "pharaoh_se-Intef-II (Intef II)",
+      "b": "ryholt-17.3 (Antef VI)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 493 years apart (-2066 vs -1573); >= 254 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Intef-II|ryholt-17.5",
+      "previously": "escalated",
+      "a": "pharaoh_se-Intef-II (Intef II)",
+      "b": "ryholt-17.5 (Antef VIII)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 17 are 6 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Ity|ryholt-17.8",
+      "previously": "escalated",
+      "a": "pharaoh_se-Ity (Ity)",
+      "b": "ryholt-17.8 (Tao)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 10 and 17 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Khamudy|ryholt-13.6",
+      "previously": "rejected",
+      "a": "pharaoh_se-Khamudy (Khamudy)",
+      "b": "ryholt-13.6 (Siharnedjheritef)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 250 years apart (-1541 vs -1791); >= 240 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Mentuhotep-III|ryholt-16.d",
+      "previously": "escalated",
+      "a": "pharaoh_se-Mentuhotep-III (Mentuhotep III)",
+      "b": "ryholt-16.d (Monthhotep VI)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 16 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Mentuhotep-II|ryholt-13.13",
+      "previously": "escalated",
+      "a": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "b": "ryholt-13.13 (Sobkhotep II)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 13 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Mentuhotep-II|ryholt-16.d",
+      "previously": "escalated",
+      "a": "pharaoh_se-Mentuhotep-II (Mentuhotep II)",
+      "b": "ryholt-16.d (Monthhotep VI)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 16 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Mentuhotep-IV|ryholt-16.d",
+      "previously": "escalated",
+      "a": "pharaoh_se-Mentuhotep-IV (Mentuhotep IV)",
+      "b": "ryholt-16.d (Monthhotep VI)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 11 and 16 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Merenhor|ryholt-16.d",
+      "previously": "rejected",
+      "a": "pharaoh_se-Merenhor (Merenhor)",
+      "b": "ryholt-16.d (Monthhotep VI)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 8 and 16 are 8 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Meribra-Khety-I|ryholt-13.25",
+      "previously": "rejected",
+      "a": "pharaoh_se-Meribra-Khety-I (Meribra Khety I)",
+      "b": "ryholt-13.25 (Seth)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 9 and 13 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Merikara|ryholt-13.48",
+      "previously": "escalated",
+      "a": "pharaoh_se-Merikara (Merikara)",
+      "b": "ryholt-13.48 (Merkare)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 10 and 13 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Neferefra-Isi|ryholt-13.29",
+      "previously": "rejected",
+      "a": "pharaoh_se-Neferefra-Isi (Neferefra Isi)",
+      "b": "ryholt-13.29 (Sobkhotep IV)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 671 years apart (-2403 vs -1732); >= 271 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Niuserra-Ini|ryholt-13.34",
+      "previously": "escalated",
+      "a": "pharaoh_se-Niuserra-Ini (Niuserra Ini)",
+      "b": "ryholt-13.34 (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 725 years apart (-2402 vs -1677); >= 271 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Niuserra-Ini|ryholt-13.a",
+      "previously": "escalated",
+      "a": "pharaoh_se-Niuserra-Ini (Niuserra Ini)",
+      "b": "ryholt-13.a (Ini)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 725 years apart (-2402 vs -1677); >= 271 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Psamtik-II|ryholt-14.28",
+      "previously": "rejected",
+      "a": "pharaoh_se-Psamtik-II (Psamtik II)",
+      "b": "ryholt-14.28 (Neferibre)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 26 and 14 are 12 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Psamtik-I|ryholt-13.32",
+      "previously": "rejected",
+      "a": "pharaoh_se-Psamtik-I (Psamtik I)",
+      "b": "ryholt-13.32 (Ibiaw)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 1048 years apart (-664 vs -1712); >= 236 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Qakara-Ibi|ryholt-13.52",
+      "previously": "escalated",
+      "a": "pharaoh_se-Qakara-Ibi (Qakara Ibi)",
+      "b": "ryholt-13.52 (Ibi)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 8 and 13 are 5 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Qemau-Siharnedjheritef|ryholt-15.6",
+      "previously": "rejected",
+      "a": "pharaoh_se-Qemau-Siharnedjheritef (Qemau Siharnedjheritef)",
+      "b": "ryholt-15.6 (Khamudi)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 250 years apart (-1791 vs -1541); >= 240 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Sekhemkara-I|ryholt-13.2",
+      "previously": "rejected",
+      "a": "pharaoh_se-Sekhemkara-I (Sekhemkara I)",
+      "b": "ryholt-13.2 (Sonbef)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 10 and 13 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Sekhemkara-I|ryholt-13.4",
+      "previously": "escalated",
+      "a": "pharaoh_se-Sekhemkara-I (Sekhemkara I)",
+      "b": "ryholt-13.4 (Amenemhet V)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 10 and 13 are 3 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Senusret-III|ryholt-14.30",
+      "previously": "rejected",
+      "a": "pharaoh_se-Senusret-III (Senusret III)",
+      "b": "ryholt-14.30 (Khakare)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 12 and 14 are 2 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Senusret-III|ryholt-16.e",
+      "previously": "escalated",
+      "a": "pharaoh_se-Senusret-III (Senusret III)",
+      "b": "ryholt-16.e (Senwosret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Senusret-II|ryholt-16.e",
+      "previously": "escalated",
+      "a": "pharaoh_se-Senusret-II (Senusret II)",
+      "b": "ryholt-16.e (Senwosret IV)",
+      "basis": "name_only",
+      "era_conflict": "Dynasties 12 and 16 are 4 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Sewesekhtawy-Sehotepibra|ryholt-15.6",
+      "previously": "rejected",
+      "a": "pharaoh_se-Sewesekhtawy-Sehotepibra (Sewesekhtawy Sehotepibra)",
+      "b": "ryholt-15.6 (Khamudi)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 242 years apart (-1783 vs -1541); >= 240 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Shebitko|ryholt-14.33",
+      "previously": "rejected",
+      "a": "pharaoh_se-Shebitko (Shebitko)",
+      "b": "ryholt-14.33 (‘Anati)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 25 and 14 are 11 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Siamun|ryholt-17.7",
+      "previously": "escalated",
+      "a": "pharaoh_se-Siamun (Siamun)",
+      "b": "ryholt-17.7 (Siamun (?))",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 573 years apart (-986 vs -1559); >= 228 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Teti|ryholt-15.5",
+      "previously": "escalated",
+      "a": "pharaoh_se-Teti (Teti)",
+      "b": "ryholt-15.5 (Apophis)",
+      "basis": "name_only",
+      "era_conflict": "Reign starts 724 years apart (-2305 vs -1581); >= 266 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Tutankhamun|ryholt-17.4",
+      "previously": "rejected",
+      "a": "pharaoh_se-Tutankhamun (Tutankhamun)",
+      "b": "ryholt-17.4 (Antef VII)",
+      "basis": "prenomen",
+      "era_conflict": "Reign starts 239 years apart (-1332 vs -1571); >= 229 is distinct kings."
+    },
+    {
+      "candidate_id": "cand-pharaoh_se-Userkara|ryholt-13.22",
+      "previously": "rejected",
+      "a": "pharaoh_se-Userkara (Userkara)",
+      "b": "ryholt-13.22 (Khendjer)",
+      "basis": "prenomen",
+      "era_conflict": "Dynasties 6 and 13 are 7 apart and not within one contested numbering band ((6, 10), (13, 17), (21, 26))."
+    }
+  ]
+}
