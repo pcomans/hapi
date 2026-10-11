@@ -53,7 +53,7 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 - **Every judgment rests on a cited source.** Whether the two sides' strings match or differ
   is never by itself a basis for a judgment, and general knowledge is not a source; what the
   case evidence records about the records counts only through a named artifact-evidence
-  exception. The schema requires at least one institutional `https` citation on every
+  exception. The schema requires at least one institutional `http(s)` citation on every
   decision, including `insufficient_evidence`.
 - **Up to 99 web searches per case** (`max_uses`), so a case is never decided from general
   knowledge because a search cap ran out (the 5-search cap of the first pilot did).
@@ -65,6 +65,9 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
   age, the encrypted content, and any passages the model quotes in its answer — so the URLs a
   decision rests on are inspectable, but not the full text the model read. Accepted by the
   project owner on 2026-10-11.
+- **Search filtering output is encrypted too.** `web_search_20260209` filters results by
+  running code server-side. The code is recorded in plain text (`code_executions`); its output
+  is returned encrypted, like the page content.
 - **The thinking is a summary.** Current Claude models return a summary of their reasoning,
   never the raw chain of thought, and adaptive thinking is optional: a simple case may carry
   no thinking at all.

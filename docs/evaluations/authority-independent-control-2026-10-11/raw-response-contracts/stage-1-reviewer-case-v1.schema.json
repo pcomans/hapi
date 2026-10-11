@@ -16,7 +16,7 @@
   },
   "citations": {
    "items": {
-    "pattern": "^https://",
+    "pattern": "^https?://",
     "type": "string"
    },
    "minItems": 1,

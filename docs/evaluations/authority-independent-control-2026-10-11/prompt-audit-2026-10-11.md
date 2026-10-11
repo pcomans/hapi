@@ -31,3 +31,8 @@ case on its own" (removes the tension with the web-research instruction), and th
 sentence unified to "the institutional URLs you relied on. Always cite at least one, including
 when you answer insufficient_evidence (then cite the sources you consulted)". Neither edit
 names an outcome, arm, class or selection, or changes what any case type must provide.
+
+Post-audit schema edit (2026-10-11, after the first mini-pilot attempt): the `citations`
+pattern was widened from `^https://` to `^https?://`, because a reviewer cited the Perseus
+Digital Library (Tufts), which serves `http://` only. The prompt asks for institutional URLs
+and never named a scheme; the change is identical for every case and names no outcome.

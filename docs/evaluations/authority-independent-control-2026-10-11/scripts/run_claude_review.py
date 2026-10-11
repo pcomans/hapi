@@ -113,6 +113,12 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
         b.get("input", {}).get("query") for r in rounds for b in _blocks(r, "server_tool_use")
         if b.get("name") == "web_search"
     ]
+    # web_search_20260209 filters results with server-side code execution: the code is
+    # plain text here; its stdout comes back encrypted, like search page content.
+    record["code_executions"] = [
+        b.get("input", {}).get("code") for r in rounds for b in _blocks(r, "server_tool_use")
+        if b.get("name") == "code_execution"
+    ]
     record["web_search_results"] = [
         {"title": res.get("title"), "url": res.get("url"), "page_age": res.get("page_age")}
         for r in rounds for b in _blocks(r, "web_search_tool_result")
@@ -121,7 +127,14 @@ def review_case(client, case: dict, role_prompt: str, schema: dict, system_promp
     if final["stop_reason"] == "refusal":
         record["failure"] = f"refusal: {final.get('stop_details')}"
         return record
-    text = "".join(b.get("text", "") for b in _blocks(final, "text")).strip()
+    # The answer is the last text block. Earlier text blocks are the model's notes between
+    # tool calls (kept verbatim in the rounds), not part of the answer.
+    texts = [b.get("text", "") for b in _blocks(final, "text")]
+    if not texts:
+        record["failure"] = "final round has no text block"
+        return record
+    text = texts[-1].strip()
+    record["interstitial_text"] = [t for r in rounds for t in (b.get("text", "") for b in _blocks(r, "text"))][:-1]
     record["final_text"] = text
     try:
         decision = json.loads(text)
