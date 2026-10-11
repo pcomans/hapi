@@ -42,7 +42,7 @@ export default function About() {
         This build&apos;s links were decided by the{" "}
         <strong>{meta.reviewer === "llm" ? modelLabel(meta.model) : "deterministic policy (draft)"}</strong>.
         Every approved link is gated on an approved verdict and every claim carries its scholar and
-        page citation. The full reviewer interaction is captured for replay.
+        page citation. The full reviewer interaction, including its reasoning, is kept as the record of each decision.
       </p>
 
       <h3>Architecture</h3>

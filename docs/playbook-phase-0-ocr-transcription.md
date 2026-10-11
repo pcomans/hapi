@@ -60,6 +60,8 @@ If the PDF uses double-page spreads (each physical page renders two printed page
 
 ## Step 3 — OCR via a Claude Code subagent
 
+> **Known Rule 13 gap ([#350](https://github.com/pcomans/hapi/issues/350)).** The OCR (Step 3) and extraction (Step 4) subagent runs keep only their output text, not the full Rule 13 record (served model, raw response, thinking). Until #350 lands, note in the PR body that this source's LLM steps carry that gap.
+
 Spawn a general-purpose subagent with a prompt that:
 
 - Names the book and the target physical-page range.
@@ -73,7 +75,7 @@ For multi-chunk targets (e.g. Ryholt's 81 pages), spawn one subagent per 5-physi
 **Common gotcha:** the harness sandbox may deny the main session's inline inference. If your OCR subagent refuses, reframe the prompt.
 
 **ADR-017 amendment (2026-04-15) — external-model fallback.** Claude Opus 4.6 declined OCR on Dodson-Hilton chunk 1 (p126–p130) with a reasoned copyright-scope refusal. ADR-017 is amended to allow a single per-chunk fallback to Gemini 3.1 Pro when Opus refuses; the amendment has constraints:
-- The Gemini prompt is committed verbatim at `<source_dir>/transcribe-gemini-prompt.md` for reproducibility. The Gemini model version is pinned in `transcribe.md`.
+- The Gemini prompt is committed verbatim at `<source_dir>/transcribe-gemini-prompt.md` as part of the record of the OCR step. The Gemini model version is recorded in `transcribe.md`.
 - Every downstream stage (3-subagent extraction, merge, reviewer pass, fix_rows) continues to run on Claude Opus 4.6 — only the OCR step uses Gemini.
 - Each chunk must re-attempt Opus OCR first before escalating. Dodson-Hilton chunk 2 (p142–p145) succeeded on main-session Opus after chunk 1 had refused; each chunk is independent.
 - Document the deviation in `transcribe.md` § "Model deviation" with the refusal transcript.
@@ -261,7 +263,7 @@ The LLM reviewers (especially `egyptologist-reviewer`) reliably flag *categories
 For every category a reviewer flags (in this PR or a previous one), implement one validation over the source's `reconciled.jsonl`. The implementation vehicle varies per source:
 
 - Sources whose transcription is **committed in the repo** (whatever the file format — `raw/*.md`, `raw/*.csv`, hand-typed CSVs shipped alongside `reconciled.jsonl`) can wire a `diff_<chunk>.py` script that compares reconciled values against the committed transcription. The diff script itself is always committed; it's the transcription-input side of the diff that varies.
-- Sources whose transcription is **gitignored for copyright reasons under ADR-017** (Dodson-Hilton's `raw/chunk-*.md` and any future source that OCRs a copyrighted scholarly book) still ship a committed `diff_<chunk>.py`, but the diff can only run on the machine that has the `raw/chunk-*.md` files locally (i.e. the agent that ran the OCR step for that PR). The diff is a **pre-commit / pre-review gate**: the committing agent runs the diff, pastes a clean run (or the row list + explanation of any intentional divergence) into the PR body or `reviewer-notes-<chunk>.md`, and only then commits. This degrades CI-reproducibility to *agent-attested-clean* rather than *CI-verified-clean*, but preserves the content-validation signal because the committed `reconciled.jsonl` has demonstrably been diff'd against the OCR before landing. A reviewer who wants to re-verify re-runs the OCR step locally against the SHA-pinned source PDF and re-runs the diff — the OCR output is reproducible, just not committable.
+- Sources whose transcription is **gitignored for copyright reasons under ADR-017** (Dodson-Hilton's `raw/chunk-*.md` and any future source that OCRs a copyrighted scholarly book) still ship a committed `diff_<chunk>.py`, but the diff can only run on the machine that has the `raw/chunk-*.md` files locally (i.e. the agent that ran the OCR step for that PR). The diff is a **pre-commit / pre-review gate**: the committing agent runs the diff, pastes a clean run (or the row list + explanation of any intentional divergence) into the PR body or `reviewer-notes-<chunk>.md`, and only then commits. This degrades CI-reproducibility to *agent-attested-clean* rather than *CI-verified-clean*, but preserves the content-validation signal because the committed `reconciled.jsonl` has demonstrably been diff'd against the OCR before landing. A reviewer who wants to re-verify re-runs the diff against the persisted local `raw/chunk-*.md` — the OCR output is the record. Never re-run the OCR to check a past transcription (Constitutional Rule 13): an LLM call cannot be re-executed to reproduce its output.
 - Sources that ship **only `reconciled.jsonl`** (some single-shot extracts with no diffable intermediate) use a `validate.py` or test fixture asserting against `reconciled.jsonl` directly.
 
 `diff_power.py` and `diff_ramesside.py` are example patterns for the gitignored-transcription case; they are not a required filename for every source. The check inventory grows monotonically as new sources surface new conventions; checks ported from a previous source's script are free.

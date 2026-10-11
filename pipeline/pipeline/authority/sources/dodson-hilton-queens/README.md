@@ -129,8 +129,8 @@ is safe and idempotent.
 
 **OCR step on this chunk was performed by Google Gemini 3.1 Pro, not Claude Opus 4.6.** Claude Opus 4.6 refused the OCR pass on reasoned copyright-scope grounds (see `transcribe.md` § "Model deviation" for the refusal transcript and rationale). This deviation is permitted under ADR-017 § "Amendment 2026-04-15: external-model fallback for copyright-refusal" and comes with constraints:
 
-- The Gemini prompt is committed verbatim at `transcribe-gemini-prompt.md` for reproducibility.
-- The Gemini model version (`Gemini 3.1 Pro`, web UI, 2026-04-15) is pinned.
+- The Gemini prompt is committed verbatim at `transcribe-gemini-prompt.md` as part of the record of the OCR step.
+- The Gemini model version (`Gemini 3.1 Pro`, web UI, 2026-04-15) is recorded.
 - Every downstream stage (3-subagent extraction, merge, reviewer pass, `fix_rows.py`) continues to run on Claude Opus 4.6 — only the OCR step uses Gemini.
 - Follow-up Dodson-Hilton chunks (Amarna, Ramesside) must re-attempt Opus OCR first before escalating to Gemini; this is a per-chunk deviation, not a source-level blanket fallback.
 

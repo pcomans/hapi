@@ -34,7 +34,7 @@ AUTHORITY_ROOT = REPO_ROOT / "pipeline" / "pipeline" / "authority" / "sources"
 WEB_DATA_DIR = REPO_ROOT / "web-claimgraph" / "data"
 
 DEFAULT_MODEL = {
-    "anthropic": "claude-sonnet-5",
+    "anthropic": "claude-sonnet-5-5",
     "openrouter": "z-ai/glm-5.2",
     "vercel": "deepseek/deepseek-v4.1-flash",
 }
@@ -68,7 +68,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--deterministic", action="store_true",
                     help="explicitly use the deterministic policy instead of the live reviewer")
-    ap.add_argument("--provider", choices=tuple(DEFAULT_MODEL), default="anthropic",
+    ap.add_argument("--provider", choices=tuple(DEFAULT_MODEL), default="vercel",
                     help="live-reviewer backend: anthropic (ANTHROPIC_API_KEY), "
                          "openrouter (OPENROUTER_API_KEY, e.g. GLM 5.2) or vercel "
                          "(AI_GATEWAY_API_KEY, DeepSeek V4.1 Flash pinned to DeepSeek)")
@@ -217,7 +217,7 @@ def main() -> int:
     # + user prompt, provider, requested model, served snapshot, request parameters and the
     # full raw response, one record per attempt (retries included) — plus the digest of the
     # request the verdict was reached under. Written separately so the app-facing artifact
-    # stays lean. This is the replayable provenance record.
+    # stays lean. This is the provenance record.
     run_path = out_path.with_name(out_path.stem + ".reviewer-run.jsonl")
     with run_path.open("w", encoding="utf-8") as fh:
         for v in resolved.verdicts:

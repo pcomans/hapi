@@ -309,12 +309,15 @@ the ratified design).
   the #306 redesign closes by construction.)*
 - **Reasoning capture (Constitutional Rule 13).** Any model-assisted step — wherever
   #306 places it, *in* the decision path or *behind* a deterministic gate — must
-  persist its complete interaction (model id + dated snapshot, parameters, the exact
-  prompt/input, and the full raw response including the model's stated reasoning),
-  linked to the decision it produced. This policy holds regardless of the architecture
-  #306 settles on: a matcher decision that cannot be replayed from a stored
-  request/response is not reproducible (Rule 1: "the model knows" is not a source).
-  *(The #342 rebuild's model has no dated snapshot; see the 2026-10-10 amendment, item 7.)*
+  persist its complete interaction (model id as requested and as served with any build
+  information the provider reports, parameters, the exact prompt/input, the full raw
+  response, the thinking transcript, and every source used at runtime, verbatim), linked
+  to the decision it produced. This policy holds regardless of the architecture #306
+  settles on. An LLM call cannot be re-executed to reproduce a decision — not with a dated
+  model id, not with web search in the loop — so what must be re-readable is the record:
+  the thinking and the sources show what the model saw and why it decided (Rule 1: "the
+  model knows" is not a source). *(Revised 2026-10-11 with Rule 13; the earlier "dated
+  snapshot" requirement is withdrawn.)*
 - **Metrics:** precision is the primary reported number; recall is secondary and is
   always reported with the abstention/escalation rate (per decision 3).
 
@@ -421,8 +424,8 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    every response is checked to have been served there and is persisted in full,
    reasoning included (Rule 13). The model id is an alias with **no dated snapshot**; each
    interaction records DeepSeek's reported serving build (`systemFingerprint`) with it, and
-   a committed test requires one build per run. The project owner accepted the missing
-   dated snapshot for this research build (2026-10-10); it is to be revisited before
-   identity links become production authority data. *(Added 2026-10-11:)* Because such a run is not "completely
-   determined by its digital input", it is typed `hapi:LLMReviewerRun` (CRMdig D7), not D10
-   (ADR-018 amendment 2026-10-11).
+   a committed test requires one build per run. *(2026-10-11: no revisit is needed — Rule
+   13 no longer asks for a dated snapshot, since no LLM call can be re-executed to
+   reproduce a decision; the persisted thinking and inputs are the record.)* *(Added
+   2026-10-11:)* Because such a run is not "completely determined by its digital input",
+   it is typed `hapi:LLMReviewerRun` (CRMdig D7), not D10 (ADR-018 amendment 2026-10-11).

@@ -29,7 +29,7 @@ connection timeouts and eight answers cut off at `max_tokens` (reasoning that ne
 reached a verdict, all Dyn 13–23 records) were retried; one pair
 (`leprohon-13.06` ↔ `ryholt-13.10`) never produced a verdict and is escalated. All attempts
 are persisted. These properties are enforced by
-`pipeline/tests/test_claimgraph_committed_artifacts.py`, which also replays the run offline
+`pipeline/tests/test_claimgraph_committed_artifacts.py`, which also re-reads the saved model answers offline
 through the current matcher and requires the committed links, escalations and clusters
 exactly — a matcher change committed without a rebuild fails CI. The tables below are
 copied from `results/ruler-ambiguity.json`, which is the source of record.
