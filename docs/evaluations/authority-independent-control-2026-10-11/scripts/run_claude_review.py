@@ -42,9 +42,11 @@ PARAMETERS = {
     "max_tokens": 32000,
     "thinking": {"type": "adaptive", "display": "summarized"},
     "output_config": {"effort": "high"},
-    "tools": [{"type": "web_search_20260209", "name": "web_search", "max_uses": 5}],
+    "tools": [{"type": "web_search_20260209", "name": "web_search", "max_uses": 99}],
 }
-MAX_CONTINUATIONS = 5  # pause_turn resumptions per case
+# pause_turn resumptions per case: the server pauses every 10 sampling iterations, and up to
+# 99 searches can need about 10 resumptions.
+MAX_CONTINUATIONS = 20
 
 # Claude Sonnet 5.5 list prices (USD per million tokens; web search per request), for the
 # cost estimate reported with the run. Cache writes are estimated at the input price.
@@ -166,10 +168,16 @@ def main() -> int:
     ap.add_argument("--reviewer", required=True, help="independent reviewer label, e.g. A or B")
     ap.add_argument("--out", type=Path, required=True, help="private output directory")
     ap.add_argument("--limit", type=int, help="review only the first N queue cases (pilot)")
+    ap.add_argument("--case-id", action="append", help="review only these case IDs (pilot)")
     args = ap.parse_args()
 
     queue = json.loads(args.queue.read_text("utf-8"))
     cases = queue["cases"][: args.limit] if args.limit else queue["cases"]
+    if args.case_id:
+        unknown = set(args.case_id) - {c["case_id"] for c in queue["cases"]}
+        if unknown:
+            raise ReviewFailure(f"unknown case IDs: {sorted(unknown)}")
+        cases = [c for c in cases if c["case_id"] in set(args.case_id)]
     role_prompt = ROLE_PROMPT.read_text("utf-8")
     system_prompt = SYSTEM_PROMPT_PATH.read_text("utf-8")
     schema = json.loads(RESPONSE_SCHEMA.read_text("utf-8"))

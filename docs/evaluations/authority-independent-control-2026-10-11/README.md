@@ -49,7 +49,14 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
   a case decided without any web search stops the run after the record is written.
 - **Prompt:** `prompts/stage-1-reviewer-v3.txt`, response schema
   `raw-response-contracts/stage-1-reviewer-case-v1.schema.json`. Leak-audited before use
-  (Rule 14).
+  (Rule 14; `prompt-audit-2026-10-11.md`).
+- **Every judgment rests on a cited source.** Whether the two sides' strings match or differ
+  is never by itself a basis for a judgment, and general knowledge is not a source; what the
+  case evidence records about the records counts only through a named artifact-evidence
+  exception. The schema requires at least one institutional `https` citation on every
+  decision, including `insufficient_evidence`.
+- **Up to 99 web searches per case** (`max_uses`), so a case is never decided from general
+  knowledge because a search cap ran out (the 5-search cap of the first pilot did).
 
 ## Known limitations (disclosed)
 
@@ -65,5 +72,9 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
   string by construction, so a case whose two sides show the same string can only be a retained
   control or a literal-only loss. The reviewer can infer that partition from the evidence it is
   asked to judge; it cannot be removed. The prompt does not name arms or classes.
+- **Sourcing burden is unequal in practice.** The prompt treats every case alike, but an
+  institutional source for a variant spelling is harder to find than one for an identical
+  string, so differing-string cases may draw more `insufficient_evidence`. Read the f counts
+  with this in mind.
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
   behaviour (#338).

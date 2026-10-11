@@ -9,6 +9,6 @@ Research the evidence on the public web before deciding, then independently deci
 
 Judge this case only from its own evidence. Do not infer why it was selected or what other cases exist.
 
-Use only the case's allowed outcomes. Choose insufficient_evidence (for either question) only when public sources cannot settle it. Decide from the institutional evidence, not from whether the two sides' strings match or differ. Copy the case ID and evidence hash exactly. Give concise reasoning and the institutional URLs you relied on; if no suitable citation exists, record a specific artifact-evidence exception instead of inventing one.
+Use only the case's allowed outcomes. Every judgment must rest on an institutional source you cite; do not rely on general knowledge. Whether the two sides' strings match or differ is never, by itself, a basis for any judgment. The case evidence may support a judgment only through what it records about the records (roles, field paths, record counts), and only where you record a specific artifact-evidence exception naming that evidence and what it shows. If neither a cited source nor such evidence settles a question, answer insufficient_evidence for it. Copy the case ID and evidence hash exactly. Give concise reasoning and the institutional URLs you relied on. Always cite at least one institutional URL you consulted, including when you answer insufficient_evidence.
 
 Return only one JSON object matching the supplied response schema, without Markdown fences or commentary.

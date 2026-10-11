@@ -2,22 +2,6 @@
  "$id": "hapi-authority-control-raw-response/stage-1-reviewer-case/1",
  "$schema": "https://json-schema.org/draft/2020-12/schema",
  "additionalProperties": false,
- "anyOf": [
-  {
-   "properties": {
-    "citations": {
-     "minItems": 1
-    }
-   }
-  },
-  {
-   "properties": {
-    "artifact_exceptions": {
-     "minItems": 1
-    }
-   }
-  }
- ],
  "properties": {
   "artifact_exceptions": {
    "items": {
@@ -35,6 +19,7 @@
     "pattern": "^https://",
     "type": "string"
    },
+   "minItems": 1,
    "type": "array"
   },
   "evidence_sha256": {
