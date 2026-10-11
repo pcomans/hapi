@@ -15,6 +15,7 @@ import collections
 import hashlib
 import importlib.util
 import json
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from dataclasses import asdict
@@ -23,9 +24,16 @@ from pathlib import Path
 import pytest
 
 from pipeline.authority.claimgraph.build_graph import AUTHORITY_ROOT, REPO_ROOT, WEB_DATA_DIR
+from pipeline.authority.claimgraph.clusters import compute_clusters
 from pipeline.authority.claimgraph.graph_ir import build_documentary_graph
-from pipeline.authority.claimgraph.reviewer import VERCEL_PINNED_PROVIDER
+from pipeline.authority.claimgraph.reviewer import (
+    VERCEL_PINNED_PROVIDER,
+    VERDICT_ESCALATED,
+    Verdict,
+    _parse_verdict_json,
+)
 from pipeline.authority.claimgraph.sources import load_all_sources
+from pipeline.authority.claimgraph.verdicts import resolve_matches
 
 GRAPH = WEB_DATA_DIR / "claim-graph.json"
 RUN = WEB_DATA_DIR / "claim-graph.reviewer-run.jsonl"
@@ -53,6 +61,41 @@ def test_committed_documentary_layer_is_what_the_sources_produce(graph):
     assert graph["rulers"] == [asdict(r) for r in doc.rulers]
     assert graph["claims"] == [asdict(c) for c in doc.claims]
     assert graph["intraSourceIdentities"] == [asdict(i) for i in doc.intra_source_identities]
+
+
+def test_committed_decisions_follow_from_the_run_and_the_current_matcher(graph, run):
+    """Replays the committed run offline: each LLM verdict is rebuilt from the model's own
+    persisted answer and pushed through the CURRENT matcher and guards. The links,
+    escalations and clusters must equal the committed graph, so a matcher change committed
+    without a rebuild fails here instead of leaving a stale graph (and stale results pinned
+    to it) behind a green CI."""
+    by_candidate = {v["candidate_id"]: v for v in run}
+
+    def replay(candidate, a, b):
+        verdict = by_candidate[candidate.id]
+        assert verdict["reviewer"] == "llm", candidate.id
+        last = verdict["interactions"][-1]
+        if last["parse_error"]:
+            # The run escalated this candidate after its retries produced no verdict.
+            return Verdict(candidate_id=candidate.id, outcome=VERDICT_ESCALATED,
+                           reason=verdict["reason"], reviewer="llm")
+        outcome, reason = _parse_verdict_json(
+            last["raw_response"]["choices"][0]["message"]["content"]
+        )
+        return Verdict(candidate_id=candidate.id, outcome=outcome, reason=reason, reviewer="llm")
+
+    records = load_all_sources(AUTHORITY_ROOT).records
+    replayed = resolve_matches(
+        records, mode="llm", provider="vercel", model=graph["meta"]["model"],
+        reviewer_fn=replay, max_workers=1, cache_path=None,
+    )
+    assert graph["meta"]["partial"] is False
+    assert sorted(v.candidate_id for v in replayed.verdicts) == sorted(by_candidate)
+    assert [asdict(e) for e in replayed.approved_edges] == graph["approvedEdges"]
+    assert [asdict(e) for e in replayed.escalations] == graph["escalations"]
+    doc = build_documentary_graph(records)
+    clusters = compute_clusters(doc.rulers, replayed.approved_edges, doc.intra_source_identities)
+    assert [asdict(c) for c in clusters] == graph["clusters"]
 
 
 def test_every_claim_predicate_is_declared_in_the_extension_manifest(graph):
@@ -128,18 +171,46 @@ def test_ruler_ambiguity_results_are_pinned_to_the_committed_graph_and_script():
     assert results["inputs"]["resolver_sha256"] == _sha256(
         REPO_ROOT / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
     )
+    assert results["inputs"]["control_sha256"] == _sha256(
+        REPO_ROOT / "docs/evaluations/authority-independent-control-2026-09-13/scripts/compare_arms.py"
+    )
+    registered_graph = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "show",
+         "97f2e610974f0e89b9c03d409b230dff89edbb1f:web-claimgraph/data/claim-graph.json"],
+        check=True, capture_output=True,
+    ).stdout
+    assert results["inputs"]["before_graph_sha256"] == hashlib.sha256(registered_graph).hexdigest()
 
 
-def test_era_rejected_previously_queued_list_matches_the_current_matcher():
+def test_viewer_predicate_labels_are_the_manifest_labels():
+    """web-claimgraph/lib/types.ts restates each predicate's label for display; it must be
+    the manifest's rdfs:label (Rule 4 — one source, checked)."""
+    import re
+
+    rdfs_label = "{http://www.w3.org/2000/01/rdf-schema#}label"
+    manifest = {
+        "hapi:" + el.attrib[RDF_ABOUT][1:]: el.find(rdfs_label).text
+        for el in ET.parse(MANIFEST).getroot()
+        if el.attrib.get(RDF_ABOUT, "").startswith("#") and el.find(rdfs_label) is not None
+    }
+    source = (REPO_ROOT / "web-claimgraph" / "lib" / "types.ts").read_text("utf-8")
+    block = source[source.index("PREDICATE_LABEL"):]
+    viewer = dict(re.findall(r'"(hapi:\w+)": "([^"]+)"', block[: block.index("};")]))
+    assert viewer, "PREDICATE_LABEL not found in types.ts"
+    assert viewer == {predicate: manifest[predicate] for predicate in viewer}
+
+
+def test_era_rejected_list_matches_the_current_matcher():
     spec = importlib.util.spec_from_file_location(
         "_342_list_era_rejected", EVAL / "scripts" / "list_era_rejected.py"
     )
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
-    committed = json.loads(
-        (EVAL / "results" / "era-rejected-previously-queued.json").read_text("utf-8")
-    )
-    assert committed["pairs"] == module.era_rejected_previously_queued(REPO_ROOT)
-    # Reviewed 2026-10-11: no previously APPROVED link is removed by the gate.
-    assert [p for p in committed["pairs"] if p["previously"] == "approved"] == []
+    committed = json.loads((EVAL / "results" / "era-rejected.json").read_text("utf-8"))
+    assert committed["pairs"] == module.era_rejected(REPO_ROOT)
+    # Reviewed 2026-10-11 (results/era-rejected-review.md); no previously APPROVED link is
+    # removed by the gate.
+    assert collections.Counter(p["previously"] for p in committed["pairs"]) == {
+        "escalated": 176, "rejected": 252, "new": 20,
+    }

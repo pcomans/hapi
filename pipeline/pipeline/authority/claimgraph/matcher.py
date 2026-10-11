@@ -81,10 +81,11 @@ _EARLY_DYNASTY_MAX = 3  # Re-formed prenomen not yet stable (ADR-020 carve-out)
 # * dynasty numbers more than ERA_MAX_DYNASTY_GAP apart — EXCEPT when both fall inside the
 #   same contested band, where the sources number kings or parallel lines differently and
 #   a dynasty gap is not evidence of distinct kings (the pair goes on to review):
-#   - Dyn 6–10: Leprohon files the late Memphite kings as "Dynasty 8a" where pharaoh.se
-#     lists the same kings, in the same order, as Dyn 10 (Wadjkare, Sekhemkare, Imhotep,
-#     Khui, Isu, Iytjenu …); pharaoh.se's Dyn 8 Netjerikare is the "Nitocris" Ryholt
-#     equates with Leprohon's Dyn 6 Neith-Iqeret; Merykare is Dyn 9 or 10 by source.
+#   - Dyn 6–10: von Beckerath's unplaced kings of the Dyn 8 era (Handbuch 1999, 70–71,
+#     a–h: Sekhemkare, Wadjkare, Iti, Imhotep, Hotep, Khui, Isu, Iytjenu) are Leprohon's
+#     "Dynasty 8a" but filed by pharaoh.se under Dyn 10 — pharaoh.se's own placement, not
+#     a scholarly renumbering; and Ryholt derives the Turin list's Neith-iqerti (Leprohon's
+#     Dyn 6 entry) from pharaoh.se's Dyn 8 Netjerkare Siptah.
 #   - Dyn 13–17: Ryholt's Second Intermediate Period numbering differs from Beckerath's.
 #   - Dyn 21–26: Takelot III is Dyn 22 in Beckerath, Dyn 23 in Kitchen; Kitchen files
 #     Necho I under Dyn 24, Leprohon under Dyn 26.
@@ -93,6 +94,14 @@ _EARLY_DYNASTY_MAX = 3  # Re-formed prenomen not yet stable (ADR-020 carve-out)
 ERA_MIN_REIGN_START_GAP_YEARS = 200
 ERA_MAX_DYNASTY_GAP = 1
 CONTESTED_DYNASTY_BANDS: tuple[tuple[int, int], ...] = ((6, 10), (13, 17), (21, 26))
+
+# Where a SHARED dynasty number is itself unreliable — parallel lines that sources assign
+# to the same number — so "both in Dyn N" cannot clear a reused throne name or decide a
+# uniqueness clash. Narrower than the era-gate bands: in Dyn 6–10 the sources file one
+# king under DIFFERENT numbers (a gap, which the era gate must tolerate), but a shared
+# number still means one block, and the sole-bearer check catches the many Dyn 8
+# Neferkares. Keeping the two apart lets Pepi II (Dyn 6) clear his reused Neferkare.
+SHARED_DYNASTY_UNRELIABLE_BANDS: tuple[tuple[int, int], ...] = ((13, 17), (21, 26))
 
 
 def chronology_tolerance(a_bce: int, b_bce: int) -> int:
@@ -103,6 +112,10 @@ def chronology_tolerance(a_bce: int, b_bce: int) -> int:
 
 def _contested_band(dynasty: int) -> tuple[int, int] | None:
     return next((b for b in CONTESTED_DYNASTY_BANDS if b[0] <= dynasty <= b[1]), None)
+
+
+def _shared_dynasty_reliable(dynasty: int) -> bool:
+    return not any(lo <= dynasty <= hi for lo, hi in SHARED_DYNASTY_UNRELIABLE_BANDS)
 
 
 def era_conflict(a: RulerRecord, b: RulerRecord) -> str | None:
@@ -150,8 +163,8 @@ class Candidate:
     reign_far_apart: bool
     homonym_trap: str | None
     era_conflict: str | None = None
-    # Both records carry the same dynasty number, outside the contested numbering bands —
-    # the only setting in which a shared dynasty is evidence (see CONTESTED_DYNASTY_BANDS).
+    # Both records carry the same dynasty number, outside SHARED_DYNASTY_UNRELIABLE_BANDS —
+    # the only setting in which a shared dynasty is evidence.
     same_uncontested_dynasty: bool = False
 
 
@@ -325,8 +338,10 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
                 homonym_trap = None
                 if basis == "prenomen":
                     # Trapped when every shared REUSED throne name is ambiguous for this
-                    # pair. Keys off the homonym list neither trap nor clear (a compound
-                    # like Usermaatre-setepenamun is itself reused by several TIP kings).
+                    # pair; cleared when ANY of them is unambiguous. Keys off the committed
+                    # homonym list neither trap nor clear: the list is the record of reused
+                    # names, and reuse of a compound within a block surfaces as a
+                    # uniqueness clash instead (the Dyn 21–22 Hedjkheperre-setepenre kings).
                     # Thutmose III's sources share the full Menkheperre, which only he
                     # bears in Dyn 18, so the vowel-less skeleton `mnkhprr` that Thutmose
                     # IV's Menkheperure also yields does not veto the pair; the reviewer
@@ -357,7 +372,7 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
                         homonym_trap=homonym_trap,
                         era_conflict=era_conflict(x.rec, y.rec),
                         same_uncontested_dynasty=bool(dynasty_match)
-                        and _contested_band(x.rec.dynasty) is None,
+                        and _shared_dynasty_reliable(x.rec.dynasty),
                     )
                 )
 
@@ -373,18 +388,18 @@ def _sole_bearers_in_dynasty(
     person_of: dict[str, str],
 ) -> bool:
     """Whether a reused throne name is nonetheless unambiguous FOR THIS PAIR: both records
-    are in one dynasty outside the contested numbering bands, and no other PERSON from
+    are in one dynasty outside SHARED_DYNASTY_UNRELIABLE_BANDS, and no other PERSON from
     either source bears the name in that dynasty. Amenhotep III is the only Nebmaatre of
     Dynasty 18 in every source; the reuse by a Dyn 17 king and by Ramesses VI cannot be
     confused with him inside that block. Where dynasty numbers are unreliable (the
-    contested bands) the trap always holds.
+    bands) the trap always holds.
 
     A source's own stage rows of one king are one bearer (Leprohon's Thutmose III (a)/(b)
     are not rival Menkheperres). A bearer with NO dynasty does not block: its own pairs
     with this king share no dynasty, so they stay trapped, and lifting the trap here only
     sends the pair to the reviewer — it never approves."""
     d = x.rec.dynasty
-    if d is None or d != y.rec.dynasty or _contested_band(d) is not None:
+    if d is None or d != y.rec.dynasty or not _shared_dynasty_reliable(d):
         return False
     sources = {x.rec.source_id, y.rec.source_id}
     pair = {person_of[x.rec.local_id], person_of[y.rec.local_id]}
@@ -432,10 +447,10 @@ def uniqueness_clashes(
     stage-suffix phase siblings are one person).
 
     One clash is resolved by rule rather than escalated whole: when exactly one of the
-    competing targets shares the record's dynasty outside the contested bands, and every
-    other target is in a different dynasty, only the others escalate. pharaoh.se's
+    competing targets shares the record's dynasty outside SHARED_DYNASTY_UNRELIABLE_BANDS,
+    and every other target is in a different dynasty, only the others escalate. pharaoh.se's
     Ramesses II (Dyn 19) shares a full throne name with Leprohon's Ramesses II (Dyn 19)
-    AND Ramesses IV (Dyn 20); outside the contested bands dynasty numbers are reliable
+    AND Ramesses IV (Dyn 20); outside those bands a shared dynasty number is reliable
     (the premise of the era gate), so the Dyn 20 king is the homonym. The surviving pair
     is still judged by the reviewer — the rule only stops escalating it unseen."""
     person_of = person_of or {}

@@ -178,6 +178,7 @@ def main() -> int:
             "before_graph_sha256": _sha256(args.before_graph),
             "after_graph_sha256": _sha256(args.after_graph),
             "resolver_sha256": _sha256(LINKABILITY),
+            "control_sha256": _sha256(CONTROL),
             "script_sha256": _sha256(Path(__file__)),
         },
         "ruler_mentions": len(rulers),

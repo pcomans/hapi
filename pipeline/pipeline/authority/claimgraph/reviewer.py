@@ -140,7 +140,8 @@ class ReviewerHttpError(ReviewerCallError, RuntimeError):
 class ReviewerProvenanceError(ReviewerCallError, RuntimeError):
     """The response did not come from the deployment the request was pinned to. Its
     verdict would be attributed to a model run that did not produce it, so it is never
-    used — the run fails loud, with the response attached (Rule 13)."""
+    used. Like any non-parse reviewer error it is retried, and if every attempt is refused
+    the run aborts loudly, each attempt's response persisted (Rule 13)."""
 
 
 @dataclass
@@ -496,8 +497,8 @@ def _served_snapshot(provider: str, body: Any) -> str | None:
 
     The gateway's ``model`` is the requested alias (deepseek/deepseek-v4.1-flash has no
     dated snapshot). DeepSeek's own ``systemFingerprint`` identifies the serving build — it
-    was identical on all 1,087 calls of the #342 run, while the top-level
-    ``system_fingerprint`` changes per request — so it is recorded with the alias. Returns
+    stays constant across a run, while the top-level ``system_fingerprint`` changes per
+    request — so it is recorded with the alias. Returns
     ``None`` when a gateway response lacks the build; the caller refuses such a response.
     A run that mixes builds is caught by the committed-run test, not hidden here."""
     if not isinstance(body, dict):

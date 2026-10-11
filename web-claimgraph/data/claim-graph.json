@@ -31,11 +31,11 @@
    "rulers": 1159,
    "claims": 5913,
    "candidates": 2208,
-   "approvedLinks": 351,
-   "escalations": 977,
+   "approvedLinks": 356,
+   "escalations": 972,
    "intraSourceIdentities": 16,
-   "clusters": 159,
-   "multiSourceClusters": 158
+   "clusters": 162,
+   "multiSourceClusters": 161
   }
  },
  "rulers": [
@@ -95766,6 +95766,38 @@
    "reviewer": "llm"
   },
   {
+   "candidate_id": "cand-beckerath-06.05|leprohon-leprohon-6.05",
+   "a_id": "beckerath-06.05",
+   "b_id": "leprohon-leprohon-6.05",
+   "a_source": "beckerath",
+   "b_source": "leprohon",
+   "a_name": "Pepi II.",
+   "b_name": "Pepy II",
+   "basis": "prenomen",
+   "shared_prenomen_keys": [
+    "neferkara",
+    "nfrkr"
+   ],
+   "reason": "Same 6th Dynasty king: identical prenomen Nefer-ka-rê and Pepi II's attested Horus name Netjeri-khau corroborate the match beyond display-name similarity.",
+   "reviewer": "llm"
+  },
+  {
+   "candidate_id": "cand-beckerath-06.05|pharaoh_se-Pepi-II",
+   "a_id": "beckerath-06.05",
+   "b_id": "pharaoh_se-Pepi-II",
+   "a_source": "beckerath",
+   "b_source": "pharaoh_se",
+   "a_name": "Pepi II.",
+   "b_name": "Pepi II",
+   "basis": "prenomen",
+   "shared_prenomen_keys": [
+    "neferkara",
+    "nfrkr"
+   ],
+   "reason": "Same 6th-dynasty king: nomen Pepi II and prenomen Neferkare agree, and record B's Horus name Netjerikhau is attested for Pepi II; overlapping reign windows reflect only chronological convention.",
+   "reviewer": "llm"
+  },
+  {
    "candidate_id": "cand-beckerath-11.05|leprohon-leprohon-11b.05b",
    "a_id": "beckerath-11.05",
    "b_id": "leprohon-leprohon-11b.05b",
@@ -100621,6 +100653,23 @@
    "reviewer": "llm"
   },
   {
+   "candidate_id": "cand-leprohon-leprohon-6.05|pharaoh_se-Pepi-II",
+   "a_id": "leprohon-leprohon-6.05",
+   "b_id": "pharaoh_se-Pepi-II",
+   "a_source": "leprohon",
+   "b_source": "pharaoh_se",
+   "a_name": "Pepy II",
+   "b_name": "Pepi II",
+   "basis": "prenomen",
+   "shared_prenomen_keys": [
+    "neferkara",
+    "nfrkara",
+    "nfrkr"
+   ],
+   "reason": "Both records share Sixth Dynasty context, prenomen Neferkare, and the distinctive Horus name Netjeri-khau with nomen Pepi, jointly identifying the same king Pepi II.",
+   "reviewer": "llm"
+  },
+  {
    "candidate_id": "cand-leprohon-leprohon-8.14|pharaoh_se-Qakara-Ibi",
    "a_id": "leprohon-leprohon-8.14",
    "b_id": "pharaoh_se-Qakara-Ibi",
@@ -100634,6 +100683,39 @@
     "qakara"
    ],
    "reason": "Throne name Qakare plus nomen Ibi and 8th Dynasty context match across both sources, corroborating identity as the same king.",
+   "reviewer": "llm"
+  },
+  {
+   "candidate_id": "cand-leprohon-leprohon-9-10a.03|pharaoh_se-Neferkara-III",
+   "a_id": "leprohon-leprohon-9-10a.03",
+   "b_id": "pharaoh_se-Neferkara-III",
+   "a_source": "leprohon",
+   "b_source": "pharaoh_se",
+   "a_name": "Neferkare (III)",
+   "b_name": "Neferkara III",
+   "basis": "prenomen",
+   "shared_prenomen_keys": [
+    "neferkara",
+    "nfrkara",
+    "nfrkr"
+   ],
+   "reason": "Both records give the same throne name Nefer-ka-Ra with matching Dynasty 9 attribution, corroborating a single King Neferkare III beyond display-name similarity.",
+   "reviewer": "llm"
+  },
+  {
+   "candidate_id": "cand-leprohon-leprohon-9-10b.01|pharaoh_se-Wahkara-Khety-II",
+   "a_id": "leprohon-leprohon-9-10b.01",
+   "b_id": "pharaoh_se-Wahkara-Khety-II",
+   "a_source": "leprohon",
+   "b_source": "pharaoh_se",
+   "a_name": "Wahkare Khety (V)",
+   "b_name": "Wahkara Khety II",
+   "basis": "prenomen",
+   "shared_prenomen_keys": [
+    "wahkara",
+    "whkr"
+   ],
+   "reason": "Identical prenomen (Wahkare) and nomen (Khety) in the Ninth Dynasty; the V versus II discrepancy reflects convention-relative numbering of the poorly attested Heracleopolitan Khety sequence, not two distinct kings.",
    "reviewer": "llm"
   },
   {
@@ -102004,32 +102086,6 @@
    "reason": "Name-only match: the records share a similar name but NO throne-name or Horus-name corroboration. Escalated for manual review — confirming this identity requires external documented evidence (a cited scholarly identification), not a model's unsourced assertion (Constitutional Rule 1).",
    "homonym_trap": null,
    "reviewer": "deterministic"
-  },
-  {
-   "candidate_id": "cand-beckerath-06.05|leprohon-leprohon-6.05",
-   "a_id": "beckerath-06.05",
-   "b_id": "leprohon-leprohon-6.05",
-   "a_source": "beckerath",
-   "b_source": "leprohon",
-   "a_name": "Pepi II.",
-   "b_name": "Pepy II",
-   "basis": "prenomen",
-   "reason": "Same 6th Dynasty king: identical prenomen Nefer-ka-rê and Pepi II's attested Horus name Netjeri-khau corroborate the match beyond display-name similarity. [overridden to escalate: shared prenomen 'neferkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
-   "homonym_trap": "neferkara",
-   "reviewer": "llm"
-  },
-  {
-   "candidate_id": "cand-beckerath-06.05|pharaoh_se-Pepi-II",
-   "a_id": "beckerath-06.05",
-   "b_id": "pharaoh_se-Pepi-II",
-   "a_source": "beckerath",
-   "b_source": "pharaoh_se",
-   "a_name": "Pepi II.",
-   "b_name": "Pepi II",
-   "basis": "prenomen",
-   "reason": "Same 6th-dynasty king: nomen Pepi II and prenomen Neferkare agree, and record B's Horus name Netjerikhau is attested for Pepi II; overlapping reign windows reflect only chronological convention. [overridden to escalate: shared prenomen 'neferkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
-   "homonym_trap": "neferkara",
-   "reviewer": "llm"
   },
   {
    "candidate_id": "cand-beckerath-06.06|pharaoh_se-Nemtiemsaf-II",
@@ -111366,19 +111422,6 @@
    "reviewer": "deterministic"
   },
   {
-   "candidate_id": "cand-leprohon-leprohon-6.05|pharaoh_se-Pepi-II",
-   "a_id": "leprohon-leprohon-6.05",
-   "b_id": "pharaoh_se-Pepi-II",
-   "a_source": "leprohon",
-   "b_source": "pharaoh_se",
-   "a_name": "Pepy II",
-   "b_name": "Pepi II",
-   "basis": "prenomen",
-   "reason": "Both records share Sixth Dynasty context, prenomen Neferkare, and the distinctive Horus name Netjeri-khau with nomen Pepi, jointly identifying the same king Pepi II. [overridden to escalate: shared prenomen 'neferkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
-   "homonym_trap": "neferkara",
-   "reviewer": "llm"
-  },
-  {
    "candidate_id": "cand-leprohon-leprohon-6.05|ryholt-N.1",
    "a_id": "leprohon-leprohon-6.05",
    "b_id": "ryholt-N.1",
@@ -111808,19 +111851,6 @@
    "reviewer": "llm"
   },
   {
-   "candidate_id": "cand-leprohon-leprohon-9-10a.03|pharaoh_se-Neferkara-III",
-   "a_id": "leprohon-leprohon-9-10a.03",
-   "b_id": "pharaoh_se-Neferkara-III",
-   "a_source": "leprohon",
-   "b_source": "pharaoh_se",
-   "a_name": "Neferkare (III)",
-   "b_name": "Neferkara III",
-   "basis": "prenomen",
-   "reason": "Both records give the same throne name Nefer-ka-Ra with matching Dynasty 9 attribution, corroborating a single King Neferkare III beyond display-name similarity. [overridden to escalate: shared prenomen 'neferkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
-   "homonym_trap": "neferkara",
-   "reviewer": "llm"
-  },
-  {
    "candidate_id": "cand-leprohon-leprohon-9-10a.04|pharaoh_se-Meribra-Khety-I",
    "a_id": "leprohon-leprohon-9-10a.04",
    "b_id": "pharaoh_se-Meribra-Khety-I",
@@ -111871,19 +111901,6 @@
    "reason": "Name-only match: the records share a similar name but NO throne-name or Horus-name corroboration. Escalated for manual review — confirming this identity requires external documented evidence (a cited scholarly identification), not a model's unsourced assertion (Constitutional Rule 1).",
    "homonym_trap": null,
    "reviewer": "deterministic"
-  },
-  {
-   "candidate_id": "cand-leprohon-leprohon-9-10b.01|pharaoh_se-Wahkara-Khety-II",
-   "a_id": "leprohon-leprohon-9-10b.01",
-   "b_id": "pharaoh_se-Wahkara-Khety-II",
-   "a_source": "leprohon",
-   "b_source": "pharaoh_se",
-   "a_name": "Wahkare Khety (V)",
-   "b_name": "Wahkara Khety II",
-   "basis": "prenomen",
-   "reason": "Identical prenomen (Wahkare) and nomen (Khety) in the Ninth Dynasty; the V versus II discrepancy reflects convention-relative numbering of the poorly attested Heracleopolitan Khety sequence, not two distinct kings. [overridden to escalate: shared prenomen 'wahkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
-   "homonym_trap": "wahkara",
-   "reviewer": "llm"
   },
   {
    "candidate_id": "cand-leprohon-leprohon-9-10b.03|pharaoh_se-Meribra-Khety-I",
@@ -116162,6 +116179,38 @@
    ]
   },
   {
+   "id": "cluster-beckerath-06.05",
+   "member_ids": [
+    "beckerath-06.05",
+    "leprohon-leprohon-6.05",
+    "pharaoh_se-Pepi-II"
+   ],
+   "sources": [
+    "beckerath",
+    "leprohon",
+    "pharaoh_se"
+   ],
+   "source_count": 3,
+   "label": "Pepi II",
+   "edges": [
+    {
+     "a_id": "beckerath-06.05",
+     "b_id": "leprohon-leprohon-6.05",
+     "basis": "prenomen"
+    },
+    {
+     "a_id": "beckerath-06.05",
+     "b_id": "pharaoh_se-Pepi-II",
+     "basis": "prenomen"
+    },
+    {
+     "a_id": "leprohon-leprohon-6.05",
+     "b_id": "pharaoh_se-Pepi-II",
+     "basis": "prenomen"
+    }
+   ]
+  },
+  {
    "id": "cluster-beckerath-26.01",
    "member_ids": [
     "beckerath-26.01",
@@ -117949,6 +117998,26 @@
    ]
   },
   {
+   "id": "cluster-leprohon-leprohon-9-10a.03",
+   "member_ids": [
+    "leprohon-leprohon-9-10a.03",
+    "pharaoh_se-Neferkara-III"
+   ],
+   "sources": [
+    "leprohon",
+    "pharaoh_se"
+   ],
+   "source_count": 2,
+   "label": "Neferkara III",
+   "edges": [
+    {
+     "a_id": "leprohon-leprohon-9-10a.03",
+     "b_id": "pharaoh_se-Neferkara-III",
+     "basis": "prenomen"
+    }
+   ]
+  },
+  {
    "id": "cluster-leprohon-leprohon-2.03",
    "member_ids": [
     "leprohon-leprohon-2.03",
@@ -118504,6 +118573,26 @@
     {
      "a_id": "leprohon-leprohon-6.02",
      "b_id": "pharaoh_se-Userkara",
+     "basis": "prenomen"
+    }
+   ]
+  },
+  {
+   "id": "cluster-leprohon-leprohon-9-10b.01",
+   "member_ids": [
+    "leprohon-leprohon-9-10b.01",
+    "pharaoh_se-Wahkara-Khety-II"
+   ],
+   "sources": [
+    "leprohon",
+    "pharaoh_se"
+   ],
+   "source_count": 2,
+   "label": "Wahkara Khety II",
+   "edges": [
+    {
+     "a_id": "leprohon-leprohon-9-10b.01",
+     "b_id": "pharaoh_se-Wahkara-Khety-II",
      "basis": "prenomen"
     }
    ]

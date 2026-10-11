@@ -125,5 +125,5 @@ export const PREDICATE_LABEL: Record<string, string> = {
   "hapi:prenomen_epithet": "epithet added to the throne name",
   "hapi:horus_name_epithet": "epithet added to the Horus name",
   "hapi:nomen_epithet": "epithet added to the birth name",
-  "hapi:in_dynastic_period": "dynasty",
+  "hapi:in_dynastic_period": "in dynastic period",
 };

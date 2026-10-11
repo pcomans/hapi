@@ -28,8 +28,9 @@
     }
   },
   "inputs": {
-    "after_graph_sha256": "8f77251514f4342d5da2a5ee638ff2e22e78312d4faf1bcba3b60a9d9699b2c1",
+    "after_graph_sha256": "e6167280cd63a4da185499b6d05a8e9c8951f98d1b8219c1ec7a89b693c85e2a",
     "before_graph_sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965",
+    "control_sha256": "aaec22bc9ce04cd7d566c12a1eabd55ade185c868907af5968f77c4592268c69",
     "mention_ledger": {
       "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
       "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
@@ -37,7 +38,7 @@
       "rows": 148871
     },
     "resolver_sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
-    "script_sha256": "bc5672164d376fd008405e8076f8c366e253076657decfaa889700d41c7401f2"
+    "script_sha256": "bd3425ffc58d912e7a90f8c56231fb68aa96720fabaa278eaefcd17a7ba26f1b"
   },
   "kings": {
     "Akhenaten": {
@@ -469,6 +470,17 @@
     },
     {
       "before_units": [
+        "leprohon-leprohon-9-10a.03",
+        "pharaoh_se-Neferkara-III"
+      ],
+      "label": "Neferkara III",
+      "members": [
+        "leprohon-leprohon-9-10a.03 (Neferkare (III))",
+        "pharaoh_se-Neferkara-III (Neferkara III)"
+      ]
+    },
+    {
+      "before_units": [
         "beckerath-21.05",
         "pharaoh_se-Osochor"
       ],
@@ -521,6 +533,19 @@
       "members": [
         "leprohon-leprohon-6.03 (Pepy I)",
         "pharaoh_se-Pepi-I (Pepi I)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-06.05",
+        "leprohon-leprohon-6.05",
+        "pharaoh_se-Pepi-II"
+      ],
+      "label": "Pepi II",
+      "members": [
+        "beckerath-06.05 (Pepi II.)",
+        "leprohon-leprohon-6.05 (Pepy II)",
+        "pharaoh_se-Pepi-II (Pepi II)"
       ]
     },
     {
@@ -912,6 +937,17 @@
       "members": [
         "leprohon-leprohon-6.02 (Userkare (I))",
         "pharaoh_se-Userkara (Userkara)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-9-10b.01",
+        "pharaoh_se-Wahkara-Khety-II"
+      ],
+      "label": "Wahkara Khety II",
+      "members": [
+        "leprohon-leprohon-9-10b.01 (Wahkare Khety (V))",
+        "pharaoh_se-Wahkara-Khety-II (Wahkara Khety II)"
       ]
     },
     {

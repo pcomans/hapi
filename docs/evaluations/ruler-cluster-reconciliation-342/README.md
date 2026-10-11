@@ -18,9 +18,9 @@ passed the Rule-14 leak audit (`prompt-audit-2026-10-11.md`) before the run.
 | | Before (graph #337 registered) | After |
 |---|---|---|
 | Candidates | 2,141 | 2,208 |
-| Approved links | 228 | 351 |
-| Escalated | 1,348 | 977 |
-| Clusters (multi-source) | 124 (124) | 159 (158) |
+| Approved links | 228 | 356 |
+| Escalated | 1,348 | 972 |
+| Clusters (multi-source) | 124 (124) | 162 (161) |
 | Reviewer | GLM 5.2 (OpenRouter) | DeepSeek V4.1 Flash (Vercel → DeepSeek, one build) |
 
 Reviewer run: 1,035 interactions, US$1.19 (gateway-reported). Every answered interaction
@@ -29,7 +29,10 @@ connection timeouts and eight answers cut off at `max_tokens` (reasoning that ne
 reached a verdict, all Dyn 13–23 records) were retried; one pair
 (`leprohon-13.06` ↔ `ryholt-13.10`) never produced a verdict and is escalated. All attempts
 are persisted. These properties are enforced by
-`pipeline/tests/test_claimgraph_committed_artifacts.py`.
+`pipeline/tests/test_claimgraph_committed_artifacts.py`, which also replays the run offline
+through the current matcher and requires the committed links, escalations and clusters
+exactly — a matcher change committed without a rebuild fails CI. The tables below are
+copied from `results/ruler-ambiguity.json`, which is the source of record.
 
 ## Museum ruler mentions (#337 ledger: 148,871 mentions, 11,555 of them ruler mentions)
 
@@ -60,18 +63,24 @@ Darius I 3, Pinudjem I 3, Qaa 2, Horemheb 1, Khendjer 1, Ramesses VIII 1.
 ## Safety checks
 
 - **Every merge was reviewed.** `results/ruler-ambiguity.json` → `merged_clusters` lists all
-  70 rebuilt clusters that join more than one earlier unit, with their members. Each is one
+  73 rebuilt clusters that join more than one earlier unit, with their members. Each is one
   king under different spellings, numberings or Greek forms (e.g. Nectanebo I =
   Nakhtnebef, Psammuthis = Pasherimut, Kitchen's Shoshenq VI = Leprohon's Sheshonq VII,
-  Beckerath's Psusennes = the High Priest Psusennes III), or a source's own stage rows.
+  Beckerath's Psusennes = the High Priest Psusennes III, Leprohon's Herakleopolitan
+  Neferkare (III) and Wahkare Khety (V) = pharaoh.se's Neferkara III and Wahkara Khety II),
+  or a source's own stage rows. Reviewed by `egyptologist-reviewer` (70, re-review of
+  287e3f8) and in this session (the last 3: Pepi II and the two Herakleopolitans).
 - **No cluster joins two records of one source** that the source does not itself declare
   one person (the Pinudjem I ↔ Menkheperre false-merge class) — test-enforced.
-- **Era gate removals, all reviewed.** `results/era-rejected-previously-queued.json` lists
-  the 176 pairs the earlier graph had escalated (none approved) that the gate now rejects;
-  test-pinned to the matcher. All are distinct kings: 167 name-only pairs and 9 shared
-  throne names centuries apart (e.g. Menkaure vs the Dyn 8 Menkare). The first version of
-  the gate wrongly rejected seven First Intermediate Period same-king pairs (Leprohon
-  "Dynasty 8a" = pharaoh.se Dynasty 10); review caught it and the Dyn 6–10 band fixes it.
+- **Every era-gate rejection is listed and was reviewed.** `results/era-rejected.json` lists
+  all 448, test-pinned to the matcher, each tagged with the earlier graph's verdict for the
+  pair: 176 escalated, 252 already rejected, 20 new, none approved. All are distinct kings;
+  the per-group review is `results/era-rejected-review.md`. The first version of the gate
+  wrongly rejected seven First Intermediate Period same-king pairs (von Beckerath's
+  unplaced Dyn 8-era kings: Leprohon "Dynasty 8a", pharaoh.se Dynasty 10); review caught
+  it and the Dyn 6–10 band fixes it.
+- **Pepi II resolves.** His Neferkare is reused by several Dyn 8 kings; a shared Dyn 6
+  clears it because Dyn 6–10 is contested only for the era gate (ADR-020 amendment, item 5).
 - **Pilot first** (2026-10-10): 16 calls on the three kings — 10 same-king pairs approved,
   6 homonym traps rejected.
 - **Contested identification kept, with its source.** Sanakht ↔ Nebka is newly linked; the
@@ -94,7 +103,7 @@ pipeline/.venv/bin/python docs/evaluations/ruler-cluster-reconciliation-342/scri
   --after-graph web-claimgraph/data/claim-graph.json \
   --out docs/evaluations/ruler-cluster-reconciliation-342/results/ruler-ambiguity.json
 pipeline/.venv/bin/python docs/evaluations/ruler-cluster-reconciliation-342/scripts/list_era_rejected.py \
-  --out docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected-previously-queued.json
+  --out docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected.json
 ```
 
 These numbers describe the resolver's potential on the frozen ledger, not deployed

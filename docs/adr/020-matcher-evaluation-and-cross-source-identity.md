@@ -257,7 +257,8 @@ the ratified design).
   *(Spec follow-up: that normalization
   table, plus the prenomen/Horus-match predicate and a committed homonym exception
   list — see decision 3 — for the cases where one prenomen is shared across distinct
-  kings: Menkheperre, Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.)*
+  kings: Menkheperre, Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.
+  Scoped by dynasty in the 2026-10-10 amendment, item 5.)*
 - **Structured cannot-link / escalation constraints.** Identity decisions must
   honour deterministic structured discriminators (never surface-string similarity,
   ADR-009). *How* these are applied — as guards over a pairwise-edge graph (the
@@ -313,6 +314,7 @@ the ratified design).
   linked to the decision it produced. This policy holds regardless of the architecture
   #306 settles on: a matcher decision that cannot be replayed from a stored
   request/response is not reproducible (Rule 1: "the model knows" is not a source).
+  *(The #342 rebuild's model has no dated snapshot; see the 2026-10-10 amendment, item 7.)*
 - **Metrics:** precision is the primary reported number; recall is secondary and is
   always reported with the abstention/escalation rate (per decision 3).
 
@@ -363,16 +365,20 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    than the period-scaled cross-chronology tolerance (`150 + |BCE|/20` years — the same
    tolerance as the far-apart escalation hint, so there is one chronology rule), or (b)
    the dynasty numbers are more than one apart and the two dynasties do not fall in the
-   same *contested numbering band*: Dynasties 6–10 (Leprohon's "Dynasty 8a" is
-   pharaoh.se's Dynasty 10; Netjerikare/Nitocris; Merykare as Dyn 9 or 10), 13–17 (Ryholt
-   vs Beckerath), and 21–26 (Takelot III Dyn 22 Beckerath / Dyn 23 Kitchen; Necho I Dyn 24
-   Kitchen / Dyn 26 Leprohon). Absent era evidence never rejects. Evidence: no link
-   approved before the rebuild fails the gate, and **every pair the previous graph
-   approved or escalated that the gate now rejects is listed and was reviewed** in
-   `docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected-previously-queued.json`
-   (pinned by test). The first version of the gate omitted the Dyn 6–10 band and rejected
-   seven genuine same-king pairs (Wadjkare, Sekhemkare, Imhotep, Hotep, Khui, Isu,
-   Iytjenu); review caught it before merge.
+   same *contested numbering band*: Dynasties 6–10 (von Beckerath's unplaced kings of the
+   Dyn 8 era — Handbuch 1999, 70–71, a–h — are Leprohon's "Dynasty 8a" but filed by
+   pharaoh.se under Dynasty 10, pharaoh.se's own placement rather than a scholarly
+   renumbering; Ryholt derives the Turin list's Neith-iqerti, Leprohon's Dyn 6 entry, from
+   Netjerkare Siptah, pharaoh.se's Dyn 8), 13–17 (Ryholt vs Beckerath), and 21–26 (Takelot
+   III Dyn 22 Beckerath / Dyn 23 Kitchen; Necho I Dyn 24 Kitchen / Dyn 26 Leprohon). Absent
+   era evidence never rejects. Evidence: no link approved before the rebuild fails the
+   gate, and **every pair the gate rejects is listed** in
+   `docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected.json` (all 448,
+   test-pinned), each tagged with the earlier graph's verdict for it, and reviewed per
+   `era-rejected-review.md`. The first version of the gate omitted the Dyn 6–10 band and
+   rejected seven genuine same-king pairs (Wadjkare, Sekhemkare, Imhotep, Hotep, Khui, Isu,
+   Iytjenu); review caught it before merge. (The eighth king of that series, Leprohon's
+   Iti / pharaoh.se's Ity, is never a candidate: `iti` and `ity` do not match.)
 2. **Sources' own identity statements join clusters** (stage-suffix phase siblings were
    already policy under "Same-source distinctness"; now loaded). Leprohon rows with
    `stage_suffix` set and `printed_under` null are one person per the source README's
@@ -392,13 +398,18 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    marks a gap (`///`, `//`, `...`, `[..]`, `[...]`) is excluded from the corroborating
    keys; such pairs stay name-only and escalate. With the gap stripped, `Senefer[...]re`
    would key to Piye's complete Sneferre.
-5. **The homonym exception list is scoped by dynasty.** A shared reused throne name stops
-   forcing escalation only when both records carry the same dynasty, outside the contested
-   bands, and no other *person* from either source bears that name in that dynasty (a
-   source's own stage rows are one bearer; a bearer with no dynasty does not block, because
-   its own pairs stay trapped). The pair is still judged by the reviewer.
+5. **The homonym exception list is scoped by dynasty.** A shared reused throne name is
+   *unambiguous for a pair* when both records carry the same dynasty, outside the bands
+   where a shared dynasty number is unreliable (13–17 and 21–26; Dyn 6–10 is contested only
+   for the era gate, where one king is filed under different numbers), and no other
+   *person* from either source bears that name in that dynasty (a source's own stage rows
+   are one bearer; a bearer with no dynasty does not block, because its own pairs stay
+   trapped). The pair stops being forced to escalate when ANY shared reused name is
+   unambiguous for it — Thutmose III's full Menkheperre is, though the vowel-less skeleton
+   it shares with Thutmose IV's Menkheperure is not — and is still judged by the reviewer.
+   *(Refines decision 3's homonym exception list above.)*
 6. **A uniqueness clash resolves to the sole same-dynasty target** when exactly one
-   competing target shares the record's dynasty outside the contested bands and every
+   competing target shares the record's dynasty outside the bands of item 5 and every
    other target has a known, different dynasty; otherwise the whole clash escalates as
    before. Two rows the other source declares one person are one target, not a clash.
 7. **Model-decided identity.** Contrary to #306's "no LLM in the decision path", the

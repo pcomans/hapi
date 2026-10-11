@@ -100,6 +100,33 @@ def test_reign_starts_199_years_apart_are_not_an_era_conflict():
     assert era_conflict(a, b) is None
 
 
+def test_reign_gap_of_exactly_200_years_is_an_era_conflict_after_1000_bce():
+    """At 900 BCE the cross-chronology tolerance is 150 + 45 = 195, so the 200-year floor
+    governs and is inclusive."""
+    a = _rec("beckerath", "beckerath-1", "A", reign_start_bce=-900)
+    b = _rec("pharaoh_se", "pharaoh_se-1", "B", reign_start_bce=-700)
+    assert era_conflict(a, b) == (
+        "Reign starts 200 years apart (-900 vs -700); >= 200 is distinct kings."
+    )
+
+
+def test_a_clean_run_writes_no_failed_attempts_file(tmp_path):
+    def reviewer_fn(c, a, b):
+        return Verdict(candidate_id=c.id, outcome=VERDICT_APPROVED, reason="same", reviewer="llm",
+                       request_digest=None)
+
+    recs = [
+        _rec("leprohon", "leprohon-1", "Amasis", prenomina=["Khnemibre"]),
+        _rec("beckerath", "beckerath-1", "Amasis", prenomina=["Chnem-ib-rê"]),
+    ]
+    cache = tmp_path / "graph.json.verdict-cache.jsonl"
+    verdicts_mod.resolve_matches(
+        recs, mode="llm", reviewer_fn=reviewer_fn, model="m", cache_path=str(cache)
+    )
+    assert cache.exists()
+    assert not (tmp_path / "graph.json.verdict-cache.jsonl.failed-attempts.jsonl").exists()
+
+
 def test_reign_gap_threshold_scales_with_antiquity():
     """At 2000 BCE cross-framework dates may differ by 150 + 100 = 250 years: a 220-year
     gap is chronology divergence, not proof of two kings."""
@@ -542,6 +569,9 @@ def _committed_reviewable():
         ("leprohon-leprohon-18.05b", "pharaoh_se-Thutmose-III"),
         ("beckerath-12.01", "pharaoh_se-Amenemhat-I"),
         ("leprohon-leprohon-12.01a", "pharaoh_se-Amenemhat-I"),
+        # Pepi II's Neferkare is reused by Dyn 8 kings; a shared Dyn 6 still clears it.
+        ("beckerath-06.05", "pharaoh_se-Pepi-II"),
+        ("leprohon-leprohon-6.05", "pharaoh_se-Pepi-II"),
     ],
 )
 def test_committed_same_king_pairs_reach_the_reviewer(a_id, b_id):

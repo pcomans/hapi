@@ -1,11 +1,12 @@
-"""Issue #342: every candidate the era gate rejects that the claim graph #337 registered had
-approved or escalated — the complete set of queue entries the gate removes, for review.
+"""Issue #342: EVERY candidate the era gate rejects, each tagged with what the claim graph
+#337 registered decided for the same pair — approved, escalated, rejected — or `new` when
+that matcher never generated it. The complete list the gate's review covers.
 
 Deterministic, no model calls: candidates come from the committed sources through the
-current matcher; the previous queue is the claim graph at the #337 registered commit.
+current matcher; the earlier verdicts are the run log at the #337 registered commit.
 
     pipeline/.venv/bin/python docs/evaluations/ruler-cluster-reconciliation-342/scripts/list_era_rejected.py \
-      --out docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected-previously-queued.json
+      --out docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected.json
 """
 
 from __future__ import annotations
@@ -28,34 +29,44 @@ from pipeline.authority.claimgraph.sources import load_all_sources  # noqa: E402
 REGISTERED_BASE_COMMIT = "97f2e610974f0e89b9c03d409b230dff89edbb1f"
 
 
-def previous_queue(root: Path = ROOT) -> dict[str, str]:
-    graph = json.loads(
-        subprocess.run(
-            ["git", "-C", str(root), "show",
-             f"{REGISTERED_BASE_COMMIT}:web-claimgraph/data/claim-graph.json"],
-            check=True, capture_output=True,
-        ).stdout
-    )
-    queue = {e["candidate_id"]: "escalated" for e in graph["escalations"]}
-    queue.update({e["candidate_id"]: "approved" for e in graph["approvedEdges"]})
-    return queue
+_OUTCOME = {
+    "hapi:verdict_approved": "approved",
+    "hapi:verdict_escalated": "escalated",
+    "hapi:verdict_rejected": "rejected",
+}
 
 
-def era_rejected_previously_queued(root: Path = ROOT) -> list[dict]:
+def previous_outcomes(root: Path = ROOT) -> dict[str, str]:
+    """candidate id → the registered graph's final verdict for it."""
+    run = subprocess.run(
+        ["git", "-C", str(root), "show",
+         f"{REGISTERED_BASE_COMMIT}:web-claimgraph/data/claim-graph.reviewer-run.jsonl"],
+        check=True, capture_output=True,
+    ).stdout.decode("utf-8")
+    outcomes: dict[str, str] = {}
+    for line in run.splitlines():
+        verdict = json.loads(line)
+        if verdict["candidate_id"] in outcomes:
+            raise ValueError(f"two verdicts for {verdict['candidate_id']} in the base run")
+        outcomes[verdict["candidate_id"]] = _OUTCOME[verdict["outcome"]]
+    return outcomes
+
+
+def era_rejected(root: Path = ROOT) -> list[dict]:
     records = load_all_sources(AUTHORITY_ROOT).records
     name = {r.local_id: r.display_name for r in records}
-    queue = previous_queue(root)
+    before = previous_outcomes(root)
     return [
         {
             "candidate_id": c.id,
-            "previously": queue[c.id],
+            "previously": before.get(c.id, "new"),
             "a": f"{c.a_id} ({name[c.a_id]})",
             "b": f"{c.b_id} ({name[c.b_id]})",
             "basis": c.basis,
             "era_conflict": c.era_conflict,
         }
         for c in generate_candidates(records)
-        if c.era_conflict and c.id in queue
+        if c.era_conflict
     ]
 
 
@@ -63,7 +74,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
-    rows = era_rejected_previously_queued()
+    rows = era_rejected()
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps({"registered_base_commit": REGISTERED_BASE_COMMIT, "pairs": rows},
