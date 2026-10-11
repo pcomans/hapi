@@ -579,6 +579,14 @@ def test_committed_same_king_pairs_reach_the_reviewer(a_id, b_id):
     assert frozenset((a_id, b_id)) in reviewable
 
 
+def test_herakleopolitan_neferkare_stays_trapped():
+    """Leprohon's Dyn 9 covers pharaoh.se's Dyn 9 AND 10, and pharaoh.se has a second
+    Dyn 9 Neferkare (as a birth name): a shared "Dyn 9" cannot clear this reused name."""
+    _, by_pair = _committed_reviewable()
+    pair = by_pair[frozenset(("leprohon-leprohon-9-10a.03", "pharaoh_se-Neferkara-III"))]
+    assert pair.homonym_trap is not None
+
+
 @pytest.mark.parametrize(
     ("a_id", "b_id", "reason"),
     [

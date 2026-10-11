@@ -89,19 +89,21 @@ _EARLY_DYNASTY_MAX = 3  # Re-formed prenomen not yet stable (ADR-020 carve-out)
 #   - Dyn 13–17: Ryholt's Second Intermediate Period numbering differs from Beckerath's.
 #   - Dyn 21–26: Takelot III is Dyn 22 in Beckerath, Dyn 23 in Kitchen; Kitchen files
 #     Necho I under Dyn 24, Leprohon under Dyn 26.
-# Every era-rejected pair that an earlier graph approved or escalated is listed and
-# reviewed in docs/evaluations/ruler-cluster-reconciliation-342/results/.
+# Every era-rejected pair is listed, with the earlier graph's verdict for it, and reviewed
+# in docs/evaluations/ruler-cluster-reconciliation-342/results/.
 ERA_MIN_REIGN_START_GAP_YEARS = 200
 ERA_MAX_DYNASTY_GAP = 1
 CONTESTED_DYNASTY_BANDS: tuple[tuple[int, int], ...] = ((6, 10), (13, 17), (21, 26))
 
-# Where a SHARED dynasty number is itself unreliable — parallel lines that sources assign
-# to the same number — so "both in Dyn N" cannot clear a reused throne name or decide a
-# uniqueness clash. Narrower than the era-gate bands: in Dyn 6–10 the sources file one
-# king under DIFFERENT numbers (a gap, which the era gate must tolerate), but a shared
-# number still means one block, and the sole-bearer check catches the many Dyn 8
-# Neferkares. Keeping the two apart lets Pepi II (Dyn 6) clear his reused Neferkare.
-SHARED_DYNASTY_UNRELIABLE_BANDS: tuple[tuple[int, int], ...] = ((13, 17), (21, 26))
+# Where a SHARED dynasty number is itself unreliable — the sources put different blocks
+# of kings under one number — so "both in Dyn N" cannot clear a reused throne name or
+# decide a uniqueness clash. Dyn 8–10: Leprohon files every Herakleopolitan king as Dyn 9
+# ("Dynasties 9–10a/b") where pharaoh.se splits them between 9 and 10, and pharaoh.se's
+# Dyn 10 also holds the Dyn 8-era unplaced kings; pharaoh.se even carries a second Dyn 9
+# Neferkare as a birth name, invisible to a throne-name bearer check. Dyn 6 and 7 are
+# contested only for the era gate (Neith-iqerti/Netjerkare), so Pepi II (Dyn 6) still
+# clears his reused Neferkare.
+SHARED_DYNASTY_UNRELIABLE_BANDS: tuple[tuple[int, int], ...] = ((8, 10), (13, 17), (21, 26))
 
 
 def chronology_tolerance(a_bce: int, b_bce: int) -> int:

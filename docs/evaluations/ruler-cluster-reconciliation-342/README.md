@@ -18,9 +18,9 @@ passed the Rule-14 leak audit (`prompt-audit-2026-10-11.md`) before the run.
 | | Before (graph #337 registered) | After |
 |---|---|---|
 | Candidates | 2,141 | 2,208 |
-| Approved links | 228 | 356 |
-| Escalated | 1,348 | 972 |
-| Clusters (multi-source) | 124 (124) | 162 (161) |
+| Approved links | 228 | 354 |
+| Escalated | 1,348 | 974 |
+| Clusters (multi-source) | 124 (124) | 160 (159) |
 | Reviewer | GLM 5.2 (OpenRouter) | DeepSeek V4.1 Flash (Vercel → DeepSeek, one build) |
 
 Reviewer run: 1,035 interactions, US$1.19 (gateway-reported). Every answered interaction
@@ -63,24 +63,29 @@ Darius I 3, Pinudjem I 3, Qaa 2, Horemheb 1, Khendjer 1, Ramesses VIII 1.
 ## Safety checks
 
 - **Every merge was reviewed.** `results/ruler-ambiguity.json` → `merged_clusters` lists all
-  73 rebuilt clusters that join more than one earlier unit, with their members. Each is one
+  71 rebuilt clusters that join more than one earlier unit, with their members. Each is one
   king under different spellings, numberings or Greek forms (e.g. Nectanebo I =
   Nakhtnebef, Psammuthis = Pasherimut, Kitchen's Shoshenq VI = Leprohon's Sheshonq VII,
-  Beckerath's Psusennes = the High Priest Psusennes III, Leprohon's Herakleopolitan
-  Neferkare (III) and Wahkare Khety (V) = pharaoh.se's Neferkara III and Wahkara Khety II),
-  or a source's own stage rows. Reviewed by `egyptologist-reviewer` (70, re-review of
-  287e3f8) and in this session (the last 3: Pepi II and the two Herakleopolitans).
+  Beckerath's Psusennes = the High Priest Psusennes III), or a source's own stage rows.
+  70 were reviewed by `egyptologist-reviewer` (re-review of 287e3f8); the 71st, Pepi II
+  across three sources, only by the author of this change. Two Herakleopolitan merges
+  (Neferkare, Wahkare Khety) that a too-narrow dynasty band briefly allowed were withdrawn
+  after code review: Leprohon's single "Dyn 9" spans pharaoh.se's Dyn 9 and 10, so a
+  shared number cannot clear a reused name there.
 - **No cluster joins two records of one source** that the source does not itself declare
   one person (the Pinudjem I ↔ Menkheperre false-merge class) — test-enforced.
 - **Every era-gate rejection is listed and was reviewed.** `results/era-rejected.json` lists
   all 448, test-pinned to the matcher, each tagged with the earlier graph's verdict for the
   pair: 176 escalated, 252 already rejected, 20 new, none approved. All are distinct kings;
-  the per-group review is `results/era-rejected-review.md`. The first version of the gate
+  `results/era-rejected-review.md` records who reviewed which group — the 176 by
+  `egyptologist-reviewer`, the 252 by the earlier independent model plus a name scan, and
+  the 20 new pairs only by the author of this change. The first version of the gate
   wrongly rejected seven First Intermediate Period same-king pairs (von Beckerath's
   unplaced Dyn 8-era kings: Leprohon "Dynasty 8a", pharaoh.se Dynasty 10); review caught
   it and the Dyn 6–10 band fixes it.
 - **Pepi II resolves.** His Neferkare is reused by several Dyn 8 kings; a shared Dyn 6
-  clears it because Dyn 6–10 is contested only for the era gate (ADR-020 amendment, item 5).
+  clears it because Dyn 6 is contested only for the era gate, while Dyn 8–10 stays
+  unreliable for shared-dynasty decisions (ADR-020 amendment, item 5).
 - **Pilot first** (2026-10-10): 16 calls on the three kings — 10 same-king pairs approved,
   6 homonym traps rejected.
 - **Contested identification kept, with its source.** Sanakht ↔ Nebka is newly linked; the

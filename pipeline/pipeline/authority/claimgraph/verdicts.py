@@ -191,9 +191,9 @@ def _review_with_retry(
     reviewer_fn, c, a, b, retries: int, *, model: str, provider: str
 ) -> Verdict:
     """``reviewer_fn(candidate, a, b) -> Verdict`` is the provider-bound live reviewer
-    (Anthropic or OpenRouter). Retries on any error; a persistent parse failure escalates
-    THIS candidate (with every attempt's full interaction), any other error fails the run
-    loud (Rule 2).
+    (Anthropic, OpenRouter or the Vercel gateway). Retries on any error; a persistent parse
+    failure escalates THIS candidate (with every attempt's full interaction), any other
+    error fails the run loud (Rule 2).
 
     EVERY attempt is retained, in order, on the returned verdict — the malformed ones a
     later successful attempt superseded, AND the ones that raised without a response. Each

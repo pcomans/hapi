@@ -1,12 +1,15 @@
-"""Stage-2 review. Two interchangeable paths, both precision-first (ADR-020 §6):
+"""Stage-2 review, precision-first (ADR-020 §6):
 
 * :func:`review_deterministic` — no external dependency; encodes the corroborate-or-
-  escalate policy as pure logic. Used ONLY when the operator explicitly selects the
-  ``deterministic`` mode, and as the reference the LLM is measured against. It is never
-  an automatic fallback for a failed/absent LLM.
-* :func:`review_with_llm` — the live Anthropic reviewer chosen for this POC. It sees the
-  FULL structured record of both sides (never just display names, ADR-020 §6) and its
-  complete interaction is captured for replay (Constitutional Rule 13).
+  escalate policy as pure logic. Used for every candidate when the operator explicitly
+  selects the ``deterministic`` mode, and in every mode for the candidates a committed
+  rule settles before any LLM call (the era gate rejects; name-only pairs escalate). It
+  is never an automatic fallback for a failed/absent LLM.
+* The live LLM reviewers — :func:`review_with_llm` (Anthropic), :func:`review_with_openrouter`
+  and :func:`review_with_vercel` (the #342 rebuild: DeepSeek V4.1 Flash pinned to
+  DeepSeek's endpoint). Each sees the FULL structured record of both sides (never just
+  display names, ADR-020 §6) and its complete interaction is captured for replay
+  (Constitutional Rule 13).
 
 A verdict never silently drops a candidate: everything resolves to approved / rejected /
 escalated, and doubt routes to escalated.

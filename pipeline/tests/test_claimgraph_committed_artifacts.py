@@ -27,10 +27,12 @@ from pipeline.authority.claimgraph.build_graph import AUTHORITY_ROOT, REPO_ROOT,
 from pipeline.authority.claimgraph.clusters import compute_clusters
 from pipeline.authority.claimgraph.graph_ir import build_documentary_graph
 from pipeline.authority.claimgraph.reviewer import (
+    PROVIDER_PARAMETERS,
     VERCEL_PINNED_PROVIDER,
     VERDICT_ESCALATED,
     Verdict,
     _parse_verdict_json,
+    request_digest,
 )
 from pipeline.authority.claimgraph.sources import load_all_sources
 from pipeline.authority.claimgraph.verdicts import resolve_matches
@@ -71,14 +73,26 @@ def test_committed_decisions_follow_from_the_run_and_the_current_matcher(graph, 
     to it) behind a green CI."""
     by_candidate = {v["candidate_id"]: v for v in run}
 
+    model = graph["meta"]["model"]
+
     def replay(candidate, a, b):
         verdict = by_candidate[candidate.id]
         assert verdict["reviewer"] == "llm", candidate.id
+        # The request the run made is the request the current code would make: same records,
+        # same prompts (the ones the Rule-14 audit covered), same model and parameters.
+        assert verdict["request_digest"] == request_digest(
+            candidate, a, b, provider="vercel", model=model,
+            parameters=PROVIDER_PARAMETERS["vercel"],
+        ), candidate.id
         last = verdict["interactions"][-1]
         if last["parse_error"]:
-            # The run escalated this candidate after its retries produced no verdict.
-            return Verdict(candidate_id=candidate.id, outcome=VERDICT_ESCALATED,
-                           reason=verdict["reason"], reviewer="llm")
+            # Every retry failed to parse: the code's own escalation path (constant reason).
+            return Verdict(
+                candidate_id=candidate.id, outcome=VERDICT_ESCALATED,
+                reason="Reviewer output could not be parsed after retries; escalated for "
+                "manual review.", reviewer="llm",
+            )
+        assert last["call_error"] is None, candidate.id
         outcome, reason = _parse_verdict_json(
             last["raw_response"]["choices"][0]["message"]["content"]
         )
@@ -91,6 +105,10 @@ def test_committed_decisions_follow_from_the_run_and_the_current_matcher(graph, 
     )
     assert graph["meta"]["partial"] is False
     assert sorted(v.candidate_id for v in replayed.verdicts) == sorted(by_candidate)
+    # The provenance file describes the decisions the code actually reaches.
+    assert {v.candidate_id: (v.outcome, v.reason, v.reviewer) for v in replayed.verdicts} == {
+        r["candidate_id"]: (r["outcome"], r["reason"], r["reviewer"]) for r in run
+    }
     assert [asdict(e) for e in replayed.approved_edges] == graph["approvedEdges"]
     assert [asdict(e) for e in replayed.escalations] == graph["escalations"]
     doc = build_documentary_graph(records)
@@ -176,7 +194,7 @@ def test_ruler_ambiguity_results_are_pinned_to_the_committed_graph_and_script():
     )
     registered_graph = subprocess.run(
         ["git", "-C", str(REPO_ROOT), "show",
-         "97f2e610974f0e89b9c03d409b230dff89edbb1f:web-claimgraph/data/claim-graph.json"],
+         f"{_list_era_rejected().REGISTERED_BASE_COMMIT}:web-claimgraph/data/claim-graph.json"],
         check=True, capture_output=True,
     ).stdout
     assert results["inputs"]["before_graph_sha256"] == hashlib.sha256(registered_graph).hexdigest()
@@ -198,15 +216,36 @@ def test_viewer_predicate_labels_are_the_manifest_labels():
     viewer = dict(re.findall(r'"(hapi:\w+)": "([^"]+)"', block[: block.index("};")]))
     assert viewer, "PREDICATE_LABEL not found in types.ts"
     assert viewer == {predicate: manifest[predicate] for predicate in viewer}
+    # ClaimList falls back to the raw predicate id, so a missing label would go unnoticed.
+    used = {c["predicate"] for c in json.loads(GRAPH.read_text("utf-8"))["claims"]}
+    assert set(viewer) == used
+
+
+def _load(name: str, path: Path):
+    if name not in sys.modules:
+        spec = importlib.util.spec_from_file_location(name, path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
+    return sys.modules[name]
+
+
+def _list_era_rejected():
+    return _load("_342_list_era_rejected", EVAL / "scripts" / "list_era_rejected.py")
+
+
+def test_registered_base_commit_is_the_one_337_registered():
+    control = _load(
+        "_342_compare_arms",
+        REPO_ROOT / "docs/evaluations/authority-independent-control-2026-09-13/scripts/compare_arms.py",
+    )
+    committed = json.loads((EVAL / "results" / "era-rejected.json").read_text("utf-8"))
+    assert _list_era_rejected().REGISTERED_BASE_COMMIT == control.BASE_COMMIT
+    assert committed["registered_base_commit"] == control.BASE_COMMIT
 
 
 def test_era_rejected_list_matches_the_current_matcher():
-    spec = importlib.util.spec_from_file_location(
-        "_342_list_era_rejected", EVAL / "scripts" / "list_era_rejected.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
+    module = _list_era_rejected()
     committed = json.loads((EVAL / "results" / "era-rejected.json").read_text("utf-8"))
     assert committed["pairs"] == module.era_rejected(REPO_ROOT)
     # Reviewed 2026-10-11 (results/era-rejected-review.md); no previously APPROVED link is

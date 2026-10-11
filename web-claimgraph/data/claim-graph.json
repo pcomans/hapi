@@ -31,11 +31,11 @@
    "rulers": 1159,
    "claims": 5913,
    "candidates": 2208,
-   "approvedLinks": 356,
-   "escalations": 972,
+   "approvedLinks": 354,
+   "escalations": 974,
    "intraSourceIdentities": 16,
-   "clusters": 162,
-   "multiSourceClusters": 161
+   "clusters": 160,
+   "multiSourceClusters": 159
   }
  },
  "rulers": [
@@ -100686,39 +100686,6 @@
    "reviewer": "llm"
   },
   {
-   "candidate_id": "cand-leprohon-leprohon-9-10a.03|pharaoh_se-Neferkara-III",
-   "a_id": "leprohon-leprohon-9-10a.03",
-   "b_id": "pharaoh_se-Neferkara-III",
-   "a_source": "leprohon",
-   "b_source": "pharaoh_se",
-   "a_name": "Neferkare (III)",
-   "b_name": "Neferkara III",
-   "basis": "prenomen",
-   "shared_prenomen_keys": [
-    "neferkara",
-    "nfrkara",
-    "nfrkr"
-   ],
-   "reason": "Both records give the same throne name Nefer-ka-Ra with matching Dynasty 9 attribution, corroborating a single King Neferkare III beyond display-name similarity.",
-   "reviewer": "llm"
-  },
-  {
-   "candidate_id": "cand-leprohon-leprohon-9-10b.01|pharaoh_se-Wahkara-Khety-II",
-   "a_id": "leprohon-leprohon-9-10b.01",
-   "b_id": "pharaoh_se-Wahkara-Khety-II",
-   "a_source": "leprohon",
-   "b_source": "pharaoh_se",
-   "a_name": "Wahkare Khety (V)",
-   "b_name": "Wahkara Khety II",
-   "basis": "prenomen",
-   "shared_prenomen_keys": [
-    "wahkara",
-    "whkr"
-   ],
-   "reason": "Identical prenomen (Wahkare) and nomen (Khety) in the Ninth Dynasty; the V versus II discrepancy reflects convention-relative numbering of the poorly attested Heracleopolitan Khety sequence, not two distinct kings.",
-   "reviewer": "llm"
-  },
-  {
    "candidate_id": "cand-leprohon-leprohon-9-10b.06|pharaoh_se-Merikara",
    "a_id": "leprohon-leprohon-9-10b.06",
    "b_id": "pharaoh_se-Merikara",
@@ -111851,6 +111818,19 @@
    "reviewer": "llm"
   },
   {
+   "candidate_id": "cand-leprohon-leprohon-9-10a.03|pharaoh_se-Neferkara-III",
+   "a_id": "leprohon-leprohon-9-10a.03",
+   "b_id": "pharaoh_se-Neferkara-III",
+   "a_source": "leprohon",
+   "b_source": "pharaoh_se",
+   "a_name": "Neferkare (III)",
+   "b_name": "Neferkara III",
+   "basis": "prenomen",
+   "reason": "Both records give the same throne name Nefer-ka-Ra with matching Dynasty 9 attribution, corroborating a single King Neferkare III beyond display-name similarity. [overridden to escalate: shared prenomen 'neferkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
+   "homonym_trap": "neferkara",
+   "reviewer": "llm"
+  },
+  {
    "candidate_id": "cand-leprohon-leprohon-9-10a.04|pharaoh_se-Meribra-Khety-I",
    "a_id": "leprohon-leprohon-9-10a.04",
    "b_id": "pharaoh_se-Meribra-Khety-I",
@@ -111901,6 +111881,19 @@
    "reason": "Name-only match: the records share a similar name but NO throne-name or Horus-name corroboration. Escalated for manual review — confirming this identity requires external documented evidence (a cited scholarly identification), not a model's unsourced assertion (Constitutional Rule 1).",
    "homonym_trap": null,
    "reviewer": "deterministic"
+  },
+  {
+   "candidate_id": "cand-leprohon-leprohon-9-10b.01|pharaoh_se-Wahkara-Khety-II",
+   "a_id": "leprohon-leprohon-9-10b.01",
+   "b_id": "pharaoh_se-Wahkara-Khety-II",
+   "a_source": "leprohon",
+   "b_source": "pharaoh_se",
+   "a_name": "Wahkare Khety (V)",
+   "b_name": "Wahkara Khety II",
+   "basis": "prenomen",
+   "reason": "Identical prenomen (Wahkare) and nomen (Khety) in the Ninth Dynasty; the V versus II discrepancy reflects convention-relative numbering of the poorly attested Heracleopolitan Khety sequence, not two distinct kings. [overridden to escalate: shared prenomen 'wahkara' is on the committed homonym exception list — a reused throne name is not sufficient to merge distinct kings (ADR-020 decision 3)]",
+   "homonym_trap": "wahkara",
+   "reviewer": "llm"
   },
   {
    "candidate_id": "cand-leprohon-leprohon-9-10b.03|pharaoh_se-Meribra-Khety-I",
@@ -117998,26 +117991,6 @@
    ]
   },
   {
-   "id": "cluster-leprohon-leprohon-9-10a.03",
-   "member_ids": [
-    "leprohon-leprohon-9-10a.03",
-    "pharaoh_se-Neferkara-III"
-   ],
-   "sources": [
-    "leprohon",
-    "pharaoh_se"
-   ],
-   "source_count": 2,
-   "label": "Neferkara III",
-   "edges": [
-    {
-     "a_id": "leprohon-leprohon-9-10a.03",
-     "b_id": "pharaoh_se-Neferkara-III",
-     "basis": "prenomen"
-    }
-   ]
-  },
-  {
    "id": "cluster-leprohon-leprohon-2.03",
    "member_ids": [
     "leprohon-leprohon-2.03",
@@ -118573,26 +118546,6 @@
     {
      "a_id": "leprohon-leprohon-6.02",
      "b_id": "pharaoh_se-Userkara",
-     "basis": "prenomen"
-    }
-   ]
-  },
-  {
-   "id": "cluster-leprohon-leprohon-9-10b.01",
-   "member_ids": [
-    "leprohon-leprohon-9-10b.01",
-    "pharaoh_se-Wahkara-Khety-II"
-   ],
-   "sources": [
-    "leprohon",
-    "pharaoh_se"
-   ],
-   "source_count": 2,
-   "label": "Wahkara Khety II",
-   "edges": [
-    {
-     "a_id": "leprohon-leprohon-9-10b.01",
-     "b_id": "pharaoh_se-Wahkara-Khety-II",
      "basis": "prenomen"
     }
    ]

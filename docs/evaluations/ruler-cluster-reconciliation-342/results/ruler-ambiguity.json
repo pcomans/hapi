@@ -28,7 +28,7 @@
     }
   },
   "inputs": {
-    "after_graph_sha256": "e6167280cd63a4da185499b6d05a8e9c8951f98d1b8219c1ec7a89b693c85e2a",
+    "after_graph_sha256": "b00ca2de74bca4fb5ce48ecf1982389a5331cfe0c3f96e191e8efd2f7a28cb7e",
     "before_graph_sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965",
     "control_sha256": "aaec22bc9ce04cd7d566c12a1eabd55ade185c868907af5968f77c4592268c69",
     "mention_ledger": {
@@ -466,17 +466,6 @@
       "members": [
         "leprohon-leprohon-5.03 (Neferirkare (I))",
         "pharaoh_se-Neferirkara-I-Kakai (Neferirkara I Kakai)"
-      ]
-    },
-    {
-      "before_units": [
-        "leprohon-leprohon-9-10a.03",
-        "pharaoh_se-Neferkara-III"
-      ],
-      "label": "Neferkara III",
-      "members": [
-        "leprohon-leprohon-9-10a.03 (Neferkare (III))",
-        "pharaoh_se-Neferkara-III (Neferkara III)"
       ]
     },
     {
@@ -937,17 +926,6 @@
       "members": [
         "leprohon-leprohon-6.02 (Userkare (I))",
         "pharaoh_se-Userkara (Userkara)"
-      ]
-    },
-    {
-      "before_units": [
-        "leprohon-leprohon-9-10b.01",
-        "pharaoh_se-Wahkara-Khety-II"
-      ],
-      "label": "Wahkara Khety II",
-      "members": [
-        "leprohon-leprohon-9-10b.01 (Wahkare Khety (V))",
-        "pharaoh_se-Wahkara-Khety-II (Wahkara Khety II)"
       ]
     },
     {

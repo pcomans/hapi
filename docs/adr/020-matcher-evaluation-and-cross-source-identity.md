@@ -400,8 +400,9 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    would key to Piye's complete Sneferre.
 5. **The homonym exception list is scoped by dynasty.** A shared reused throne name is
    *unambiguous for a pair* when both records carry the same dynasty, outside the bands
-   where a shared dynasty number is unreliable (13–17 and 21–26; Dyn 6–10 is contested only
-   for the era gate, where one king is filed under different numbers), and no other
+   where a shared dynasty number is unreliable — 8–10 (Leprohon files all Herakleopolitan
+   kings as Dyn 9 where pharaoh.se splits them between 9 and 10, and pharaoh.se's Dyn 10
+   also holds the Dyn 8-era unplaced kings), 13–17 and 21–26 — and no other
    *person* from either source bears that name in that dynasty (a source's own stage rows
    are one bearer; a bearer with no dynasty does not block, because its own pairs stay
    trapped). The pair stops being forced to escalate when ANY shared reused name is
