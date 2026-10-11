@@ -69,7 +69,7 @@
   <rdfs:Class rdf:about="#MatcherRun">
     <rdfs:label xml:lang="en">Matcher run</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D10_Software_Execution"/>
-    <rdfs:comment xml:lang="en">A specific execution of a software run in the matcher pipeline — either a deterministic stage-1 matcher OR a stage-2 LLM reviewer. Both are hapi:MatcherRun instances; the run's hapi:MatcherAlgorithm (D14) records which of the two roles it played. IS-A chain: hapi:MatcherRun ⊂ crmdig:D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. D10 is the correct general parent for "software ran and produced output." Carries run-reproducibility metadata (run_id, parameters_hash, started_at, completed_at) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional. There is NO reviewer_status / reviewer_id / reviewed_at field on the MatcherRun itself: verdicts from the stage-2 reviewer are their own E13s whose P140 subject IS the matcher's E13 and whose hapi:derived_by_run points at the reviewer's MatcherRun (see ADR-018 schema sketch case 4b).</rdfs:comment>
+    <rdfs:comment xml:lang="en">A specific execution of a software run in the matcher pipeline — a deterministic stage-1 matcher, a stage-2 LLM reviewer, OR a committed deterministic verdict rule that settles a candidate before any reviewer call (the ADR-020 era gate, amendment 2026-10-10). All are hapi:MatcherRun instances; the run's hapi:MatcherAlgorithm (D14) records which role it played. IS-A chain: hapi:MatcherRun ⊂ crmdig:D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. D10 is the correct general parent for "software ran and produced output." Carries run-reproducibility metadata (run_id, parameters_hash, started_at, completed_at) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional. There is NO reviewer_status / reviewer_id / reviewed_at field on the MatcherRun itself: verdicts from the stage-2 reviewer are their own E13s whose P140 subject IS the matcher's E13 and whose hapi:derived_by_run points at the reviewer's MatcherRun (see ADR-018 schema sketch case 4b).</rdfs:comment>
   </rdfs:Class>
 
   <rdfs:Class rdf:about="#MatcherAlgorithm">
@@ -275,6 +275,36 @@
     <rdfs:comment xml:lang="en">A Ruler's Horus titulary element. Closest CRM superproperty under review: P1_is_identified_by (E1 → E41), with the value being an E41 Appellation subclass typed for Horus-name semantics. Pending. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
   </rdf:Property>
 
+  <rdf:Property rdf:about="#prenomen">
+    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
+    <rdfs:label xml:lang="en">throne name (prenomen)</rdfs:label>
+    <rdfs:comment xml:lang="en">A Ruler's throne name (nsw-bity name, prenomen) — the primary cross-source identity corroborator (ADR-020 §6). Closest CRM superproperty under review: P1_is_identified_by (E1 → E41), with the value an E41 Appellation. Pending. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="#nomen">
+    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
+    <rdfs:label xml:lang="en">birth name (nomen)</rdfs:label>
+    <rdfs:comment xml:lang="en">A Ruler's birth name (sꜣ-rꜥ name, nomen). Closest CRM superproperty under review: P1_is_identified_by (E1 → E41), with the value an E41 Appellation. Pending. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="#prenomen_epithet">
+    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
+    <rdfs:label xml:lang="en">epithet added to the throne name</rdfs:label>
+    <rdfs:comment xml:lang="en">An epithet the source records as added to a Ruler's throne name (Leprohon's "Epithets added to the Throne name" blocks, e.g. stp.n rꜥ, "whom Re has chosen"). Distinct from the name predicate so the kind is carried by the Statement's P177 target alone (ADR-018 encoding convention #2): an epithet is not itself a name, and is never used as cross-source identity evidence on its own. The value is an E41 Appellation like its sibling name predicate. Closest CRM superproperty under review: P1_is_identified_by (E1 → E41). Pending. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="#nomen_epithet">
+    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
+    <rdfs:label xml:lang="en">epithet added to the birth name</rdfs:label>
+    <rdfs:comment xml:lang="en">An epithet the source records as added to a Ruler's birth name (Leprohon's "Epithets added to the Birth name" blocks, e.g. ḥqꜣ wꜣst, "ruler of Thebes"). Distinct from the name predicate so the kind is carried by the Statement's P177 target alone (ADR-018 encoding convention #2): an epithet is not itself a name, and is never used as cross-source identity evidence on its own. The value is an E41 Appellation like its sibling name predicate. Closest CRM superproperty under review: P1_is_identified_by (E1 → E41). Pending. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="#horus_name_epithet">
+    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
+    <rdfs:label xml:lang="en">epithet added to the Horus name</rdfs:label>
+    <rdfs:comment xml:lang="en">An epithet the source records as added to a Ruler's Horus name. Distinct from the name predicate so the kind is carried by the Statement's P177 target alone (ADR-018 encoding convention #2): an epithet is not itself a name, and is never used as cross-source identity evidence on its own. The value is an E41 Appellation like its sibling name predicate. Closest CRM superproperty under review: P1_is_identified_by (E1 → E41). Pending. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
+  </rdf:Property>
+
   <rdf:Property rdf:about="#matcher_review_verdict">
     <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdfs:label xml:lang="en">matcher review verdict</rdfs:label>
@@ -303,13 +333,13 @@
   <rdf:Description rdf:about="#verdict_approved">
     <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdfs:label xml:lang="en">reviewer approved</rdfs:label>
-    <rdfs:comment xml:lang="en">Verdict-outcome :E55 Type. Used as P141 value on a verdict-E13 (P177 = hapi:matcher_review_verdict) to record that the LLM reviewer accepted the matcher's candidate identity claim. Triggers shortcut-triple emission for the matcher's claim IF this verdict-E13 is the unique tip of the supersession chain for that matcher-claim.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Verdict-outcome :E55 Type. Used as P141 value on a verdict-E13 (P177 = hapi:matcher_review_verdict) to record that the reviewer stage (the LLM reviewer, or the committed deterministic policy when the run is explicitly deterministic) accepted the matcher's candidate identity claim. Triggers shortcut-triple emission for the matcher's claim IF this verdict-E13 is the unique tip of the supersession chain for that matcher-claim.</rdfs:comment>
   </rdf:Description>
 
   <rdf:Description rdf:about="#verdict_rejected">
     <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdfs:label xml:lang="en">reviewer rejected</rdfs:label>
-    <rdfs:comment xml:lang="en">Verdict-outcome :E55 Type. Used as P141 value on a verdict-E13 to record that the LLM reviewer rejected the matcher's candidate. No shortcut emission. The matcher's E13 stays in the graph as a candidate-claim record; the verdict is the authoritative reason it isn't materialised.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Verdict-outcome :E55 Type. Used as P141 value on a verdict-E13 to record that the reviewer stage rejected the matcher's candidate — either the LLM reviewer, or a committed deterministic verdict rule such as the ADR-020 era gate (amendment 2026-10-10), whose verdict-E13 derives from a MatcherRun whose D14 is that rule. No shortcut emission. The matcher's E13 stays in the graph as a candidate-claim record; the verdict is the authoritative reason it isn't materialised.</rdfs:comment>
   </rdf:Description>
 
   <rdf:Description rdf:about="#verdict_escalated">

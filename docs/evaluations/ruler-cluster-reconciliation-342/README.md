@@ -1,32 +1,41 @@
 # Ruler-cluster reconciliation (#342) — before/after measurement
 
-**Date:** 2026-10-10 · **Issue:** [#342](https://github.com/pcomans/hapi/issues/342) ·
+**Dates:** 2026-10-10 (first run), 2026-10-11 (corrected run after review) ·
+**Issue:** [#342](https://github.com/pcomans/hapi/issues/342) ·
 **Policy:** ADR-020, amendment 2026-10-10
 
 ## What changed
 
 The claim graph (`web-claimgraph/data/claim-graph.json`) was rebuilt with the matcher
-rules recorded in the ADR-020 amendment — era gate, Leprohon titulary stages as one
-person, added epithets matched only as compounds, dynasty-scoped homonym and uniqueness
-rules — and with DeepSeek V4.1 Flash (max reasoning effort, Vercel AI Gateway pinned to
-DeepSeek's endpoint) as the reviewer. Every reviewer request and full response, reasoning
-included, is in `web-claimgraph/data/claim-graph.reviewer-run.jsonl`.
+rules recorded in the ADR-020 amendment — era gate, sources' own identity statements in
+clusters, added epithets as their own claims and never alone as identity evidence,
+fragmentary names never corroborating, dynasty-scoped homonym and uniqueness rules — with
+DeepSeek V4.1 Flash as the reviewer (maximum reasoning effort requested; Vercel AI Gateway
+pinned to DeepSeek's endpoint). Every reviewer request and full response, reasoning
+included, is in `web-claimgraph/data/claim-graph.reviewer-run.jsonl`; the changed prompt
+passed the Rule-14 leak audit (`prompt-audit-2026-10-11.md`) before the run.
 
 | | Before (graph #337 registered) | After |
 |---|---|---|
-| Candidates | 2,141 | 2,301 |
-| Approved links | 228 | 341 |
-| Escalated | 1,348 | 1,049 |
-| Clusters (multi-source) | 124 (124) | 164 (161) |
-| Reviewer | GLM 5.2 (OpenRouter) | DeepSeek V4.1 Flash (Vercel → DeepSeek) |
+| Candidates | 2,141 | 2,208 |
+| Approved links | 228 | 351 |
+| Escalated | 1,348 | 977 |
+| Clusters (multi-source) | 124 (124) | 159 (158) |
+| Reviewer | GLM 5.2 (OpenRouter) | DeepSeek V4.1 Flash (Vercel → DeepSeek, one build) |
 
-Reviewer run: 1,087 calls, US$1.26 (gateway-reported), every response served by
-`deepseek`, every response carrying reasoning text.
+Reviewer run: 1,035 interactions, US$1.19 (gateway-reported). Every answered interaction
+was served by `deepseek` with one serving build and carries reasoning text. Three
+connection timeouts and eight answers cut off at `max_tokens` (reasoning that never
+reached a verdict, all Dyn 13–23 records) were retried; one pair
+(`leprohon-13.06` ↔ `ryholt-13.10`) never produced a verdict and is escalated. All attempts
+are persisted. These properties are enforced by
+`pipeline/tests/test_claimgraph_committed_artifacts.py`.
 
-## Museum ruler mentions (#337 ledger, 148,871 mentions; 11,555 ruler mentions)
+## Museum ruler mentions (#337 ledger: 148,871 mentions, 11,555 of them ruler mentions)
 
 Measured by `scripts/measure_ruler_ambiguity.py` with the unchanged #337 resolver over the
-byte-identical #337 mention ledger; aggregate output in `results/ruler-ambiguity.json`.
+byte-identical #337 mention ledger; aggregate output in `results/ruler-ambiguity.json`,
+pinned to the committed graph and script by test.
 
 | Status | Before | After |
 |---|---|---|
@@ -35,8 +44,8 @@ byte-identical #337 mention ledger; aggregate output in `results/ruler-ambiguity
 | unmatched | 346 | 346 |
 | abstained (expression) | 2,241 | 2,241 |
 
-Transitions: 4,348 ambiguous → resolved; 0 resolved → ambiguous; 0 resolved mentions
-moved to a different king.
+Transitions: 4,348 ambiguous → resolved; 0 resolved → ambiguous; 0 resolved mentions now
+resolve to a target sharing none of their former records.
 
 | King (by claim-graph record ids) | Artifacts ambiguous before | Resolved after |
 |---|---|---|
@@ -44,20 +53,32 @@ moved to a different king.
 | Akhenaten | 923 | 923 |
 | Ramesses II | 520 | 520 |
 
-## Safety checks on the rebuilt graph
+The other 154 newly resolved mentions, by the cluster they now resolve to: Tutankhamun 64,
+Amenemhat III 28, Thutmose I 27, Amenemhat II 12, Aha 4, Hatshepsut 4, Ramesses IX 4,
+Darius I 3, Pinudjem I 3, Qaa 2, Horemheb 1, Khendjer 1, Ramesses VIII 1.
 
-- **No cluster joins two records of one source** that the source itself does not declare
-  one person (the Pinudjem I ↔ Menkheperre false-merge class, ADR-020 finding 1).
-- **Pilot first:** 16 reviewer calls on the three kings' candidates — 10 same-king pairs
-  approved, 6 homonym traps (Dyn 17 Nebmaatre ×5 against Amenhotep III; Ramesses IV
-  against Ramesses II) rejected. Pilot verdicts were reused in the full run only through
-  the request-digest-checked cache.
-- **Links approved before but not after (10)** are all escalated, none rejected:
-  fragmentary Dyn 13–14 throne names (`Mer[///]re`, `Djed[...]re`, …) that fit several
-  kings, and Smenkhkare / Neferneferuaten, a disputed identification. None affected a
-  resolved museum mention.
-- **Cross-dynasty links gained (2):** Osorkon IV (Dyn 22/23) and Merykare (Dyn 9/10) —
-  the same king under the sources' differing dynasty numbering.
+## Safety checks
+
+- **Every merge was reviewed.** `results/ruler-ambiguity.json` → `merged_clusters` lists all
+  70 rebuilt clusters that join more than one earlier unit, with their members. Each is one
+  king under different spellings, numberings or Greek forms (e.g. Nectanebo I =
+  Nakhtnebef, Psammuthis = Pasherimut, Kitchen's Shoshenq VI = Leprohon's Sheshonq VII,
+  Beckerath's Psusennes = the High Priest Psusennes III), or a source's own stage rows.
+- **No cluster joins two records of one source** that the source does not itself declare
+  one person (the Pinudjem I ↔ Menkheperre false-merge class) — test-enforced.
+- **Era gate removals, all reviewed.** `results/era-rejected-previously-queued.json` lists
+  the 176 pairs the earlier graph had escalated (none approved) that the gate now rejects;
+  test-pinned to the matcher. All are distinct kings: 167 name-only pairs and 9 shared
+  throne names centuries apart (e.g. Menkaure vs the Dyn 8 Menkare). The first version of
+  the gate wrongly rejected seven First Intermediate Period same-king pairs (Leprohon
+  "Dynasty 8a" = pharaoh.se Dynasty 10); review caught it and the Dyn 6–10 band fixes it.
+- **Pilot first** (2026-10-10): 16 calls on the three kings — 10 same-king pairs approved,
+  6 homonym traps rejected.
+- **Contested identification kept, with its source.** Sanakht ↔ Nebka is newly linked; the
+  link rests on Leprohon's own cited statement ("The identification of the Horus Sanakht
+  with King Nebka is ascertained by a fragmentary sealing from Beit Khallaf"; Wilkinson
+  2001, Baud 2007, Ryholt 2008). Representing scholarly dispute about such equations is a
+  separate follow-up.
 
 ## Reproduce
 
@@ -65,14 +86,17 @@ The ledger is rebuilt from the private corpus archive exactly as in the #337 REA
 (`extract_mentions.py`), then:
 
 ```bash
-git show 7a7db48:web-claimgraph/data/claim-graph.json > /tmp/before-claim-graph.json
+git show 97f2e610974f0e89b9c03d409b230dff89edbb1f:web-claimgraph/data/claim-graph.json \
+  > /tmp/before-claim-graph.json   # the graph #337 registered (compare_arms.BASE_COMMIT)
 pipeline/.venv/bin/python docs/evaluations/ruler-cluster-reconciliation-342/scripts/measure_ruler_ambiguity.py \
   --ledger <dir>/mentions.ndjson.gz --extraction-manifest <dir>/extraction-manifest.json \
   --before-graph /tmp/before-claim-graph.json \
   --after-graph web-claimgraph/data/claim-graph.json \
   --out docs/evaluations/ruler-cluster-reconciliation-342/results/ruler-ambiguity.json
+pipeline/.venv/bin/python docs/evaluations/ruler-cluster-reconciliation-342/scripts/list_era_rejected.py \
+  --out docs/evaluations/ruler-cluster-reconciliation-342/results/era-rejected-previously-queued.json
 ```
 
 These numbers describe the resolver's potential on the frozen ledger, not deployed
 pipeline behaviour (museum records are not yet linked in production, #338). The #337 A/B
-itself still runs against the graph it registered (`compare_arms.BASE_COMMIT`).
+itself still runs against the graph it registered.

@@ -28,7 +28,7 @@
     }
   },
   "inputs": {
-    "after_graph_sha256": "15aec4a0d9fa80216e99584aec6bd5a4499c0a0886761c02fec40cf64e36eb6a",
+    "after_graph_sha256": "8f77251514f4342d5da2a5ee638ff2e22e78312d4faf1bcba3b60a9d9699b2c1",
     "before_graph_sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965",
     "mention_ledger": {
       "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
@@ -37,7 +37,7 @@
       "rows": 148871
     },
     "resolver_sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
-    "script_sha256": "541a80cefb700ccbefba5c2b709fab5c2de49ad007b6d75763e6b8e4ceddd0bc"
+    "script_sha256": "bc5672164d376fd008405e8076f8c366e253076657decfaa889700d41c7401f2"
   },
   "kings": {
     "Akhenaten": {
@@ -82,6 +82,866 @@
         "ambiguous": 520
       }
     }
+  },
+  "merged_clusters": [
+    {
+      "before_units": [
+        "leprohon-leprohon-1.01",
+        "pharaoh_se-Aha"
+      ],
+      "label": "Aha",
+      "members": [
+        "leprohon-leprohon-1.01 (Aha)",
+        "pharaoh_se-Aha (Aha)"
+      ]
+    },
+    {
+      "before_units": [
+        "pharaoh_se-Akara",
+        "ryholt-14.31"
+      ],
+      "label": "Akara",
+      "members": [
+        "pharaoh_se-Akara (Akara)",
+        "ryholt-14.31 (Akare)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-18.10",
+        "leprohon-leprohon-18.10a",
+        "leprohon-leprohon-18.10b"
+      ],
+      "label": "Akhenaten (Regnal Years 5 to 17)",
+      "members": [
+        "beckerath-18.10 (Amenophis IV. Ach-en-aten)",
+        "leprohon-leprohon-18.10a (Amenhotep IV (Regnal Years 1 to 5))",
+        "leprohon-leprohon-18.10b (Akhenaten (Regnal Years 5 to 17))",
+        "pharaoh_se-Amenhotep-IV (Amenhotep IV)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-21.02",
+        "leprohon-leprohon-21.03"
+      ],
+      "label": "Amen-em-nisu",
+      "members": [
+        "beckerath-21.02 (Amen-em-nisu)",
+        "leprohon-leprohon-21.03 (Amenemnisu)",
+        "pharaoh_se-Amenemnesut (Amenemnesut)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-12.01",
+        "leprohon-leprohon-12.01a",
+        "leprohon-leprohon-12.01b",
+        "pharaoh_se-Amenemhat-I"
+      ],
+      "label": "Amenemhat I",
+      "members": [
+        "beckerath-12.01 (Ammenemes I.)",
+        "leprohon-leprohon-12.01a (Amenemhat I (a))",
+        "leprohon-leprohon-12.01b (Amenemhat I (b))",
+        "pharaoh_se-Amenemhat-I (Amenemhat I)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-12.03",
+        "pharaoh_se-Amenemhat-II"
+      ],
+      "label": "Amenemhat II",
+      "members": [
+        "leprohon-leprohon-12.03 (Amenemhat II)",
+        "pharaoh_se-Amenemhat-II (Amenemhat II)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-12.06",
+        "leprohon-leprohon-12.06"
+      ],
+      "label": "Amenemhat III",
+      "members": [
+        "beckerath-12.06 (Ammenemes III.)",
+        "leprohon-leprohon-12.06 (Amenemhat III)",
+        "pharaoh_se-Amenemhat-III (Amenemhat III)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-18.07",
+        "leprohon-leprohon-18.07"
+      ],
+      "label": "Amenhotep II",
+      "members": [
+        "beckerath-18.07 (Amenophis II.)",
+        "leprohon-leprohon-18.07 (Amenhotep II)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-18.09",
+        "leprohon-leprohon-18.09",
+        "pharaoh_se-Amenhotep-III"
+      ],
+      "label": "Amenhotep III",
+      "members": [
+        "beckerath-18.09 (Amenophis III.)",
+        "leprohon-leprohon-18.09 (Amenhotep III)",
+        "pharaoh_se-Amenhotep-III (Amenhotep III)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-14.33",
+        "ryholt-14.33"
+      ],
+      "label": "Anati",
+      "members": [
+        "leprohon-leprohon-14.33 (Anati)",
+        "ryholt-14.33 (‘Anati)"
+      ]
+    },
+    {
+      "before_units": [
+        "pharaoh_se-Intef-VI",
+        "ryholt-17.4"
+      ],
+      "label": "Antef VII",
+      "members": [
+        "pharaoh_se-Intef-VI (Intef VI)",
+        "ryholt-17.4 (Antef VII)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-27.02",
+        "pharaoh_se-Darius-I"
+      ],
+      "label": "Darius I",
+      "members": [
+        "leprohon-leprohon-27.02 (Darius I)",
+        "pharaoh_se-Darius-I (Darius I)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-5.08",
+        "pharaoh_se-Djedkara-Isesi"
+      ],
+      "label": "Djedkara Isesi",
+      "members": [
+        "leprohon-leprohon-5.08 (Djedkare)",
+        "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-18.05",
+        "pharaoh_se-Hatshepsut"
+      ],
+      "label": "Hatshepsut",
+      "members": [
+        "beckerath-18.05 (Kgin.Hat-schepsut)",
+        "leprohon-leprohon-18.06 (Hatshepsut)",
+        "pharaoh_se-Hatshepsut (Hatshepsut)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-18.15",
+        "leprohon-leprohon-18.15"
+      ],
+      "label": "Horemheb",
+      "members": [
+        "beckerath-18.15 (Har-em-hab)",
+        "leprohon-leprohon-18.15 (Horemheb)",
+        "pharaoh_se-Horemheb (Horemheb)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-13.32",
+        "pharaoh_se-Wahibra-Jaib",
+        "ryholt-13.32"
+      ],
+      "label": "Ib-Iau",
+      "members": [
+        "leprohon-leprohon-13.32 (Ib-Iau)",
+        "pharaoh_se-Wahibra-Jaib (Wahibra Jaib)",
+        "ryholt-13.32 (Ibiaw)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-14.30",
+        "pharaoh_se-Khakara",
+        "ryholt-14.30"
+      ],
+      "label": "Khakare",
+      "members": [
+        "leprohon-leprohon-14.30 (Khakare)",
+        "pharaoh_se-Khakara (Khakara)",
+        "ryholt-14.30 (Khakare)"
+      ]
+    },
+    {
+      "before_units": [
+        "pharaoh_se-Khamudy",
+        "ryholt-15.6"
+      ],
+      "label": "Khamudi",
+      "members": [
+        "pharaoh_se-Khamudy (Khamudy)",
+        "ryholt-15.6 (Khamudi)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-13.22",
+        "pharaoh_se-Khendjer",
+        "ryholt-13.22"
+      ],
+      "label": "Khendjer",
+      "members": [
+        "leprohon-leprohon-13.22 (Khendjer)",
+        "pharaoh_se-Khendjer (Khendjer)",
+        "ryholt-13.22 (Khendjer)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-11.05",
+        "leprohon-leprohon-11b.05a",
+        "leprohon-leprohon-11b.05b",
+        "leprohon-leprohon-11b.05c"
+      ],
+      "label": "Ment-hotpe II.",
+      "members": [
+        "beckerath-11.05 (Ment-hotpe II.)",
+        "leprohon-leprohon-11b.05a (Mentuhotep II (a))",
+        "leprohon-leprohon-11b.05b (Mentuhotep II (b))",
+        "leprohon-leprohon-11b.05c (Mentuhotep II (c))",
+        "pharaoh_se-Mentuhotep-II (Mentuhotep II)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-leprohon-leprohon-13.50",
+        "ryholt-13.50"
+      ],
+      "label": "Mentuhotep V",
+      "members": [
+        "leprohon-leprohon-13.50 (Mentuhotep V)",
+        "pharaoh_se-Mentuhotep-V (Mentuhotep V)",
+        "ryholt-13.50 (Monthhotep V)"
+      ]
+    },
+    {
+      "before_units": [
+        "pharaoh_se-Mentuhotep-VI",
+        "ryholt-16.d"
+      ],
+      "label": "Mentuhotep VI",
+      "members": [
+        "pharaoh_se-Mentuhotep-VI (Mentuhotep VI)",
+        "ryholt-16.d (Monthhotep VI)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-19.04",
+        "pharaoh_se-Merenptah"
+      ],
+      "label": "Merenptah",
+      "members": [
+        "leprohon-leprohon-19.04 (Merenptah/Merneptah)",
+        "pharaoh_se-Merenptah (Merenptah)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-06.04",
+        "leprohon-leprohon-6.04"
+      ],
+      "label": "Merenre (I)",
+      "members": [
+        "beckerath-06.04 (Nemti-em-saf I.)",
+        "leprohon-leprohon-6.04 (Merenre (I))",
+        "pharaoh_se-Nemtiemsaf-I (Nemtiemsaf I)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-9-10b.06",
+        "pharaoh_se-Merikara"
+      ],
+      "label": "Merikara",
+      "members": [
+        "leprohon-leprohon-9-10b.06 (Merykare)",
+        "pharaoh_se-Merikara (Merikara)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-30.03",
+        "pharaoh_se-Nectanebo-II"
+      ],
+      "label": "Nakhthorhebyt",
+      "members": [
+        "beckerath-30.03 (Nektanebôs)",
+        "leprohon-leprohon-30.03 (Nakhthorhebyt)",
+        "pharaoh_se-Nectanebo-II (Nectanebo II)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-30.01",
+        "leprohon-leprohon-30.01",
+        "pharaoh_se-Nectanebo-I"
+      ],
+      "label": "Nakhtnebef",
+      "members": [
+        "beckerath-30.01 (Nektanebês)",
+        "leprohon-leprohon-30.01 (Nakhtnebef)",
+        "pharaoh_se-Nectanebo-I (Nectanebo I)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-3.04",
+        "pharaoh_se-Nebka"
+      ],
+      "label": "Nebka",
+      "members": [
+        "leprohon-leprohon-3.04 (Sanakht)",
+        "pharaoh_se-Nebka (Nebka)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-29.01",
+        "pharaoh_se-Neferites-I"
+      ],
+      "label": "Nefaarudu I",
+      "members": [
+        "leprohon-leprohon-29.01 (Nefaarudu I)",
+        "pharaoh_se-Neferites-I (Neferites I)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-5.05",
+        "pharaoh_se-Neferefra-Isi"
+      ],
+      "label": "Nefer(ef)re",
+      "members": [
+        "leprohon-leprohon-5.05 (Nefer(ef)re)",
+        "pharaoh_se-Neferefra-Isi (Neferefra Isi)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-14.28",
+        "pharaoh_se-Neferibra",
+        "ryholt-14.28"
+      ],
+      "label": "Neferibre",
+      "members": [
+        "leprohon-leprohon-14.28 (Neferibre)",
+        "pharaoh_se-Neferibra (Neferibra)",
+        "ryholt-14.28 (Neferibre)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-5.03",
+        "pharaoh_se-Neferirkara-I-Kakai"
+      ],
+      "label": "Neferirkara I Kakai",
+      "members": [
+        "leprohon-leprohon-5.03 (Neferirkare (I))",
+        "pharaoh_se-Neferirkara-I-Kakai (Neferirkara I Kakai)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-21.05",
+        "pharaoh_se-Osochor"
+      ],
+      "label": "Osochor",
+      "members": [
+        "beckerath-21.05 (Osochor)",
+        "pharaoh_se-Osochor (Osochor)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-23.03",
+        "pharaoh_se-Osorkon-IV"
+      ],
+      "label": "Osorkon IV",
+      "members": [
+        "beckerath-23.03 (Osorkon IV.)",
+        "kitchen-22.11 (Osorkon IV)",
+        "pharaoh_se-Osorkon-IV (Osorkon IV)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-21.09",
+        "leprohon-leprohon-21a.03"
+      ],
+      "label": "Pa-Seba-Kha-En-Niut III",
+      "members": [
+        "beckerath-21.09 (Psusennes)",
+        "leprohon-leprohon-21a.03 (Pa-Seba-Kha-En-Niut III)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-29.02",
+        "pharaoh_se-Psammuthis"
+      ],
+      "label": "Pasherimut",
+      "members": [
+        "leprohon-leprohon-29.02 (Pasherimut)",
+        "pharaoh_se-Psammuthis (Psammuthis)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-6.03",
+        "pharaoh_se-Pepi-I"
+      ],
+      "label": "Pepi I",
+      "members": [
+        "leprohon-leprohon-6.03 (Pepy I)",
+        "pharaoh_se-Pepi-I (Pepi I)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-25.02",
+        "leprohon-leprohon-25.03",
+        "pharaoh_se-Piye"
+      ],
+      "label": "Piankhy",
+      "members": [
+        "beckerath-25.02 (Pije)",
+        "kitchen-25.03 (Piankhy)",
+        "leprohon-leprohon-25.03 (Piye/Piankhy)",
+        "pharaoh_se-Piye (Piye)"
+      ]
+    },
+    {
+      "before_units": [
+        "kitchen-21H.03",
+        "kitchen-21H.04"
+      ],
+      "label": "Pinudjem I",
+      "members": [
+        "kitchen-21H.03 (Pinudjem I)",
+        "kitchen-21H.04 (Pinudjem I)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-26.01",
+        "leprohon-leprohon-26.01",
+        "pharaoh_se-Psamtik-I"
+      ],
+      "label": "Psametik I.",
+      "members": [
+        "beckerath-26.01 (Psametik I.)",
+        "leprohon-leprohon-26.01 (Psamtek I)",
+        "pharaoh_se-Psamtik-I (Psamtik I)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-26.03",
+        "leprohon-leprohon-26.03",
+        "pharaoh_se-Psamtik-II"
+      ],
+      "label": "Psametik II.",
+      "members": [
+        "beckerath-26.03 (Psametik II.)",
+        "leprohon-leprohon-26.03 (Psamtek II)",
+        "pharaoh_se-Psamtik-II (Psamtik II)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-1.07",
+        "pharaoh_se-Qaa"
+      ],
+      "label": "Qaa",
+      "members": [
+        "leprohon-leprohon-1.07 (Qaa)",
+        "pharaoh_se-Qaa (Qaa)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-19.03",
+        "leprohon-leprohon-19.03",
+        "pharaoh_se-Ramesses-II"
+      ],
+      "label": "Ramesses II",
+      "members": [
+        "beckerath-19.03 (Ramses II.)",
+        "leprohon-leprohon-19.03 (Ramesses II)",
+        "pharaoh_se-Ramesses-II (Ramesses II)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-20.03",
+        "cluster-leprohon-leprohon-20.03"
+      ],
+      "label": "Ramesses IV",
+      "members": [
+        "beckerath-20.03 (Ramses IV.)",
+        "leprohon-leprohon-20.03 (Ramesses IV)",
+        "pharaoh_se-Ramesses-IV (Ramesses IV)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-20.08",
+        "leprohon-leprohon-20.08"
+      ],
+      "label": "Ramesses IX",
+      "members": [
+        "beckerath-20.08 (Ramses IX.)",
+        "leprohon-leprohon-20.08 (Ramesses IX)",
+        "pharaoh_se-Ramesses-IX (Ramesses IX)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-20.04",
+        "leprohon-leprohon-20.04"
+      ],
+      "label": "Ramesses V",
+      "members": [
+        "beckerath-20.04 (Ramses V.)",
+        "leprohon-leprohon-20.04 (Ramesses V)",
+        "pharaoh_se-Ramesses-V (Ramesses V)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-20.05",
+        "leprohon-leprohon-20.05"
+      ],
+      "label": "Ramesses VI",
+      "members": [
+        "beckerath-20.05 (Ramses VI.)",
+        "leprohon-leprohon-20.05 (Ramesses VI)",
+        "pharaoh_se-Ramesses-VI (Ramesses VI)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-20.07",
+        "leprohon-leprohon-20.07"
+      ],
+      "label": "Ramesses VIII",
+      "members": [
+        "beckerath-20.07 (Ramses VIII.)",
+        "leprohon-leprohon-20.07 (Ramesses VIII)",
+        "pharaoh_se-Ramesses-VIII (Ramesses VIII)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-20.09",
+        "leprohon-leprohon-20.09"
+      ],
+      "label": "Ramesses X",
+      "members": [
+        "beckerath-20.09 (Ramses X.)",
+        "leprohon-leprohon-20.09 (Ramesses X)",
+        "pharaoh_se-Ramesses-X (Ramesses X)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-20.10",
+        "leprohon-leprohon-20.10"
+      ],
+      "label": "Ramesses XI",
+      "members": [
+        "beckerath-20.10 (Ramses XI.)",
+        "leprohon-leprohon-20.10 (Ramesses XI)",
+        "pharaoh_se-Ramesses-XI (Ramesses XI)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-25.04",
+        "kitchen-25.05"
+      ],
+      "label": "Schebitko",
+      "members": [
+        "beckerath-25.04 (Schebitko)",
+        "kitchen-25.05 (Shebitku)",
+        "leprohon-leprohon-25.05 (Shabataka/Shebitko)",
+        "pharaoh_se-Shebitko (Shebitko)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-pharaoh_se-Sekheperenra",
+        "leprohon-leprohon-14.22"
+      ],
+      "label": "Sekheperenre",
+      "members": [
+        "leprohon-leprohon-14.22 (Sekheperenre)",
+        "pharaoh_se-Sekheperenra (Sekheperenra)",
+        "ryholt-14.22 (Sekheperenre)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-12.02",
+        "leprohon-leprohon-12.02",
+        "pharaoh_se-Senusret-I"
+      ],
+      "label": "Senusret I",
+      "members": [
+        "beckerath-12.02 (Sesostris I.)",
+        "leprohon-leprohon-12.02 (Senwosret I)",
+        "pharaoh_se-Senusret-I (Senusret I)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-12.04",
+        "leprohon-leprohon-12.04"
+      ],
+      "label": "Senusret II",
+      "members": [
+        "beckerath-12.04 (Sesostris II.)",
+        "leprohon-leprohon-12.04 (Senwosret II)",
+        "pharaoh_se-Senusret-II (Senusret II)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-leprohon-leprohon-16a.05",
+        "pharaoh_se-Senusret-IV"
+      ],
+      "label": "Senwosret IV",
+      "members": [
+        "leprohon-leprohon-16a.05 (Senwosret IV)",
+        "pharaoh_se-Senusret-IV (Senusret IV)",
+        "ryholt-16.e (Senwosret IV)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-20.01",
+        "pharaoh_se-Setnakht"
+      ],
+      "label": "Sethnakht",
+      "members": [
+        "leprohon-leprohon-20.01 (Sethnakht)",
+        "pharaoh_se-Setnakht (Setnakht)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-19.02",
+        "leprohon-leprohon-19.02"
+      ],
+      "label": "Sethôs I.",
+      "members": [
+        "beckerath-19.02 (Sethôs I.)",
+        "leprohon-leprohon-19.02 (Sety I)",
+        "pharaoh_se-Seti-I (Seti I)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-19.05",
+        "pharaoh_se-Seti-II"
+      ],
+      "label": "Seti II",
+      "members": [
+        "leprohon-leprohon-19.05 (Sety II)",
+        "pharaoh_se-Seti-II (Seti II)"
+      ]
+    },
+    {
+      "before_units": [
+        "kitchen-23.08",
+        "leprohon-leprohon-23.09"
+      ],
+      "label": "Sheshonq VII",
+      "members": [
+        "kitchen-23.08 (Shoshenq VI)",
+        "leprohon-leprohon-23.09 (Sheshonq VII)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-beckerath-22.04",
+        "leprohon-leprohon-22.03"
+      ],
+      "label": "Shoshenq II",
+      "members": [
+        "beckerath-22.04 (Schoschenq II.)",
+        "kitchen-22.03 (Shoshenq II)",
+        "leprohon-leprohon-22.03 (Sheshonq IIa)",
+        "pharaoh_se-Shoshenq-II (Shoshenq II)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-22.09",
+        "kitchen-22.10",
+        "pharaoh_se-Shoshenq-V"
+      ],
+      "label": "Shoshenq V",
+      "members": [
+        "beckerath-22.09 (Schoschenq V.)",
+        "kitchen-22.10 (Shoshenq V)",
+        "pharaoh_se-Shoshenq-V (Shoshenq V)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-21.07",
+        "pharaoh_se-Siamun"
+      ],
+      "label": "Siamun",
+      "members": [
+        "leprohon-leprohon-21.07 (Siamun)",
+        "pharaoh_se-Siamun (Siamun)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-leprohon-leprohon-13.29",
+        "pharaoh_se-Sobekhotep-IV"
+      ],
+      "label": "Sobekhotep IV",
+      "members": [
+        "leprohon-leprohon-13.29 (Sobekhotep IV)",
+        "pharaoh_se-Sobekhotep-IV (Sobekhotep IV)",
+        "ryholt-13.29 (Sobkhotep IV)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-19.08",
+        "pharaoh_se-Tausret"
+      ],
+      "label": "Tausret",
+      "members": [
+        "leprohon-leprohon-19.08 (Tawosret)",
+        "pharaoh_se-Tausret (Tausret)"
+      ]
+    },
+    {
+      "before_units": [
+        "cluster-kitchen-24.01",
+        "kitchen-24E.04"
+      ],
+      "label": "Tefnakht I",
+      "members": [
+        "kitchen-24.01 (Tefnakht I)",
+        "kitchen-24E.04 (Tefnakht I)",
+        "leprohon-leprohon-24.01 (Tefnakht)",
+        "pharaoh_se-Tafnakht (Tafnakht)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-18.03",
+        "leprohon-leprohon-18.03",
+        "pharaoh_se-Thutmose-I"
+      ],
+      "label": "Thutmose I",
+      "members": [
+        "beckerath-18.03 (Tuthmosis I.)",
+        "leprohon-leprohon-18.03 (Thutmose I)",
+        "pharaoh_se-Thutmose-I (Thutmose I)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-18.06",
+        "leprohon-leprohon-18.05a",
+        "leprohon-leprohon-18.05b",
+        "pharaoh_se-Thutmose-III"
+      ],
+      "label": "Thutmose III",
+      "members": [
+        "beckerath-18.06 (Tuthmosis III.)",
+        "leprohon-leprohon-18.05a (Thutmose III (a))",
+        "leprohon-leprohon-18.05b (Thutmose III (b))",
+        "pharaoh_se-Thutmose-III (Thutmose III)"
+      ]
+    },
+    {
+      "before_units": [
+        "beckerath-18.13",
+        "leprohon-leprohon-18.13",
+        "pharaoh_se-Tutankhamun"
+      ],
+      "label": "Tutankhamun",
+      "members": [
+        "beckerath-18.13 (Tut-anch-amun)",
+        "leprohon-leprohon-18.13 (Tutankhamun)",
+        "pharaoh_se-Tutankhamun (Tutankhamun)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-6.02",
+        "pharaoh_se-Userkara"
+      ],
+      "label": "Userkara",
+      "members": [
+        "leprohon-leprohon-6.02 (Userkare (I))",
+        "pharaoh_se-Userkara (Userkara)"
+      ]
+    },
+    {
+      "before_units": [
+        "leprohon-leprohon-14.13",
+        "pharaoh_se-Webenra",
+        "ryholt-14.13"
+      ],
+      "label": "Webenra",
+      "members": [
+        "leprohon-leprohon-14.13 (Webenre I)",
+        "pharaoh_se-Webenra (Webenra)",
+        "ryholt-14.13 (Webenre)"
+      ]
+    }
+  ],
+  "newly_resolved_outside_the_three_kings": {
+    "Aha": 4,
+    "Amenemhat II": 12,
+    "Amenemhat III / Ammenemes III.": 28,
+    "Darius I": 3,
+    "Har-em-hab / Horemheb": 1,
+    "Hatshepsut / Kgin.Hat-schepsut": 4,
+    "Khendjer": 1,
+    "Pinudjem I": 3,
+    "Qaa": 2,
+    "Ramesses IX / Ramses IX.": 4,
+    "Ramesses VIII / Ramses VIII.": 1,
+    "Thutmose I / Tuthmosis I.": 27,
+    "Tut-anch-amun / Tutankhamun": 64
   },
   "resolved_mentions_moved_to_a_different_king": 0,
   "ruler_mentions": 11555,

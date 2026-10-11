@@ -163,6 +163,8 @@ class RulerRecord:
     authority: SourceAuthority
     cited_page: int | None = None
     cited_pdf_page: str | None = None
+    # Leprohon only: the king entry a suffixed row is printed under (book layout, see
+    # `_printed_under_entry`). Never an identity statement.
     stage_group: str | None = None
 
 
@@ -465,20 +467,31 @@ def load_leprohon(root: Path) -> SourceLoad:
                 authority=auth,
                 cited_page=_opt_int(cite, "printed_page", source=src, row_id=rid),
                 cited_pdf_page=str(pdf_page) if pdf_page is not None else None,
-                stage_group=(
-                    (_opt_str(r, "printed_under", source=src, row_id=rid) or display_name)
-                    if stage_suffix
-                    else None
-                ),
+                stage_group=_printed_under_entry(r, rid, stage_suffix),
             )
         )
         if stage_suffix and _opt_str(r, "printed_under", source=src, row_id=rid) is None:
-            if not rid.endswith(stage_suffix):
-                raise _err(src, rid, "stage_suffix", f"is {stage_suffix!r} but the id does "
-                           f"not end with it, so the parent king entry cannot be derived.")
-            stage_rows.setdefault(rid[: -len(stage_suffix)], []).append(f"{src}-{rid}")
+            stage_rows.setdefault(_printed_under_entry(r, rid, stage_suffix), []).append(
+                f"{src}-{rid}"
+            )
     _link_titulary_stages(out, stage_rows)
     return SourceLoad(source_id=src, records=out)
+
+
+def _printed_under_entry(r: dict, rid: str, stage_suffix: str | None) -> str | None:
+    """The Leprohon king entry a suffixed row is printed under — its book layout, one
+    meaning for both kinds of suffixed row: a consort sub-entry's ``printed_under`` pointer,
+    or a titulary stage's own numbered entry (``leprohon-18.10`` for 18.10a/18.10b). Which
+    rows are the same PERSON is carried by ``intra_source_same_as`` alone."""
+    if not stage_suffix:
+        return None
+    printed_under = _opt_str(r, "printed_under", source="leprohon", row_id=rid)
+    if printed_under is not None:
+        return printed_under
+    if not rid.endswith(stage_suffix):
+        raise _err("leprohon", rid, "stage_suffix", f"is {stage_suffix!r} but the id does "
+                   f"not end with it, so the parent king entry cannot be derived.")
+    return rid[: -len(stage_suffix)]
 
 
 def _link_titulary_stages(records: list[RulerRecord], stage_rows: dict[str, list[str]]) -> None:

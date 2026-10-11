@@ -133,14 +133,43 @@ def main() -> int:
             per_king[king]["before_artifacts"][b["status"]].add(artifact)
             per_king[king]["after_artifacts"][a["status"]].add(artifact)
 
-    # A mention resolved before must not resolve somewhere ELSE after: the rebuild may
-    # only merge a king's records, never move an existing link to a different king.
+    # A mention resolved before must not resolve to a target sharing none of its records
+    # after. This catches a link MOVED to a different king; it cannot catch a king's
+    # cluster absorbing a wrong record — that is what `merged_clusters` below is for.
     moved = 0
     for b, a in zip(before, after, strict=True):
         if b["status"] == "resolved" and a["status"] == "resolved":
             if not (_record_ids_of(before_graph, b["target_ids"][0])
                     & _record_ids_of(after_graph, a["target_ids"][0])):
                 moved += 1
+
+    # Every rebuilt cluster that joins more than one before-unit (a before cluster or a
+    # singleton record), with the units it joined: the complete list of merges the rebuild
+    # made, for review — a false merge can only appear here.
+    unit_of = {r["id"]: r["id"] for r in before_graph["rulers"]}
+    for cluster in before_graph["clusters"]:
+        for member in cluster["member_ids"]:
+            unit_of[member] = cluster["id"]
+    label_of = {r["id"]: r["display_name"] for r in after_graph["rulers"]}
+    merged_clusters = []
+    for cluster in after_graph["clusters"]:
+        units = sorted({unit_of[m] for m in cluster["member_ids"]})
+        if len(units) > 1:
+            merged_clusters.append({
+                "label": cluster["label"],
+                "members": [f"{m} ({label_of[m]})" for m in cluster["member_ids"]],
+                "before_units": units,
+            })
+
+    # Newly resolved mentions outside the three #342 kings, by the cluster they now resolve
+    # to (aggregate counts only).
+    other_new = collections.Counter()
+    for b, a in zip(before, after, strict=True):
+        if b["status"] != "resolved" and a["status"] == "resolved":
+            records = _record_ids_of(after_graph, a["target_ids"][0])
+            if not records & set(king_of):
+                labels = sorted({label_of[r] for r in records})
+                other_new[" / ".join(labels)] += 1
 
     result = {
         "schema_version": "hapi-342-ruler-ambiguity/1",
@@ -156,6 +185,10 @@ def main() -> int:
         "after": _summary(after),
         "status_transitions": dict(sorted(transitions.items())),
         "resolved_mentions_moved_to_a_different_king": moved,
+        "merged_clusters": sorted(merged_clusters, key=lambda c: c["label"]),
+        "newly_resolved_outside_the_three_kings": dict(
+            sorted(other_new.items(), key=lambda kv: (-kv[1], kv[0]))
+        ),
         "kings": {
             king: {
                 "mentions_before": dict(sorted(v["before"].items())),

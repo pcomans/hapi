@@ -1,13 +1,15 @@
 """Build-time pipeline: authority reconciled.jsonl → source-attributed claim graph →
-best-effort cross-source matcher (LIVE Anthropic reviewer) → gated identity links →
+best-effort cross-source matcher (live LLM reviewer: Anthropic, OpenRouter, or the Vercel AI
+Gateway) → gated identity links →
 committed JSON artifact consumed by the web-claimgraph Next.js app.
 
 Run (from pipeline/):
     uv run python -m pipeline.authority.claimgraph.build_graph              # live reviewer
     uv run python -m pipeline.authority.claimgraph.build_graph --limit 8    # thin-slice
     uv run python -m pipeline.authority.claimgraph.build_graph --deterministic  # explicit
+    uv run python -m pipeline.authority.claimgraph.build_graph --provider vercel  # #342 run
 
-The live reviewer is REQUIRED by default. If ANTHROPIC_API_KEY is missing the build STOPS
+The live reviewer is REQUIRED by default. If the provider's key is missing the build STOPS
 loudly rather than silently falling back (that would ship a compromised graph). The
 emitted claim-graph.json is the only thing the deployed app reads — no runtime API key.
 """

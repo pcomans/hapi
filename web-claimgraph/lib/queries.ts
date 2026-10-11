@@ -149,9 +149,12 @@ export async function getClaimsFor(subjectId: string): Promise<ClaimRow[]> {
        ORDER BY CASE predicate
          WHEN 'hapi:display_name' THEN 0
          WHEN 'hapi:prenomen' THEN 1
-         WHEN 'hapi:horus_name' THEN 2
-         WHEN 'hapi:nomen' THEN 3
-         WHEN 'hapi:in_dynastic_period' THEN 4 ELSE 5 END, is_variant, value_text`,
+         WHEN 'hapi:prenomen_epithet' THEN 2
+         WHEN 'hapi:horus_name' THEN 3
+         WHEN 'hapi:horus_name_epithet' THEN 4
+         WHEN 'hapi:nomen' THEN 5
+         WHEN 'hapi:nomen_epithet' THEN 6
+         WHEN 'hapi:in_dynastic_period' THEN 7 ELSE 8 END, is_variant, value_text`,
     [subjectId],
   );
 }

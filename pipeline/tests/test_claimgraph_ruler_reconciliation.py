@@ -88,24 +88,57 @@ def _pair(cands, a_id, b_id):
 def test_reign_starts_200_years_apart_are_an_era_conflict():
     ramesses = _rec("beckerath", "beckerath-1", "Ramses II.", dynasty=19, reign_start_bce=-1279)
     osorkon = _rec("pharaoh_se", "pharaoh_se-1", "Osorkon II", dynasty=22, reign_start_bce=-872)
+    # tolerance at 1279 BCE: 150 + 1279 // 20 = 213, so the limit is 214
     assert era_conflict(ramesses, osorkon) == (
-        "Reign starts 407 years apart (-1279 vs -872); >= 200 is distinct kings."
+        "Reign starts 407 years apart (-1279 vs -872); >= 214 is distinct kings."
     )
 
 
 def test_reign_starts_199_years_apart_are_not_an_era_conflict():
-    a = _rec("beckerath", "beckerath-1", "A", reign_start_bce=-1279)
-    b = _rec("pharaoh_se", "pharaoh_se-1", "B", reign_start_bce=-1080)
+    a = _rec("beckerath", "beckerath-1", "A", reign_start_bce=-900)
+    b = _rec("pharaoh_se", "pharaoh_se-1", "B", reign_start_bce=-701)
     assert era_conflict(a, b) is None
 
 
-def test_dynasties_two_apart_outside_the_contested_bands_are_an_era_conflict():
-    pepi = _rec("beckerath", "beckerath-1", "Pepi II.", dynasty=6)
-    neby = _rec("pharaoh_se", "pharaoh_se-1", "Neferkare Nebi", dynasty=8)
-    assert era_conflict(pepi, neby) == (
-        "Dynasties 6 and 8 are 2 apart and not within one contested numbering band "
-        "((13, 17), (21, 26))."
+def test_reign_gap_threshold_scales_with_antiquity():
+    """At 2000 BCE cross-framework dates may differ by 150 + 100 = 250 years: a 220-year
+    gap is chronology divergence, not proof of two kings."""
+    a = _rec("beckerath", "beckerath-1", "A", reign_start_bce=-2000)
+    b = _rec("pharaoh_se", "pharaoh_se-1", "B", reign_start_bce=-1780)
+    assert era_conflict(a, b) is None
+    c = _rec("pharaoh_se", "pharaoh_se-2", "C", reign_start_bce=-1749)
+    assert era_conflict(a, c) == (
+        "Reign starts 251 years apart (-2000 vs -1749); >= 251 is distinct kings."
     )
+
+
+def test_dynasties_two_apart_outside_the_contested_bands_are_an_era_conflict():
+    amenhotep = _rec("beckerath", "beckerath-1", "Amenophis III.", dynasty=18)
+    ramesses = _rec("leprohon", "leprohon-1", "Ramesses VI", dynasty=20)
+    assert era_conflict(amenhotep, ramesses) == (
+        "Dynasties 18 and 20 are 2 apart and not within one contested numbering band "
+        "((6, 10), (13, 17), (21, 26))."
+    )
+
+
+@pytest.mark.parametrize(
+    ("a_id", "b_id"),
+    [
+        # Leprohon "Dynasty 8a" = pharaoh.se Dyn 10: the same kings in the same order.
+        ("leprohon-leprohon-8a.01", "pharaoh_se-Sekhemkara-I"),
+        ("leprohon-leprohon-8a.02", "pharaoh_se-Wadjkara"),
+        ("leprohon-leprohon-8a.04", "pharaoh_se-Imhotep"),
+        ("leprohon-leprohon-8a.05", "pharaoh_se-Hotep"),
+        ("leprohon-leprohon-8a.06", "pharaoh_se-Khui"),
+        ("leprohon-leprohon-8a.07", "pharaoh_se-Isu"),
+        ("leprohon-leprohon-8a.08", "pharaoh_se-Iytenu"),
+        # Ryholt's disputed Netjerkare = Nitocris equation: review, never reject.
+        ("leprohon-leprohon-6.07", "pharaoh_se-Netjerikara"),
+    ],
+)
+def test_first_intermediate_period_renumbering_is_not_an_era_conflict(a_id, b_id):
+    by_id = {r.local_id: r for r in load_all_sources(AUTHORITY_ROOT).records}
+    assert era_conflict(by_id[a_id], by_id[b_id]) is None
 
 
 def test_adjacent_dynasties_are_not_an_era_conflict():
@@ -128,7 +161,7 @@ def test_bands_do_not_bridge_into_each_other():
     b = _rec("kitchen", "kitchen-1", "B", dynasty=21)
     assert era_conflict(a, b) == (
         "Dynasties 17 and 21 are 4 apart and not within one contested numbering band "
-        "((13, 17), (21, 26))."
+        "((6, 10), (13, 17), (21, 26))."
     )
 
 
@@ -151,7 +184,7 @@ def test_era_conflict_is_rejected_deterministically():
     assert verdict.reviewer == "deterministic"
     assert verdict.reason == (
         "Era gate (ADR-020 amendment 2026-10-10): Reign starts 407 years apart "
-        "(-1279 vs -872); >= 200 is distinct kings."
+        "(-1279 vs -872); >= 214 is distinct kings."
     )
 
 
@@ -200,6 +233,45 @@ def test_name_plus_added_epithet_matches_the_compound_another_source_prints():
     (cand,) = generate_candidates([leprohon, pharaoh])
     assert cand.basis == "prenomen"
     assert "wsrmtrstpnr" in cand.shared_prenomen_keys
+
+
+def test_only_the_primary_throne_name_is_compounded_with_added_epithets():
+    """Thutmose III's late epithet must not be grafted onto his early variant."""
+    leprohon = _rec("leprohon", "leprohon-18.05", "Thutmose III", dynasty=18,
+                    prenomina=[NameForm("men kheper ra", "mn ḫpr rꜥ"),
+                               NameForm("men kheper ka ra", "mn ḫpr kꜣ rꜥ"),
+                               _epithet("iwa ra", "iwꜥ rꜥ")])
+    other = _rec("pharaoh_se", "pharaoh_se-X", "X", dynasty=18,
+                 prenomina=[NameForm("Men kheper ka Ra iwa Ra", "mn-ḫpr-kꜣ-rꜥ iwꜥ-rꜥ")])
+    assert generate_candidates([leprohon, other]) == []
+
+
+def test_birth_names_are_not_compounded_with_added_epithets():
+    """Amenhotep II + ḥqꜣ wꜣst spells Amenhotep III's nomen; it must not become a key."""
+    amenhotep_ii = _rec("leprohon", "leprohon-18.07", "Amenhotep II", dynasty=18,
+                        nomina=[NameForm("imen hetep", "imn ḥtp"),
+                                _epithet("netjer heqa iunu", "nṯr ḥqꜣ iwnw")])
+    other = _rec("pharaoh_se", "pharaoh_se-X", "Unrelated", dynasty=18,
+                 nomina=[NameForm("imen hetep netjer heqa iunu", "imn-ḥtp nṯr-ḥqꜣ-iwnw")])
+    assert generate_candidates([amenhotep_ii, other]) == []
+
+
+@pytest.mark.parametrize(
+    "fragment", ["Djed /// Re", "Senefer[...]re", "It...", "//-kꜣ-//", "[..]-ḏfꜣ-rꜥ"]
+)
+def test_fragmentary_throne_names_never_corroborate(fragment):
+    a = _rec("leprohon", "leprohon-1", "A", prenomina=[fragment])
+    b = _rec("ryholt", "ryholt-1", "B", prenomina=[fragment])
+    cands = generate_candidates([a, b])
+    assert all(c.basis == "name_only" for c in cands)
+
+
+def test_alternative_readings_are_not_fragments():
+    """A lone slash separates alternative readings (Beckerath `A-qen-en-rê/A-user-rê`)."""
+    a = _rec("beckerath", "beckerath-1", "Apophis", prenomina=["A-qen-en-rê/A-user-rê"])
+    b = _rec("ryholt", "ryholt-1", "Apepi", prenomina=["A-qen-en-rê/A-user-rê"])
+    (cand,) = generate_candidates([a, b])
+    assert cand.basis == "prenomen"
 
 
 def test_loader_marks_added_epithets_from_the_transcription_convention():
@@ -304,11 +376,58 @@ def test_reused_throne_name_stays_trapped_with_a_same_dynasty_bearer():
     assert _pair(cands, "beckerath-18.09", "leprohon-18.09").homonym_trap == "nbmaatra"
 
 
-def test_reused_throne_name_stays_trapped_with_an_undated_bearer():
+def test_an_undated_bearer_does_not_block_but_its_own_pair_stays_trapped():
+    """pharaoh.se's unplaced Ini II (Menkheperre, no dynasty) must not stop Thutmose III
+    reaching review; its own pairs with Thutmose III share no dynasty and stay trapped."""
     undated = _rec("leprohon", "leprohon-x", "Undated Nebmaatre",
                    prenomina=[NameForm("neb maat ra", "nb mꜣꜥt rꜥ")])
     cands = generate_candidates(_nebmaatre_records(undated))
-    assert _pair(cands, "beckerath-18.09", "leprohon-18.09").homonym_trap == "nbmaatra"
+    assert _pair(cands, "beckerath-18.09", "leprohon-18.09").homonym_trap is None
+    assert _pair(cands, "beckerath-18.09", "leprohon-x").homonym_trap == "nbmaatra"
+
+
+def test_a_skeleton_collision_does_not_veto_an_unambiguous_full_name():
+    """Thutmose IV's Menkheperure and Thutmose III's Menkheperre share the vowel-less
+    skeleton mnkhprr; the full Menkheperre is still borne by only one Dyn 18 king."""
+    recs = [
+        _rec("beckerath", "beckerath-18.06", "Tuthmosis III.", dynasty=18,
+             prenomina=["Men-cheper-rê"]),
+        _rec("pharaoh_se", "pharaoh_se-Thutmose-III", "Thutmose III", dynasty=18,
+             prenomina=[NameForm("Men kheper Ra", "mn-ḫpr-rꜥ")]),
+        _rec("pharaoh_se", "pharaoh_se-Thutmose-IV", "Thutmose IV", dynasty=18,
+             prenomina=[NameForm("Men kheperu Ra", "mn-ḫprw-rꜥ")]),
+    ]
+    cands = generate_candidates(recs)
+    assert _pair(cands, "beckerath-18.06", "pharaoh_se-Thutmose-III").homonym_trap is None
+
+
+def test_a_pair_sharing_only_ambiguous_reused_names_stays_trapped():
+    """Every shared reused name is ambiguous in the contested band: still trapped, even
+    though the pair also shares a compound that is off the homonym list."""
+    recs = [
+        _rec("kitchen", "kitchen-23.03", "Osorkon III", dynasty=23,
+             prenomina=["Usermaatre", "Usermaatre Setepenamun"]),
+        _rec("pharaoh_se", "pharaoh_se-Takelot-III", "Takelot III", dynasty=23,
+             prenomina=["User Maat Ra", "User Maat Ra setep en Amun"]),
+    ]
+    (cand,) = generate_candidates(recs)
+    assert cand.homonym_trap is not None
+
+
+def test_stage_rows_of_one_king_are_one_bearer_of_a_reused_name():
+    recs = [
+        _rec("beckerath", "beckerath-18.05", "Thutmosis III.", dynasty=18,
+             prenomina=["Men-cheper-rê"]),
+        _rec("leprohon", "leprohon-18.05a", "Thutmose III (a)", dynasty=18,
+             prenomina=[NameForm("men kheper ra", "mn ḫpr rꜥ")],
+             same_as=["leprohon-18.05b"]),
+        _rec("leprohon", "leprohon-18.05b", "Thutmose III (b)", dynasty=18,
+             prenomina=[NameForm("men kheper ra", "mn ḫpr rꜥ")],
+             same_as=["leprohon-18.05a"]),
+    ]
+    cands = generate_candidates(recs)
+    assert _pair(cands, "beckerath-18.05", "leprohon-18.05a").homonym_trap is None
+    assert _pair(cands, "beckerath-18.05", "leprohon-18.05b").homonym_trap is None
 
 
 def test_reused_throne_name_stays_trapped_in_a_contested_band():
@@ -416,6 +535,13 @@ def _committed_reviewable():
         ("leprohon-leprohon-18.10b", "pharaoh_se-Amenhotep-IV"),
         ("beckerath-19.03", "pharaoh_se-Ramesses-II"),
         ("leprohon-leprohon-19.03", "pharaoh_se-Ramesses-II"),
+        ("beckerath-18.06", "leprohon-leprohon-18.05a"),
+        ("beckerath-18.06", "leprohon-leprohon-18.05b"),
+        ("beckerath-18.06", "pharaoh_se-Thutmose-III"),
+        ("leprohon-leprohon-18.05a", "pharaoh_se-Thutmose-III"),
+        ("leprohon-leprohon-18.05b", "pharaoh_se-Thutmose-III"),
+        ("beckerath-12.01", "pharaoh_se-Amenemhat-I"),
+        ("leprohon-leprohon-12.01a", "pharaoh_se-Amenemhat-I"),
     ],
 )
 def test_committed_same_king_pairs_reach_the_reviewer(a_id, b_id):
@@ -427,10 +553,10 @@ def test_committed_same_king_pairs_reach_the_reviewer(a_id, b_id):
     ("a_id", "b_id", "reason"),
     [
         ("beckerath-19.03", "pharaoh_se-Osorkon-II",
-         "Reign starts 407 years apart (-1279 vs -872); >= 200 is distinct kings."),
+         "Reign starts 407 years apart (-1279 vs -872); >= 214 is distinct kings."),
         ("leprohon-leprohon-20.05", "pharaoh_se-Amenhotep-III",
          "Dynasties 20 and 18 are 2 apart and not within one contested numbering band "
-         "((13, 17), (21, 26))."),
+         "((6, 10), (13, 17), (21, 26))."),
     ],
 )
 def test_committed_homonym_pairs_are_era_rejected(a_id, b_id, reason):
@@ -529,7 +655,12 @@ class _FakeHttpResponse:
         return self._payload
 
 
-def _gateway_body(final_provider, content='{"outcome":"approved","reason":"same king"}'):
+def _gateway_body(
+    final_provider, content='{"outcome":"approved","reason":"same king"}', build="aeb56401"
+):
+    metadata = {"gateway": {"routing": {"finalProvider": final_provider}}}
+    if build is not None:
+        metadata[final_provider] = {"systemFingerprint": build}
     return {
         "id": "gen_1",
         "model": "deepseek/deepseek-v4.1-flash",
@@ -540,7 +671,7 @@ def _gateway_body(final_provider, content='{"outcome":"approved","reason":"same 
                 "role": "assistant",
                 "content": content,
                 "reasoning": "Both records give the same throne name and dynasty.",
-                "provider_metadata": {"gateway": {"routing": {"finalProvider": final_provider}}},
+                "provider_metadata": metadata,
             },
         }],
         "usage": {"prompt_tokens": 400, "completion_tokens": 90, "cost": 0.0001},
@@ -582,7 +713,7 @@ def test_vercel_reviewer_sends_the_pinned_request_and_persists_the_response(monk
     (interaction,) = verdict.interactions
     assert interaction.provider == "vercel"
     assert interaction.requested_model == "deepseek/deepseek-v4.1-flash"
-    assert interaction.model_snapshot == "deepseek/deepseek-v4.1-flash"
+    assert interaction.model_snapshot == "deepseek/deepseek-v4.1-flash@aeb56401"
     assert interaction.raw_response == _gateway_body("deepseek")
     assert interaction.call_error is None
 
@@ -603,7 +734,108 @@ def test_vercel_response_served_by_another_provider_is_refused(monkeypatch):
     assert err.interaction.raw_response == _gateway_body("fireworks")
 
 
+def test_vercel_response_without_the_serving_build_is_refused(monkeypatch):
+    import httpx
+
+    body = _gateway_body("deepseek", build=None)
+    monkeypatch.setattr(httpx, "post", lambda *args, **kw: _FakeHttpResponse(body))
+    cand, a, b = _amasis_pair()
+    with pytest.raises(ReviewerProvenanceError) as excinfo:
+        review_with_vercel("key", cand, a, b)
+    assert excinfo.value.interaction.call_error == (
+        "Vercel AI Gateway response does not report the 'deepseek' build "
+        "(provider_metadata.deepseek.systemFingerprint)."
+    )
+    assert excinfo.value.interaction.raw_response == body
+
+
+def test_reviewer_prompt_lists_added_epithets_apart_from_names():
+    a = _rec("leprohon", "leprohon-19.03", "Ramesses II", dynasty=19,
+             prenomina=[NameForm("weser maat ra", "wsr mꜣꜥt rꜥ"),
+                        _epithet("setep en ra", "stp.n rꜥ")])
+    b = _rec("pharaoh_se", "pharaoh_se-Ramesses-II", "Ramesses II", dynasty=19,
+             prenomina=[NameForm("User Maat Ra, setep en Ra", "wsr-mꜢꜤt-rꜤ stp.n-rꜤ")])
+    (cand,) = generate_candidates([a, b])
+    prompt = _build_user_prompt(cand, a, b)
+    assert "throne_names/prenomina: weser maat ra\n" in prompt
+    assert "epithets added to the throne name: setep en ra\n" in prompt
+    assert "throne_names/prenomina: User Maat Ra, setep en Ra\n" in prompt
+
+
 def test_vercel_mode_requires_api_key():
     recs = [_rec("leprohon", "leprohon-12", "X", prenomina=["Khnemibre"])]
     with pytest.raises(RuntimeError, match="'llm'/vercel mode without an api_key"):
         verdicts_mod.resolve_matches(recs, mode="llm", provider="vercel", api_key=None)
+
+
+# --- added-epithet convention: drift guard over the committed Leprohon rows -----------
+
+# Leprohon notes that MENTION an epithet but are attached to a real name, not to an
+# added-epithet entry (reviewed 2026-10-11; each is the entry's own name, with a note on
+# how an epithet is written beside it, or on a different element).
+_EPITHET_MENTION_NOT_AN_EPITHET_ENTRY = {
+    ("leprohon-6.01", "birth_names", 1): "sꜣ rꜥ sometimes written inside Teti's cartouche",
+    ("leprohon-6.03", "birth_names", 1): "sꜣ rꜥ sometimes written inside the cartouche",
+    ("leprohon-6.05", "birth_names", 1): "sA ra sometimes precedes the name",
+    ("leprohon-8.12", "later_cartouche_names", 1): "Turin adds Sri to the name",
+    ("leprohon-11a.01", "birth_names", 1): "priestly title; epithets inside the cartouche",
+    ("leprohon-11a.02", "birth_names", 1): "sꜣ rꜥ added within the cartouche at Tod",
+    ("leprohon-11b.05a", "birth_names", 1): "the epithet is written within the cartouche",
+    ("leprohon-11b.05c", "golden_horus_names", 1): "epithet on the Horus name elsewhere",
+    ("leprohon-16.04", "birth_names", 1): "Leprohon prints it as the name; doubt noted",
+    ("leprohon-20.06", "horus_names", 2): "an additional Horus NAME; epithet after serekh",
+    ("leprohon-21.04", "golden_horus_names", 1): "reading of smA tAw; epithets in general",
+    ("leprohon-21a.03", "throne_names", 1): "High Priest preamble title with epithets",
+    ("leprohon-22.13", "birth_names", 1): "n(y)-sw-bity sometimes before the name",
+    ("leprohon-22.13", "throne_names", 1): "n(y)-sw-bity sometimes before the name",
+    ("leprohon-23.03", "birth_names", 1): "pr-aA sometimes written before the name",
+    ("leprohon-23.04", "birth_names", 1): "pr-aA sometimes written before the name",
+    ("leprohon-33.04", "golden_horus_names", 1): "'twice-great Thoth' is the god's epithet",
+}
+
+
+def test_every_leprohon_epithet_note_is_classified_or_reviewed():
+    """Fails when a committed Leprohon note mentions an epithet without following the
+    added-epithet convention and without a reviewed entry above — a new transcription
+    pattern must be decided, not silently loaded as a name."""
+    import re
+
+    from pipeline.authority.claimgraph.sources import _ADDED_EPITHET_NOTE_PREFIXES
+
+    path = AUTHORITY_ROOT / "leprohon-2013-titulary" / "reconciled.jsonl"
+    unreviewed, stale = [], set(_EPITHET_MENTION_NOT_AN_EPITHET_ENTRY)
+    for line in path.read_text(encoding="utf-8").splitlines():
+        row = json.loads(line)
+        for slot, entries in row.items():
+            if not (slot.endswith("_names") and isinstance(entries, list)):
+                continue
+            for entry in entries:
+                note = entry.get("source_note") if isinstance(entry, dict) else None
+                if not note or not re.search("epithet", note, re.IGNORECASE):
+                    continue
+                if note.startswith(_ADDED_EPITHET_NOTE_PREFIXES):
+                    continue
+                key = (row["leprohon_id"], slot, entry.get("variant_index"))
+                if key in _EPITHET_MENTION_NOT_AN_EPITHET_ENTRY:
+                    stale.discard(key)
+                else:
+                    unreviewed.append(key)
+    assert unreviewed == []
+    assert stale == set()
+
+
+def test_committed_added_epithet_count():
+    records = load_all_sources(AUTHORITY_ROOT).records
+    counts = {
+        slot: sum(f.is_added_epithet for r in records for f in getattr(r, slot))
+        for slot in ("prenomina", "horus_names", "nomina")
+    }
+    assert counts == {"prenomina": 126, "horus_names": 1, "nomina": 130}
+
+
+def test_stage_group_is_the_printed_under_entry_for_stages_and_consorts():
+    by_id = {r.local_id: r for r in load_all_sources(AUTHORITY_ROOT).records}
+    assert by_id["leprohon-leprohon-18.10a"].stage_group == "leprohon-18.10"
+    assert by_id["leprohon-leprohon-18.10b"].stage_group == "leprohon-18.10"
+    assert by_id["leprohon-leprohon-33.02a"].stage_group == "leprohon-33.02"
+    assert by_id["leprohon-leprohon-18.09"].stage_group is None

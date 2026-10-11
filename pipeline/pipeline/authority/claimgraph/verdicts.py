@@ -313,8 +313,10 @@ def resolve_matches(
     repeated error — no silent fallback) or "deterministic" (the committed corroborate-or-
     escalate policy; an explicitly-chosen mode, never an auto-substitute).
 
-    ``provider`` selects the live reviewer backend: "anthropic" (needs ``client``) or
-    "openrouter" (needs ``api_key``); ``reviewer_fn`` overrides both (used by tests). In
+    ``provider`` selects the live reviewer backend: "anthropic" (needs ``client``),
+    "openrouter" or "vercel" (each needs ``api_key``); ``reviewer_fn`` overrides all of
+    them (used by tests). Era-gated candidates are rejected deterministically and, like
+    name-only candidates, never reach the reviewer. In
     "llm" mode, name-only candidates are escalated deterministically and NEVER sent to the
     reviewer — only prenomen/Horus-corroborated candidates cost a call. Reviews run
     concurrently (``max_workers`` threads); any candidate still failing after retries fails
@@ -450,7 +452,9 @@ def resolve_matches(
             )
             return c.id, v
 
-        aborted_fh = open(aborted_path, "a", encoding="utf-8") if aborted_path else None
+        # Opened on the first abort only: an empty evidence file for a run that had no
+        # failed attempts is noise that looks like (missing) evidence.
+        aborted_fh = None
         try:
             with ThreadPoolExecutor(max_workers=max_workers) as pool:
                 futures = {pool.submit(work, c): c for c in todo}
@@ -463,7 +467,9 @@ def resolve_matches(
                         # still dies — it just does not die with the evidence unwritten.
                         with lock:
                             aborted.append(err)
-                            if aborted_fh:
+                            if aborted_path:
+                                if aborted_fh is None:
+                                    aborted_fh = open(aborted_path, "a", encoding="utf-8")
                                 aborted_fh.write(
                                     json.dumps(err.as_record(), ensure_ascii=False) + "\n"
                                 )

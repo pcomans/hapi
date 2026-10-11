@@ -221,8 +221,10 @@ def review_deterministic(candidate: Candidate, forced_escalate: bool) -> Verdict
 # --- live LLM path ---------------------------------------------------------
 
 
-def _names(forms) -> str:
-    vals = [f.surface or f.translit or "" for f in forms]
+def _names(forms, *, epithets: bool = False) -> str:
+    """The slot's names, or (``epithets``) the epithets the source records as added to
+    them — never mixed, so the reviewer does not read an epithet as a name."""
+    vals = [f.surface or f.translit or "" for f in forms if f.is_added_epithet == epithets]
     vals = [v for v in vals if v]
     return "; ".join(vals) if vals else "(none)"
 
@@ -236,8 +238,11 @@ def _record_context(rec: RulerRecord) -> str:
             f"dynasty: {rec.dynasty if rec.dynasty is not None else '(unknown)'} "
             f"({rec.dynasty_label or '?'})",
             f"throne_names/prenomina: {_names(rec.prenomina)}",
+            f"epithets added to the throne name: {_names(rec.prenomina, epithets=True)}",
             f"horus_names: {_names(rec.horus_names)}",
+            f"epithets added to the Horus name: {_names(rec.horus_names, epithets=True)}",
             f"nomina: {_names(rec.nomina)}",
+            f"epithets added to the birth name: {_names(rec.nomina, epithets=True)}",
             f"reign_bce: {rec.reign_start_bce if rec.reign_start_bce is not None else '?'}"
             f"..{rec.reign_end_bce if rec.reign_end_bce is not None else '?'}",
         ]
@@ -486,6 +491,29 @@ def _served_by(body: dict) -> str | None:
         return None
 
 
+def _served_snapshot(provider: str, body: Any) -> str | None:
+    """The model build that served a response, as precisely as the provider reports it.
+
+    The gateway's ``model`` is the requested alias (deepseek/deepseek-v4.1-flash has no
+    dated snapshot). DeepSeek's own ``systemFingerprint`` identifies the serving build — it
+    was identical on all 1,087 calls of the #342 run, while the top-level
+    ``system_fingerprint`` changes per request — so it is recorded with the alias. Returns
+    ``None`` when a gateway response lacks the build; the caller refuses such a response.
+    A run that mixes builds is caught by the committed-run test, not hidden here."""
+    if not isinstance(body, dict):
+        return None
+    model = body.get("model")
+    if provider != PROVIDER_VERCEL:
+        return model
+    try:
+        build = body["choices"][0]["message"]["provider_metadata"][VERCEL_PINNED_PROVIDER][
+            "systemFingerprint"
+        ]
+    except (KeyError, IndexError, TypeError):
+        return None
+    return f"{model}@{build}" if model and build else None
+
+
 def _review_with_chat_completions(
     provider: str,
     api_key: str,
@@ -566,11 +594,16 @@ def _review_with_chat_completions(
         raise ReviewerParseError(
             interaction.parse_error, interaction=interaction, request_digest=digest
         )
-    interaction = _interaction(body, body.get("model") if isinstance(body, dict) else None)
-    if provider == PROVIDER_VERCEL and _served_by(body) != VERCEL_PINNED_PROVIDER:
+    interaction = _interaction(body, _served_snapshot(provider, body))
+    if provider == PROVIDER_VERCEL and (
+        _served_by(body) != VERCEL_PINNED_PROVIDER or interaction.model_snapshot is None
+    ):
         interaction.call_error = (
             f"{label} served this response from {_served_by(body)!r}, not the pinned "
             f"{VERCEL_PINNED_PROVIDER!r}."
+            if _served_by(body) != VERCEL_PINNED_PROVIDER
+            else f"{label} response does not report the {VERCEL_PINNED_PROVIDER!r} build "
+            f"(provider_metadata.{VERCEL_PINNED_PROVIDER}.systemFingerprint)."
         )
         raise ReviewerProvenanceError(
             f"{interaction.call_error} Candidate {candidate.id}; refusing its verdict.",

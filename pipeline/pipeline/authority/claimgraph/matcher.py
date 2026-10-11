@@ -15,6 +15,7 @@ to issue #306 to replace):
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from .normalize import NameForm, key_set, keys_for_form
@@ -72,17 +73,32 @@ _EARLY_DYNASTY_MAX = 3  # Re-formed prenomen not yet stable (ADR-020 carve-out)
 # and the four Dyn 22/23 kings who reused his throne name are ~400 years apart, and
 # Leprohon's Amenhotep III and Dyn 6 Merenre ~900. Two independent tests, either suffices:
 #
-# * reign starts >= ERA_MAX_REIGN_START_GAP_YEARS apart. Measured on the committed sources
-#   (2026-10-10): no approved link and no pair of dynasty-adjacent records that denote one
-#   king differs by 200+ years; every such pair is two distinct kings.
+# * reign starts at least ERA_MIN_REIGN_START_GAP_YEARS apart AND beyond the period-scaled
+#   cross-chronology tolerance (`chronology_tolerance`, the same tolerance the reviewer's
+#   far-apart hint uses — one chronology rule, not two). Cross-framework dates diverge with
+#   antiquity (Beckerath opens Dyn 1 ~3032 BCE vs Hornung–Krauss–Warburton ~2900), so the
+#   threshold grows with age.
 # * dynasty numbers more than ERA_MAX_DYNASTY_GAP apart — EXCEPT when both fall inside the
-#   same contested band. In the Second and Third Intermediate / Late periods the sources
-#   number parallel lines differently (Takelot III is Dyn 22 in Beckerath, Dyn 23 in
-#   Kitchen; Kitchen files Necho I under Dyn 24, Leprohon under Dyn 26), so there a
-#   dynasty gap is not evidence of distinct kings and the pair goes on to review.
-ERA_MAX_REIGN_START_GAP_YEARS = 200
+#   same contested band, where the sources number kings or parallel lines differently and
+#   a dynasty gap is not evidence of distinct kings (the pair goes on to review):
+#   - Dyn 6–10: Leprohon files the late Memphite kings as "Dynasty 8a" where pharaoh.se
+#     lists the same kings, in the same order, as Dyn 10 (Wadjkare, Sekhemkare, Imhotep,
+#     Khui, Isu, Iytjenu …); pharaoh.se's Dyn 8 Netjerikare is the "Nitocris" Ryholt
+#     equates with Leprohon's Dyn 6 Neith-Iqeret; Merykare is Dyn 9 or 10 by source.
+#   - Dyn 13–17: Ryholt's Second Intermediate Period numbering differs from Beckerath's.
+#   - Dyn 21–26: Takelot III is Dyn 22 in Beckerath, Dyn 23 in Kitchen; Kitchen files
+#     Necho I under Dyn 24, Leprohon under Dyn 26.
+# Every era-rejected pair that an earlier graph approved or escalated is listed and
+# reviewed in docs/evaluations/ruler-cluster-reconciliation-342/results/.
+ERA_MIN_REIGN_START_GAP_YEARS = 200
 ERA_MAX_DYNASTY_GAP = 1
-CONTESTED_DYNASTY_BANDS: tuple[tuple[int, int], ...] = ((13, 17), (21, 26))
+CONTESTED_DYNASTY_BANDS: tuple[tuple[int, int], ...] = ((6, 10), (13, 17), (21, 26))
+
+
+def chronology_tolerance(a_bce: int, b_bce: int) -> int:
+    """Years two absolute dates for one reign may differ across chronological frameworks;
+    grows with antiquity (ADR-020 §6)."""
+    return 150 + max(abs(a_bce), abs(b_bce)) // 20
 
 
 def _contested_band(dynasty: int) -> tuple[int, int] | None:
@@ -94,10 +110,12 @@ def era_conflict(a: RulerRecord, b: RulerRecord) -> str | None:
     ``None`` when the era evidence is compatible or absent (absence never rejects)."""
     if a.reign_start_bce is not None and b.reign_start_bce is not None:
         gap = abs(a.reign_start_bce - b.reign_start_bce)
-        if gap >= ERA_MAX_REIGN_START_GAP_YEARS:
+        limit = max(ERA_MIN_REIGN_START_GAP_YEARS,
+                    chronology_tolerance(a.reign_start_bce, b.reign_start_bce) + 1)
+        if gap >= limit:
             return (
                 f"Reign starts {gap} years apart ({a.reign_start_bce} vs "
-                f"{b.reign_start_bce}); >= {ERA_MAX_REIGN_START_GAP_YEARS} is distinct kings."
+                f"{b.reign_start_bce}); >= {limit} is distinct kings."
             )
     if a.dynasty is not None and b.dynasty is not None:
         gap = abs(a.dynasty - b.dynasty)
@@ -141,36 +159,67 @@ def _join(a: str | None, b: str | None) -> str | None:
     return f"{a} {b}" if a and b else None
 
 
-def _matchable(forms: list[NameForm]) -> list[NameForm]:
+def _matchable(forms: list[NameForm], *, compound: bool = False) -> list[NameForm]:
     """The forms a name slot contributes to matching.
 
     An epithet the source records as ADDED to a name ("Whom Re has loved", mr.n rꜥ) is not
     itself a name: alone as a key it collides with any king whose name it happens to spell
     (Amenhotep III's epithet mr.n rꜥ vs the Dyn 6 throne name Merenre), so it never
-    matches alone. What the source states is that the epithet was written WITH the name,
-    so each name + added epithet is matched as the compound it forms: Leprohon's
-    Ramesses II throne name wsr mꜣꜥt rꜥ plus his added epithet stp.n rꜥ is the
-    Usermaatre-setepenre that Beckerath and pharaoh.se print as one throne name. A
-    compound only ever corroborates when another source independently prints it."""
+    matches alone.
+
+    With ``compound`` (throne names only), the slot's PRIMARY name — the first non-epithet
+    form, the source's variant 1 — is also matched together with each added epithet, as the
+    cartouche the source says was written: Leprohon's Ramesses II throne name wsr mꜣꜥt rꜥ
+    plus his added epithet stp.n rꜥ is the Usermaatre-setepenre that Beckerath and
+    pharaoh.se print as one throne name. Only the primary name is compounded, because an
+    epithet the source attaches to the slot is not attested with every variant (Thutmose
+    III's year-22 epithets never stood with his early Menkheperkare). Birth names are never
+    compounded: epithets such as ḥqꜣ wꜣst turn one king's birth name into another's
+    (Amenhotep II + ḥqꜣ wꜣst spells Amenhotep III's nomen). A compound only corroborates
+    when another source independently prints it."""
     names = [f for f in forms if not f.is_added_epithet]
+    if not compound or not names:
+        return names
     epithets = [f for f in forms if f.is_added_epithet]
+    primary = names[0]
     compounds = [
-        NameForm(surface=_join(n.surface, e.surface) or "", translit=_join(n.translit, e.translit))
-        for n in names
+        NameForm(
+            surface=_join(primary.surface, e.surface) or "",
+            translit=_join(primary.translit, e.translit),
+        )
         for e in epithets
     ]
     return names + [c for c in compounds if c.surface or c.translit]
+
+
+# A gap the source marks in a name it could only partly read: Leprohon `///`, pharaoh.se
+# `//` / `...` / `[..]`, Ryholt `[...]` / `...`. NOT a lone `/` (Beckerath and Kitchen use
+# it between alternative readings, `A-qen-en-rê/A-user-rê`) and NOT a bracketed
+# restoration (`[nemty?]`), which supplies text rather than marking its absence.
+_LACUNA = re.compile(r"/{2,}|\.{2,}|…")
+
+
+def _is_fragmentary(form: NameForm) -> bool:
+    return any(_LACUNA.search(v) for v in (form.surface, form.translit or "") if v)
+
+
+def _corroborating(forms: list[NameForm], *, compound: bool = False) -> list[NameForm]:
+    """Throne/Horus forms that may corroborate an identity. A fragmentary name never does:
+    with the gap stripped, `Senefer[...]re` keys to `snfrr`, Piye's complete Sneferre, and
+    `Djed /// Re` fits every Djed-…-re king of Dyn 13–14. Such pairs stay name-only and
+    escalate deterministically."""
+    return [f for f in _matchable(forms, compound=compound) if not _is_fragmentary(f)]
 
 
 def _prenomen_keys(rec: RulerRecord) -> set[str]:
     # skeleton on: the throne name is the primary corroborator; collapse epenthetic-vowel
     # spelling divergence. Over-generated candidates are gated by the homonym list +
     # reviewer, never auto-merged.
-    return key_set(_matchable(rec.prenomina), skeleton=True)
+    return key_set(_corroborating(rec.prenomina, compound=True), skeleton=True)
 
 
 def _horus_keys(rec: RulerRecord) -> set[str]:
-    return key_set(_matchable(rec.horus_names), skeleton=True)
+    return key_set(_corroborating(rec.horus_names), skeleton=True)
 
 
 def _name_keys(rec: RulerRecord) -> set[str]:
@@ -202,11 +251,9 @@ def _reign_far_apart(a: RulerRecord, b: RulerRecord) -> bool:
     as_, bs = a.reign_start_bce, b.reign_start_bce
     if as_ is None or bs is None:
         return False
-    # Cross-framework absolute chronology diverges with antiquity; use a generous,
-    # period-scaled tolerance. Only "far apart" (centuries) is flagged, and even then it
-    # is a HINT for escalation, never a hard block (ADR-020 §6 reign-span disjointness).
-    tolerance = 150 + abs(as_) // 20
-    return abs(as_ - bs) > tolerance
+    # Beyond the cross-framework tolerance but under the era gate's 200-year floor (only
+    # possible after ~1000 BCE): a HINT for escalation, never a hard block.
+    return abs(as_ - bs) > chronology_tolerance(as_, bs)
 
 
 @dataclass
@@ -218,6 +265,7 @@ class _Indexed:
 
 
 def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
+    person_of = same_person_groups(records)
     idx = [
         _Indexed(rec, _prenomen_keys(rec), _horus_keys(rec), _name_keys(rec))
         for rec in records
@@ -276,14 +324,21 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
 
                 homonym_trap = None
                 if basis == "prenomen":
-                    homonym_trap = next(
-                        (
-                            k
-                            for k in shared_pren
-                            if _is_homonym_key(k) and not _sole_bearers_in_dynasty(x, y, k, by_pren)
-                        ),
-                        None,
-                    )
+                    # Trapped when every shared REUSED throne name is ambiguous for this
+                    # pair. Keys off the homonym list neither trap nor clear (a compound
+                    # like Usermaatre-setepenamun is itself reused by several TIP kings).
+                    # Thutmose III's sources share the full Menkheperre, which only he
+                    # bears in Dyn 18, so the vowel-less skeleton `mnkhprr` that Thutmose
+                    # IV's Menkheperure also yields does not veto the pair; the reviewer
+                    # still judges it.
+                    reused = [k for k in shared_pren if _is_homonym_key(k)]
+                    ambiguous = [
+                        k
+                        for k in reused
+                        if not _sole_bearers_in_dynasty(x, y, k, by_pren, person_of)
+                    ]
+                    if reused and len(ambiguous) == len(reused):
+                        homonym_trap = ambiguous[0]
 
                 candidates.append(
                     Candidate(
@@ -311,22 +366,32 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
 
 
 def _sole_bearers_in_dynasty(
-    x: _Indexed, y: _Indexed, key: str, by_pren: dict[str, list[_Indexed]]
+    x: _Indexed,
+    y: _Indexed,
+    key: str,
+    by_pren: dict[str, list[_Indexed]],
+    person_of: dict[str, str],
 ) -> bool:
     """Whether a reused throne name is nonetheless unambiguous FOR THIS PAIR: both records
-    are in one dynasty outside the contested numbering bands, and no other record from
-    either source bears the name in that dynasty or without a dynasty. Amenhotep III is
-    the only Nebmaatre of Dynasty 18 in every source; the reuse by a Dyn 17 king and by
-    Ramesses VI cannot be confused with him inside that block. Where dynasty numbers are
-    unreliable (the contested bands) the trap always holds."""
+    are in one dynasty outside the contested numbering bands, and no other PERSON from
+    either source bears the name in that dynasty. Amenhotep III is the only Nebmaatre of
+    Dynasty 18 in every source; the reuse by a Dyn 17 king and by Ramesses VI cannot be
+    confused with him inside that block. Where dynasty numbers are unreliable (the
+    contested bands) the trap always holds.
+
+    A source's own stage rows of one king are one bearer (Leprohon's Thutmose III (a)/(b)
+    are not rival Menkheperres). A bearer with NO dynasty does not block: its own pairs
+    with this king share no dynasty, so they stay trapped, and lifting the trap here only
+    sends the pair to the reviewer — it never approves."""
     d = x.rec.dynasty
     if d is None or d != y.rec.dynasty or _contested_band(d) is not None:
         return False
     sources = {x.rec.source_id, y.rec.source_id}
+    pair = {person_of[x.rec.local_id], person_of[y.rec.local_id]}
     return not any(
         o.rec.source_id in sources
-        and o.rec.local_id not in (x.rec.local_id, y.rec.local_id)
-        and o.rec.dynasty in (d, None)
+        and person_of[o.rec.local_id] not in pair
+        and o.rec.dynasty == d
         for o in by_pren[key]
     )
 

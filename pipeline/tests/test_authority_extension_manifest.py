@@ -41,7 +41,7 @@ SYMMETRIC = "http://www.w3.org/2002/07/owl#SymmetricProperty"
 # manifest" — the single source of truth for the inventory AND for each
 # term's (element kind, explicit rdf:type set). This encodes ADR-018's
 # load-bearing punning invariant as deterministic enforcement (Rule 3):
-#   * the 9 P177-target predicates MUST carry crm:E55_Type (so a P177 value
+#   * the 14 P177-target predicates MUST carry crm:E55_Type (so a P177 value
 #     is a well-typed E55 instance), declared as rdf:Property + the pun;
 #   * derived_by_run / supersedes are E13-internal direct edges and MUST NOT
 #     carry E55_Type (they are never P177 targets);
@@ -69,6 +69,11 @@ EXPECTED_TYPING: dict[str, tuple[str, frozenset[str]]] = {
     "#display_name": (RDF_PROPERTY, frozenset({E55_TYPE})),
     "#reign_period": (RDF_PROPERTY, frozenset({E55_TYPE})),
     "#horus_name": (RDF_PROPERTY, frozenset({E55_TYPE})),
+    "#prenomen": (RDF_PROPERTY, frozenset({E55_TYPE})),
+    "#nomen": (RDF_PROPERTY, frozenset({E55_TYPE})),
+    "#prenomen_epithet": (RDF_PROPERTY, frozenset({E55_TYPE})),
+    "#nomen_epithet": (RDF_PROPERTY, frozenset({E55_TYPE})),
+    "#horus_name_epithet": (RDF_PROPERTY, frozenset({E55_TYPE})),
     "#matcher_review_verdict": (RDF_PROPERTY, frozenset({E55_TYPE})),
     # Derived / query-only predicate — symmetric, but NOT a P177 target
     "#shares_tomb_with": (RDF_PROPERTY, frozenset({SYMMETRIC})),
