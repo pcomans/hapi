@@ -28,6 +28,8 @@ from pipeline.authority.claimgraph.clusters import compute_clusters
 from pipeline.authority.claimgraph.graph_ir import build_documentary_graph
 from pipeline.authority.claimgraph.reviewer import (
     PROVIDER_PARAMETERS,
+    SYSTEM_PROMPT,
+    _build_user_prompt,
     VERCEL_PINNED_PROVIDER,
     VERDICT_ESCALATED,
     Verdict,
@@ -35,7 +37,10 @@ from pipeline.authority.claimgraph.reviewer import (
     request_digest,
 )
 from pipeline.authority.claimgraph.sources import load_all_sources
-from pipeline.authority.claimgraph.verdicts import resolve_matches
+from pipeline.authority.claimgraph.verdicts import (
+    _PARSE_FAILURE_ESCALATION_REASON,
+    resolve_matches,
+)
 
 GRAPH = WEB_DATA_DIR / "claim-graph.json"
 RUN = WEB_DATA_DIR / "claim-graph.reviewer-run.jsonl"
@@ -84,13 +89,23 @@ def test_committed_decisions_follow_from_the_run_and_the_current_matcher(graph, 
             candidate, a, b, provider="vercel", model=model,
             parameters=PROVIDER_PARAMETERS["vercel"],
         ), candidate.id
+        # The persisted interactions are the evidence (Rule 13): each one carries exactly
+        # the prompts and parameters the current code sends.
+        for interaction in verdict["interactions"]:
+            assert interaction["system_prompt"] == SYSTEM_PROMPT, candidate.id
+            assert interaction["user_prompt"] == _build_user_prompt(candidate, a, b), candidate.id
+            assert interaction["parameters"] == PROVIDER_PARAMETERS["vercel"], candidate.id
         last = verdict["interactions"][-1]
         if last["parse_error"]:
-            # Every retry failed to parse: the code's own escalation path (constant reason).
+            # Every retry failed to parse — re-checked here, not taken from the stored flag.
+            assert len(verdict["interactions"]) == 3, candidate.id
+            for interaction in verdict["interactions"]:
+                content = interaction["raw_response"]["choices"][0]["message"]["content"]
+                with pytest.raises(ValueError):
+                    _parse_verdict_json(content or "")
             return Verdict(
                 candidate_id=candidate.id, outcome=VERDICT_ESCALATED,
-                reason="Reviewer output could not be parsed after retries; escalated for "
-                "manual review.", reviewer="llm",
+                reason=_PARSE_FAILURE_ESCALATION_REASON, reviewer="llm",
             )
         assert last["call_error"] is None, candidate.id
         outcome, reason = _parse_verdict_json(

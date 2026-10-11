@@ -41,6 +41,11 @@ _NAME_ONLY_ESCALATION_REASON = (
     "external documented evidence (a cited scholarly identification), not a model's "
     "unsourced assertion (Constitutional Rule 1)."
 )
+# The reason a candidate is escalated when every retry returned output that could not be
+# parsed into a verdict. One constant, so a committed run's escalation reason is checkable.
+_PARSE_FAILURE_ESCALATION_REASON = (
+    "Reviewer output could not be parsed after retries; escalated for manual review."
+)
 from .sources import RulerRecord
 
 
@@ -249,7 +254,7 @@ def _review_with_retry(
     return Verdict(
         candidate_id=c.id,
         outcome=VERDICT_ESCALATED,
-        reason="Reviewer output could not be parsed after retries; escalated for manual review.",
+        reason=_PARSE_FAILURE_ESCALATION_REASON,
         reviewer="llm",
         request_digest=digest,
         interactions=interactions,
