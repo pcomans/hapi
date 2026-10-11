@@ -2,7 +2,7 @@
 
 **Audience:** a Claude Code agent running locally on the user's machine (who has PDFs of the eleven source books listed below that the sandbox agent cannot access).
 
-**Goal:** transcribe eleven Egyptological reference works into committed, reproducible `reconciled.jsonl` files under `pipeline/pipeline/authority/sources/`, so the Phase A authority-curation step can begin from a rigorous scholarly base (constitutional rule 1).
+**Goal:** transcribe eleven Egyptological reference works into committed, page-cited, traceable `reconciled.jsonl` files under `pipeline/pipeline/authority/sources/`, so the Phase A authority-curation step can begin from a rigorous scholarly base (constitutional rule 1).
 
 **Not your job:** curate `dynasties.json` / `periods.json` / `rulers.json` / `sites.json`. That is Phase A, done after these sources land. You are producing **raw material**, not the final authority files.
 
@@ -20,7 +20,7 @@
 4. **Each source directory contains:**
    - `README.md` — citation, edition, ISBN, retrieved date, rights verification, method (OCR? manual typing? scraped PDF?), known quirks
    - `raw/` — the raw artifact you extracted from, **only if rights permit**. For most of these ten sources (all in-copyright academic books), commit **only a derived extract** (CSV of plain-text rows), not the book PDF. Document this in the README. Put a `raw/.gitkeep` if empty.
-   - `transcribe.py` or `transcribe.md` — the reproducible method. If you wrote a script, commit it. If you typed by hand, write a short protocol describing exactly which pages, what fields, and how you normalised (whitespace, diacritics, etc.).
+   - `transcribe.py` or `transcribe.md` — the documented method. If you wrote a script, commit it. If you typed by hand, write a short protocol describing exactly which pages, what fields, and how you normalised (whitespace, diacritics, etc.).
    - `reconciled.jsonl` — one JSON object per line, following the schema specified below for each source.
 5. **Never redistribute copyrighted text you can't license.** Facts (king names, dates, tomb numbers, occupants) are not copyrightable and are the goal of the extract. Prose passages, tables-as-layout, and images are copyrightable; transcribe the facts without copying the book's prose wholesale. If in doubt, cite and paraphrase in a `source_note` field instead of copying.
 6. **Every `reconciled.jsonl` row must carry a `source_citation` field** with at minimum `{page: int, edition: string}` so any reader can verify the row against the physical book.
@@ -405,7 +405,7 @@ For each of the eleven sources, in the order above:
 1. **Create the branch.** `git checkout main && git pull && git checkout -b feat/source-<slug>` (e.g. `feat/source-shaw-ohae`).
 2. **Scaffold the directory.** `mkdir -p pipeline/pipeline/authority/sources/<slug>/raw` and create `README.md`, `transcribe.py` or `transcribe.md`, `reconciled.jsonl`.
 3. **Write the README first.** Citation, edition, ISBN, retrieved-date, rights verification, method. This forces you to think about rights before you start extracting.
-4. **Transcribe.** Use OCR + manual verification for scanned PDFs, or direct copy-paste + normalisation for text PDFs. Whichever method, document it in `transcribe.md` step by step so a reviewer can reproduce.
+4. **Transcribe.** Use OCR + manual verification for scanned PDFs, or direct copy-paste + normalisation for text PDFs. Whichever method, document it in `transcribe.md` step by step so a reviewer can follow and check it.
 5. **Validate.** Run the existing structural tests: `cd pipeline && uv run pytest tests/test_structure.py` should stay green (you're not touching tested files, but sanity-check). Write a source-specific test in `pipeline/tests/test_sources_<slug>.py` that loads your JSONL and asserts specific field values for 3 known rows (e.g. for Shaw, assert that the row for Predynastic has `date_range_start_bce == -4000`).
 6. **Commit, push, open PR.** Title: `feat: transcribe <source short name> → sources/<slug>`. Body: cite the source, row count, pages covered, rights verification summary, any known gaps.
 7. **Codex must be triggered explicitly — but `post-pr-create.sh` does it for you** on PR creation and every push. Post `@codex review` by hand only as recovery when the hook reports a failure. Wait, reply to every comment on thread per `CLAUDE.md` PR workflow. Invoke the `scope-accountability-enforcer` subagent before the batch reply.

@@ -70,7 +70,7 @@ Per ADR-017 step 6:
 
 ## PDF hash pinning
 
-Source PDF SHA-256: `18605ca79b5dbd0149280e243ef4219f557c5603305796d51ad17a25e3bf42bb`. A reviewer re-running the pipeline against a PDF with a different hash should not expect byte-for-byte output reproduction; model outputs are stochastic, and the committed `reconciled.jsonl` is the source of truth.
+Source PDF SHA-256: `18605ca79b5dbd0149280e243ef4219f557c5603305796d51ad17a25e3bf42bb`. Re-running the LLM steps is not guaranteed to reproduce this output, whatever the PDF hash (Constitutional Rule 13); the committed `reconciled.jsonl` is the source of truth.
 
 ## Physical vs printed pages
 

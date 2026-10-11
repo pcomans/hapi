@@ -33,7 +33,7 @@ web-claimgraph/                            (TypeScript — the deployed app)
   components/Constellation.tsx   the node-link "constellation" visualization
 ```
 
-## Regenerate the graph (the matching step)
+## Rebuild the graph (a new live review)
 
 The live LLM reviewer is the matcher. Run it from the repo's `pipeline/`:
 

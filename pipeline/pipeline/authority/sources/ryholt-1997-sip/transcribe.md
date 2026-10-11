@@ -111,7 +111,7 @@ These pages summarise Ryholt's reconstructed parallel-dynasty chronology. They p
 
 ## PDF hash pinning
 
-Source PDF SHA-256: `078c0d92bc3310c1044d4b736db6a8af9c309ef6839bd9e96b6864d200bbc972`. A reviewer re-running the pipeline against a PDF with a different hash should not expect byte-for-byte output reproduction; model outputs are stochastic, and the committed `reconciled.jsonl` is the source of truth.
+Source PDF SHA-256: `078c0d92bc3310c1044d4b736db6a8af9c309ef6839bd9e96b6864d200bbc972`. Re-running the LLM steps is not guaranteed to reproduce this output, whatever the PDF hash (Constitutional Rule 13); the committed `reconciled.jsonl` is the source of truth.
 
 ## Verification
 
