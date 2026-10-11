@@ -16,7 +16,7 @@ cannot be removed (P2-a); JSON keys are printed sorted, so `brooklyn` precedes `
 (P3-b, cosmetic); extractor-internal role names appear in the evidence (P3-c, shared by both
 arms). The project owner approved the final wording on 2026-10-11.
 
-Round 5 notes (P3, no prompt change, so the audited text is the text used):
+Round 5 notes (P3):
 sourcing is symmetric in the prompt, but a citation for a variant spelling is harder to find
 than one for an identical string, so differing-string cases may draw more
 `insufficient_evidence` (disclosed in `README.md`); "Judge this case only from its own
@@ -24,3 +24,10 @@ evidence" sits beside the web-research instruction (the system prompt permits se
 meaning is clear); the always-cite rule could invite a loosely related URL and nothing checks
 that a URL is institutional — the pressure is equal for every case; "relied on" vs
 "consulted" wording drift. The project owner approved the round-5 wording on 2026-10-11.
+
+Post-audit cosmetic edits (2026-10-11, no re-audit; the project owner judged cosmetic
+wording changes not to need one): "Judge this case only from its own evidence" → "Judge this
+case on its own" (removes the tension with the web-research instruction), and the citation
+sentence unified to "the institutional URLs you relied on. Always cite at least one, including
+when you answer insufficient_evidence (then cite the sources you consulted)". Neither edit
+names an outcome, arm, class or selection, or changes what any case type must provide.
