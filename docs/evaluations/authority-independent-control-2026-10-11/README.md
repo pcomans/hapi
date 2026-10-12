@@ -81,7 +81,8 @@ Pro / V4.1 Flash trial through the Vercel AI Gateway (`scripts/run_gateway_revie
 rejected: 4 of 5 calls ended with the model's tool call emitted as text.
 
 Attempts: every call is kept as `<case>.attempt-<n>.json`. An answer rejected for its format
-(not JSON, schema-invalid, miscopied case ID or hash) is retried, up to 3 such attempts per
+(not JSON, schema-invalid, miscopied case ID or hash), or a run whose search results or
+fetches touched Wikidata or GitHub (Claude Code's search cannot exclude them), is retried, up to 3 such attempts per
 case; a case's decision is its single valid attempt. A stored attempt rejected under an
 earlier parsing rule is re-checked from its saved events, with no new call, and the re-check
 is kept as a new attempt naming its source. The answer is the JSON object that ends the final

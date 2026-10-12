@@ -51,11 +51,12 @@ SERVED_MODEL = "claude-sonnet-5-5"
 EFFORT = "high"
 TOOLS = ("WebFetch", "WebSearch")
 BLOCKED_DOMAINS = ("wikidata.org", "github.com", "raw.githubusercontent.com")
-# A malformed answer (not JSON, schema-invalid, or a miscopied case ID or hash) is retried,
-# up to this many attempts per case. Every attempt is kept; a case's decision is its one
+# A malformed answer (not JSON, schema-invalid, or a miscopied case ID or hash), or a run
+# whose search results or fetches touched a blocked domain (the search tool cannot exclude
+# them, and its summary may draw on them), is retried, up to this many attempts per case. Every attempt is kept; a case's decision is its one
 # valid attempt (the run stops retrying a case once it has one).
 MAX_ATTEMPTS = 3
-FORMAT_FAILURES = ("invalid decision:", "decision does not echo")
+FORMAT_FAILURES = ("invalid decision:", "decision does not echo", "blocked domain used:")
 SESSION_LIMIT_TEXT = "hit your session limit"
 
 
