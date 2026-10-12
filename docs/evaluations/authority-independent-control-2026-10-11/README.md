@@ -23,8 +23,38 @@ pristine pre-registration.
   identical to the 2026-09-13 run).
 - **Two independent runs** of both arms and the review queue: every registered output
   byte-identical (`results/real-rerun-proof.json`).
-- **Stage 1 review done (2026-10-12):** both reviewers decided all 108 units; they agree on
-  both questions in 105.
+
+## Result (2026-10-12): CONTINUE, sites only, Met–Brooklyn and Met–Harvard
+
+`results/real-adjudicated-score.json`, from `decision-rule.md` applied in code:
+
+| Step | Numbers | Outcome |
+|---|---|---|
+| Calibration | 3 of 50 retained controls uncertain or wrong (6%, limit 20%) | passed |
+| Safety | b = 0 of 13 authority gains | passed |
+| Utility | scopes below | 2 qualify |
+
+| Scope | a | b | c | d | e | f | Qualifies |
+|---|---|---|---|---|---|---|---|
+| site, Met–Brooklyn | 9 | 0 | 0 | 10 | 10 | 1 | yes (a + e = 19 > d = 10) |
+| site, Met–Harvard | 1 | 0 | 0 | 2 | 2 | 0 | yes (3 > 2) |
+| site, Brooklyn–Harvard | 1 | 0 | 0 | 2 | 1 | 0 | no (a + e = d) |
+| ruler, Met–Brooklyn | 2 | 0 | 0 | 5 | 1 | 1 | no (3 < 5) |
+
+Reading it:
+- **No false merges.** Every authority gain the review could decide is a correct, useful
+  match; 2 changed cases stay uncertain.
+- **The authority arm still loses correct matches.** 19 literal-only losses were correct,
+  useful connections plain text makes (d), against 14 that were wrong or not useful (e).
+  For sites in Met–Brooklyn and Met–Harvard, the gains plus the bad links it removes outweigh
+  the good links it loses; for rulers they do not (5 lost against 3).
+- **Met–Harvard qualifies narrowly** (5 changed cases, 3 vs 2), so treat it as weak.
+- The counts are a finite census of the selected review population, not a sample estimate.
+
+Review: Stage 1, 108 units, two reviewers agreeing on both questions in 105 (3 reconciled
+with cited overrides); Stage 2, 65 proposed targets, agreeing in 63 (2 reconciled). All calls
+ran through Claude Code (Claude Sonnet 5.5) at no API cost; records are private
+(`dropbox/hapi-337-review-2026-10-11/`), bound by the hashes in the score.
 - **The review population:** 98 cases (15 authority-only gains, 33 literal-only losses,
   50 retained controls), 108 Stage 1 review units (`results/real-review-population-digest.json`).
 - **The decision rule:** `decision-rule.md`, approved before any model judged any case.

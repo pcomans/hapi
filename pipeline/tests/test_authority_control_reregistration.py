@@ -390,3 +390,37 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
     })
     with pytest.raises(protocol.ProtocolFailure, match="stored outcome differs from its re-check"):
         protocol.decided_record(tmp_path, case, role, inputs)
+
+
+def test_committed_score_verdict_follows_from_its_own_counts() -> None:
+    score = json.loads((EVALUATION / "results" / "real-adjudicated-score.json").read_text())
+    rule = score["decision_rule"]
+    letters = {category[0]: category for category in scorer.PRIMARY_CATEGORIES}
+    joined = [
+        joined_case(CONTROL, category)
+        for category, count in score["calibration_control_counts"].items() for _ in range(count)
+    ]
+    for key, row in rule["scopes"].items():
+        entity, *pair = key.split("__")
+        for letter, category in letters.items():
+            transition = LOSS if letter in "de" else GAIN
+            joined += [joined_case(transition, category, entity, pair)] * row[letter]
+    assert scorer.decision_rule(joined) == rule
+    assert rule["verdict"] == "CONTINUE"
+    assert rule["qualifying_scopes"] == ["site__met__brooklyn", "site__met__harvard"]
+    assert score["primary_decision_counts"] == {
+        "a_authority_only_same_useful_exact_target": 13,
+        "b_authority_only_useful_but_wrong_or_nonidentity": 0,
+        "c_authority_only_false_or_not_useful_gain": 0,
+        "d_literal_only_same_useful_connection_lost": 19,
+        "e_literal_only_false_or_not_useful_removal": 14,
+        "f_transition_uncertainty": 2,
+    }
+    assert score["calibration_control_counts"] == {
+        "calibration_control_same_useful_exact_target": 47,
+        "calibration_control_useful_but_wrong_or_nonidentity": 1,
+        "calibration_control_false_or_not_useful": 1,
+        "calibration_control_uncertainty": 1,
+    }
+    assert score["scorer_sha256"] == protocol.sha256_path(SCRIPTS / "score_review.py")
+    assert score["review_status"] == "COMPLETE_TRACEABLE"
