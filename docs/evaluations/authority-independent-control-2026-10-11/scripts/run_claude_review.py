@@ -20,19 +20,17 @@ a refusal must not silently change which model reviewed a case.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-import os
 import sys
 from pathlib import Path
 
 import anthropic
 import jsonschema
 
-EVALUATION_ROOT = Path(__file__).resolve().parents[1]
-ROLE_PROMPT = EVALUATION_ROOT / "prompts" / "stage-1-reviewer-v3.txt"
-SYSTEM_PROMPT_PATH = EVALUATION_ROOT / "launcher-instructions" / "review-system-v2.txt"
-RESPONSE_SCHEMA = EVALUATION_ROOT / "raw-response-contracts" / "stage-1-reviewer-case-v1.schema.json"
+from review_protocol import ROLES, SYSTEM_PROMPT_PATH, compose_user_content, sha256_bytes, write_atomic
+
+ROLE_PROMPT = ROLES["stage_1_reviewer"].prompt
+RESPONSE_SCHEMA = ROLES["stage_1_reviewer"].schema
 
 MODEL = "claude-sonnet-5-5"
 # Committed request parameters. Thinking is adaptive (the model thinks when the case calls
@@ -64,18 +62,6 @@ PRICE = {"input": 2.00, "output": 10.00, "cache_read": 0.20, "web_search": 0.01}
 
 class ReviewFailure(RuntimeError):
     pass
-
-
-def sha256_bytes(value: bytes) -> str:
-    return hashlib.sha256(value).hexdigest()
-
-
-def compose_user_content(case: dict, role_prompt: str, schema: dict) -> str:
-    return "\n\n".join([
-        role_prompt.strip(),
-        "Response schema:\n" + json.dumps(schema, indent=1, sort_keys=True),
-        "Case:\n" + json.dumps(case, indent=1, sort_keys=True, ensure_ascii=False),
-    ])
 
 
 def _blocks(response: dict, kind: str) -> list[dict]:
@@ -200,12 +186,6 @@ def usage_cost(record: dict) -> dict:
         + totals["cache_read"] * PRICE["cache_read"]
     ) / 1e6 + totals["web_search"] * PRICE["web_search"]
     return {**totals, "estimated_usd": round(usd, 4)}
-
-
-def write_atomic(path: Path, value: dict) -> None:
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=1, sort_keys=True) + "\n", "utf-8")
-    tmp.replace(path)
 
 
 def main() -> int:

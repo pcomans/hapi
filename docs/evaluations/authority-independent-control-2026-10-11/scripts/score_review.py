@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Score only prompt-audited, fully traceable two-stage review artifacts."""
+"""Score the frozen two-stage consensus and apply the frozen decision rule (`decision-rule.md`).
+
+Both consensus files are accepted only if `review_protocol.py` rebuilds them exactly from the
+stored reviewer and reconciler records, and every protocol file (prompts, schemas, system
+prompt, runner, validator, this scorer) must match its hash in the committed population
+digest."""
 
 from __future__ import annotations
 
 import argparse
-import collections
 import hashlib
 import importlib.util
 import json
@@ -19,6 +23,12 @@ PRIMARY_CATEGORIES = (
     "d_literal_only_same_useful_connection_lost",
     "e_literal_only_false_or_not_useful_removal",
     "f_transition_uncertainty",
+)
+CALIBRATION_CATEGORIES = (
+    "calibration_control_same_useful_exact_target",
+    "calibration_control_useful_but_wrong_or_nonidentity",
+    "calibration_control_false_or_not_useful",
+    "calibration_control_uncertainty",
 )
 PUBLIC_FORBIDDEN_KEYS = {
     "arm_native", "artifact_id", "artifact_ids", "artifact_ids_by_side", "case_id",
@@ -349,47 +359,87 @@ def recursive_forbidden_keys(value, path: str = "$") -> list[str]:
     return findings
 
 
+CALIBRATION_OK = "calibration_control_same_useful_exact_target"
+
+
+def decision_rule(joined: list[dict]) -> dict:
+    """`decision-rule.md`, applied in its order: calibration, safety, utility, otherwise STOP."""
+    controls = [case for case in joined if case["transition_class"] == "retained_control"]
+    off = sum(case["decision_category"] != CALIBRATION_OK for case in controls)
+    # More than 20% of retained controls uncertain or wrong -> INCONCLUSIVE.
+    calibration = {
+        "retained_controls": len(controls),
+        "uncertain_or_wrong": off,
+        "passed": off * 5 <= len(controls),
+    }
+    transitions = [case for case in joined if case["transition_class"] != "retained_control"]
+    letters = {category: category[0] for category in PRIMARY_CATEGORIES}
+    scopes = {}
+    for case in transitions:
+        key = f"{case['entity_type']}__{'__'.join(case['museum_pair'])}"
+        counts = scopes.setdefault(key, dict.fromkeys(letters.values(), 0))
+        counts[letters[case["decision_category"]]] += 1
+    totals = {letter: sum(counts[letter] for counts in scopes.values()) for letter in letters.values()}
+    gains = totals["a"] + totals["b"] + totals["c"]
+    # b >= 2 overall, or b > 10% of all authority gains -> REDESIGN.
+    safety = {
+        "b": totals["b"],
+        "authority_gains": gains,
+        "unsafe_scopes": sorted(key for key, counts in scopes.items() if counts["b"]),
+        "passed": not (totals["b"] >= 2 or totals["b"] * 10 > gains),
+    }
+    scope_table = {}
+    for key, counts in sorted(scopes.items()):
+        changed = sum(counts.values())
+        decided = changed - counts["f"]
+        scope_table[key] = {
+            **counts,
+            "changed": changed,
+            "decided": decided,
+            # No b; a + e > d; at least 3 decided; f <= 1/3 of changed.
+            "qualifies": (
+                counts["b"] == 0
+                and counts["a"] + counts["e"] > counts["d"]
+                and decided >= 3
+                and counts["f"] * 3 <= changed
+            ),
+        }
+    qualifying = [key for key, row in scope_table.items() if row["qualifies"]]
+    if not calibration["passed"]:
+        verdict = "INCONCLUSIVE"
+    elif not safety["passed"]:
+        verdict = "REDESIGN"
+    elif qualifying:
+        verdict = "CONTINUE"
+    else:
+        verdict = "STOP"
+    return {
+        "calibration": calibration,
+        "safety": safety,
+        "totals": totals,
+        "scopes": scope_table,
+        "qualifying_scopes": qualifying if verdict == "CONTINUE" else [],
+        "verdict": verdict,
+    }
+
+
 def score(
-    *, repo_root: Path, stage_1_queue_path: Path, stage_1_review_paths: list[Path],
-    stage_1_reviewer_prompt_audit_path: Path, stage_1_consensus_path: Path,
-    stage_1_reconciler_prompt_audit_path: Path, stage_2_queue_path: Path,
-    stage_2_review_paths: list[Path], stage_2_reviewer_prompt_audit_path: Path,
-    stage_2_consensus_path: Path, stage_2_reconciler_prompt_audit_path: Path,
-    answer_key_path: Path, population_digest_path: Path, private_out: Path,
-    public_out: Path,
+    *, repo_root: Path, stage_1_queue_path: Path, stage_1_records: Path,
+    stage_1_consensus_path: Path, stage_2_queue_path: Path, stage_2_records: Path,
+    stage_2_consensus_path: Path, answer_key_path: Path, population_digest_path: Path,
+    private_out: Path, public_out: Path,
 ) -> dict:
     protocol = load_protocol(repo_root)
-    prompt_root = repo_root / "docs/evaluations/authority-independent-control-2026-10-11/prompts"
-    consensus_1 = protocol.validate_consensus_package(
-        stage_1_consensus_path, stage_1_queue_path,
-        prompt_root / "stage-1-reviewer-v2.txt", stage_1_reviewer_prompt_audit_path,
-        stage_1_review_paths, prompt_root / "stage-1-reconciler-v2.txt",
-        stage_1_reconciler_prompt_audit_path, prompt_root / "prompt-auditor-v2.txt", "1",
-    )
-    consensus_2 = protocol.validate_consensus_package(
-        stage_2_consensus_path, stage_2_queue_path,
-        prompt_root / "stage-2-reviewer-v2.txt", stage_2_reviewer_prompt_audit_path,
-        stage_2_review_paths, prompt_root / "stage-2-reconciler-v2.txt",
-        stage_2_reconciler_prompt_audit_path, prompt_root / "prompt-auditor-v2.txt", "2",
-    )
     digest = read_json(population_digest_path)
-    answer = read_json(answer_key_path)
-    protocol_bindings = digest.get("input_hashes", {}).get("review_protocol", {})
-    expected_protocol_paths = [
-        protocol_bindings.get("validator"),
-        protocol_bindings.get("scorer"),
-        protocol_bindings.get("response_wrapper"),
-        protocol_bindings.get("artifact_schema"),
-        *protocol_bindings.get("prompts", {}).values(),
-        *protocol_bindings.get("raw_response_contracts", {}).values(),
-        *protocol_bindings.get("launcher_system_prompts", {}).values(),
+    bindings = digest["input_hashes"]["review_protocol"]
+    bound = [
+        bindings["validator"], bindings["runner"], bindings["scorer"], bindings["artifact_schema"],
+        *bindings["prompts"].values(), *bindings["raw_response_contracts"].values(),
+        *bindings["launcher_system_prompts"].values(),
     ]
-    if not expected_protocol_paths or any(not isinstance(item, dict) for item in expected_protocol_paths):
-        raise ValueError("population digest lacks complete review-protocol bindings")
-    for binding in expected_protocol_paths:
-        bound_path = repo_root / binding.get("path", "")
-        if binding.get("sha256") != sha256_path(bound_path):
-            raise ValueError(f"population digest review-protocol binding changed: {bound_path}")
+    for binding in bound:
+        if binding["sha256"] != sha256_path(repo_root / binding["path"]):
+            raise ValueError(f"population digest review-protocol binding changed: {binding['path']}")
     if digest["output_hashes"]["stage_1_queue_sha256"] != sha256_path(stage_1_queue_path):
         raise ValueError("population digest does not bind Stage 1 queue")
     if digest["output_hashes"]["private_answer_key_sha256"] != sha256_path(answer_key_path):
@@ -397,12 +447,13 @@ def score(
     stage_2_queue = read_json(stage_2_queue_path)
     if stage_2_queue["stage_1_queue_sha256"] != sha256_path(stage_1_queue_path):
         raise ValueError("Stage 2 queue does not bind Stage 1 queue")
-    if stage_2_queue["stage_2_custodian_sha256"] != digest["output_hashes"][
-        "stage_2_custodian_sha256"
-    ]:
+    if stage_2_queue["stage_2_custodian_sha256"] != digest["output_hashes"]["stage_2_custodian_sha256"]:
         raise ValueError("Stage 2 queue does not bind the population custodian")
     if stage_2_queue["frozen_stage_1_consensus_sha256"] != sha256_path(stage_1_consensus_path):
         raise ValueError("Stage 2 queue does not bind Stage 1 consensus")
+    consensus_1 = protocol.verify_consensus("1", stage_1_consensus_path, stage_1_queue_path, stage_1_records)
+    consensus_2 = protocol.verify_consensus("2", stage_2_consensus_path, stage_2_queue_path, stage_2_records)
+    answer = read_json(answer_key_path)
     joined = validate_and_join(
         read_json(stage_1_queue_path), consensus_1, stage_2_queue, consensus_2, answer
     )
@@ -415,27 +466,29 @@ def score(
         "review_population_digest": population_digest_path,
     }
     private = {
-        "schema_version": "hapi-authority-control-private-adjudicated-join/2",
+        "schema_version": "hapi-authority-control-private-adjudicated-join/3",
         "scorer_sha256": sha256_path(Path(__file__)),
         "input_hashes": {name: sha256_path(path) for name, path in input_paths.items()},
-        "source_review_hashes": sorted(
-            sha256_path(path) for path in [*stage_1_review_paths, *stage_2_review_paths]
-        ),
         "cases": joined,
     }
     write_json(private_out, private)
     transitions = [case for case in joined if case["transition_class"] != "retained_control"]
     public = {
-        "schema_version": "hapi-authority-control-adjudicated-score/2",
+        "schema_version": "hapi-authority-control-adjudicated-score/3",
         "evaluation_date": "2026-10-11",
         "scorer_sha256": sha256_path(Path(__file__)),
         "input_hashes": private["input_hashes"],
-        "source_review_hashes": private["source_review_hashes"],
         "private_join_sha256": sha256_path(private_out),
         "primary_decision_counts": {
             category: sum(case["decision_category"] == category for case in transitions)
             for category in PRIMARY_CATEGORIES
         },
+        "calibration_control_counts": {
+            category: sum(case["decision_category"] == category for case in joined
+                          if case["transition_class"] == "retained_control")
+            for category in CALIBRATION_CATEGORIES
+        },
+        "decision_rule": decision_rule(joined),
         "adjudicated_arm_outcomes": arm_outcomes(joined),
         "review_status": "COMPLETE_TRACEABLE",
     }
@@ -450,15 +503,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--stage-1-queue", type=Path, required=True)
-    parser.add_argument("--stage-1-review", type=Path, action="append", required=True)
-    parser.add_argument("--stage-1-reviewer-prompt-audit", type=Path, required=True)
+    parser.add_argument("--stage-1-records", type=Path, required=True)
     parser.add_argument("--stage-1-consensus", type=Path, required=True)
-    parser.add_argument("--stage-1-reconciler-prompt-audit", type=Path, required=True)
     parser.add_argument("--stage-2-queue", type=Path, required=True)
-    parser.add_argument("--stage-2-review", type=Path, action="append", required=True)
-    parser.add_argument("--stage-2-reviewer-prompt-audit", type=Path, required=True)
+    parser.add_argument("--stage-2-records", type=Path, required=True)
     parser.add_argument("--stage-2-consensus", type=Path, required=True)
-    parser.add_argument("--stage-2-reconciler-prompt-audit", type=Path, required=True)
     parser.add_argument("--private-answer-key", type=Path, required=True)
     parser.add_argument("--review-population-digest", type=Path, required=True)
     parser.add_argument("--private-out", type=Path, required=True)
@@ -466,15 +515,9 @@ def main() -> None:
     args = parser.parse_args()
     public = score(
         repo_root=args.repo_root.resolve(), stage_1_queue_path=args.stage_1_queue,
-        stage_1_review_paths=args.stage_1_review,
-        stage_1_reviewer_prompt_audit_path=args.stage_1_reviewer_prompt_audit,
-        stage_1_consensus_path=args.stage_1_consensus,
-        stage_1_reconciler_prompt_audit_path=args.stage_1_reconciler_prompt_audit,
-        stage_2_queue_path=args.stage_2_queue, stage_2_review_paths=args.stage_2_review,
-        stage_2_reviewer_prompt_audit_path=args.stage_2_reviewer_prompt_audit,
-        stage_2_consensus_path=args.stage_2_consensus,
-        stage_2_reconciler_prompt_audit_path=args.stage_2_reconciler_prompt_audit,
-        answer_key_path=args.private_answer_key,
+        stage_1_records=args.stage_1_records, stage_1_consensus_path=args.stage_1_consensus,
+        stage_2_queue_path=args.stage_2_queue, stage_2_records=args.stage_2_records,
+        stage_2_consensus_path=args.stage_2_consensus, answer_key_path=args.private_answer_key,
         population_digest_path=args.review_population_digest,
         private_out=args.private_out, public_out=args.public_out,
     )

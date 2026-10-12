@@ -58,24 +58,6 @@ SAME_ENTITY_OUTCOMES = ("same_entity", "different_entity", "insufficient_evidenc
 USEFUL_GRANULARITY_OUTCOMES = ("useful", "too_broad", "too_narrow", "insufficient_evidence")
 CANONICAL_IDENTITY_OUTCOMES = ("exact_identity", "different_identity", "insufficient_evidence")
 EVALUATION_ROOT = Path("docs/evaluations/authority-independent-control-2026-10-11")
-PROMPT_PATHS = {
-    "prompt_auditor": EVALUATION_ROOT / "prompts/prompt-auditor-v2.txt",
-    "stage_1_reviewer": EVALUATION_ROOT / "prompts/stage-1-reviewer-v3.txt",
-    "stage_1_reconciler": EVALUATION_ROOT / "prompts/stage-1-reconciler-v2.txt",
-    "stage_2_reviewer": EVALUATION_ROOT / "prompts/stage-2-reviewer-v2.txt",
-    "stage_2_reconciler": EVALUATION_ROOT / "prompts/stage-2-reconciler-v2.txt",
-}
-RAW_RESPONSE_CONTRACT_PATHS = {
-    "prompt_auditor": EVALUATION_ROOT / "raw-response-contracts/prompt-auditor-v1.schema.json",
-    "stage_1_reviewer": EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v1.schema.json",
-    "stage_1_reconciler": EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-v1.schema.json",
-    "stage_2_reviewer": EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-v1.schema.json",
-    "stage_2_reconciler": EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-v1.schema.json",
-}
-LAUNCHER_SYSTEM_PROMPT_PATHS = {
-    "prompt_auditor": EVALUATION_ROOT / "launcher-instructions/prompt-auditor-system-v1.txt",
-    "review": EVALUATION_ROOT / "launcher-instructions/review-system-v2.txt",
-}
 REVIEW_SCHEMA_PATH = EVALUATION_ROOT / "review-artifact.schema.json"
 
 
@@ -110,50 +92,24 @@ def read_gzip_rows(path: Path) -> list[dict]:
 
 
 def review_protocol_inputs(repo_root: Path) -> dict:
-    prompts = {
-        role: {
-            "path": path.as_posix(),
-            "sha256": sha256_path(repo_root / path),
-        }
-        for role, path in sorted(PROMPT_PATHS.items())
-    }
-    contracts = {
-        role: {
-            "path": path.as_posix(),
-            "sha256": sha256_path(repo_root / path),
-        }
-        for role, path in sorted(RAW_RESPONSE_CONTRACT_PATHS.items())
-    }
-    launcher_system_prompts = {
-        role: {
-            "path": path.as_posix(),
-            "sha256": sha256_path(repo_root / path),
-        }
-        for role, path in sorted(LAUNCHER_SYSTEM_PROMPT_PATHS.items())
-    }
+    """Hash bindings of every file the review protocol runs on, taken from `review_protocol.ROLES`."""
+    protocol = load_review_protocol_module(repo_root)
+
+    def binding(path: Path) -> dict:
+        path = path.resolve()
+        return {"path": path.relative_to(repo_root).as_posix(), "sha256": sha256_path(path)}
+
     return {
-        "protocol_version": "hapi-authority-control-traceable-review/2",
-        "validator": {
-            "path": (EVALUATION_ROOT / "scripts/review_protocol.py").as_posix(),
-            "sha256": sha256_path(repo_root / EVALUATION_ROOT / "scripts/review_protocol.py"),
+        "protocol_version": protocol.CONSENSUS_SCHEMA_VERSION,
+        "validator": binding(repo_root / EVALUATION_ROOT / "scripts/review_protocol.py"),
+        "runner": binding(repo_root / EVALUATION_ROOT / "scripts/run_harness_review.py"),
+        "scorer": binding(repo_root / EVALUATION_ROOT / "scripts/score_review.py"),
+        "artifact_schema": binding(repo_root / REVIEW_SCHEMA_PATH),
+        "prompts": {name: binding(role.prompt) for name, role in sorted(protocol.ROLES.items())},
+        "raw_response_contracts": {
+            name: binding(role.schema) for name, role in sorted(protocol.ROLES.items())
         },
-        "scorer": {
-            "path": (EVALUATION_ROOT / "scripts/score_review.py").as_posix(),
-            "sha256": sha256_path(repo_root / EVALUATION_ROOT / "scripts/score_review.py"),
-        },
-        "response_wrapper": {
-            "path": (EVALUATION_ROOT / "scripts/wrap_review_response.py").as_posix(),
-            "sha256": sha256_path(
-                repo_root / EVALUATION_ROOT / "scripts/wrap_review_response.py"
-            ),
-        },
-        "artifact_schema": {
-            "path": REVIEW_SCHEMA_PATH.as_posix(),
-            "sha256": sha256_path(repo_root / REVIEW_SCHEMA_PATH),
-        },
-        "prompts": prompts,
-        "raw_response_contracts": contracts,
-        "launcher_system_prompts": launcher_system_prompts,
+        "launcher_system_prompts": {"review": binding(protocol.SYSTEM_PROMPT_PATH)},
     }
 
 
@@ -1119,70 +1075,60 @@ def build(
     return public
 
 
+# Builder internals of a claim-graph target that are no evidence a reviewer can check: claim
+# statement IDs (which would also invite searches for this repository) and a label count
+# (leak audit round 10).
+UNRELEASED_TARGET_METADATA = ("label_count_including_duplicates", "name_claim_ids")
+
+
+def released_stage_2_case(custodian_case: dict, stage_1_case: dict) -> dict:
+    target = custodian_case["proposed_target"]
+    return {
+        "case_id": custodian_case["case_id"],
+        "evidence_sha256": stage_1_case["evidence_sha256"],
+        **stage_1_evidence(stage_1_case),
+        "proposed_target": {
+            **target,
+            "target_metadata": {
+                key: value for key, value in target["target_metadata"].items()
+                if key not in UNRELEASED_TARGET_METADATA
+            },
+        },
+        "question": custodian_case["question"],
+        "allowed_outcomes": custodian_case["allowed_outcomes"],
+    }
+
+
 def release_stage_2(
     repo_root: Path,
     stage_1_path: Path,
     custodian_path: Path,
-    reviewer_paths: list[Path],
-    reviewer_prompt_audit_path: Path,
+    stage_1_records: Path,
     consensus_path: Path,
-    reconciler_prompt_audit_path: Path,
     out_path: Path,
 ) -> dict:
+    """Release the Stage 2 queue only after the complete Stage 1 consensus is frozen.
+
+    The consensus must be exactly what `review_protocol.py` rebuilds from the stored Stage 1
+    reviewer and reconciler records, and the released queue binds its hash."""
     stage_1 = read_json(stage_1_path)
     custodian = read_json(custodian_path)
     protocol = load_review_protocol_module(repo_root)
-    consensus = protocol.validate_consensus_package(
-        consensus_path,
-        stage_1_path,
-        repo_root / PROMPT_PATHS["stage_1_reviewer"],
-        reviewer_prompt_audit_path,
-        reviewer_paths,
-        repo_root / PROMPT_PATHS["stage_1_reconciler"],
-        reconciler_prompt_audit_path,
-        repo_root / PROMPT_PATHS["prompt_auditor"],
-        "1",
-    )
+    consensus = protocol.verify_consensus("1", consensus_path, stage_1_path, stage_1_records)
     readiness = stage_2_release_readiness(stage_1, custodian)
     if not readiness["passed"]:
         raise ValueError(f"Stage 2 release evidence contract failed: {readiness}")
     expected = {case["case_id"]: case for case in stage_1["cases"]}
-    supplied = consensus["decisions"]
-    supplied_ids = [decision.get("case_id") for decision in supplied]
-    if len(supplied_ids) != len(set(supplied_ids)):
-        raise ValueError("Stage 1 decisions contain duplicate case IDs")
-    if set(supplied_ids) != set(expected):
-        raise ValueError("Stage 1 decisions must cover every Stage 1 case exactly once")
-    for decision in supplied:
-        case = expected[decision["case_id"]]
-        if decision.get("evidence_sha256") != case["evidence_sha256"]:
-            raise ValueError(f"Stage 1 evidence hash mismatch: {decision['case_id']}")
-        if decision.get("same_entity") not in SAME_ENTITY_OUTCOMES:
-            raise ValueError(f"invalid same-entity outcome: {decision['case_id']}")
-        if decision.get("useful_granularity") not in USEFUL_GRANULARITY_OUTCOMES:
-            raise ValueError(f"invalid useful-granularity outcome: {decision['case_id']}")
-
-    released_cases = []
-    for custodian_case in custodian["cases"]:
-        case_id = custodian_case["case_id"]
-        review_unit_id = custodian_case["stage_1_review_unit_id"]
-        stage_1_case = expected[review_unit_id]
-        evidence = stage_1_evidence(stage_1_case)
-        released_cases.append({
-            "case_id": case_id,
-            "evidence_sha256": stage_1_case["evidence_sha256"],
-            **evidence,
-            "proposed_target": custodian_case["proposed_target"],
-            "question": custodian_case["question"],
-            "allowed_outcomes": custodian_case["allowed_outcomes"],
-        })
+    if {decision["case_id"] for decision in consensus["decisions"]} != set(expected):
+        raise ValueError("Stage 1 consensus must cover every Stage 1 case exactly once")
+    released_cases = [
+        released_stage_2_case(custodian_case, expected[custodian_case["stage_1_review_unit_id"]])
+        for custodian_case in custodian["cases"]
+    ]
     released = {
-        "schema_version": "hapi-authority-independent-control-stage-2-review/6",
+        "schema_version": "hapi-authority-independent-control-stage-2-review/7",
         "stage_1_queue_sha256": sha256_path(stage_1_path),
         "frozen_stage_1_consensus_sha256": sha256_path(consensus_path),
-        "stage_1_source_review_sha256": sorted(sha256_path(path) for path in reviewer_paths),
-        "stage_1_reviewer_prompt_audit_sha256": sha256_path(reviewer_prompt_audit_path),
-        "stage_1_reconciler_prompt_audit_sha256": sha256_path(reconciler_prompt_audit_path),
         "stage_2_custodian_sha256": sha256_path(custodian_path),
         "review_protocol": custodian["review_protocol"],
         "task": "Judge whether each proposed canonical target is the exact identity represented by the included museum-side evidence, not merely a containing, adjacent, diachronically associated, or broader place.",
@@ -1193,6 +1139,8 @@ def release_stage_2(
         raise ValueError(f"Stage 2 release contains forbidden private/class fields: {forbidden}")
     if len(released_cases) != readiness["release_candidate_count"]:
         raise ValueError("Stage 2 released case count changed after readiness validation")
+    if out_path.exists():
+        raise ValueError(f"{out_path} already exists; the released queue is never overwritten")
     write_json(out_path, released)
     return released
 
@@ -1210,10 +1158,8 @@ def main() -> None:
     release_parser.add_argument("--repo-root", type=Path, required=True)
     release_parser.add_argument("--stage-1-queue", type=Path, required=True)
     release_parser.add_argument("--stage-2-custodian", type=Path, required=True)
-    release_parser.add_argument("--stage-1-review", type=Path, action="append", required=True)
-    release_parser.add_argument("--stage-1-reviewer-prompt-audit", type=Path, required=True)
+    release_parser.add_argument("--stage-1-records", type=Path, required=True)
     release_parser.add_argument("--stage-1-consensus", type=Path, required=True)
-    release_parser.add_argument("--stage-1-reconciler-prompt-audit", type=Path, required=True)
     release_parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "build":
@@ -1221,8 +1167,7 @@ def main() -> None:
     else:
         result = release_stage_2(
             args.repo_root.resolve(), args.stage_1_queue, args.stage_2_custodian,
-            args.stage_1_review, args.stage_1_reviewer_prompt_audit,
-            args.stage_1_consensus, args.stage_1_reconciler_prompt_audit, args.out,
+            args.stage_1_records, args.stage_1_consensus, args.out,
         )
     print(json.dumps(result, indent=2))
 

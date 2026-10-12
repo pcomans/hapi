@@ -88,88 +88,76 @@
     "literal_links_sha256": "78f8b221ca3325ad5908bb9b479b374de82345f59ea6357981739b097068b237",
     "mention_ledger_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
     "report_sha256": "7c1b61c5cb640ce52de1ad87572cfd14dd013482870d1e21d889e9380f3a404a",
-    "review_population_builder_sha256": "6128e1b5b6ce43b60ca963db4739dcd3f5680628bbcede89e30bbc16d4d66494",
+    "review_population_builder_sha256": "563eb4c0364619499172b0776abdc05d54eb1cabc16d5c1d9bea8d5b8808a98c",
     "review_protocol": {
       "artifact_schema": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/review-artifact.schema.json",
         "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
       },
       "launcher_system_prompts": {
-        "prompt_auditor": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/prompt-auditor-system-v1.txt",
-          "sha256": "b6a074377058587671f42e90e882d8ecdc8a8ed44aa7a2dfdd5b60b046e745fe"
-        },
         "review": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v2.txt",
           "sha256": "03344b313c62b3bcc481f5172f5683e1421ced0c8e99b16fd0e8b6b9c273ef7a"
         }
       },
       "prompts": {
-        "prompt_auditor": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/prompt-auditor-v2.txt",
-          "sha256": "ede3f433d8cea558102ec2a63519fb8ef40bd96be958c4de8941475f0b088216"
-        },
         "stage_1_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v2.txt",
-          "sha256": "4e1acd575d28c9e1c1b982834e8b351aadd4e180ef76b7eb698f9103a6890040"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v3.txt",
+          "sha256": "91c4c701f5d4d5a213592a10abda4726db90619cb31637ac0c38ec0c57a7a1e2"
         },
         "stage_1_reviewer": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v3.txt",
           "sha256": "e9eda8a3b4a010f90c6206ae4a0476bdefbce38c7f6100c64104eab749c54bf3"
         },
         "stage_2_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v2.txt",
-          "sha256": "967f81333203be50889633d72f50a52fcd3a52e98b32e2276a5beeda321a185f"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v3.txt",
+          "sha256": "a8fafe930b5ab6fbdd280f6734354f8adb132bf00936d0b52c95a2313a3c3055"
         },
         "stage_2_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v2.txt",
-          "sha256": "79ab033e72d03323d1ebae9a3f848502aabd92999c5e928500cab86274bb7e46"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v3.txt",
+          "sha256": "e50e33ba0c0f1cf51c75674c2aafe88c8b2dd15ecb3ebb87dbfbd18e20c295a0"
         }
       },
-      "protocol_version": "hapi-authority-control-traceable-review/2",
+      "protocol_version": "hapi-337-reregistration-consensus/1",
       "raw_response_contracts": {
-        "prompt_auditor": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/prompt-auditor-v1.schema.json",
-          "sha256": "640adb2a47062e6b4b3ba104f5cede5f4ff72633e7348b548dbea73bb06377ab"
-        },
         "stage_1_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reconciler-v1.schema.json",
-          "sha256": "985587ba23f19c58a7593ddf02b4f57f6be3c3cb2e0703a49e49e261a00a5463"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reconciler-case-v1.schema.json",
+          "sha256": "f872840eeadde402d0e892d461572cd42c4f009966af6a534b89b210aa1ddb69"
         },
         "stage_1_reviewer": {
           "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v1.schema.json",
           "sha256": "13a7a6b8df76160b02809412449cfacd69e54b04890d575b10922e6d9e5faf43"
         },
         "stage_2_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-v1.schema.json",
-          "sha256": "cbe8b2be03448d456fb731f209de8473a060791ca1f766c29598e2815dfdd04b"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-case-v1.schema.json",
+          "sha256": "7d4f0b8222ba42ed4b3ad4c1883472b5bb7731d82bcec8b79dc7c287bac32202"
         },
         "stage_2_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reviewer-v1.schema.json",
-          "sha256": "28edb9750995e37e6b299233a1a1f9d7a44c3c77f70ead5984ba3800eb6bc4a4"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reviewer-case-v1.schema.json",
+          "sha256": "a93471a61b14036dee09db67d977cc1b214268dd735d104f89bbc413223eb200"
         }
       },
-      "response_wrapper": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/wrap_review_response.py",
-        "sha256": "1e4e14261c44ed9c2d590fb4397245f51d1171e6d91705ffac5c773a6d1fc7c1"
+      "runner": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
+        "sha256": "f37c290d50062a4d86354fd67bc0ad8f32e46dc9e56533aff6c86b5e6f40d926"
       },
       "scorer": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-        "sha256": "21b8db6a8bb19700bf8b1556b6bd9eac2e8b7e48773b353713e645bd24a8339e"
+        "sha256": "4c19abb37d5bbdc2e5af4922e9fa1d176dc4f5fe9917e394eddf6e4492a50574"
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "68688be2a51797f49c19768327f61970a91749ae2cea36a31edfabd9ed070972"
+        "sha256": "9032679029c0770971b8e7481348427a4ce14e7a77e524ed6859757daa241f31"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "f4a4e04c576843a7d358d7d977de875286ab8825e85ca6bdb80b9a637a7362ff",
-    "review_protocol_manifest_sha256": "9f7551e90c180c06885c82fa92a5b272bf47695881b558f439dec3101b0dff27",
+    "private_population_manifest_sha256": "89844efb5596c1653874b2489f3a3fdaeb64881cc4459781c8f66c34e514375b",
+    "review_protocol_manifest_sha256": "25c2cc12cdc928c58923ff2e194b7c36c7b0cbc52abbb0dec2129507b27bc741",
     "stage_1_queue_sha256": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
-    "stage_2_custodian_sha256": "ee44cf6bf4f83911efed539acee75dc69736dec680fee54fca0e94992da7929d"
+    "stage_2_custodian_sha256": "a97ac5487784e225302051d80bcbb5fb89fc306c25e04271b9a6ab5565143b1a"
   },
   "population_counts": {
     "by_class": {
@@ -202,7 +190,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "9f7551e90c180c06885c82fa92a5b272bf47695881b558f439dec3101b0dff27",
+    "protocol_manifest_sha256": "25c2cc12cdc928c58923ff2e194b7c36c7b0cbc52abbb0dec2129507b27bc741",
     "quality_conclusion_status": "NOT_AVAILABLE",
     "runtime_readiness": "BLOCKED",
     "status": "NOT_RUN",

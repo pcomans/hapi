@@ -23,6 +23,8 @@ pristine pre-registration.
   identical to the 2026-09-13 run).
 - **Two independent runs** of both arms and the review queue: every registered output
   byte-identical (`results/real-rerun-proof.json`).
+- **Stage 1 review done (2026-10-12):** both reviewers decided all 108 units; they agree on
+  both questions in 105.
 - **The review population:** 98 cases (15 authority-only gains, 33 literal-only losses,
   50 retained controls), 108 Stage 1 review units (`results/real-review-population-digest.json`).
 - **The decision rule:** `decision-rule.md`, approved before any model judged any case.
@@ -89,6 +91,37 @@ is kept as a new attempt naming its source. The answer is the JSON object that e
 message; a note on its own line before it is kept, not parsed. A Claude Code session limit
 stops the run, which resumes after the reset with the cases still undecided.
 
+## Reconciliation, Stage 2 and scoring (2026-10-12)
+
+The whole-queue reconciler and Stage 2 of the original design were replaced by the same
+per-case pattern as the Stage 1 reviewer (`scripts/review_protocol.py`, run by
+`scripts/run_harness_review.py --role ...`), with per-case prompts and schemas
+(`prompts/stage-1-reconciler-v3.txt`, `stage-2-reviewer-v3.txt`, `stage-2-reconciler-v3.txt`;
+`raw-response-contracts/*-case-v1.schema.json`), leak-audited before use
+(`prompt-audit-2026-10-11.md`, round 10).
+
+1. **Stage 1 consensus.** A question both reviewers answer identically is settled by that
+   agreement. Each case with a disputed question goes to the reconciler, which sees the case,
+   both reviews under opaque labels in a seeded-hash order, and the disputed questions, and
+   must settle each one with at least one cited source (`prepare-reconciliation`). The
+   consensus (`freeze-consensus`) is written once and accepted only if it is exactly what the
+   protocol rebuilds from the stored records: every attempt is re-checked from its saved
+   events, each case must have exactly one valid model call per role, and each record must
+   have been composed from the current prompt, schema and case.
+2. **Stage 2 release.** `build_review_queue.py release-stage-2` releases the 65 proposed-target
+   cases only after verifying the frozen Stage 1 consensus, and binds its hash.
+3. **Stage 2** runs the same way: two independent reviewers, then the reconciler on
+   disagreements, then a frozen consensus.
+4. **Scoring.** `score_review.py` verifies both consensus files against the records, checks
+   every protocol file against the population digest, labels each case, and applies
+   `decision-rule.md` in code (`decision_rule`).
+
+The population digest was rebuilt for these files: the Stage 1 queue and the private answer
+key are byte-identical to the ones the Stage 1 reviewers ran on; the Stage 2 custodian
+changed only in its prompt and schema hashes. `review-artifact.schema.json` (the original
+whole-queue artifact schema) is no longer used, but the frozen Stage 1 queue binds its hash,
+so it stays.
+
 Harness-specific limitations: the thinking is not returned (only the model's stated text
 and its JSON `reasoning`); a fetch returns Claude Code's summary of the page, recorded with
 the HTTP status and page size, not the page itself; search results are recorded as titles
@@ -131,5 +164,12 @@ and URLs.
 - **Record pages may not open.** Whether a museum's page loads for the reviewer can vary by
   site. A record that cannot be opened may be used only through an artifact-evidence exception
   saying so, the same for every case.
+- **Stage 2 targets recur.** Some proposed targets appear in several cases, and the class is
+  the same within each recurring target (one site target recurs only in authority-only gains,
+  others only in controls). No reviewer sees this, since each case is a separate call, but a
+  reviewer's knowledge of one recurring target is confounded with class when reading results.
+- **Released ruler targets omit builder internals.** Claim-statement IDs and a label count
+  are dropped from a target's metadata at release (`UNRELEASED_TARGET_METADATA`); they are no
+  evidence a reviewer can check.
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
   behaviour (#338).

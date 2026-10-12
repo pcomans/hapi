@@ -68,3 +68,21 @@ block `wikidata.org`.
 | Round | Prompt state | Verdict | Findings acted on |
 |---|---|---|---|
 | 9 | web fetch added | PASS on text; P2 gate | P2 gate: brooklynmuseum.org refuses fetches (HTTP 429), so a class that involves Brooklyn more often would get a weaker evidence path. Checked against the private answer key: a Brooklyn side appears in 14/15 authority-only gains (93%), 29/33 literal-only losses (88%) and 47/50 retained controls (94%), and always on the same side within a pair — class-neutral, so the gate passes and it is disclosed as a limitation. P3 the repository rule was convention only: `github.com` and `raw.githubusercontent.com` added to `blocked_domains` on both tools (the repository is public); the change only enforces an existing rule and is identical for every case, so it was not re-audited. Per-URL fetch outcomes are recorded (`web_fetches`). |
+
+## Rounds 10–11: per-case reconciler and Stage 2 prompts (2026-10-12)
+
+New prompts `stage-1-reconciler-v3.txt`, `stage-2-reviewer-v3.txt` and
+`stage-2-reconciler-v3.txt`, audited on the exact composed requests: the three real Stage 1
+reconciliation requests (units 023, 090, 092), three real Stage 2 requests (one ruler, two
+sites) and a Stage 2 reconciler request with placeholder reviews (no Stage 2 review existed).
+Class balance was checked against the private answer key (aggregate counts only).
+
+| Round | Prompt state | Verdict | Findings acted on |
+|---|---|---|---|
+| 10 | first drafts | Stage 1 reconciler PASS; both Stage 2 prompts **FAIL** (P2) | P2 the exact-identity guidance listed only relations that are *not* exact identity. That one-sided push weighs on differing-string cases (where alias recognition decides) more than on identical-string ones; the auditor's symmetric definition was applied verbatim. P3 claim-statement IDs and a label count in a ruler target's metadata are builder internals, not checkable evidence (and the IDs invite searches for this repository); release now drops them. P3 the Stage 1 reconciler did not say agreed questions are settled; a sentence was added |
+| 11 | round-10 fixes applied | **PASS** all three (no P0/P1/P2) | none |
+
+Accepted residual (P3, disclosed in `README.md`): some Stage 2 targets recur across cases and
+the class is uniform within each recurring target. No single request can see this (each case
+is a separate call); it matters only when reading results, because a reviewer's knowledge of
+one recurring target is confounded with class.
