@@ -23,6 +23,13 @@ pristine pre-registration.
   identical to the 2026-09-13 run).
 - **Two independent runs** of both arms and the review queue: every registered output
   byte-identical (`results/real-rerun-proof.json`).
+- **The review population:** 98 cases (15 authority-only gains, 33 literal-only losses,
+  50 retained controls), 108 Stage 1 review units (`results/real-review-population-digest.json`).
+- **The decision rule:** `decision-rule.md`, approved before any model judged any case.
+
+Deterministic headline (before review): shared records on any two-museum shared node —
+literal arm Met 27,330 / Brooklyn 2,894 / Harvard 534; authority arm Met 14,502 /
+Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 
 ## Result (2026-10-12): CONTINUE, sites only, Met–Brooklyn and Met–Harvard
 
@@ -31,7 +38,7 @@ pristine pre-registration.
 | Step | Numbers | Outcome |
 |---|---|---|
 | Calibration | 3 of 50 retained controls uncertain or wrong (6%, limit 20%) | passed |
-| Safety | b = 0 of 13 authority gains | passed |
+| Safety | b = 0 of 13 authority gains labelled a/b/c | passed |
 | Utility | scopes below | 2 qualify |
 
 | Scope | a | b | c | d | e | f | Qualifies |
@@ -42,8 +49,16 @@ pristine pre-registration.
 | ruler, Met–Brooklyn | 2 | 0 | 0 | 5 | 1 | 1 | no (3 < 5) |
 
 Reading it:
-- **No false merges.** Every authority gain the review could decide is a correct, useful
-  match; 2 changed cases stay uncertain.
+- **One false merge is scored as uncertain.** Case-067 (ruler, Met–Brooklyn, an authority
+  gain): both Stage 1 reviewers found the two sides are different rulers (Hatshepsut on the
+  Met side; a Dynasty 21 shabti of Maatkare on the Brooklyn side), and Stage 2 found the
+  target is not their identity. Granularity has nothing to judge for two different entities,
+  so it was settled as `insufficient_evidence`, and the frozen classifier (`classify_case`,
+  which `decision-rule.md` names) checks uncertainty first and requires `useful` for b: the
+  case is labelled f, not b. The label is left as frozen. **Counted as b, the verdict is
+  unchanged:** b = 1 is under 2 and is 1 of 14 gains (7%, limit 10%); it makes the ruler
+  Met–Brooklyn scope unsafe, which did not qualify anyway. The other f (case-011, a site
+  gain) is uncertain because the Brooklyn records could not be opened.
 - **The authority arm still loses correct matches.** 19 literal-only losses were correct,
   useful connections plain text makes (d), against 14 that were wrong or not useful (e).
   For sites in Met–Brooklyn and Met–Harvard, the gains plus the bad links it removes outweigh
@@ -53,86 +68,72 @@ Reading it:
 
 Review: Stage 1, 108 units, two reviewers agreeing on both questions in 105 (3 reconciled
 with cited overrides); Stage 2, 65 proposed targets, agreeing in 63 (2 reconciled). All calls
-ran through Claude Code (Claude Sonnet 5.5) at no API cost; records are private
+ran through Claude Code (Claude Sonnet 5.5) on the subscription; the records are private
 (`dropbox/hapi-337-review-2026-10-11/`), bound by the hashes in the score.
-- **The review population:** 98 cases (15 authority-only gains, 33 literal-only losses,
-  50 retained controls), 108 Stage 1 review units (`results/real-review-population-digest.json`).
-- **The decision rule:** `decision-rule.md`, approved before any model judged any case.
 
-Deterministic headline (no review yet): shared records on any two-museum shared node —
-literal arm Met 27,330 / Brooklyn 2,894 / Harvard 534; authority arm Met 14,502 /
-Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
+## Review protocol
 
-## Review protocol (changes from the original)
+Every role (Stage 1 and Stage 2 reviewer and reconciler) answers **one case per call** through
+headless Claude Code (`scripts/run_harness_review.py --role ...`; shared rules in
+`scripts/review_protocol.py`). The Anthropic API credit ran out during the mini-pilot, and on
+the project owner's decision every scored call runs on the Claude Code subscription.
 
-- **Reviewer:** Claude Sonnet 5.5 through the Anthropic API, **one case per call**, with
-  adaptive thinking (display `summarized`), effort `high`, and the `web_search_20260209` and
-  `web_fetch_20260209` tools (Wikidata and GitHub, where this public repository lives, blocked on both by
-  `blocked_domains`)
-  (`scripts/run_claude_review.py`). Two independent reviewers are two separate runs. One call
-  per case keeps each decision's record separate; a whole-queue call with web search would
-  exceed the context window.
-- **No dated model snapshot.** Per the revised Constitutional Rule 13 (2026-10-11), an LLM call
-  cannot be re-executed to reproduce a decision, with or without a dated model id. The record
-  of each call is what is re-read: request parameters, system prompt, user content, every
-  response round verbatim, the served model, the thinking, the web-search queries and results,
-  token usage, and the validated decision.
-- **No automatic fallback** to another model on a refusal: a refusal stops the run, so a
-  case's reviewer can never change silently.
-- **Fail loud:** an unparseable or schema-invalid answer, a wrong case ID or evidence hash, or
-  a case decided without any web search or successful
-  web fetch stops the run after the record is written.
-- **Prompt:** `prompts/stage-1-reviewer-v3.txt`, response schema
-  `raw-response-contracts/stage-1-reviewer-case-v1.schema.json`. Leak-audited before use
-  (Rule 14; `prompt-audit-2026-10-11.md`).
+- **Call setup.** Claude Sonnet 5.5 (`--model sonnet`, served model checked as
+  `claude-sonnet-5-5`), effort `high`, the review system prompt
+  (`launcher-instructions/review-system-v2.txt`), only the WebSearch and WebFetch tools, no MCP
+  servers, no API key (auth checked as the subscription), each case in a fresh empty
+  directory. The driver refuses any other setup. Two independent reviewers are two separate
+  runs. User-level plugins and a SessionStart hook still load; every stored call is checked to
+  have had no hook output.
+- **The record** of each call is its full stream-json event log, with the exact command,
+  system prompt and user content. Per Constitutional Rule 13 (revised 2026-10-11) an LLM call
+  cannot be re-executed to reproduce a decision; the record is what is re-read, and every
+  validation is re-derived from the stored events.
+- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v3.txt`,
+  `stage-1-reconciler-v3.txt`, `stage-2-reviewer-v3.txt`, `stage-2-reconciler-v3.txt`;
+  `raw-response-contracts/*-case-v1.schema.json`. All leak-audited before use (Rule 14;
+  `prompt-audit-2026-10-11.md`, whose audited SHA-256s are checked by a test).
 - **Every judgment rests on a cited source.** Whether the two sides' strings match or differ
   is never by itself a basis for a judgment, and general knowledge is not a source; what the
   case evidence records about the records counts only through a named artifact-evidence
-  exception. The schema requires at least one institutional `http(s)` citation on every
-  decision, including `insufficient_evidence`.
+  exception. The schema requires at least one `http(s)` citation on every decision, including
+  `insufficient_evidence`, and no citation may point at a blocked domain.
 - **Each side shows up to 5 of its records** (`shown_records`): the museum's public record
   URL, taken from the frozen corpus's canonical `source_url`, and the full text of each field
-  that holds a mention. They are chosen in an opaque seeded order over record IDs. The original
+  that holds a mention, chosen in an opaque seeded order over record IDs. The original
   registration showed only the mention strings. In the mini-pilot both reviewers then took a
   title-field "Horemheb" for "Stela of Lady Horemheb" (a private woman). The ledger record is
   "Fragment of a Statue of King Horemheb", so one reviewer answered `different_entity` on a
-  real match. Adding the records changes no case membership, case ID or other evidence field
-  (`results/real-review-population-digest.json`, `results/real-rerun-proof.json`).
-- **Up to 99 web searches per case** (`max_uses`), so a case is never decided from general
-  knowledge because a search cap ran out (the 5-search cap of the first pilot did).
+  real match. Adding the records changes no case membership, case ID or other evidence field.
+- **Fail loud.** Billed auth, another tool, an MCP server, hook output, another served model,
+  or a case decided without a search result or a successful fetch stops the run, and such a
+  case is not resumed automatically. An answer rejected for its format (not JSON,
+  schema-invalid, miscopied case ID or hash, a reconciler resolving other than the disputed
+  questions), or a call whose search results, fetches or citations touched Wikidata or GitHub
+  (Claude Code's search cannot exclude them), is retried, up to 3 such calls per case.
+- **Attempts.** Every call is kept as `<case>.attempt-<n>.json` and never overwritten. The
+  answer is the JSON object that ends the final message; a note on its own line before it is
+  kept, not parsed. When a later rule changes a stored call's verdict, the call is re-checked
+  from its saved events, with no new model call, and the re-check is kept as a new attempt
+  naming its source call (its events must equal the source's). A case's decision is its one
+  valid call.
+- **Session limits.** A Claude Code session limit stops the run, which resumes after the
+  reset. A call in which the session limit refused any tool call is a session-limit stop too,
+  not a decision, because its research was cut short for a reason unrelated to the case
+  (added 2026-10-12, applied to every stored call by re-checking its events: it voided
+  reviewer A's call on unit 072, whose redo gave the same answer, and the first reconciler
+  call on unit 090).
 
-## Reviewer runtime (2026-10-11)
-
-The Anthropic API credit ran out during the mini-pilot. On the project owner's decision, the
-Stage 1 reviewer runs through headless Claude Code on the subscription instead
-(`scripts/run_harness_review.py`): the same model (Claude Sonnet 5.5, effort `high`), the same
-audited prompts, schema, cases and validation. Each case is a separate `claude -p` process in
-a fresh empty directory with only the WebSearch and WebFetch tools, no MCP servers and no API
-key; the driver refuses any other setup. The full event stream is the record. A DeepSeek V4
-Pro / V4.1 Flash trial through the Vercel AI Gateway (`scripts/run_gateway_review.py`) was
-rejected: 4 of 5 calls ended with the model's tool call emitted as text.
-
-Attempts: every call is kept as `<case>.attempt-<n>.json`. An answer rejected for its format
-(not JSON, schema-invalid, miscopied case ID or hash), or a run whose search results or
-fetches touched Wikidata or GitHub (Claude Code's search cannot exclude them), is retried, up to 3 such attempts per
-case; a case's decision is its single valid attempt. A stored attempt rejected under an
-earlier parsing rule is re-checked from its saved events, with no new call, and the re-check
-is kept as a new attempt naming its source. The answer is the JSON object that ends the final
-message; a note on its own line before it is kept, not parsed. A Claude Code session limit
-stops the run, which resumes after the reset with the cases still undecided. A call in which the session limit refused any tool
-call is a session-limit stop too, not a decision, because its research was cut short for a
-reason unrelated to the case (added 2026-10-12, applied to every stored call by re-checking
-its events: it voided reviewer A's call on unit 072, whose redo gave the same answer, and the
-first reconciler call on unit 090).
+Pilot runtimes, not used for any scored call (removed; see the Git history of this
+directory): the Anthropic API reviewer (`run_claude_review.py`, web search and web fetch with
+`blocked_domains`), used until the credit ran out; and a DeepSeek V4 Pro / V4.1 Flash trial
+through the Vercel AI Gateway (`run_gateway_review.py`), rejected because 4 of 5 calls ended
+with the model's tool call emitted as text.
 
 ## Reconciliation, Stage 2 and scoring (2026-10-12)
 
 The whole-queue reconciler and Stage 2 of the original design were replaced by the same
-per-case pattern as the Stage 1 reviewer (`scripts/review_protocol.py`, run by
-`scripts/run_harness_review.py --role ...`), with per-case prompts and schemas
-(`prompts/stage-1-reconciler-v3.txt`, `stage-2-reviewer-v3.txt`, `stage-2-reconciler-v3.txt`;
-`raw-response-contracts/*-case-v1.schema.json`), leak-audited before use
-(`prompt-audit-2026-10-11.md`, round 10).
+per-case pattern.
 
 1. **Stage 1 consensus.** A question both reviewers answer identically is settled by that
    agreement. Each case with a disputed question goes to the reconciler, which sees the case,
@@ -140,8 +141,8 @@ per-case pattern as the Stage 1 reviewer (`scripts/review_protocol.py`, run by
    must settle each one with at least one cited source (`prepare-reconciliation`). The
    consensus (`freeze-consensus`) is written once and accepted only if it is exactly what the
    protocol rebuilds from the stored records: every attempt is re-checked from its saved
-   events, each case must have exactly one valid model call per role, and each record must
-   have been composed from the current prompt, schema and case.
+   events, each case must have exactly one valid call per role, and each record must have
+   been composed from the current prompt, schema and case.
 2. **Stage 2 release.** `build_review_queue.py release-stage-2` releases the 65 proposed-target
    cases only after verifying the frozen Stage 1 consensus, and binds its hash.
 3. **Stage 2** runs the same way: two independent reviewers, then the reconciler on
@@ -156,38 +157,27 @@ changed only in its prompt and schema hashes. `review-artifact.schema.json` (the
 whole-queue artifact schema) is no longer used, but the frozen Stage 1 queue binds its hash,
 so it stays.
 
-Harness-specific limitations: the thinking is not returned (only the model's stated text
-and its JSON `reasoning`); a fetch returns Claude Code's summary of the page, recorded with
-the HTTP status and page size, not the page itself; search results are recorded as titles
-and URLs.
-
 ## Known limitations (disclosed)
 
-- **Search result text is not fully readable.** Anthropic's web search returns each result's
-  page content encrypted. The record keeps the results exactly as returned — URL, title, page
-  age, the encrypted content, and any passages the model quotes in its answer — so the URLs a
-  decision rests on are inspectable, but not the full text the model read. Accepted by the
-  project owner on 2026-10-11.
-- **Search filtering output is encrypted too.** `web_search_20260209` filters results by
-  running code server-side. The code is recorded in plain text (`code_executions`); its output
-  is returned encrypted, like the page content.
-- **The thinking is a summary.** Current Claude models return a summary of their reasoning,
-  never the raw chain of thought, and adaptive thinking is optional: a simple case may carry
-  no thinking at all.
+- **The thinking is not in the records.** Claude Code returns the thinking blocks of a call
+  with empty text unless it is started with `--thinking-display summarized`, which was found
+  only after the review was scored. Every scored record therefore has the model's stated text,
+  its JSON reasoning and its tool calls, but no thinking summary. **Accepted by the project
+  owner on 2026-10-12**, who chose to keep these results rather than re-run the review; the
+  runner now passes the flag for any later call.
+- **Fetched pages are recorded as Claude Code's summary.** WebFetch returns the model a
+  summary of the page, recorded with the URL, HTTP status and page size, not the page itself.
+  Search results are recorded as titles and URLs.
 - **Surface text correlates with case type.** An authority-only gain has no common literal
   string by construction, so a case whose two sides show the same string can only be a retained
   control or a literal-only loss. The reviewer can infer that partition from the evidence it is
-  asked to judge; it cannot be removed. The prompt does not name arms or classes.
-- **Sourcing burden is unequal in practice.** The prompt treats every case alike, but an
+  asked to judge; it cannot be removed. The prompts do not name arms or classes.
+- **Sourcing burden is unequal in practice.** The prompts treat every case alike, but an
   institutional source for a variant spelling is harder to find than one for an identical
   string, so differing-string cases may draw more `insufficient_evidence`. Read the f counts
   with this in mind.
-- **Fetched pages are recorded in plain text, but may be cached.** Web fetch returns each
-  page's text, kept verbatim in the record (`web_fetches` lists URL, retrieval time, error).
-  Anthropic serves fetches from a cache: `retrieved_at` can predate the review (a Met page
-  fetched on 2026-10-11 reported 2026-08-13).
-- **Brooklyn record pages cannot be fetched.** brooklynmuseum.org answers fetches with HTTP 429
-  (`url_not_accessible`), so Brooklyn records are read through search results or used only
+- **Brooklyn record pages mostly cannot be fetched.** brooklynmuseum.org usually answers
+  fetches with HTTP 429, so Brooklyn records are read through search results or used only
   through the "could not be opened" exception, while Met and Harvard pages are read directly.
   This depends on the museum, not on the case type: a Brooklyn side appears in 14 of 15
   authority-only gains, 29 of 33 literal-only losses and 47 of 50 retained controls.
@@ -195,9 +185,6 @@ and URLs.
   context the bare mention lacks (both the "Hurbeit" and "Horbeit" records read
   "(Pharbaethos)"); this is the museums' own text and the reason the records are shown, but it
   helps differing-string cases more than identical ones.
-- **Record pages may not open.** Whether a museum's page loads for the reviewer can vary by
-  site. A record that cannot be opened may be used only through an artifact-evidence exception
-  saying so, the same for every case.
 - **Stage 2 targets recur.** Some proposed targets appear in several cases, and the class is
   the same within each recurring target (one site target recurs only in authority-only gains,
   others only in controls). No reviewer sees this, since each case is a separate call, but a
@@ -205,5 +192,7 @@ and URLs.
 - **Released ruler targets omit builder internals.** Claim-statement IDs and a label count
   are dropped from a target's metadata at release (`UNRELEASED_TARGET_METADATA`); they are no
   evidence a reviewer can check.
+- **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
+  to the next registration.
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
   behaviour (#338).

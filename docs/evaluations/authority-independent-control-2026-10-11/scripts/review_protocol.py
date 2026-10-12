@@ -177,6 +177,15 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     if init.get("model") != SERVED_MODEL:
         record["failure"] = f"served model {init.get('model')!r}, not {SERVED_MODEL!r}"
         return record
+    # User-level hooks still run in a `claude -p` session; any output would reach the model.
+    hook_output = [
+        e.get("hook_name") for e in events
+        if e.get("type") == "system" and e.get("subtype") == "hook_response"
+        and (e.get("output") or e.get("stdout") or e.get("stderr"))
+    ]
+    if hook_output:
+        record["failure"] = f"hook output reached the session: {hook_output}"
+        return record
 
     blocks = [
         (e["type"], b, e.get("tool_use_result"))
@@ -250,7 +259,10 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     if not record["web_search_results"] and not any(f["status_code"] == 200 for f in record["web_fetches"]):
         record["failure"] = "case decided without a search result or successful fetch"
         return record
-    touched = [r["url"] for r in record["web_search_results"]] + [f["url"] for f in record["web_fetches"]]
+    cited = decision.get("citations", []) + [
+        url for resolution in decision.get("resolutions", {}).values() for url in resolution["citations"]
+    ]
+    touched = [r["url"] for r in record["web_search_results"]] + [f["url"] for f in record["web_fetches"]] + cited
     if any(_blocked(url) for url in touched):
         record["failure"] = f"blocked domain used: {[u for u in touched if _blocked(u)]}"
         return record
@@ -263,6 +275,14 @@ def attempt_number(path: Path) -> int:
     if match is None:
         raise ProtocolFailure(f"unexpected record name: {path}")
     return int(match["n"])
+
+
+def calls_by_latest_attempt(directory: Path, case_id: str) -> dict[str, Path]:
+    """Each model call of a case (a re-check is its source call) and its latest attempt file."""
+    latest = {}
+    for path in sorted(directory.glob(f"{case_id}.attempt-*.json"), key=attempt_number):
+        latest[read_json(path).get("revalidated_from", path.name)] = path
+    return latest
 
 
 def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tuple[str, dict]:
@@ -286,9 +306,15 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
         if stored["user_content"] != user_content or stored["system_prompt"] != inputs["system_prompt"]:
             raise ProtocolFailure(f"{path}: not composed from the current prompt, schema and case")
         if "events" not in stored:
+            if "decision" in stored:
+                raise ProtocolFailure(f"{path}: a decision without its event stream")
             continue
-        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
         call = stored.get("revalidated_from", path.name)
+        if call != path.name:
+            source = directory / call
+            if not source.exists() or read_json(source).get("events") != stored["events"]:
+                raise ProtocolFailure(f"{path}: a re-check whose events are not those of {call}")
+        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
         if "decision" in recheck:
             valid_calls.add(call)
         latest[call] = (path, stored, recheck)

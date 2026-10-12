@@ -88,7 +88,7 @@
     "literal_links_sha256": "78f8b221ca3325ad5908bb9b479b374de82345f59ea6357981739b097068b237",
     "mention_ledger_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
     "report_sha256": "7c1b61c5cb640ce52de1ad87572cfd14dd013482870d1e21d889e9380f3a404a",
-    "review_population_builder_sha256": "563eb4c0364619499172b0776abdc05d54eb1cabc16d5c1d9bea8d5b8808a98c",
+    "review_population_builder_sha256": "234521f40a01afaf1552ef3afd45622287939a85e9ae953b8734d12c92ff6689",
     "review_protocol": {
       "artifact_schema": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/review-artifact.schema.json",
@@ -139,23 +139,23 @@
       },
       "runner": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
-        "sha256": "28bdbf2047c556543c417230b981101d7d1892f8edcd66cbf5a16c77e1f65ef9"
+        "sha256": "56c158644e0c9978b05c9b1124fce06a47341b80b70c1c44372de60d3875a3ec"
       },
       "scorer": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-        "sha256": "4c19abb37d5bbdc2e5af4922e9fa1d176dc4f5fe9917e394eddf6e4492a50574"
+        "sha256": "c8577970c0633a34685346c19f15681d40a6bc8531987cb8fb463b5f16b1d202"
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "a451d7abefb6c1c0d6406a844bd99d54a3f5ac977272f09ffb607523f65af275"
+        "sha256": "3ce52c793caea8ee6d3cbd56905ddc1b72352d4f7a4942894213181ccf2f419a"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "87062c1ba1e1ffbc615e26802ddc7c4d228a26961f71156580fa93865c442524",
-    "review_protocol_manifest_sha256": "e83008542f84a15772a243e233b634c500bf85e710bfd58d3cef9895c26c7e8c",
+    "private_population_manifest_sha256": "7336b8a1bc974ecea6eadebd14d4de3a7976a3078275977ac67caed901d74a86",
+    "review_protocol_manifest_sha256": "029112794d70d55653b2f951601d576de449fe35cef7d3104738da6fce4b0d60",
     "stage_1_queue_sha256": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
     "stage_2_custodian_sha256": "a97ac5487784e225302051d80bcbb5fb89fc306c25e04271b9a6ab5565143b1a"
   },
@@ -190,11 +190,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "e83008542f84a15772a243e233b634c500bf85e710bfd58d3cef9895c26c7e8c",
-    "quality_conclusion_status": "NOT_AVAILABLE",
-    "runtime_readiness": "BLOCKED",
-    "status": "NOT_RUN",
-    "valid_review_artifact_count": 0
+    "protocol_manifest_sha256": "029112794d70d55653b2f951601d576de449fe35cef7d3104738da6fce4b0d60"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }

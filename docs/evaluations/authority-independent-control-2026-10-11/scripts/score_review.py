@@ -365,6 +365,8 @@ CALIBRATION_OK = "calibration_control_same_useful_exact_target"
 def decision_rule(joined: list[dict]) -> dict:
     """`decision-rule.md`, applied in its order: calibration, safety, utility, otherwise STOP."""
     controls = [case for case in joined if case["transition_class"] == "retained_control"]
+    if not controls:
+        raise ValueError("no retained controls: calibration cannot be judged")
     off = sum(case["decision_category"] != CALIBRATION_OK for case in controls)
     # More than 20% of retained controls uncertain or wrong -> INCONCLUSIVE.
     calibration = {

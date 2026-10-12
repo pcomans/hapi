@@ -952,36 +952,27 @@ def build(
     write_json(stage_1_path, stage_1)
     write_json(stage_2_path, stage_2)
     write_json(answer_path, answer_key)
+    # The protocol the population is reviewed under; the review's outcome lives in the
+    # adjudicated score (`score_review.py`), not here.
     review_protocol_manifest = {
-        "schema_version": "hapi-authority-control-review-protocol-manifest/3",
+        "schema_version": "hapi-authority-control-review-protocol-manifest/4",
         "evaluation_date": "2026-10-11",
-        "review_status": "NOT_RUN",
-        "quality_conclusion_status": "NOT_AVAILABLE",
-        "reason": (
-            "Review is blocked: no genuine immutable provider snapshot is exposed for "
-            "gpt-5.6-sol and no authorized direct Responses API credential is available."
-        ),
-        "runtime_readiness": {
-            "status": "BLOCKED",
-            "blocker": "missing_genuine_immutable_provider_snapshot_and_authorized_api_path",
-        },
-        "valid_review_artifact_count": 0,
         "protocol_inputs": protocol_inputs,
         "queue_inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1_path),
             "stage_2_custodian_sha256": sha256_path(stage_2_path),
         },
         "required_sequence": [
-            "satisfy_provider_snapshot_and_explicit_launcher_gate",
-            "audit_stage_1_reviewer_composed_input",
+            "leak_audit_every_prompt_on_composed_requests",
             "run_two_stage_1_reviewers",
-            "audit_stage_1_reconciler_composed_input",
-            "run_stage_1_reconciler_with_explicit_cited_overrides",
-            "release_stage_2_through_official_gate",
-            "audit_stage_2_reviewer_composed_input",
+            "prepare_stage_1_reconciliation",
+            "run_stage_1_reconciler_on_disputed_questions",
+            "freeze_stage_1_consensus",
+            "release_stage_2",
             "run_two_stage_2_reviewers",
-            "audit_stage_2_reconciler_composed_input",
-            "run_stage_2_reconciler_with_explicit_cited_overrides",
+            "prepare_stage_2_reconciliation",
+            "run_stage_2_reconciler_on_disputed_questions",
+            "freeze_stage_2_consensus",
             "score",
         ],
     }
@@ -1015,13 +1006,7 @@ def build(
     public = {
         "schema_version": "hapi-authority-independent-control-public-review-population-digest/5",
         "input_hashes": {**inputs, "review_protocol": protocol_inputs},
-        "review": {
-            "status": "NOT_RUN",
-            "quality_conclusion_status": "NOT_AVAILABLE",
-            "valid_review_artifact_count": 0,
-            "protocol_manifest_sha256": sha256_path(protocol_path),
-            "runtime_readiness": "BLOCKED",
-        },
+        "review": {"protocol_manifest_sha256": sha256_path(protocol_path)},
         "population_counts": private_manifest["population_counts"],
         "arm_native_inventory": native_inventory,
         "executable_check_counts": {
@@ -1114,13 +1099,11 @@ def release_stage_2(
     stage_1 = read_json(stage_1_path)
     custodian = read_json(custodian_path)
     protocol = load_review_protocol_module(repo_root)
-    consensus = protocol.verify_consensus("1", consensus_path, stage_1_path, stage_1_records)
+    protocol.verify_consensus("1", consensus_path, stage_1_path, stage_1_records)
     readiness = stage_2_release_readiness(stage_1, custodian)
     if not readiness["passed"]:
         raise ValueError(f"Stage 2 release evidence contract failed: {readiness}")
     expected = {case["case_id"]: case for case in stage_1["cases"]}
-    if {decision["case_id"] for decision in consensus["decisions"]} != set(expected):
-        raise ValueError("Stage 1 consensus must cover every Stage 1 case exactly once")
     released_cases = [
         released_stage_2_case(custodian_case, expected[custodian_case["stage_1_review_unit_id"]])
         for custodian_case in custodian["cases"]
@@ -1137,8 +1120,6 @@ def release_stage_2(
     forbidden = recursive_forbidden_keys(released, forbidden_keys=STAGE_2_FORBIDDEN_KEYS)
     if forbidden:
         raise ValueError(f"Stage 2 release contains forbidden private/class fields: {forbidden}")
-    if len(released_cases) != readiness["release_candidate_count"]:
-        raise ValueError("Stage 2 released case count changed after readiness validation")
     if out_path.exists():
         raise ValueError(f"{out_path} already exists; the released queue is never overwritten")
     write_json(out_path, released)

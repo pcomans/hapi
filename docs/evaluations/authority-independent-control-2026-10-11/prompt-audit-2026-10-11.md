@@ -86,3 +86,20 @@ Accepted residual (P3, disclosed in `README.md`): some Stage 2 targets recur acr
 the class is uniform within each recurring target. No single request can see this (each case
 is a separate call); it matters only when reading results, because a reviewer's knowledge of
 one recurring target is confounded with class.
+
+## Audited prompt bytes
+
+The prompts that ran, by SHA-256 (a test checks these against the files). The Stage 1 reviewer
+prompt is the round-9 text plus the post-audit cosmetic edits above, which the project owner
+waived from re-audit; the other three are the round-11 text. The Stage 1 reviewer was audited
+on requests composed for the API runtime; the harness runtime sends the same user content
+(`compose_user_content`) and system prompt, without the API tool parameters. The
+`prompt-auditor` runs were Claude Code subagents of the working session; their reports are
+summarised in this file, not stored verbatim.
+
+| Prompt | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v3.txt` | `e9eda8a3b4a010f90c6206ae4a0476bdefbce38c7f6100c64104eab749c54bf3` |
+| `stage-1-reconciler-v3.txt` | `91c4c701f5d4d5a213592a10abda4726db90619cb31637ac0c38ec0c57a7a1e2` |
+| `stage-2-reviewer-v3.txt` | `e50e33ba0c0f1cf51c75674c2aafe88c8b2dd15ecb3ebb87dbfbd18e20c295a0` |
+| `stage-2-reconciler-v3.txt` | `a8fafe930b5ab6fbdd280f6734354f8adb132bf00936d0b52c95a2313a3c3055` |

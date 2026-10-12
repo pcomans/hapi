@@ -50,41 +50,33 @@
     },
     "runner": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
-      "sha256": "28bdbf2047c556543c417230b981101d7d1892f8edcd66cbf5a16c77e1f65ef9"
+      "sha256": "56c158644e0c9978b05c9b1124fce06a47341b80b70c1c44372de60d3875a3ec"
     },
     "scorer": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-      "sha256": "4c19abb37d5bbdc2e5af4922e9fa1d176dc4f5fe9917e394eddf6e4492a50574"
+      "sha256": "c8577970c0633a34685346c19f15681d40a6bc8531987cb8fb463b5f16b1d202"
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "a451d7abefb6c1c0d6406a844bd99d54a3f5ac977272f09ffb607523f65af275"
+      "sha256": "3ce52c793caea8ee6d3cbd56905ddc1b72352d4f7a4942894213181ccf2f419a"
     }
   },
-  "quality_conclusion_status": "NOT_AVAILABLE",
   "queue_inputs": {
     "stage_1_queue_sha256": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
     "stage_2_custodian_sha256": "a97ac5487784e225302051d80bcbb5fb89fc306c25e04271b9a6ab5565143b1a"
   },
-  "reason": "Review is blocked: no genuine immutable provider snapshot is exposed for gpt-5.6-sol and no authorized direct Responses API credential is available.",
   "required_sequence": [
-    "satisfy_provider_snapshot_and_explicit_launcher_gate",
-    "audit_stage_1_reviewer_composed_input",
+    "leak_audit_every_prompt_on_composed_requests",
     "run_two_stage_1_reviewers",
-    "audit_stage_1_reconciler_composed_input",
-    "run_stage_1_reconciler_with_explicit_cited_overrides",
-    "release_stage_2_through_official_gate",
-    "audit_stage_2_reviewer_composed_input",
+    "prepare_stage_1_reconciliation",
+    "run_stage_1_reconciler_on_disputed_questions",
+    "freeze_stage_1_consensus",
+    "release_stage_2",
     "run_two_stage_2_reviewers",
-    "audit_stage_2_reconciler_composed_input",
-    "run_stage_2_reconciler_with_explicit_cited_overrides",
+    "prepare_stage_2_reconciliation",
+    "run_stage_2_reconciler_on_disputed_questions",
+    "freeze_stage_2_consensus",
     "score"
   ],
-  "review_status": "NOT_RUN",
-  "runtime_readiness": {
-    "blocker": "missing_genuine_immutable_provider_snapshot_and_authorized_api_path",
-    "status": "BLOCKED"
-  },
-  "schema_version": "hapi-authority-control-review-protocol-manifest/3",
-  "valid_review_artifact_count": 0
+  "schema_version": "hapi-authority-control-review-protocol-manifest/4"
 }
