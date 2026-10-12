@@ -419,6 +419,11 @@ class SourceLoad:
 
     source_id: str
     records: list[RulerRecord]
+    # Record ids whose row the source flags as carrying an uncertain reading ("(?)"), from
+    # a typed field. Required: a source without such a field states it with an empty set.
+    # Kept beside the records, not on them: the fact is never sent to the reviewer, so it
+    # must not enter the reviewer's request digest (which hashes the records verbatim).
+    uncertain_readings: frozenset[str]
     non_ruler_rows: list[tuple[str, str]] = field(default_factory=list)  # (row id, why)
 
 
@@ -475,7 +480,9 @@ def load_leprohon(root: Path) -> SourceLoad:
                 f"{src}-{rid}"
             )
     _link_titulary_stages(out, stage_rows)
-    return SourceLoad(source_id=src, records=out)
+    # No typed uncertain-reading field in this source (its "(?)" marks stay in the name
+    # strings): ADR-020 amendment 2026-10-12 item 5 covers Ryholt only.
+    return SourceLoad(source_id=src, records=out, uncertain_readings=frozenset())
 
 
 def _printed_under_entry(r: dict, rid: str, stage_suffix: str | None) -> str | None:
@@ -568,7 +575,11 @@ def load_beckerath(root: Path) -> SourceLoad:
                 cited_pdf_page=_opt_str(cite, "pdf_pages", source=src, row_id=rid),
             )
         )
-    return SourceLoad(source_id=src, records=out, non_ruler_rows=non_ruler)
+    # No typed uncertain-reading field in this source (its "(?)" marks stay in the name
+    # strings): ADR-020 amendment 2026-10-12 item 5 covers Ryholt only.
+    return SourceLoad(
+        source_id=src, records=out, uncertain_readings=frozenset(), non_ruler_rows=non_ruler
+    )
 
 
 def load_kitchen(root: Path) -> SourceLoad:
@@ -626,7 +637,9 @@ def load_kitchen(root: Path) -> SourceLoad:
                 authority=auth,
             )
         )
-    return SourceLoad(source_id=src, records=out)
+    # No typed uncertain-reading field in this source (its "(?)" marks stay in the name
+    # strings): ADR-020 amendment 2026-10-12 item 5 covers Ryholt only.
+    return SourceLoad(source_id=src, records=out, uncertain_readings=frozenset())
 
 
 def load_pharaoh_se(root: Path) -> SourceLoad:
@@ -665,13 +678,16 @@ def load_pharaoh_se(root: Path) -> SourceLoad:
                 authority=auth,
             )
         )
-    return SourceLoad(source_id=src, records=out)
+    # No typed uncertain-reading field in this source (its "(?)" marks stay in the name
+    # strings): ADR-020 amendment 2026-10-12 item 5 covers Ryholt only.
+    return SourceLoad(source_id=src, records=out, uncertain_readings=frozenset())
 
 
 def load_ryholt(root: Path) -> SourceLoad:
     src = "ryholt"
     auth = SOURCE_AUTHORITY[src]
     out = []
+    uncertain_readings = set()
     for i, r in enumerate(_read_jsonl(root, "ryholt-1997-sip"), 1):
         rid = _req_str(r, "ryholt_id", source=src, row_id=f"line {i}")
         # NB Ryholt's `is_lacunose` is NOT an absence flag and is deliberately absent
@@ -696,6 +712,11 @@ def load_ryholt(root: Path) -> SourceLoad:
         horus_form = _name_form(None, horus_translit)
         if horus_form is not None:
             horus_names.append(horus_form)
+        uncertain = _opt_bool(r, "is_uncertain_attribution", source=src, row_id=rid)
+        if uncertain is None:
+            raise _err(src, rid, "is_uncertain_attribution", "required on every Ryholt row")
+        if uncertain:
+            uncertain_readings.add(f"{src}-{rid}")
         out.append(
             RulerRecord(
                 source_id=src,
@@ -721,12 +742,14 @@ def load_ryholt(root: Path) -> SourceLoad:
                 authority=auth,
             )
         )
-    return SourceLoad(source_id=src, records=out)
+    return SourceLoad(source_id=src, records=out, uncertain_readings=frozenset(uncertain_readings))
 
 
 @dataclass
 class LoadResult:
     records: list[RulerRecord]
+    # Union of every source's `SourceLoad.uncertain_readings`.
+    uncertain_readings: frozenset[str]
     per_source: dict[str, int] = field(default_factory=dict)
     # The drop report the module promises: source id → [(row id, why it is not a ruler)].
     non_ruler_rows: dict[str, list[tuple[str, str]]] = field(default_factory=dict)
@@ -753,4 +776,5 @@ def load_all_sources(authority_root: Path) -> LoadResult:
         records=records,
         per_source={g.source_id: len(g.records) for g in groups},
         non_ruler_rows={g.source_id: g.non_ruler_rows for g in groups if g.non_ruler_rows},
+        uncertain_readings=frozenset().union(*(g.uncertain_readings for g in groups)),
     )

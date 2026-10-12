@@ -31,7 +31,9 @@ sys.path.insert(0, str(ROOT / "pipeline"))
 from pipeline.authority.claimgraph.build_graph import AUTHORITY_ROOT  # noqa: E402
 from pipeline.authority.claimgraph.matcher import (  # noqa: E402
     _shared_dynasty_reliable,
+    clash_groups,
     generate_candidates,
+    regnal_number_of,
     same_person_groups,
     uniqueness_clashes,
 )
@@ -41,9 +43,10 @@ CONTROL = ROOT / "docs/evaluations/authority-independent-control-2026-09-13/scri
 LINKABILITY = ROOT / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
 MATCHER = ROOT / "pipeline/pipeline/authority/claimgraph/matcher.py"
 
-# A regnal number printed after the name: "Ramesses III", "Amenophis II.", "Psusennes I".
-ORDINAL = re.compile(r"\b(?P<n>[IVX]+)\.?\s*(?:\(.*\))?$")
-OVERRIDE = re.compile(r"\[overridden to escalate: (?P<why>uniqueness clash|shared prenomen)")
+OVERRIDE = re.compile(
+    r"\[overridden to escalate: (?P<why>uniqueness clash|shared prenomen|king-name route|a record "
+    r"carries a name its source marks as an uncertain reading)"
+)
 
 
 def _load(name: str, path: Path):
@@ -58,27 +61,30 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def ordinal(name: str) -> str | None:
-    match = ORDINAL.search(name.strip())
-    return match["n"] if match else None
-
-
 def park_reason(escalation: dict) -> str:
     """Why the pair is parked, from the committed verdict.
 
     `name_only`: no throne or Horus name in common, escalated by policy and never reviewed.
     `uniqueness_clash` / `homonym_list`: the reviewer approved, a code guard overrode it.
-    `reviewer_escalated`: the reviewer itself declined to approve."""
+    `king_name_route`: the reviewer approved a record without titulary by its name; the
+    windows or regnal numbers do not corroborate it and a code guard overrode it.
+    `uncertain_reading`: the reviewer rejected on a name its source marks uncertain; a code
+    guard overrode it. `reviewer_escalated`: the reviewer itself declined to approve."""
     if escalation["basis"] == "name_only":
         return "name_only"
     override = OVERRIDE.search(escalation["reason"])
     if override is None:
         return "reviewer_escalated"
-    return "uniqueness_clash" if override["why"] == "uniqueness clash" else "homonym_list"
+    return {
+        "uniqueness clash": "uniqueness_clash",
+        "shared prenomen": "homonym_list",
+        "king-name route": "king_name_route",
+        "a record carries a name its source marks as an uncertain reading": "uncertain_reading",
+    }[override["why"]]
 
 
 def evidence(a, b) -> dict:
-    oa, ob = ordinal(a.display_name), ordinal(b.display_name)
+    oa, ob = regnal_number_of(a.display_name), regnal_number_of(b.display_name)
     same_dynasty = a.dynasty is not None and a.dynasty == b.dynasty
     return {
         "dynasty": [a.dynasty, b.dynasty],
@@ -116,19 +122,12 @@ def main() -> int:
 
     # The competing pairs behind each clash: for a forced candidate, every other approvable
     # candidate sharing one of its records' persons against the same other source.
-    approvable = [
-        c for c in candidates.values()
-        if c.basis != "name_only" and not c.homonym_trap and not c.era_conflict
-    ]
-    groups: dict[str, list] = collections.defaultdict(list)
-    for c in approvable:
-        groups[f"{person_of[c.a_id]}|{c.b_source}"].append(c)
-        groups[f"{person_of[c.b_id]}|{c.a_source}"].append(c)
+    groups = clash_groups(list(candidates.values()), person_of)
 
     def rivals(c) -> list[str]:
         found = set()
         for key in (f"{person_of[c.a_id]}|{c.b_source}", f"{person_of[c.b_id]}|{c.a_source}"):
-            for other in groups[key]:
+            for other in groups.get(key, []):
                 if other.id != c.id:
                     found.add(f"{other.a_id} ({other.a_name}) ~ {other.b_id} ({other.b_name}) "
                               f"via {', '.join(other.shared_prenomen_keys) or other.basis}")

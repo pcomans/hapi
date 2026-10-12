@@ -57,7 +57,7 @@ uv run python -m pipeline.authority.claimgraph.build_graph --provider openrouter
 - **No key → the build STOPS** loudly; it will not silently fall back (that would ship a
   compromised graph). `meta.reviewer` records `llm` vs `deterministic`, `meta.provider`/`meta.model`
   record the backend, and the app shows a DRAFT banner whenever the data was not live-reviewed.
-- Only prenomen/Horus-corroborated candidates cost a reviewer call; **name-only pairs are escalated
+- Only prenomen, Horus or name-and-dynasty candidates cost a reviewer call; **name-only pairs are escalated
   deterministically without one** (see "What it demonstrates").
 - Options: `--provider {vercel,anthropic,openrouter}`, `--model <id>`, `--limit N` (thin-slice),
   `--workers N`, `--fresh` (ignore the resume cache), `--deterministic` (explicit non-LLM mode).

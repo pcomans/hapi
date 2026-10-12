@@ -1,14 +1,11 @@
-# Ruler escalation queue — audit (2026-10-12)
+# Ruler escalation queue — audit and work-off (2026-10-12)
 
-**Why:** the #337 re-registration lost correct ruler matches that plain text makes (Apries,
-Userkaf), because the claim graph keeps one king's records from different sources apart.
-This audit measures why: every pair the matcher parked as "escalated", the evidence the
-pair carries, and the museum mentions each parked pair leaves ambiguous.
-
-`scripts/audit_escalations.py` recomputes the candidates and uniqueness-clash groups with
-the committed matcher (they must equal the committed graph's escalations) and runs the #337
-ruler resolver over the frozen #337 mention ledger against the committed graph. No model
-call. Output: `results/escalation-queue.json` (authority pairs and aggregate counts only).
+**Result.** After the queue was worked off (ADR-020 amendment 2026-10-12), ambiguous ruler
+mentions on the #337 ledger fell from **689 to 62**: 627 now resolve to one king, no mention
+that resolved before resolves to a different king, none became ambiguous. Approved links
+354 → 429; parked pairs 974 → 890. An Egyptologist review of every merge found no false
+merge (`results/merge-review.md`). Details in [After the work-off](#after-the-work-off);
+the audit below is the state before (commit a4ab486).
 
 ## The queue: 974 parked pairs, against 354 approved links
 
@@ -70,11 +67,103 @@ Root causes in the largest groups:
   (`weser` vs `user`; `mry` vs `mri`).
 - **Djoser** (48): Beckerath's row has no titulary; Leprohon's has only the Horus name.
 
+## After the work-off
+
+The matcher and reviewer changes are ADR-020 amendment 2026-10-12, items 1–5. The graph was
+rebuilt with DeepSeek V4.1 Flash via the Vercel gateway (`build_graph --provider vercel
+--fresh`, ~1,230 reviewer calls). The code-review fixes that followed are deterministic
+guards over the stored verdicts, applied by rebuilding from the verdict cache with no model
+call. `scripts/measure_rebuild.py` ran the #337 resolver over the same frozen ledger against
+the graph on main (9402974) and the rebuilt one. Output: `results/rebuild.json`, with every
+merged cluster, the edges that join it, and every link main approved that is no longer
+approved.
+
+| | Before | After |
+|---|---|---|
+| Approved links | 354 | 429 |
+| Parked pairs | 974 | 890 |
+| Identity clusters | 160 | 190 |
+| Ambiguous ruler mentions | 689 | 62 |
+| Resolved ruler mentions | 8,279 | 8,906 |
+| Resolved mentions moved to a different king | — | 0 |
+
+Newly resolved: Psusennes I 309, Amenhotep II 129, Thutmose IV 62, Apries 41, Ramesses III
+40, Thutmose II 29, Necho II 5, Userkaf 4, Kashta 3, Osorkon II 2, and one each for Intef II,
+Intef III and Rudamun.
+
+Still ambiguous (62): Djoser 48. Beckerath's record has no Horus name, so only the
+king-name route applies, and it needs both reign windows overlapping; Leprohon gives none
+and pharaoh.se is 28 years off. The rest: Teti / Aha / Sekhemkhet 4, Shabaka 2 (a reused
+throne name, Neferkare, held by the homonym guard), Amenhotep I/II/III 2, and one each for
+Xerxes I, Iuput II, Smendes I, Sobekhotep III, Menkheperre / Necho I, and Aha / Djet / Iti /
+Ity.
+
+Links main approved that are no longer approved (4, all escalated, in the queue):
+Senakhtenre (Leprohon 17.26 and pharaoh.se against Ryholt 17.7 "Siamun (?)") and Seqenenre
+Tao (Leprohon 17.27 and pharaoh.se against Ryholt 17.8; the sources print different Horus
+names). The Egyptologist judged all four the same king and the escalations defensible.
+
+**Review.** The `egyptologist-reviewer` checked all 58 merged clusters of the rebuilt graph:
+no false merge (`results/merge-review.md`). It raised two P1s, fixed here: the reviewer
+*rejected* Senakhtenre on Ryholt's uncertain "Siamun (?)", so a rejection touching a reading
+its source flags uncertain is now escalated (item 5); and `name_dynasty` edges joining
+records that both carry throne names (Beckerath's German transcriptions the normaliser does
+not equate) are now described correctly in the ADR.
+
+The `code-reviewer` then found the king-name route enforced only by the prompt: the stored
+run approved Radjedef, Userkare, Shepseskaf, Sahure and others with a missing or
+non-overlapping reign window. Now enforced in code (item 1): both windows known, overlapping
+by at least half the shorter, same regnal number; 7 approvals were downgraded. Also fixed:
+a listed reused throne name shared in full stays trapped beside an unlisted compound
+(Shabaka); a later Horus name needs no conflicting regnal number; regnal numbers are read
+from Leprohon's "(I)" and "III (a)" forms; a clash with a rival of unknown dynasty stays
+escalated; and a `name_only` pair is escalated ahead of the verdict cache (a cached verdict
+from an earlier basis had approved one). Every link approved now was among those the
+Egyptologist reviewed. Excluding Dyn 21–24 from the king-name basis was measured and not
+adopted: 374 ambiguous mentions instead of 62 (`results/alternative-exclude-dyn-21-24/`).
+The window rule does not cover the case it was meant for: Beckerath's and pharaoh.se's
+"Shoshenq IV" are different kings with overlapping dates and the same numeral, so for a
+record without a throne name there the reviewer is the only defence. The project owner
+accepted that risk on 2026-10-12 (ADR item 1).
+
+**A discarded first rebuild.** The first reviewer policy (audit rounds 1–3) applied the
+reign-window and regnal-numeral checks meant for the king-name route to every pair. The
+model then escalated 97 throne-name links it approves on main (Khafre, Senwosret I–III,
+Amenhotep III, Ramesses V–XI …) because chronologies differ by decades or a window was
+missing. That run is kept in `results/discarded-round-3/` (graph, full reviewer run, and its
+measurement, which lists the 97 links). The policy was split into three explicit routes,
+re-audited (rounds 4–5, `prompt-audit-2026-10-12.md`) and the graph rebuilt. During that
+rebuild one call timed out three times and the run stopped, as designed; the timed-out
+attempts are in `results/aborted-attempts-2026-10-12.jsonl`, and the run was resumed from
+the verdict cache.
+
+**Follow-ups (not in this change).** Beckerath, Kitchen, Leprohon and pharaoh.se print "(?)" readings
+without a typed flag, so item 5 covers Ryholt only until the flag is added upstream. The
+normaliser keys "mery ib ra" and "Mer ib Ra" differently, which leaves Meryibre Khety
+`name_only`. pharaoh.se's Ptolemy V row is column-shifted, and its Qemau-Siharnedjheritef
+carries the alt label "Amenemhat VI" (Ryholt 13.8). Queens have no authority entries.
+
 ## Reproduce
+
+The graph is replayed, not re-reviewed: `web-claimgraph/data/claim-graph.reviewer-run.jsonl`
+holds every reviewer interaction, and `test_committed_decisions_follow_from_the_run_and_the_current_matcher`
+re-derives every committed decision from it with the current matcher and guards (Rule 13).
+The 13 paid verdicts on pairs the final matcher calls `name_only` (so never reviewer-decided)
+are kept in `results/superseded-by-name-only.jsonl`.
 
 ```bash
 pipeline/.venv/bin/python docs/evaluations/ruler-escalation-queue/scripts/audit_escalations.py \
   --ledger <#337 run>/mentions.ndjson.gz --extraction-manifest <#337 run>/extraction-manifest.json \
   --graph web-claimgraph/data/claim-graph.json \
   --out docs/evaluations/ruler-escalation-queue/results/escalation-queue.json
+
+git show 9402974:web-claimgraph/data/claim-graph.json > before-graph.json
+pipeline/.venv/bin/python docs/evaluations/ruler-escalation-queue/scripts/measure_rebuild.py \
+  --ledger <#337 run>/mentions.ndjson.gz --extraction-manifest <#337 run>/extraction-manifest.json \
+  --before-graph before-graph.json --after-graph web-claimgraph/data/claim-graph.json \
+  --out docs/evaluations/ruler-escalation-queue/results/rebuild.json
 ```
+
+`results/escalation-queue.json` now describes the rebuilt graph (890 pairs, 62 ambiguous
+mentions; it adds the park reasons `king_name_route` and `uncertain_reading`); the 974-pair audit above is that file
+at a4ab486.

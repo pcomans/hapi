@@ -1,0 +1,1895 @@
+{
+ "after": {
+  "artifacts_by_status": {
+   "abstained": 2232,
+   "ambiguous": 63,
+   "resolved": 8842,
+   "unmatched": 330
+  },
+  "mentions_by_status": {
+   "abstained": 2241,
+   "ambiguous": 65,
+   "resolved": 8903,
+   "unmatched": 346
+  }
+ },
+ "approved_links_gained_by_basis": {
+  "horus": 14,
+  "name_dynasty": 46,
+  "prenomen": 10
+ },
+ "approved_links_lost": [
+  {
+   "a": "beckerath-04.04 (Chephren)",
+   "b": "pharaoh_se-Khafra (Khafra)",
+   "now": {
+    "escalated": "Throne names match (Cha'ef-rê = Khaf Ra) in Dynasty 4, but the reign windows do not overlap at all, so the policy requires escalation rather than approval."
+   }
+  },
+  {
+   "a": "beckerath-04.06 (Mykerinos)",
+   "b": "pharaoh_se-Menkaura (Menkaura)",
+   "now": {
+    "escalated": "Shared dynasty-4 prenomen Menkaura matches, but the reign windows do not overlap (2489–2461 vs 2447–2442 BCE), and per policy non-overlapping dates cannot corroborate identity; escalate for manual review."
+   }
+  },
+  {
+   "a": "beckerath-11.05 (Ment-hotpe II.)",
+   "b": "leprohon-leprohon-11b.05b (Mentuhotep II (b))",
+   "now": {
+    "escalated": "Shared prenomen Nebhepetre and dynasty 11 agree, but Record B's reign window is entirely unknown, so the required reign-window corroboration cannot be verified."
+   }
+  },
+  {
+   "a": "beckerath-11.06 (Ment-hotpe III.)",
+   "b": "leprohon-leprohon-11b.06 (Mentuhotep III)",
+   "now": {
+    "escalated": "Records share Sankhkare and Mentuhotep III, but B adds conflicting prenomen Seneferkare and lacks a reign window, so identity cannot be confirmed."
+   }
+  },
+  {
+   "a": "beckerath-11.06 (Ment-hotpe III.)",
+   "b": "pharaoh_se-Mentuhotep-III (Mentuhotep III)",
+   "now": {
+    "escalated": "Shared prenomen Seankhkare/Sankhkare and dynasty 11 with matching Horus title support identity, but the reign windows (-1995..-1983 vs -1958..-1947) do not overlap, so policy requires escalation."
+   }
+  },
+  {
+   "a": "beckerath-11.07 (Ment-hotpe IV.)",
+   "b": "pharaoh_se-Mentuhotep-IV (Mentuhotep IV)",
+   "now": {
+    "escalated": "Shared name and prenomen Nebtawyre, but reign windows do not overlap (-1983..-1976 vs -1947..-1940), so identity cannot be corroborated per policy."
+   }
+  },
+  {
+   "a": "beckerath-12.01 (Ammenemes I.)",
+   "b": "leprohon-leprohon-12.01a (Amenemhat I (a))",
+   "now": {
+    "escalated": "Shared prenomen and dynasty 12 match, but Leprohon's reign window is unknown, so the required reign-window corroboration for approval is missing."
+   }
+  },
+  {
+   "a": "beckerath-12.02 (Sesostris I.)",
+   "b": "leprohon-leprohon-12.02 (Senwosret I)",
+   "now": {
+    "escalated": "Shared prenomen (Cheper-ka-rê / kheper ka ra) and dynasty 12 agree, but the second record's reign window is unknown, so identity cannot be fully corroborated under the policy."
+   }
+  },
+  {
+   "a": "beckerath-12.04 (Sesostris II.)",
+   "b": "leprohon-leprohon-12.04 (Senwosret II)",
+   "now": {
+    "escalated": "Shared prenomen Kha-kheper-Re, nomen and dynasty 12 match, but Leprohon's reign window is unknown, so reign-window corroboration is unavailable; policy escalates when either window is unknown."
+   }
+  },
+  {
+   "a": "beckerath-12.04 (Sesostris II.)",
+   "b": "pharaoh_se-Senusret-II (Senusret II)",
+   "now": {
+    "escalated": "Shared Khakheperre prenomen and Senusret II nomen in dynasty 12, but the reign windows do not overlap at all, so the chronological discrepancy must be resolved before merging."
+   }
+  },
+  {
+   "a": "beckerath-12.05 (Sesostris III.)",
+   "b": "leprohon-leprohon-12.05 (Senwosret III)",
+   "now": {
+    "escalated": "Transliteration variants of Khakaure and Senwosret III agree in Dynasty 12, but record B's reign window is unknown, leaving required window corroboration unverifiable."
+   }
+  },
+  {
+   "a": "beckerath-12.05 (Sesostris III.)",
+   "b": "pharaoh_se-Senusret-III (Senusret III)",
+   "now": {
+    "escalated": "Same king name, dynasty, and equivalent prenomen (Khakaure), but the reign windows do not overlap at all, so chronology cannot corroborate identity."
+   }
+  },
+  {
+   "a": "beckerath-12.06 (Ammenemes III.)",
+   "b": "leprohon-leprohon-12.06 (Amenemhat III)",
+   "now": {
+    "escalated": "Shared prenomen Ni-maat-re and dynasty 12 agree, but record B has no reign window, so the identity cannot be corroborated as policy requires."
+   }
+  },
+  {
+   "a": "beckerath-12.07 (Ammenemes IV.)",
+   "b": "pharaoh_se-Amenemhat-IV (Amenemhat IV)",
+   "now": {
+    "escalated": "Shared prenomen and dynasty support identity, but the reign windows (-1806..-1797 vs -1772..-1764) do not overlap, requiring escalation."
+   }
+  },
+  {
+   "a": "beckerath-15.05 (Apophis)",
+   "b": "leprohon-leprohon-15.05 (Apepi)",
+   "now": {
+    "escalated": "Shared prenomens and 15th Dynasty match, but the Leprohon record's reign window is unknown, so chronological corroboration is missing."
+   }
+  },
+  {
+   "a": "beckerath-18.09 (Amenophis III.)",
+   "b": "leprohon-leprohon-18.09 (Amenhotep III)",
+   "now": {
+    "escalated": "Prenomen, nomen, dynasty and numeral align, but Record B has no reign window, so the required reign-window consistency cannot be corroborated; policy requires escalation when a window is unknown."
+   }
+  },
+  {
+   "a": "beckerath-19.07 (Si-ptah)",
+   "b": "pharaoh_se-Siptah (Siptah)",
+   "now": {
+    "escalated": "Same 19th-dynasty Siptah with matching prenomina and nomen, but reign windows (-1193..-1185 vs -1197..-1193) only touch, not overlap, so approval is barred."
+   }
+  },
+  {
+   "a": "beckerath-20.04 (Ramses V.)",
+   "b": "pharaoh_se-Ramesses-V (Ramesses V)",
+   "now": {
+    "escalated": "Same king name, dynasty, and matching prenomen, but the reign windows (1149–1146 vs 1144–1140 BCE) do not overlap, which is not corroboration under policy."
+   }
+  },
+  {
+   "a": "beckerath-20.05 (Ramses VI.)",
+   "b": "pharaoh_se-Ramesses-VI (Ramesses VI)",
+   "now": {
+    "escalated": "Shared prenomen, dynasty, and titulary fit Ramses VI, but the reign windows overlap only slightly (1140–1139 BCE), which the policy treats as insufficient corroboration for approval."
+   }
+  },
+  {
+   "a": "beckerath-20.07 (Ramses VIII.)",
+   "b": "pharaoh_se-Ramesses-VIII (Ramesses VIII)",
+   "now": {
+    "escalated": "Same dynasty and prenomen (User-maat-Re akh-en-Amun) with matching numeral VIII, but the reign windows (-1123..-1121 vs -1130..-1129) do not overlap at all, so identity cannot be corroborated."
+   }
+  },
+  {
+   "a": "beckerath-20.09 (Ramses X.)",
+   "b": "pharaoh_se-Ramesses-X (Ramesses X)",
+   "now": {
+    "escalated": "Shared prenomen and dynasty match, but the reign windows do not overlap (-1103..-1099 vs -1110..-1107), so identity cannot be confirmed."
+   }
+  },
+  {
+   "a": "beckerath-20.10 (Ramses XI.)",
+   "b": "leprohon-leprohon-20.10 (Ramesses XI)",
+   "now": {
+    "escalated": "Records share throne and birth names, but record B has no reign window, so the required reign-window consistency cannot be confirmed."
+   }
+  },
+  {
+   "a": "beckerath-21.02 (Amen-em-nisu)",
+   "b": "leprohon-leprohon-21.03 (Amenemnisu)",
+   "now": {
+    "escalated": "Shared prenomen Nefer-ka-rê heqa-weset and nomen Amenemnisu in Dynasty 21, but Leprohon's reign window is unknown, preventing the chronological corroboration policy requires."
+   }
+  },
+  {
+   "a": "beckerath-21.02 (Amen-em-nisu)",
+   "b": "pharaoh_se-Amenemnesut (Amenemnesut)",
+   "now": {
+    "escalated": "Same name and prenomen in Dynasty 21, but the reign windows do not overlap, so identity is not corroborated and a false merge risk remains."
+   }
+  },
+  {
+   "a": "beckerath-21.05 (Osochor)",
+   "b": "pharaoh_se-Osochor (Osochor)",
+   "now": {
+    "escalated": "Same king name and identical prenomen (Aakheperre Setepenre) in dynasty 21, but the reign windows do not overlap (-984..-978 vs -992..-987), so non-overlap blocks approval per policy."
+   }
+  },
+  {
+   "a": "beckerath-21.09 (Psusennes)",
+   "b": "leprohon-leprohon-21a.03 (Pa-Seba-Kha-En-Niut III)",
+   "now": {
+    "escalated": "Shared prenomen Titkheperre-setepenamun fits 21st dynasty, but B carries regnal numeral III while A has none, so identity cannot be confirmed without reign windows."
+   }
+  },
+  {
+   "a": "beckerath-22.04 (Schoschenq II.)",
+   "b": "kitchen-22.03 (Shoshenq II)",
+   "now": {
+    "escalated": "Shared prenomen and dynasty, but reign windows do not overlap (-890 vs -877/-875), so identity cannot be corroborated under policy."
+   }
+  },
+  {
+   "a": "beckerath-22.04 (Schoschenq II.)",
+   "b": "leprohon-leprohon-22.03 (Sheshonq IIa)",
+   "now": {
+    "escalated": "Shared prenomen Heqakheperre Setepenre fits dynasty 22, but the regnal numeral differs (II vs IIa) and B gives no reign window, so identity cannot be corroborated; escalate."
+   }
+  },
+  {
+   "a": "beckerath-22.04 (Schoschenq II.)",
+   "b": "pharaoh_se-Shoshenq-II (Shoshenq II)",
+   "now": {
+    "escalated": "Shared prenomen (Heqakheperre Setepenre) and 22nd-dynasty context agree, but Record B's reign window is unknown, so the required reign-window corroboration is missing; escalate rather than approve."
+   }
+  },
+  {
+   "a": "beckerath-23.03 (Osorkon IV.)",
+   "b": "kitchen-22.11 (Osorkon IV)",
+   "now": {
+    "escalated": "Same throne and birth name with overlapping reign, but conflicting dynastic placements (22nd vs 23rd) require review before approving identity."
+   }
+  },
+  {
+   "a": "beckerath-25.04 (Schebitko)",
+   "b": "leprohon-leprohon-25.05 (Shabataka/Shebitko)",
+   "now": {
+    "escalated": "Shared Djedkare prenomen and Dynasty 25 align, but B's reign window is unknown, so chronology cannot corroborate the match; escalate per policy."
+   }
+  },
+  {
+   "a": "beckerath-26.01 (Psametik I.)",
+   "b": "leprohon-leprohon-26.01 (Psamtek I)",
+   "now": {
+    "escalated": "Shared prenomen Wah-ib-re and dynasty 26 align, but the Leprohon record's reign window is unknown, so consistent reign-window corroboration cannot be established; escalate per policy."
+   }
+  },
+  {
+   "a": "beckerath-26.03 (Psametik II.)",
+   "b": "leprohon-leprohon-26.03 (Psamtek II)",
+   "now": {
+    "escalated": "Shared prenomen Neferibre, dynasty 26, and numeral II agree, but Leprohon's reign window is unknown, so identity cannot be fully corroborated under the precision-first policy."
+   }
+  },
+  {
+   "a": "beckerath-26.05 (Amosis II.)",
+   "b": "leprohon-leprohon-26.05 (Ahmose III)",
+   "now": {
+    "escalated": "Shared prenomen Khnem-ib-re, Horus Semen-maat and nomen Ahmose suggest one king, but the numerals differ (II vs III) and B's reign window is unknown; escalate."
+   }
+  },
+  {
+   "a": "beckerath-30.01 (Nektanebês)",
+   "b": "leprohon-leprohon-30.01 (Nakhtnebef)",
+   "now": {
+    "escalated": "Shared prenomen Kheperkare and dynasty 30 align, and the nomina match, but Leprohon gives no reign window, so the reign-window consistency required for approval cannot be verified."
+   }
+  },
+  {
+   "a": "beckerath-30.02 (Teôs)",
+   "b": "leprohon-leprohon-30.02 (Djedhor)",
+   "now": {
+    "escalated": "The records share the throne name Irimaatenre and Dynasty 30, but B has no reign window, so the required reign-window corroboration cannot be verified; per precision-first policy, escalate."
+   }
+  },
+  {
+   "a": "beckerath-30.03 (Nektanebôs)",
+   "b": "leprohon-leprohon-30.03 (Nakhthorhebyt)",
+   "now": {
+    "escalated": "Shared throne name matches, but Record B lacks a reign window and its numeral II is unmatched in A, so policy-required corroboration is incomplete."
+   }
+  },
+  {
+   "a": "beckerath-31.04 (Chababasch)",
+   "b": "leprohon-leprohon-31.04 (Khababash)",
+   "now": {
+    "escalated": "Shared throne name and dynasty, but Record B's reign window is unknown, so identity cannot be corroborated under the precision-first policy."
+   }
+  },
+  {
+   "a": "kitchen-22.03 (Shoshenq II)",
+   "b": "leprohon-leprohon-22.03 (Sheshonq IIa)",
+   "now": {
+    "escalated": "Records share the throne name Heqakheperre Setepenre, but differ in regnal numeral (II vs IIa) and Record B's reign window is unknown, so identity cannot be confirmed."
+   }
+  },
+  {
+   "a": "kitchen-22.03 (Shoshenq II)",
+   "b": "pharaoh_se-Shoshenq-II (Shoshenq II)",
+   "now": {
+    "escalated": "Shared unique prenomen (Heqakheperre Setepenre) and dynasty 22 agree, but one record's reign window is entirely unknown, so the required date corroboration is missing."
+   }
+  },
+  {
+   "a": "kitchen-23.08 (Shoshenq VI)",
+   "b": "leprohon-leprohon-23.09 (Sheshonq VII)",
+   "now": {
+    "escalated": "Shared prenomen Wasneterre Setepenre and dynasty 23 agree, but conflicting regnal numerals (VI vs VII) and an unknown reign window prevent safe approval."
+   }
+  },
+  {
+   "a": "kitchen-24.01 (Tefnakht I)",
+   "b": "leprohon-leprohon-24.01 (Tefnakht)",
+   "now": {
+    "escalated": "Shared prenomen Shepsesre and dynasty 24 support identity, but Record B lacks a reign window and the regnal numeral appears only in Record A, so policy requires escalation."
+   }
+  },
+  {
+   "a": "kitchen-24.01 (Tefnakht I)",
+   "b": "pharaoh_se-Tafnakht (Tafnakht)",
+   "now": {
+    "escalated": "Shared prenomen Shepsesre and same dynasty-24 context support identity, but record B supplies no reign window, so the required chronological corroboration cannot be verified."
+   }
+  },
+  {
+   "a": "kitchen-25.03 (Piankhy)",
+   "b": "leprohon-leprohon-25.03 (Piye/Piankhy)",
+   "now": {
+    "escalated": "Record B has no reign window, so the required reign-window corroboration is missing; matching prenomina and nomen in dynasty 25 are insufficient for approval."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-13.03 (Nerkare)",
+   "b": "ryholt-13.3 (Nerikare)",
+   "now": {
+    "escalated": "Shared throne name Nerkare/Nerikare and Dynasty 13 fit, but Record A's reign window is unknown and no Horus/nomen corroboration exists, so shared prenomen alone cannot justify a merge."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-13.24 (Intef IV)",
+   "b": "ryholt-13.24 (Antef V)",
+   "now": {
+    "escalated": "Shared Sehetepkare prenomen and dynasty, but conflicting regnal numerals (Intef IV vs Antef V) and both reign windows unknown, so escalate."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-13.31 (Sobekhotep VI)",
+   "b": "pharaoh_se-Sobekhotep-VI (Sobekhotep VI)",
+   "now": {
+    "escalated": "Shared Khahotepre prenomen and dynasty 13, but Record A's reign window is unknown and Record B's alt name Sobekhotep V conflicts with the numeral VI, so identity is unconfirmed."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-13.31 (Sobekhotep VI)",
+   "b": "ryholt-13.31 (Sobkhotep VI)",
+   "now": {
+    "escalated": "Shared prenomen Khahotepre and nomen Sobkhotep VI align in Dynasty 13, but Leprohon's reign window is unknown, so the required reign-window corroboration is missing."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-13.32 (Ib-Iau)",
+   "b": "pharaoh_se-Wahibra-Jaib (Wahibra Jaib)",
+   "now": {
+    "escalated": "Shared Wahibre prenomen and Ib-iau nomen in Dynasty 13, but Record A's reign window is unknown, so chronological consistency cannot be verified; escalate."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-13.50 (Mentuhotep V)",
+   "b": "pharaoh_se-Mentuhotep-V (Mentuhotep V)",
+   "now": {
+    "escalated": "Both records share prenomen Sewadjare and nomen Mentuhotep in Dynasty 13, but record B carries the conflicting alternate numeral Mentuhotep VI and both reign windows are unknown, so identity cannot be safely approved."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.05 (Sheshi)",
+   "b": "pharaoh_se-Sheshi (Sheshi)",
+   "now": {
+    "escalated": "Shared prenomen Maaibre and nomen Sheshi in Dynasty 14 agree, but record A's reign window is unknown, so reign-window consistency cannot be verified; escalate rather than approve."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.07 (Khakherure)",
+   "b": "pharaoh_se-Khakherura (Khakherura)",
+   "now": {
+    "escalated": "Shared prenomen and Dynasty 14 agree, but both reign windows are unknown and Record B adds a second prenomen (Kha tit Ra), so identity cannot be corroborated."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.07 (Khakherure)",
+   "b": "ryholt-14.7 (Khakherewre)",
+   "now": {
+    "escalated": "Throne names Khakherure/Khakherewre are transliteration variants in the same dynasty with no conflicting titulary, but both reign windows are unknown, so identity cannot be corroborated."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.08 (Nebfaure)",
+   "b": "ryholt-14.8 (Nebefawre)",
+   "now": {
+    "escalated": "Shared Dynasty 14 prenomen (Nebfaure/Nebefawre), but one record lacks any reign window and the other is only partial, so chronological corroboration is missing."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.09 (Sehebre)",
+   "b": "pharaoh_se-Sehabra (Sehabra)",
+   "now": {
+    "escalated": "Shared Dynasty 14 prenomen with only transliteration variance, but both reign windows are unknown and no other titulary corroborates; a shared throne name alone cannot justify approval."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.09 (Sehebre)",
+   "b": "ryholt-14.9 (Sehebre)",
+   "now": {
+    "escalated": "Throne name Sehebre and Dynasty 14 agree, but both reign windows are unknown and no Horus name or other titulary corroborates, so identity cannot be confirmed."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.12 (Nebdjefare)",
+   "b": "ryholt-14.12 (Nebdjefare)",
+   "now": {
+    "escalated": "Shared throne name Nebdjefare and dynasty 14 agree, but Record A's reign window is entirely unknown, so the required reign-window corroboration is missing and a shared prenomen alone cannot confirm identity."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.13 (Webenre I)",
+   "b": "pharaoh_se-Webenra (Webenra)",
+   "now": {
+    "escalated": "Same 14th-Dynasty prenomen Webenra, but Record A bears regnal numeral 'I' while B has none, and both reign windows are unknown, so identity is unconfirmed."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.22 (Sekheperenre)",
+   "b": "ryholt-14.22 (Sekheperenre)",
+   "now": {
+    "escalated": "Records share the prenomen Sekheperenre and Dynasty 14, but both reign windows are unknown and no other titulary corroborates, so a prenomen match alone cannot confirm identity."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.23 (Djedkherure)",
+   "b": "pharaoh_se-Djedkherura (Djedkherura)",
+   "now": {
+    "escalated": "Both records share the Djedkherure prenomen and Dynasty 14, but reign windows are unknown in both, so chronological corroboration is missing and a prenomen-only merge cannot be approved."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.23 (Djedkherure)",
+   "b": "ryholt-14.23 (Djedkherewre)",
+   "now": {
+    "escalated": "Shared prenomen Djedkherure/Djedkherewre and Dynasty 14 agree, but both reign windows are unknown and no Horus name corroborates identity, so the match cannot be confirmed."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.28 (Neferibre)",
+   "b": "pharaoh_se-Neferibra (Neferibra)",
+   "now": {
+    "escalated": "Shared prenomen Neferibre and Dynasty 14 match, but both reign windows are unknown and no other titulary corroborates; a shared throne name alone cannot carry a merge."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-14.30 (Khakare)",
+   "b": "pharaoh_se-Khakara (Khakara)",
+   "now": {
+    "escalated": "Shared prenomen Khakare/Khakara and dynasty 14 match, but both reign windows are unknown, so there is no chronological corroboration; a shared throne name alone cannot carry approval."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-16.05 (Mentuhotep VI)",
+   "b": "pharaoh_se-Mentuhotepi (Mentuhotepi)",
+   "now": {
+    "escalated": "Same Sankhenre prenomen and Dynasty 16, but conflicting regnal numerals (VI vs VII) and Record A's reign is unknown, so identity cannot be safely confirmed."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-17.26 (Senakhtenre Ahmose (I))",
+   "b": "pharaoh_se-Senakhtenra (Senakhtenra)",
+   "now": {
+    "escalated": "Titulary matches (Senakhtenre prenomen, Merymaat Horus, Ahmose nomen), but the '(I)' numeral appears in only one record and A's reign window is unknown, so policy bars approval."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-17.26 (Senakhtenre Ahmose (I))",
+   "b": "ryholt-17.7 (Siamun (?))",
+   "now": {
+    "escalated": "Shared prenomen Senakhtenre, but conflicting nomina (Ahmose vs Siamun) and Record A's reign window is unknown, so identity cannot be corroborated."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-17.27 (Seqenenre Tao)",
+   "b": "ryholt-17.8 (Tao)",
+   "now": {
+    "escalated": "Shared prenomen Seqenenre and dynasty 17 suggest the same king, but the Horus names conflict (Khaemwaset vs ḥꜥ-m-tꜣwy) and Record A's reign window is unknown, so corroboration is incomplete."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-18.01 (Ahmose (II))",
+   "b": "pharaoh_se-Ahmose-I (Ahmose I)",
+   "now": {
+    "escalated": "Titulary matches exactly (Nebpehtyra, Aa kheperu, Ka em Waset, Iahmesu), but regnal numerals differ — Ahmose (II) vs Ahmose I — so the numeral convention conflict needs human resolution."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-2.07 (Peribsen)",
+   "b": "pharaoh_se-Peribsen (Peribsen)",
+   "now": {
+    "escalated": "Shared throne name Peribsen and Dynasty 2 agree, but Record A lacks the Horus name and has an unknown reign window, so identity cannot be corroborated under policy."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-21.03 (Amenemnisu)",
+   "b": "pharaoh_se-Amenemnesut (Amenemnesut)",
+   "now": {
+    "escalated": "Records share the same 21st Dynasty prenomen (Neferkare Heqawaset) and nomen, but Record A's reign window is unknown, so identity cannot be corroborated under the precision-first rules; escalate."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-22.03 (Sheshonq IIa)",
+   "b": "pharaoh_se-Shoshenq-II (Shoshenq II)",
+   "now": {
+    "escalated": "Shared prenomen Heqakheperre Setepenre in dynasty 22, but both reign windows are unknown and the regnal numerals differ (IIa vs II), so identity cannot be corroborated."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-27.01 (Cambyses)",
+   "b": "pharaoh_se-Cambyses-II (Cambyses II)",
+   "now": {
+    "escalated": "Shared prenomen Mesut Ra, Horus Sema tawy, and nomen Kembud in Dynasty 27 corroborate, but Record A lacks the numeral 'II' and has an unknown reign window, which policy requires escalating."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-6.02 (Userkare (I))",
+   "b": "pharaoh_se-Userkara (Userkara)",
+   "now": {
+    "escalated": "Reign windows are unknown in both records, neither gives a Horus name, and the numeral '(I)' appears in only one record, so the shared throne name cannot be corroborated."
+   }
+  },
+  {
+   "a": "leprohon-leprohon-8.14 (Qakare Ibi I)",
+   "b": "pharaoh_se-Qakara-Ibi (Qakara Ibi)",
+   "now": {
+    "escalated": "Shared Dynasty 8 prenomen Qakare and nomen Ibi, but record A's numeral in 'Ibi I' is unmatched in record B and both reign windows are unknown, so identity needs review."
+   }
+  },
+  {
+   "a": "pharaoh_se-Djedkherura (Djedkherura)",
+   "b": "ryholt-14.23 (Djedkherewre)",
+   "now": {
+    "escalated": "Throne name and 14th-dynasty label agree, but both reign windows are unknown and no Horus name or other titulary corroborates; shared prenomen alone is insufficient to approve."
+   }
+  },
+  {
+   "a": "pharaoh_se-Intef-IV (Intef IV)",
+   "b": "ryholt-13.24 (Antef V)",
+   "now": {
+    "escalated": "Both share prenomen Sehotepkare in dynasty 13, but regnal numerals differ (Intef IV vs Antef V) and both reign windows are unknown, so identity cannot be safely confirmed."
+   }
+  },
+  {
+   "a": "pharaoh_se-Intef-VI (Intef VI)",
+   "b": "ryholt-17.4 (Antef VII)",
+   "now": {
+    "escalated": "Shared Nubkheperre prenomen and Neferkheperu Horus, but Intef VI vs VII numerals conflict and Ryholt adds a second Horus name; escalated for manual review."
+   }
+  },
+  {
+   "a": "pharaoh_se-Kakemura (Kakemura)",
+   "b": "ryholt-14.27 (Kakemure)",
+   "now": {
+    "escalated": "Shared prenomen and dynasty (14) agree, but both reign windows are unknown and no Horus name or other titulary corroborates, so identity cannot be confirmed."
+   }
+  },
+  {
+   "a": "pharaoh_se-Khakara (Khakara)",
+   "b": "ryholt-14.30 (Khakare)",
+   "now": {
+    "escalated": "Shared prenomen and dynasty, but both reign windows are unknown and no additional titulary corroborates identity; a shared throne name alone is insufficient."
+   }
+  },
+  {
+   "a": "pharaoh_se-Khakherura (Khakherura)",
+   "b": "ryholt-14.7 (Khakherewre)",
+   "now": {
+    "escalated": "Shared prenomen in the same dynasty, but both reign windows are unknown and Record A carries a conflicting second prenomen (Khatitre), so the name-only match is insufficient to approve."
+   }
+  },
+  {
+   "a": "pharaoh_se-Khendjer (Khendjer)",
+   "b": "ryholt-13.22 (Khendjer)",
+   "now": {
+    "escalated": "Shared prenomen Userkare/Woserkare and nomen Khendjer, but the reign windows do not overlap, so policy requires escalation rather than approval."
+   }
+  },
+  {
+   "a": "pharaoh_se-Merdjefara (Merdjefara)",
+   "b": "ryholt-14.10 (Merdjefare)",
+   "now": {
+    "escalated": "Shared prenomen Merdjefare and 14th Dynasty agree, but the given reign windows do not overlap (begins 1694 BCE vs ends 1699 BCE), and both are partly unknown, so identity cannot be approved."
+   }
+  },
+  {
+   "a": "pharaoh_se-Nebdjefara (Nebdjefara)",
+   "b": "ryholt-14.12 (Nebdjefare)",
+   "now": {
+    "escalated": "Shared prenomen Nebdjefare and dynasty 14 align, but Record A's reign window is entirely unknown, so identity cannot be corroborated; escalate per policy."
+   }
+  },
+  {
+   "a": "pharaoh_se-Nebfaura (Nebfaura)",
+   "b": "ryholt-14.8 (Nebefawre)",
+   "now": {
+    "escalated": "Shared throne name and dynasty match, but both reign windows are incomplete and only meet at 1704 BCE, so identity is not securely corroborated."
+   }
+  },
+  {
+   "a": "pharaoh_se-Nebsenra (Nebsenra)",
+   "b": "ryholt-14.19 (Nebsenre)",
+   "now": {
+    "escalated": "Shared throne name (Nebsenre/Nebsenra) and same dynasty, but both reign windows are unknown and no other titulary corroborates, so identity cannot be confirmed."
+   }
+  },
+  {
+   "a": "pharaoh_se-Nedjemibra (Nedjemibra)",
+   "b": "ryholt-13.12 (Nedjemibre)",
+   "now": {
+    "escalated": "Shared prenomen Nedjemibre and dynasty 13 agree, but the reign windows only touch at 1780 BCE with the other bounds unknown, so identity is not corroborated."
+   }
+  },
+  {
+   "a": "pharaoh_se-Neferhotep-I (Neferhotep I)",
+   "b": "ryholt-13.27 (Neferhotep I)",
+   "now": {
+    "escalated": "Titulary matches (Khasekhemre Neferhotep I, Horus grg-tawy, 13th Dynasty), but the reign windows do not overlap (1742–1731 vs 1721–1710 BC); policy requires escalation, never approval."
+   }
+  },
+  {
+   "a": "pharaoh_se-Neferibra (Neferibra)",
+   "b": "ryholt-14.28 (Neferibre)",
+   "now": {
+    "escalated": "Both records share the Fourteenth Dynasty prenomen Neferibra/Neferibre, but with unknown reign windows and no corroborating titulary, identity cannot be confirmed under the precision-first policy."
+   }
+  },
+  {
+   "a": "pharaoh_se-Nerikara (Nerikara)",
+   "b": "ryholt-13.3 (Nerikare)",
+   "now": {
+    "escalated": "Shared 13th-Dynasty prenomen Nerikare matches, but both reign windows are open-ended and intersect only at 1796 BC, so the records lack sufficient corroboration; escalate per policy."
+   }
+  },
+  {
+   "a": "pharaoh_se-Sehabra (Sehabra)",
+   "b": "ryholt-14.9 (Sehebre)",
+   "now": {
+    "escalated": "Both are 14th-Dynasty throne-name variants (Sehabra/Sehebre) with unknown reign windows and no other titulary; a shared prenomen alone cannot corroborate identity, so escalate."
+   }
+  },
+  {
+   "a": "pharaoh_se-Sekheperenra (Sekheperenra)",
+   "b": "ryholt-14.22 (Sekheperenre)",
+   "now": {
+    "escalated": "Both records share the same 14th-dynasty prenomen, but reign windows are unknown and no independent titulary corroborates identity; escalate rather than approve."
+   }
+  },
+  {
+   "a": "pharaoh_se-Senakhtenra (Senakhtenra)",
+   "b": "ryholt-17.7 (Siamun (?))",
+   "now": {
+    "escalated": "Shared prenomen Senakhtenre and identical reign window, but conflicting birth names (Iahmesu vs Siamun(?)) indicate a known scholarly dispute; cannot safely approve or reject."
+   }
+  },
+  {
+   "a": "pharaoh_se-Seqenenra (Seqenenra)",
+   "b": "ryholt-17.8 (Tao)",
+   "now": {
+    "escalated": "Prenomen, nomen, dynasty, and reign window agree, but the Horus names differ materially (Khaemwaset vs ḥꜥ-m-tꜣwy), a titulary conflict that requires expert review before merging."
+   }
+  },
+  {
+   "a": "pharaoh_se-Sobekhotep-IV (Sobekhotep IV)",
+   "b": "ryholt-13.29 (Sobkhotep IV)",
+   "now": {
+    "escalated": "Despite matching prenomen Khaneferre, Horus Ankh-ib-tawy, and nomen Sobekhotep IV, the reign windows (-1709..-1701 vs -1732..-1720) do not overlap, so policy treats this as no corroboration."
+   }
+  },
+  {
+   "a": "pharaoh_se-Wahibra-Jaib (Wahibra Jaib)",
+   "b": "ryholt-13.32 (Ibiaw)",
+   "now": {
+    "escalated": "Same 13th-Dynasty Wahibre/Ibiaw names, but the reign windows do not overlap (-1712..-1701 vs -1695..-1685), so policy requires escalation."
+   }
+  },
+  {
+   "a": "pharaoh_se-Webenra (Webenra)",
+   "b": "ryholt-14.13 (Webenre)",
+   "now": {
+    "escalated": "Shared prenomen Webenra/Webenre and same dynasty, but both reign windows are unknown, no Horus name corroborates, and 14th-dynasty prenomen reuse makes identity unverifiable."
+   }
+  },
+  {
+   "a": "pharaoh_se-Wegaf (Wegaf)",
+   "b": "ryholt-13.21 (Wegaf)",
+   "now": {
+    "escalated": "Prenomen Khutawyre, Horus Sekhem-netjeru, and nomen Wegaf all agree, but the reign windows (-1766..-1764 vs -1759..-1757) do not overlap, so policy requires escalation."
+   }
+  }
+ ],
+ "before": {
+  "artifacts_by_status": {
+   "abstained": 2232,
+   "ambiguous": 683,
+   "resolved": 8222,
+   "unmatched": 330
+  },
+  "mentions_by_status": {
+   "abstained": 2241,
+   "ambiguous": 689,
+   "resolved": 8279,
+   "unmatched": 346
+  }
+ },
+ "graph_stats": {
+  "after": {
+   "approvedLinks": 327,
+   "candidates": 2208,
+   "claims": 5913,
+   "clusters": 173,
+   "escalations": 1025,
+   "intraSourceIdentities": 16,
+   "multiSourceClusters": 171,
+   "rulers": 1159
+  },
+  "before": {
+   "approvedLinks": 354,
+   "candidates": 2208,
+   "claims": 5913,
+   "clusters": 160,
+   "escalations": 974,
+   "intraSourceIdentities": 16,
+   "multiSourceClusters": 159,
+   "rulers": 1159
+  }
+ },
+ "inputs": {
+  "after_graph_sha256": "c32e1d044cacf5c78ce58a8a42aa609b6ae95f84c09b7526d7b744859ed9ab63",
+  "before_graph_sha256": "b00ca2de74bca4fb5ce48ecf1982389a5331cfe0c3f96e191e8efd2f7a28cb7e",
+  "control_sha256": "aaec22bc9ce04cd7d566c12a1eabd55ade185c868907af5968f77c4592268c69",
+  "measure_342_sha256": "bd3425ffc58d912e7a90f8c56231fb68aa96720fabaa278eaefcd17a7ba26f1b",
+  "mention_ledger": {
+   "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
+   "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+   "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+   "rows": 148871
+  },
+  "resolver_sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
+  "script_sha256": "61de49f6eaf26d1994e38137d51146c223584f1c98d9b384542af842e4482ee9"
+ },
+ "merged_clusters": [
+  {
+   "before_units": [
+    "cluster-beckerath-12.08",
+    "pharaoh_se-Neferusobek"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-12.08",
+     "b": "pharaoh_se-Neferusobek",
+     "basis": "horus",
+     "reason": "Both records share the same Dynasty 12 prenomen (Ka Sobek Ra/Sobek ka Ra), Horus name Meryt Ra, and nomen Sobekneferu, with no conflicting titulary."
+    }
+   ],
+   "label": "(Queen) Sobekneferu",
+   "members": [
+    "beckerath-12.08 (Kgin.Nefru-sobek)",
+    "leprohon-leprohon-12.08 ((Queen) Sobekneferu)",
+    "pharaoh_se-Neferusobek (Neferusobek)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-21.02",
+    "kitchen-21.02"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-21.02",
+     "b": "kitchen-21.02",
+     "basis": "name_dynasty",
+     "reason": "Same nomen (transliteration variant) in Dynasty 21 with identical reign windows; Record B lacks throne and Horus names, so the missing-field clause applies and no field conflicts."
+    }
+   ],
+   "label": "Amen-em-nisu",
+   "members": [
+    "beckerath-21.02 (Amen-em-nisu)",
+    "kitchen-21.02 (Amenemnisu)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-18.07",
+    "pharaoh_se-Amenhotep-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-18.07",
+     "b": "pharaoh_se-Amenhotep-II",
+     "basis": "prenomen",
+     "reason": "Both records share the prenomen Aakheperure (A-chepru-rê) in Dynasty 18 with near-identical reign windows (-1428..-1397 vs -1425..-1400) and no conflicting titulary, so they denote Amenhotep II."
+    },
+    {
+     "a": "leprohon-leprohon-18.07",
+     "b": "pharaoh_se-Amenhotep-II",
+     "basis": "prenomen",
+     "reason": "Both records share the same 18th-Dynasty prenomen Aa-kheperu-Ra, identical four Horus names, and matching nomen Amenhotep with no conflicting titulary."
+    }
+   ],
+   "label": "Amenhotep II",
+   "members": [
+    "beckerath-18.07 (Amenophis II.)",
+    "leprohon-leprohon-18.07 (Amenhotep II)",
+    "pharaoh_se-Amenhotep-II (Amenhotep II)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-19.05",
+    "leprohon-leprohon-19.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-19.06",
+     "b": "pharaoh_se-Amenmesse",
+     "basis": "horus",
+     "reason": "Same Dynasty 19 king: identical prenomen Menmire Setepenre, identical Horus name Ka-nakht-mery-Maat-semen-tawy, and matching nomen Amenmesse heqa Waset, with no conflicting titulary."
+    }
+   ],
+   "label": "Amenmesse",
+   "members": [
+    "beckerath-19.05 (Amen-mes-su)",
+    "leprohon-leprohon-19.06 (Amenmesse)",
+    "pharaoh_se-Amenmesse (Amenmesse)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.04",
+    "kitchen-26.04"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-26.04",
+     "b": "kitchen-26.04",
+     "basis": "name_dynasty",
+     "reason": "Both name Apries in dynasty 26 with identical reign windows -589..-570; record B lacks throne name, so the same king name and dynasty plus full window overlap corroborate identity."
+    },
+    {
+     "a": "kitchen-26.04",
+     "b": "pharaoh_se-Apries",
+     "basis": "name_dynasty",
+     "reason": "Record A gives no throne or Horus name; both share the nomen Apries, dynasty 26, and an identical reign window, while B's names Haaibre/Wahib and Hophra corroborate rather than conflict."
+    }
+   ],
+   "label": "Apries",
+   "members": [
+    "beckerath-26.04 (Apries)",
+    "kitchen-26.04 (Apries)",
+    "leprohon-leprohon-26.04 (Wahibre)",
+    "pharaoh_se-Apries (Apries)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-31.02",
+    "pharaoh_se-Arses"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-31.02",
+     "b": "pharaoh_se-Arses",
+     "basis": "name_dynasty",
+     "reason": "Both records give the same king name (Arses) in dynasty 31 with fully overlapping and identical reign windows (-338..-336) and no conflicting titulary."
+    }
+   ],
+   "label": "Arses",
+   "members": [
+    "beckerath-31.02 (Arses)",
+    "pharaoh_se-Arses (Arses)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-27.04",
+    "pharaoh_se-Artaxerxes-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-27.04",
+     "b": "pharaoh_se-Artaxerxes-I",
+     "basis": "name_dynasty",
+     "reason": "Both records name Artaxerxes I in dynasty 27 with no throne or Horus name, matching numerals, and near-identical overlapping reign windows (465/464–424 BCE)."
+    }
+   ],
+   "label": "Artaxerxes I",
+   "members": [
+    "beckerath-27.04 (Artaxerxes I.)",
+    "pharaoh_se-Artaxerxes-I (Artaxerxes I)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-31.03",
+    "pharaoh_se-Darius-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-31.03",
+     "b": "pharaoh_se-Darius-III",
+     "basis": "name_dynasty",
+     "reason": "Both records lack throne and Horus names, share the same Darius III nomen in Dynasty 31, match regnal numeral III, and their reign windows overlap fully across the shorter span."
+    }
+   ],
+   "label": "Dareios III.",
+   "members": [
+    "beckerath-31.03 (Dareios III.)",
+    "pharaoh_se-Darius-III (Darius III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.08",
+    "cluster-leprohon-leprohon-5.08"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.08",
+     "b": "pharaoh_se-Djedkara-Isesi",
+     "basis": "name_dynasty",
+     "reason": "Record A lacks throne and Horus names, but both give the same king name Isesi in dynasty 5 with reign windows overlapping most of the shorter span and no conflicting field."
+    }
+   ],
+   "label": "Djed-ka-re Isesi",
+   "members": [
+    "beckerath-05.08 (Djed-ka-re Isesi)",
+    "leprohon-leprohon-5.08 (Djedkare)",
+    "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-1.03",
+    "pharaoh_se-Djet"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-1.03",
+     "b": "pharaoh_se-Djet",
+     "basis": "name_dynasty",
+     "reason": "Both records are Dynasty 1 with the same Horus name Djet/Wadjet (spelling variants only); the throne name in B is a known alternate for Djet, with no conflicting titulary."
+    }
+   ],
+   "label": "Djet",
+   "members": [
+    "leprohon-leprohon-1.03 (Djet/Wadjet)",
+    "pharaoh_se-Djet (Djet)"
+   ]
+  },
+  {
+   "before_units": [
+    "kitchen-22.06",
+    "pharaoh_se-Harsiese-A"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-22.06",
+     "b": "pharaoh_se-Harsiese-A",
+     "basis": "prenomen",
+     "reason": "Exact shared prenomen Hedjkheperre Setepenamun, matching Harsiese nomen, and overlapping Theban 22nd-Dynasty reign windows confirm the same king; 'A' is only a modern disambiguator."
+    }
+   ],
+   "label": "Harsiese",
+   "members": [
+    "kitchen-22.06 (Harsiese)",
+    "pharaoh_se-Harsiese-A (Harsiese A)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.02",
+    "pharaoh_se-Intef-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.02",
+     "b": "pharaoh_se-Intef-I",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Sehertawy and the same nomen Intef I in Dynasty 11, with no conflicting titulary, numerals, or dynasty; the shared Horus name corroborates identity."
+    }
+   ],
+   "label": "Intef I",
+   "members": [
+    "leprohon-leprohon-11a.02 (Intef I)",
+    "pharaoh_se-Intef-I (Intef I)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.03",
+    "pharaoh_se-Intef-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.03",
+     "b": "pharaoh_se-Intef-II",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Wahankh, the king name Intef II, and Dynasty 11, with matching nomina ('Sa Ra Intef aa'); no conflicting titulary."
+    }
+   ],
+   "label": "Intef II",
+   "members": [
+    "leprohon-leprohon-11a.03 (Intef II)",
+    "pharaoh_se-Intef-II (Intef II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.04",
+    "pharaoh_se-Intef-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.04",
+     "b": "pharaoh_se-Intef-III",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Nakht neb tep-nefer and nomen Intef III within Dynasty 11, with matching regnal numeral and no conflicting titulary; corroboration rests on titulary, not the unknown reign window."
+    }
+   ],
+   "label": "Intef III",
+   "members": [
+    "leprohon-leprohon-11a.04 (Intef III)",
+    "pharaoh_se-Intef-III (Intef III)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.01",
+    "pharaoh_se-Mentuhotep-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.01",
+     "b": "pharaoh_se-Mentuhotep-I",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Tepy-a/Tepia, identical nomina 'It netjeru Mentuhotep aa mery Satet nebet Abu,' and Eleventh Dynasty context, with no conflicting titulary."
+    }
+   ],
+   "label": "Mentuhotep I",
+   "members": [
+    "leprohon-leprohon-11a.01 (Mentuhotep I)",
+    "pharaoh_se-Mentuhotep-I (Mentuhotep I)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-leprohon-leprohon-26.02",
+    "kitchen-26.02"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.02",
+     "b": "pharaoh_se-Necho-II",
+     "basis": "name_dynasty",
+     "reason": "Same dynasty 26, identical reign window (-610..-595), matching regnal numeral II; Record B's nomen Ni kau and throne Wehemibre are consistent with Necho II, and no field conflicts."
+    }
+   ],
+   "label": "Necho II",
+   "members": [
+    "kitchen-26.02 (Necho II)",
+    "leprohon-leprohon-26.02 (Nekau II)",
+    "pharaoh_se-Necho-II (Necho II)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-29.01",
+    "cluster-leprohon-leprohon-29.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-29.01",
+     "b": "leprohon-leprohon-29.01",
+     "basis": "name_dynasty",
+     "reason": "Both records share the 29th-dynasty prenomen Baenre/Bi-en-rê and nomen Nefaarud/Nepherites I with matching numeral I and no conflicting titulary; B's Horus Aa-ib also matches Nepherites I."
+    },
+    {
+     "a": "beckerath-29.01",
+     "b": "pharaoh_se-Neferites-I",
+     "basis": "name_dynasty",
+     "reason": "Both records share the same 29th Dynasty king: matching prenomen Ba-en-Ra, identical reign window 399–393 BCE, and consistent nomina Nepherites/Nef-aa-rud; no conflicting titulary."
+    }
+   ],
+   "label": "Nefaarudu I",
+   "members": [
+    "beckerath-29.01 (Nepherites I.)",
+    "leprohon-leprohon-29.01 (Nefaarudu I)",
+    "pharaoh_se-Neferites-I (Neferites I)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.06",
+    "cluster-leprohon-leprohon-5.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.06",
+     "b": "pharaoh_se-Niuserra-Ini",
+     "basis": "name_dynasty",
+     "reason": "A lacks throne and Horus names; both share the nomen Ini in Dynasty 5, windows overlap by most of the shorter reign, and B's Ni-user-Ra/Setibtawe titulary conflicts with nothing."
+    }
+   ],
+   "label": "Ni-user-rê Ini",
+   "members": [
+    "beckerath-05.06 (Ni-user-rê Ini)",
+    "leprohon-leprohon-5.06 (Niuserre)",
+    "pharaoh_se-Niuserra-Ini (Niuserra Ini)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-21.05",
+    "kitchen-21.05"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-21.05",
+     "b": "kitchen-21.05",
+     "basis": "name_dynasty",
+     "reason": "Record B has no throne or Horus name; both share the nomen Osochor and dynasty 21 with identical reign windows (-984..-978) and no conflicting titulary, satisfying the missing-field corroboration rule."
+    }
+   ],
+   "label": "Osochor",
+   "members": [
+    "beckerath-21.05 (Osochor)",
+    "kitchen-21.05 (Osochor)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-22.05",
+    "kitchen-22.05",
+    "leprohon-leprohon-22.06",
+    "pharaoh_se-Osorkon-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-22.05",
+     "b": "kitchen-22.05",
+     "basis": "name_dynasty",
+     "reason": "Both records share the same throne name (Usermaatre Setepenamun), same king name Osorkon II, Dynasty 22, and overlapping reign windows with matching regnal numeral."
+    },
+    {
+     "a": "beckerath-22.05",
+     "b": "leprohon-leprohon-22.06",
+     "basis": "name_dynasty",
+     "reason": "Both records denote Osorkon II of Dynasty 22, sharing the prenomen Usermaatre Setepenamun and the nomen Weserken/Osorkon with matching Horus names and no conflicts."
+    },
+    {
+     "a": "kitchen-22.05",
+     "b": "leprohon-leprohon-22.06",
+     "basis": "name_dynasty",
+     "reason": "B's prenomen Weser-maat-Ra setep-en-Amun, Horus name Kanakht Khaemwaset, and nomen Osorkon Si-Bastet all match Kitchen's Dynasty 22 Osorkon II, with no conflicting titulary; B's missing reign dates are non-blocking."
+    },
+    {
+     "a": "kitchen-22.05",
+     "b": "pharaoh_se-Osorkon-II",
+     "basis": "name_dynasty",
+     "reason": "Same throne name (Usimare Setepenamun), same 22nd Dynasty, overlapping reign windows, and consistent Osorkon II titulary corroborate identity."
+    }
+   ],
+   "label": "Osorkon II",
+   "members": [
+    "beckerath-22.05 (Osorkon II.)",
+    "kitchen-22.05 (Osorkon II)",
+    "leprohon-leprohon-22.06 (Osorkon II)",
+    "pharaoh_se-Osorkon-II (Osorkon II)"
+   ]
+  },
+  {
+   "before_units": [
+    "kitchen-23.04",
+    "pharaoh_se-Osorkon-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-23.04",
+     "b": "pharaoh_se-Osorkon-III",
+     "basis": "name_dynasty",
+     "reason": "Both records give the same 23rd-Dynasty prenomen (Usermaatre Setepenamun = User Maat Ra setep en Amun) and nomen Osorkon/Userken III, with overlapping reign windows and no conflicting titulary."
+    }
+   ],
+   "label": "Osorkon III",
+   "members": [
+    "kitchen-23.04 (Osorkon III)",
+    "pharaoh_se-Osorkon-III (Osorkon III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-21.07",
+    "leprohon-leprohon-21.08"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-21.07",
+     "b": "leprohon-leprohon-21.08",
+     "basis": "name_dynasty",
+     "reason": "Shared throne name Titkheperure Setepenre and matching nomen Psusennes/Pasebakhaenniut II within Dynasty 21, numeral II agreeing, no conflicting titulary; Leprohon's missing reign window is a gap, not a conflict."
+    }
+   ],
+   "label": "Pa-Seba-Kha-En-Niut II",
+   "members": [
+    "beckerath-21.07 (Psusennes II.)",
+    "leprohon-leprohon-21.08 (Pa-Seba-Kha-En-Niut II)"
+   ]
+  },
+  {
+   "before_units": [
+    "kitchen-23.01",
+    "pharaoh_se-Pedubast-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-23.01",
+     "b": "pharaoh_se-Pedubast-I",
+     "basis": "name_dynasty",
+     "reason": "Same Pedubast I with matching prenomen Usimare Setepenamun, same Dynasty 23, overlapping reign windows, and no conflicting titulary."
+    }
+   ],
+   "label": "Pedubast I",
+   "members": [
+    "kitchen-23.01 (Pedubast I)",
+    "pharaoh_se-Pedubast-I (Pedubast I)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-06.03",
+    "cluster-leprohon-leprohon-6.03"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-06.03",
+     "b": "pharaoh_se-Pepi-I",
+     "basis": "name_dynasty",
+     "reason": "Both records denote Sixth Dynasty Pepi I: shared prenomen Meryre/Meri-rê and nomen Pepi, plus B's Horus Merytawy, consistent dynasty, and overlapping reign windows; no titulary points to a different king."
+    }
+   ],
+   "label": "Pepi I",
+   "members": [
+    "beckerath-06.03 (Pepi I.)",
+    "leprohon-leprohon-6.03 (Pepy I)",
+    "pharaoh_se-Pepi-I (Pepi I)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-21.08",
+    "leprohon-leprohon-21a.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-21.08",
+     "b": "leprohon-leprohon-21a.01",
+     "basis": "name_dynasty",
+     "reason": "Both are 21st-dynasty Pinodjem I; Beckerath's throne name Kheper-ka-Ra Setep-en-Amun matches Leprohon's Kha-kheper-Ra Setep-en-Amun (transliteration order only), corroborated by Leprohon's Horus name Kanakht Meryamun."
+    }
+   ],
+   "label": "Pi-nodjem I.",
+   "members": [
+    "beckerath-21.08 (Pi-nodjem I.)",
+    "leprohon-leprohon-21a.01 (Pinodjem I)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.01",
+    "kitchen-26.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.01",
+     "b": "pharaoh_se-Psamtik-I",
+     "basis": "name_dynasty",
+     "reason": "Both are the same 26th-Dynasty king: identical nomen (Psammetichus/Psamtik I) and reign window -664..-610; A supplies no titulary conflicting with B's Wahibre/Aa-ib."
+    }
+   ],
+   "label": "Psametik I.",
+   "members": [
+    "beckerath-26.01 (Psametik I.)",
+    "kitchen-26.01 (Psammetichus I)",
+    "leprohon-leprohon-26.01 (Psamtek I)",
+    "pharaoh_se-Psamtik-I (Psamtik I)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.03",
+    "kitchen-26.03"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.03",
+     "b": "pharaoh_se-Psamtik-II",
+     "basis": "name_dynasty",
+     "reason": "Record A lacks throne and Horus names; both agree on Psammetichus/Psamtik II in dynasty 26 with identical reign windows 595–589 BCE and matching regnal numeral, with no conflicting titulary."
+    }
+   ],
+   "label": "Psametik II.",
+   "members": [
+    "beckerath-26.03 (Psametik II.)",
+    "kitchen-26.03 (Psammetichus II)",
+    "leprohon-leprohon-26.03 (Psamtek II)",
+    "pharaoh_se-Psamtik-II (Psamtik II)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.06",
+    "kitchen-26.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.06",
+     "b": "pharaoh_se-Psamtik-III",
+     "basis": "name_dynasty",
+     "reason": "Record A lacks throne and Horus names; same dynasty 26, matching numeral III and identical reign window -526..-525, and B's Ankhkaenre prenomen is historically Psamtik III's, with no conflicting fields."
+    }
+   ],
+   "label": "Psametik III.",
+   "members": [
+    "beckerath-26.06 (Psametik III.)",
+    "kitchen-26.06 (Psammetichus III)",
+    "leprohon-leprohon-26.06 (Psamtek III)",
+    "pharaoh_se-Psamtik-III (Psamtik III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-21.03",
+    "kitchen-21.03",
+    "pharaoh_se-Psusennes-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-21.03",
+     "b": "kitchen-21.03",
+     "basis": "name_dynasty",
+     "reason": "Same king name and numeral, same 21st Dynasty, reign windows overlap almost entirely (46 of 48 years); Record B supplies no throne or Horus name to conflict."
+    },
+    {
+     "a": "kitchen-21.03",
+     "b": "pharaoh_se-Psusennes-I",
+     "basis": "name_dynasty",
+     "reason": "Both denote Psusennes I of Dynasty 21; record A has no throne/Horus name (missing field), numerals match, and reign windows overlap most of the shorter window with only a decade-scale chronology offset."
+    }
+   ],
+   "label": "Psusennes I",
+   "members": [
+    "beckerath-21.03 (Psusennes I.)",
+    "kitchen-21.03 (Psusennes I)",
+    "pharaoh_se-Psusennes-I (Psusennes I)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-33.02",
+    "pharaoh_se-Ptolemy-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-33.02",
+     "b": "pharaoh_se-Ptolemy-II",
+     "basis": "horus",
+     "reason": "Shared throne name Userkare Meryamun, matching Horus name Hunu qeni, and nomen Ptolemys in the Ptolemaic dynasty all corroborate the same king, Ptolemy II Philadelphus."
+    }
+   ],
+   "label": "Ptolemy II",
+   "members": [
+    "leprohon-leprohon-33.02 (Ptolemy II Philadelphus)",
+    "pharaoh_se-Ptolemy-II (Ptolemy II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-33.05",
+    "pharaoh_se-Ptolemy-V"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-33.05",
+     "b": "pharaoh_se-Ptolemy-V",
+     "basis": "horus",
+     "reason": "Both records give the same king name Ptolemy V and the same Horus name (Hunu kha em nesu/nisut her set it.ef) in the Ptolemaic dynasty, with consistent titulary and reign window."
+    }
+   ],
+   "label": "Ptolemy V",
+   "members": [
+    "leprohon-leprohon-33.05 (Ptolemy V Epiphanes)",
+    "pharaoh_se-Ptolemy-V (Ptolemy V)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-33.17",
+    "pharaoh_se-Ptolemy-XV"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-33.17",
+     "b": "pharaoh_se-Ptolemy-XV",
+     "basis": "horus",
+     "reason": "Both records share the same distinctive Ptolemaic prenomen, Horus names, and nomina of Caesarion, with consistent dynasty and no conflicting titulary, corroborating identity."
+    }
+   ],
+   "label": "Ptolemy XV",
+   "members": [
+    "leprohon-leprohon-33.17 (Ptolemy XV Caesarion)",
+    "pharaoh_se-Ptolemy-XV (Ptolemy XV)"
+   ]
+  },
+  {
+   "before_units": [
+    "pharaoh_se-Qemau-Siharnedjheritef",
+    "ryholt-13.6"
+   ],
+   "joining_edges": [
+    {
+     "a": "pharaoh_se-Qemau-Siharnedjheritef",
+     "b": "ryholt-13.6",
+     "basis": "prenomen",
+     "reason": "Both records share the prenomen Hotepibre (Hotep-ib-Ra), nomen Siharnedjheritef, Thirteenth Dynasty placement, and an identical reign window, with no conflicting titulary."
+    }
+   ],
+   "label": "Qemau Siharnedjheritef",
+   "members": [
+    "pharaoh_se-Qemau-Siharnedjheritef (Qemau Siharnedjheritef)",
+    "ryholt-13.6 (Siharnedjheritef)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-20.02",
+    "leprohon-leprohon-20.02",
+    "pharaoh_se-Ramesses-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-20.02",
+     "b": "pharaoh_se-Ramesses-III",
+     "basis": "name_dynasty",
+     "reason": "Same dynasty 20 king Ramses III, matching prenomen User-maat-Ra mery-Amun/Horus Ka-nakht, and overlapping reign windows, with no conflicting titulary."
+    },
+    {
+     "a": "leprohon-leprohon-20.02",
+     "b": "pharaoh_se-Ramesses-III",
+     "basis": "horus",
+     "reason": "Both records share the same throne name Weser/User Maat Ra mery Imen, matching Horus titulary, and Ramesses III in Dynasty 20, confirming identity."
+    }
+   ],
+   "label": "Ramesses III",
+   "members": [
+    "beckerath-20.02 (Ramses III.)",
+    "leprohon-leprohon-20.02 (Ramesses III)",
+    "pharaoh_se-Ramesses-III (Ramesses III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-20.06",
+    "leprohon-leprohon-20.06",
+    "pharaoh_se-Ramesses-VII"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-20.06",
+     "b": "pharaoh_se-Ramesses-VII",
+     "basis": "name_dynasty",
+     "reason": "Same dynasty, regnal numeral, and identical prenomen User-maat-Ra setep-en-Ra mery-Amun; reign windows overlap with only minor chronological offset, and no titulary conflicts."
+    },
+    {
+     "a": "leprohon-leprohon-20.06",
+     "b": "pharaoh_se-Ramesses-VII",
+     "basis": "horus",
+     "reason": "Both records share prenomen Usermaatre-setepenre-meryamun, matching Horus names (Ka nakht an em nesu; Ka nakht Ra nefer her) and nomen Ramessu-ity-Amun in Dynasty 20; A's unknown reign window conflicts with nothing."
+    }
+   ],
+   "label": "Ramesses VII",
+   "members": [
+    "beckerath-20.06 (Ramses VII.)",
+    "leprohon-leprohon-20.06 (Ramesses VII)",
+    "pharaoh_se-Ramesses-VII (Ramesses VII)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-20.10",
+    "kitchen-20.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-20.01",
+     "b": "pharaoh_se-Ramesses-XI",
+     "basis": "name_dynasty",
+     "reason": "Same nomen Ramesses XI with matching numeral and Dynasty 20; record A lacks throne/Horus names, and the 29-year reign windows overlap 21 years with no conflicting titulary."
+    }
+   ],
+   "label": "Ramesses XI",
+   "members": [
+    "beckerath-20.10 (Ramses XI.)",
+    "kitchen-20.01 (Ramesses XI)",
+    "leprohon-leprohon-20.10 (Ramesses XI)",
+    "pharaoh_se-Ramesses-XI (Ramesses XI)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.02",
+    "leprohon-leprohon-5.02",
+    "pharaoh_se-Sahura"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.02",
+     "b": "pharaoh_se-Sahura",
+     "basis": "name_dynasty",
+     "reason": "Both records denote Sahure (Sahu-Ra) of dynasty 5 with no conflicting titulary; the ~17-year reign-window offset falls within the allowed inter-chronology tolerance, and only one record lacks titles."
+    },
+    {
+     "a": "leprohon-leprohon-5.02",
+     "b": "pharaoh_se-Sahura",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Neb Khau and the same king name (Sahure/Sahu Ra) in Dynasty 5, with no conflicting titulary."
+    }
+   ],
+   "label": "Sahu-rê",
+   "members": [
+    "beckerath-05.02 (Sahu-rê)",
+    "leprohon-leprohon-5.02 (Sahure)",
+    "pharaoh_se-Sahura (Sahura)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-18.12",
+    "pharaoh_se-Smenkhkara"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-18.12",
+     "b": "pharaoh_se-Smenkhkara",
+     "basis": "prenomen",
+     "reason": "Both records give the same 18th-Dynasty prenomen Ankhkheperure (spelling variant) and nomen Smenkhkare, with closely overlapping reign windows and no conflicting titulary."
+    }
+   ],
+   "label": "Semench-ka-rê Nefer-nefru-aten",
+   "members": [
+    "beckerath-18.12 (Semench-ka-rê Nefer-nefru-aten)",
+    "pharaoh_se-Smenkhkara (Smenkhkara)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-19.06",
+    "cluster-leprohon-leprohon-19.05"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-19.06",
+     "b": "pharaoh_se-Seti-II",
+     "basis": "name_dynasty",
+     "reason": "Shared throne name Userkheperura meryamun with consistent 19th Dynasty and overlapping reign windows, no conflicting titulary; both denote Seti II."
+    }
+   ],
+   "label": "Sethôs II.",
+   "members": [
+    "beckerath-19.06 (Sethôs II.)",
+    "leprohon-leprohon-19.05 (Sety II)",
+    "pharaoh_se-Seti-II (Seti II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-25.04",
+    "pharaoh_se-Shabaka"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-25.04",
+     "b": "pharaoh_se-Shabaka",
+     "basis": "prenomen",
+     "reason": "Both records share the same prenomen (Neferkare), Horus name (Sebahtawy), and nomen (Shabaka) in Dynasty 25; Record A's unknown reign window is missing, not conflicting."
+    }
+   ],
+   "label": "Shabaka",
+   "members": [
+    "leprohon-leprohon-25.04 (Shabaka)",
+    "pharaoh_se-Shabaka (Shabaka)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-22.06",
+    "kitchen-22.08",
+    "pharaoh_se-Shoshenq-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-22.06",
+     "b": "kitchen-22.08",
+     "basis": "name_dynasty",
+     "reason": "Both records share the same prenomen (Usermaatre Setepenre), dynasty 22, and regnal numeral III, with substantially overlapping reign windows and no conflicting titulary."
+    },
+    {
+     "a": "kitchen-22.08",
+     "b": "pharaoh_se-Shoshenq-III",
+     "basis": "name_dynasty",
+     "reason": "Both records denote Shoshenq III of Dynasty 22, sharing the Usermaatre Setepenre/Amun prenomen with overlapping reign windows and no conflicting titulary."
+    }
+   ],
+   "label": "Shoshenq III",
+   "members": [
+    "beckerath-22.06 (Schoschenq III.)",
+    "kitchen-22.08 (Shoshenq III)",
+    "pharaoh_se-Shoshenq-III (Shoshenq III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-21.06",
+    "cluster-leprohon-leprohon-21.07",
+    "kitchen-21.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-21.06",
+     "b": "kitchen-21.06",
+     "basis": "name_dynasty",
+     "reason": "Same nomen Siamun (transliteration variant) in Dynasty 21, identical reign windows, no throne or Horus name in Kitchen and no conflicting field."
+    },
+    {
+     "a": "beckerath-21.06",
+     "b": "leprohon-leprohon-21.07",
+     "basis": "name_dynasty",
+     "reason": "Both records are the 21st-Dynasty Siamun: the prenomen Netjerkheperre-setepenamun and nomen match, Leprohon's Horus titulary is consistent, and no field conflicts."
+    },
+    {
+     "a": "beckerath-21.06",
+     "b": "pharaoh_se-Siamun",
+     "basis": "name_dynasty",
+     "reason": "Both records share the prenomen Netjeri-kheper-Ra setep-en-Amun in dynasty 21 with overlapping reign windows (-978..-959 vs -986..-968) and no conflicting titulary, confirming one king Siamun."
+    },
+    {
+     "a": "kitchen-21.06",
+     "b": "pharaoh_se-Siamun",
+     "basis": "name_dynasty",
+     "reason": "Both records denote the 21st-Dynasty king Siamun: identical nomen, no conflicting titulary, and reign windows overlapping 10 of the shorter 18 years, within allowed chronological offset."
+    }
+   ],
+   "label": "Siamun",
+   "members": [
+    "beckerath-21.06 (Si-amun)",
+    "kitchen-21.06 (Siamun)",
+    "leprohon-leprohon-21.07 (Siamun)",
+    "pharaoh_se-Siamun (Siamun)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-25.05",
+    "kitchen-25.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-25.06",
+     "b": "leprohon-leprohon-25.06",
+     "basis": "name_dynasty",
+     "reason": "Both records give the same dynasty 25 king name Taharqa and matching prenomen Khunefertemre (Nefertumkhure), with B's Horus name Qa-khau consistent and no conflicting titulary."
+    },
+    {
+     "a": "kitchen-25.06",
+     "b": "pharaoh_se-Taharqa",
+     "basis": "name_dynasty",
+     "reason": "Same nomen Taharqa, same 25th Dynasty, identical reign window -690..-664, and prenomina Nefertumkhure/Khunefertemre render the same throne name with no conflicting titulary."
+    }
+   ],
+   "label": "Taharqa",
+   "members": [
+    "beckerath-25.05 (Taharqo)",
+    "kitchen-25.06 (Taharqa)",
+    "leprohon-leprohon-25.06 (Taharqa)",
+    "pharaoh_se-Taharqa (Taharqa)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-leprohon-leprohon-25.07",
+    "kitchen-25.07"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-25.07",
+     "b": "pharaoh_se-Tenutamen",
+     "basis": "name_dynasty",
+     "reason": "Shared prenomen Bakare/Ba ka Ra, same dynasty 25, and nearly identical overlapping reign windows (-664..-656 vs -664..-655) confirm both records denote King Tantamani/Tenutamen."
+    }
+   ],
+   "label": "Tantamani",
+   "members": [
+    "kitchen-25.07 (Tantamani)",
+    "leprohon-leprohon-25.07 (Tanutamun)",
+    "pharaoh_se-Tenutamen (Tenutamen)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-06.01",
+    "leprohon-leprohon-6.01",
+    "pharaoh_se-Teti"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-06.01",
+     "b": "pharaoh_se-Teti",
+     "basis": "name_dynasty",
+     "reason": "Same nomen Teti in Sixth Dynasty; Record A lacks titulary, while B's Horus Sehotep tawy matches Teti and the reign windows fully overlap the shorter span."
+    },
+    {
+     "a": "leprohon-leprohon-6.01",
+     "b": "pharaoh_se-Teti",
+     "basis": "horus",
+     "reason": "Both records give the same Horus name (Sehetep-tawy/Sehotep tawy) and the same nomen Teti in Dynasty 6, with no conflicting titulary."
+    }
+   ],
+   "label": "Teti",
+   "members": [
+    "beckerath-06.01 (Teti)",
+    "leprohon-leprohon-6.01 (Teti)",
+    "pharaoh_se-Teti (Teti)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-18.04",
+    "pharaoh_se-Thutmose-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-18.04",
+     "b": "pharaoh_se-Thutmose-II",
+     "basis": "prenomen",
+     "reason": "Both records share the prenomen A(a)kheperenre and dynasty 18, with overlapping reign windows (-1482–1480 within -1492–1479) and no conflicting titulary, matching Thutmose II."
+    },
+    {
+     "a": "leprohon-leprohon-18.04",
+     "b": "pharaoh_se-Thutmose-II",
+     "basis": "prenomen",
+     "reason": "Both records share the prenomen Aa-kheper-en-Ra, Horus name Ka-nakht-weser/user-pehty, and nomen Djehuty-mes in Dynasty 18, with transliteration variants only, no conflicting titulary, and consistent short-reign context."
+    }
+   ],
+   "label": "Thutmose II",
+   "members": [
+    "beckerath-18.04 (Tuthmosis II.)",
+    "leprohon-leprohon-18.04 (Thutmose II)",
+    "pharaoh_se-Thutmose-II (Thutmose II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-18.08",
+    "pharaoh_se-Thutmose-IV"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-18.08",
+     "b": "pharaoh_se-Thutmose-IV",
+     "basis": "prenomen",
+     "reason": "Both records share the Horus name Ka nakht tut khau, the same nomen Djehutimes (Thutmose IV), and prenomen Menkheperura in Dynasty 18, with no conflicting titulary."
+    }
+   ],
+   "label": "Thutmose IV",
+   "members": [
+    "leprohon-leprohon-18.08 (Thutmose IV)",
+    "pharaoh_se-Thutmose-IV (Thutmose IV)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.09",
+    "leprohon-leprohon-5.09",
+    "pharaoh_se-Unas"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.09",
+     "b": "pharaoh_se-Unas",
+     "basis": "name_dynasty",
+     "reason": "Both denote Unas of Dynasty 5; record A lacks throne/Horus names, names match, no conflicting fields, and reign windows overlap most of the shorter span."
+    },
+    {
+     "a": "leprohon-leprohon-5.09",
+     "b": "pharaoh_se-Unas",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Wadj tawy and the same king name (Unas/Wenis) in Dynasty 5, with no conflicting titulary or reign data."
+    }
+   ],
+   "label": "Unas",
+   "members": [
+    "beckerath-05.09 (Unas)",
+    "leprohon-leprohon-5.09 (Unas)",
+    "pharaoh_se-Unas (Unas)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-5.01",
+    "pharaoh_se-Userkaf"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-5.01",
+     "b": "pharaoh_se-Userkaf",
+     "basis": "name_dynasty",
+     "reason": "Both records share the Horus name Iri Maat and the king name Userkaf/Weserkaf in Dynasty 5, with consistent titulary and no conflicts."
+    }
+   ],
+   "label": "Userkaf",
+   "members": [
+    "leprohon-leprohon-5.01 (Userkaf)",
+    "pharaoh_se-Userkaf (Userkaf)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-27.03",
+    "pharaoh_se-Xerxes-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-27.03",
+     "b": "pharaoh_se-Xerxes-I",
+     "basis": "name_dynasty",
+     "reason": "Both records are Xerxes I of Dynasty 27 with no throne or Horus names, matching regnal numeral, and reign windows overlapping by nearly the whole shorter span."
+    }
+   ],
+   "label": "Xerxes I",
+   "members": [
+    "beckerath-27.03 (Xerxes I.)",
+    "pharaoh_se-Xerxes-I (Xerxes I)"
+   ]
+  }
+ ],
+ "newly_resolved_by_target": {
+  "Amenhotep II / Amenophis II.": 129,
+  "Apries / Wahibre": 41,
+  "Intef II": 1,
+  "Intef III": 1,
+  "Necho II / Nekau II": 5,
+  "Osorkon II / Osorkon II.": 2,
+  "Psusennes I / Psusennes I.": 309,
+  "Ramesses III / Ramses III.": 40,
+  "Shabaka": 2,
+  "Thutmose II / Tuthmosis II.": 29,
+  "Thutmose IV": 62,
+  "Userkaf": 4
+ },
+ "resolved_mentions_moved_to_a_different_king": 0,
+ "ruler_mentions": 11555,
+ "schema_version": "hapi-ruler-escalation-queue-rebuild/1",
+ "status_transitions": {
+  "abstained->abstained": 2241,
+  "ambiguous->ambiguous": 64,
+  "ambiguous->resolved": 625,
+  "resolved->ambiguous": 1,
+  "resolved->resolved": 8278,
+  "unmatched->unmatched": 346
+ },
+ "still_ambiguous_by_targets": {
+  "Aha | Djet / Djet/Wadjet | Iti | Ity": 1,
+  "Amenhotep I / Amenophis I. | Amenhotep II / Amenophis II. | Amenhotep III / Amenophis III.": 2,
+  "Djoser | Djoser / Netjerikhet/Djoser": 48,
+  "Iuput II | Iuput II": 1,
+  "Kashta | Kashta": 3,
+  "Menkheperre | Necho I | Menkheperre": 1,
+  "Peribsen | Peribsen": 1,
+  "Rudamun | Rudamun | Rudamun": 1,
+  "Smendes I | Smendes I": 1,
+  "Sobekhotep III | Sobekhotep III": 1,
+  "Teti | Aha | Sekhemkhet": 4,
+  "Xerxes I / Xerxes I. | Xerxes I": 1
+ }
+}

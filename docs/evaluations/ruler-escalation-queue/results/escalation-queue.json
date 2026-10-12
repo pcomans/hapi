@@ -1,64 +1,6 @@
 {
- "ambiguous_mentions": 689,
+ "ambiguous_mentions": 62,
  "ambiguous_target_sets": [
-  {
-   "artifacts": 309,
-   "labels": [
-    "Psusennes I",
-    "Psusennes I"
-   ],
-   "mentions": 309,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-kitchen-21.03|pharaoh_se-Psusennes-I",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "kitchen-21.03",
-    "pharaoh_se-Psusennes-I"
-   ]
-  },
-  {
-   "artifacts": 129,
-   "labels": [
-    "Amenophis II.",
-    "Amenhotep II"
-   ],
-   "mentions": 129,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-beckerath-18.07|pharaoh_se-Amenhotep-II",
-     "park_reason": "uniqueness_clash"
-    },
-    {
-     "candidate": "cand-leprohon-leprohon-18.07|pharaoh_se-Amenhotep-II",
-     "park_reason": "uniqueness_clash"
-    }
-   ],
-   "targets": [
-    "cluster-beckerath-18.07",
-    "pharaoh_se-Amenhotep-II"
-   ]
-  },
-  {
-   "artifacts": 62,
-   "labels": [
-    "Thutmose IV",
-    "Thutmose IV"
-   ],
-   "mentions": 62,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-leprohon-leprohon-18.08|pharaoh_se-Thutmose-IV",
-     "park_reason": "homonym_list"
-    }
-   ],
-   "targets": [
-    "leprohon-leprohon-18.08",
-    "pharaoh_se-Thutmose-IV"
-   ]
-  },
   {
    "artifacts": 47,
    "labels": [
@@ -69,11 +11,11 @@
    "parked_pairs_between_targets": [
     {
      "candidate": "cand-beckerath-03.02|leprohon-leprohon-3.01",
-     "park_reason": "name_only"
+     "park_reason": "reviewer_escalated"
     },
     {
      "candidate": "cand-beckerath-03.02|pharaoh_se-Djoser",
-     "park_reason": "name_only"
+     "park_reason": "reviewer_escalated"
     }
    ],
    "targets": [
@@ -82,159 +24,18 @@
    ]
   },
   {
-   "artifacts": 39,
-   "labels": [
-    "Apries",
-    "Apries"
-   ],
-   "mentions": 41,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-beckerath-26.04|kitchen-26.04",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-kitchen-26.04|leprohon-leprohon-26.04",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-kitchen-26.04|pharaoh_se-Apries",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "cluster-beckerath-26.04",
-    "kitchen-26.04"
-   ]
-  },
-  {
-   "artifacts": 40,
-   "labels": [
-    "Ramesses III",
-    "Ramesses III"
-   ],
-   "mentions": 40,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-leprohon-leprohon-20.02|pharaoh_se-Ramesses-III",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "leprohon-leprohon-20.02",
-    "pharaoh_se-Ramesses-III"
-   ]
-  },
-  {
-   "artifacts": 29,
-   "labels": [
-    "Tuthmosis II.",
-    "Thutmose II"
-   ],
-   "mentions": 29,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-beckerath-18.04|pharaoh_se-Thutmose-II",
-     "park_reason": "uniqueness_clash"
-    },
-    {
-     "candidate": "cand-leprohon-leprohon-18.04|pharaoh_se-Thutmose-II",
-     "park_reason": "uniqueness_clash"
-    }
-   ],
-   "targets": [
-    "cluster-beckerath-18.04",
-    "pharaoh_se-Thutmose-II"
-   ]
-  },
-  {
-   "artifacts": 4,
-   "labels": [
-    "Nekau II",
-    "Necho II"
-   ],
-   "mentions": 5,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-kitchen-26.02|leprohon-leprohon-26.02",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-kitchen-26.02|pharaoh_se-Necho-II",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "cluster-leprohon-leprohon-26.02",
-    "kitchen-26.02"
-   ]
-  },
-  {
-   "artifacts": 3,
-   "labels": [
-    "Userkaf",
-    "Userkaf"
-   ],
-   "mentions": 4,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-leprohon-leprohon-5.01|pharaoh_se-Userkaf",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "leprohon-leprohon-5.01",
-    "pharaoh_se-Userkaf"
-   ]
-  },
-  {
    "artifacts": 3,
    "labels": [
     "Teti",
     "Aha",
-    "Sekhemkhet",
-    "Teti",
-    "Teti"
+    "Sekhemkhet"
    ],
    "mentions": 4,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-beckerath-06.01|leprohon-leprohon-6.01",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-beckerath-06.01|pharaoh_se-Teti",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-leprohon-leprohon-6.01|pharaoh_se-Teti",
-     "park_reason": "name_only"
-    }
-   ],
+   "parked_pairs_between_targets": [],
    "targets": [
-    "beckerath-06.01",
+    "cluster-beckerath-06.01",
     "cluster-leprohon-leprohon-1.01",
-    "cluster-leprohon-leprohon-3.02",
-    "leprohon-leprohon-6.01",
-    "pharaoh_se-Teti"
-   ]
-  },
-  {
-   "artifacts": 3,
-   "labels": [
-    "Kashta",
-    "Kashta"
-   ],
-   "mentions": 3,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-kitchen-25.02|leprohon-leprohon-25.02",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "kitchen-25.02",
-    "leprohon-leprohon-25.02"
+    "cluster-leprohon-leprohon-3.02"
    ]
   },
   {
@@ -258,42 +59,18 @@
   {
    "artifacts": 2,
    "labels": [
-    "Osorkon II",
-    "Osorkon II",
-    "Osorkon II"
-   ],
-   "mentions": 2,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-kitchen-22.05|leprohon-leprohon-22.06",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-kitchen-22.05|pharaoh_se-Osorkon-II",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-leprohon-leprohon-22.06|pharaoh_se-Osorkon-II",
-     "park_reason": "uniqueness_clash"
-    }
-   ],
-   "targets": [
-    "kitchen-22.05",
-    "leprohon-leprohon-22.06",
-    "pharaoh_se-Osorkon-II"
-   ]
-  },
-  {
-   "artifacts": 2,
-   "labels": [
     "Amenophis I.",
-    "Amenophis III.",
-    "Amenhotep II"
+    "Amenophis II.",
+    "Amenophis III."
    ],
    "mentions": 2,
    "parked_pairs_between_targets": [
     {
      "candidate": "cand-leprohon-leprohon-18.02|pharaoh_se-Amenhotep-II",
+     "park_reason": "name_only"
+    },
+    {
+     "candidate": "cand-leprohon-leprohon-18.07|pharaoh_se-Amenhotep-I",
      "park_reason": "name_only"
     },
     {
@@ -307,8 +84,8 @@
    ],
    "targets": [
     "cluster-beckerath-18.02",
-    "cluster-beckerath-18.09",
-    "pharaoh_se-Amenhotep-II"
+    "cluster-beckerath-18.07",
+    "cluster-beckerath-18.09"
    ]
   },
   {
@@ -321,7 +98,7 @@
    "parked_pairs_between_targets": [
     {
      "candidate": "cand-kitchen-23.07|leprohon-leprohon-23.08",
-     "park_reason": "name_only"
+     "park_reason": "reviewer_escalated"
     }
    ],
    "targets": [
@@ -350,71 +127,39 @@
   {
    "artifacts": 1,
    "labels": [
-    "Xerxes I",
+    "Xerxes I.",
     "Xerxes I"
    ],
    "mentions": 1,
    "parked_pairs_between_targets": [
     {
+     "candidate": "cand-beckerath-27.03|leprohon-leprohon-27.03",
+     "park_reason": "reviewer_escalated"
+    },
+    {
      "candidate": "cand-leprohon-leprohon-27.03|pharaoh_se-Xerxes-I",
-     "park_reason": "name_only"
+     "park_reason": "reviewer_escalated"
     }
    ],
    "targets": [
-    "leprohon-leprohon-27.03",
-    "pharaoh_se-Xerxes-I"
-   ]
-  },
-  {
-   "artifacts": 1,
-   "labels": [
-    "Intef III",
-    "Intef III"
-   ],
-   "mentions": 1,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-leprohon-leprohon-11a.04|pharaoh_se-Intef-III",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "leprohon-leprohon-11a.04",
-    "pharaoh_se-Intef-III"
-   ]
-  },
-  {
-   "artifacts": 1,
-   "labels": [
-    "Intef II",
-    "Intef II"
-   ],
-   "mentions": 1,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-leprohon-leprohon-11a.03|pharaoh_se-Intef-II",
-     "park_reason": "name_only"
-    }
-   ],
-   "targets": [
-    "leprohon-leprohon-11a.03",
-    "pharaoh_se-Intef-II"
+    "cluster-beckerath-27.03",
+    "leprohon-leprohon-27.03"
    ]
   },
   {
    "artifacts": 1,
    "labels": [
     "Aha",
+    "Djet/Wadjet",
     "Iti",
-    "Djet",
     "Ity"
    ],
    "mentions": 1,
    "parked_pairs_between_targets": [],
    "targets": [
     "cluster-leprohon-leprohon-1.01",
+    "cluster-leprohon-leprohon-1.03",
     "leprohon-leprohon-8a.03",
-    "pharaoh_se-Djet",
     "pharaoh_se-Ity"
    ]
   },
@@ -428,7 +173,7 @@
    "parked_pairs_between_targets": [
     {
      "candidate": "cand-kitchen-21.01|pharaoh_se-Smendes-I",
-     "park_reason": "name_only"
+     "park_reason": "uniqueness_clash"
     }
    ],
    "targets": [
@@ -447,7 +192,7 @@
    "parked_pairs_between_targets": [
     {
      "candidate": "cand-kitchen-21H.07|leprohon-leprohon-21a.02",
-     "park_reason": "name_only"
+     "park_reason": "reviewer_escalated"
     }
    ],
    "targets": [
@@ -455,85 +200,67 @@
     "kitchen-24P.04",
     "leprohon-leprohon-21a.02"
    ]
-  },
-  {
-   "artifacts": 1,
-   "labels": [
-    "Rudamun",
-    "Rudamun",
-    "Rudamun"
-   ],
-   "mentions": 1,
-   "parked_pairs_between_targets": [
-    {
-     "candidate": "cand-kitchen-23.06|leprohon-leprohon-23.06",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-kitchen-23.06|pharaoh_se-Rudamun",
-     "park_reason": "name_only"
-    },
-    {
-     "candidate": "cand-leprohon-leprohon-23.06|pharaoh_se-Rudamun",
-     "park_reason": "homonym_list"
-    }
-   ],
-   "targets": [
-    "kitchen-23.06",
-    "leprohon-leprohon-23.06",
-    "pharaoh_se-Rudamun"
-   ]
   }
  ],
  "by_park_reason": {
-  "homonym_list": 77,
-  "name_only": 735,
-  "reviewer_escalated": 46,
-  "uniqueness_clash": 116
+  "homonym_list": 79,
+  "king_name_route": 7,
+  "name_only": 544,
+  "reviewer_escalated": 139,
+  "uncertain_reading": 1,
+  "uniqueness_clash": 120
  },
- "escalations": 974,
+ "escalations": 890,
  "evidence_by_park_reason": {
   "homonym_list": {
-   "both_absent": 6,
+   "both_absent": 8,
    "both_absent+same_dynasty": 37,
-   "different+same_dynasty": 7,
+   "different+same_dynasty": 9,
    "one_absent": 1,
-   "one_absent+same_dynasty": 7,
+   "one_absent+same_dynasty": 5,
    "same": 1,
    "same+same_dynasty": 18
   },
+  "king_name_route": {
+   "both_absent+same_dynasty": 6,
+   "same+same_dynasty": 1
+  },
   "name_only": {
    "both_absent": 36,
-   "both_absent+same_dynasty": 176,
+   "both_absent+same_dynasty": 77,
    "different": 109,
-   "different+same_dynasty": 133,
-   "one_absent": 124,
-   "one_absent+same_dynasty": 44,
-   "same": 19,
-   "same+same_dynasty": 94
+   "different+same_dynasty": 137,
+   "one_absent": 120,
+   "one_absent+same_dynasty": 26,
+   "same": 20,
+   "same+same_dynasty": 19
   },
   "reviewer_escalated": {
-   "both_absent": 14,
-   "both_absent+same_dynasty": 10,
-   "different": 2,
-   "different+same_dynasty": 1,
-   "one_absent": 11,
-   "one_absent+same_dynasty": 8
+   "both_absent": 10,
+   "both_absent+same_dynasty": 67,
+   "different": 6,
+   "different+same_dynasty": 7,
+   "one_absent": 12,
+   "one_absent+same_dynasty": 5,
+   "same+same_dynasty": 32
+  },
+  "uncertain_reading": {
+   "one_absent+same_dynasty": 1
   },
   "uniqueness_clash": {
-   "both_absent": 13,
-   "both_absent+same_dynasty": 46,
-   "different+same_dynasty": 2,
-   "one_absent": 1,
-   "one_absent+same_dynasty": 10,
+   "both_absent": 11,
+   "both_absent+same_dynasty": 42,
+   "different+same_dynasty": 3,
+   "one_absent": 3,
+   "one_absent+same_dynasty": 15,
    "same": 8,
-   "same+same_dynasty": 36
+   "same+same_dynasty": 38
   }
  },
  "inputs": {
   "control_sha256": "aaec22bc9ce04cd7d566c12a1eabd55ade185c868907af5968f77c4592268c69",
-  "graph_sha256": "b00ca2de74bca4fb5ce48ecf1982389a5331cfe0c3f96e191e8efd2f7a28cb7e",
-  "matcher_sha256": "24f4161b9eb5c1a4b2022e74caa2f8e7646ed0ad4352fa02974353b3eb094287",
+  "graph_sha256": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66",
+  "matcher_sha256": "29694af2f4a38a2d2798d2b4edc3203aff62444f8c303ef982982db7b512ee2b",
   "mention_ledger": {
    "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
    "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
@@ -541,7 +268,7 @@
    "rows": 148871
   },
   "resolver_sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
-  "script_sha256": "ff278a085e09563476b6bff09806f23b962c5f0e36978c95283d5dc1c2b680e4"
+  "script_sha256": "952a95a6e0bbc6af34b08e4e5828ea288d3b39799ddf3477c8342e4bb75e5981"
  },
  "pairs": {
   "cand-beckerath-01.01|pharaoh_se-Narmer": {
@@ -557,7 +284,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2982,
     -2900
@@ -582,7 +309,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2949,
     null
@@ -607,7 +334,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2949,
     -2870
@@ -632,7 +359,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2889,
     -2814
@@ -657,7 +384,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2836,
     -2763
@@ -682,7 +409,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2775,
     null
@@ -707,7 +434,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2760,
     -2700
@@ -732,7 +459,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2717,
     null
@@ -757,7 +484,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2710,
     null
@@ -808,7 +535,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2699,
     null
@@ -833,7 +560,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2694,
     null
@@ -858,7 +585,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2694,
     null
@@ -883,7 +610,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2684,
     -2660
@@ -908,7 +635,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2657,
     null
@@ -933,7 +660,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2640,
     null
@@ -958,7 +685,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2640,
     -2592
@@ -983,7 +710,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2613,
     null
@@ -1008,7 +735,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2613,
     null
@@ -1033,7 +760,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2554,
     null
@@ -1058,7 +785,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2554,
     -2509
@@ -1083,7 +810,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     -2531,
     null
@@ -1108,7 +835,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2531,
     -2482
@@ -1134,7 +861,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2496,
     -2474
@@ -1159,7 +886,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2461,
     null
@@ -1184,7 +911,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     -2461,
     -2441
@@ -1209,7 +936,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2456,
     null
@@ -1234,7 +961,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2454,
     null
@@ -1259,7 +986,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2454,
     -2435
@@ -1284,7 +1011,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2446,
     null
@@ -1309,7 +1036,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     -2446,
     -2428
@@ -1335,7 +1062,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2413,
     null
@@ -1360,7 +1087,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     -2413,
     null
@@ -1385,7 +1112,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2406,
     -2403
@@ -1394,57 +1121,6 @@
    "same_dynasty_reliable": true,
    "shared_name_keys": [
     "neferefraisi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-05.06|pharaoh_se-Niuserra-Ini": {
-   "a": "beckerath-05.06 (Ni-user-rê Ini)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Niuserra-Ini (Niuserra Ini)",
-   "dynasty": [
-    5,
-    5
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -2395,
-    -2402
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "niuserraini"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-05.08|pharaoh_se-Djedkara-Isesi": {
-   "a": "beckerath-05.08 (Djed-ka-re Isesi)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)",
-   "dynasty": [
-    5,
-    5
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -2355,
-    -2365
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "djedkaraisesi",
-    "djedkareisesi"
    ],
    "shared_prenomen_keys": []
   },
@@ -1461,35 +1137,10 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2317,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "unas"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-05.09|pharaoh_se-Unas": {
-   "a": "beckerath-05.09 (Unas)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Unas (Unas)",
-   "dynasty": [
-    5,
-    5
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -2317,
-    -2321
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": true,
@@ -1500,7 +1151,7 @@
   },
   "cand-beckerath-06.01|leprohon-leprohon-6.01": {
    "a": "beckerath-06.01 (Teti)",
-   "ambiguous_mentions_between_its_targets": 4,
+   "ambiguous_mentions_between_its_targets": 0,
    "b": "leprohon-leprohon-6.01 (Teti)",
    "dynasty": [
     6,
@@ -1511,35 +1162,10 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2297,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "teti"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-06.01|pharaoh_se-Teti": {
-   "a": "beckerath-06.01 (Teti)",
-   "ambiguous_mentions_between_its_targets": 4,
-   "b": "pharaoh_se-Teti (Teti)",
-   "dynasty": [
-    6,
-    6
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -2297,
-    -2305
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": true,
@@ -1561,7 +1187,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     -2287,
     null
@@ -1571,31 +1197,6 @@
    "shared_name_keys": [
     "userkara",
     "userkare"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-06.03|pharaoh_se-Pepi-I": {
-   "a": "beckerath-06.03 (Pepi I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Pepi-I (Pepi I)",
-   "dynasty": [
-    6,
-    6
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -2285,
-    -2276
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "pepii"
    ],
    "shared_prenomen_keys": []
   },
@@ -1612,7 +1213,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2169,
     -2152
@@ -1637,7 +1238,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -1662,7 +1263,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2103,
     -2066
@@ -1687,7 +1288,7 @@
     "III"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -2054,
     -2016
@@ -2180,66 +1781,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-beckerath-18.04|pharaoh_se-Thutmose-II": {
-   "a": "beckerath-18.04 (Tuthmosis II.)",
-   "ambiguous_mentions_between_its_targets": 29,
-   "b": "pharaoh_se-Thutmose-II (Thutmose II)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    -1492,
-    -1482
-   ],
-   "rival_pairs": [
-    "beckerath-18.04 (Tuthmosis II.) ~ pharaoh_se-Amenhotep-II (Amenhotep II) via khprnr"
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "tuthmosisii"
-   ],
-   "shared_prenomen_keys": [
-    "khprnr"
-   ]
-  },
-  "cand-beckerath-18.07|pharaoh_se-Amenhotep-II": {
-   "a": "beckerath-18.07 (Amenophis II.)",
-   "ambiguous_mentions_between_its_targets": 129,
-   "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    -1428,
-    -1425
-   ],
-   "rival_pairs": [
-    "beckerath-18.04 (Tuthmosis II.) ~ pharaoh_se-Amenhotep-II (Amenhotep II) via khprnr"
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "amenophisii"
-   ],
-   "shared_prenomen_keys": [
-    "khprr"
-   ]
-  },
   "cand-beckerath-18.08|leprohon-leprohon-18.08": {
    "a": "beckerath-18.08 (Tuthmosis IV.)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -2294,6 +1835,32 @@
     "mnkhprr"
    ]
   },
+  "cand-beckerath-18.09|leprohon-leprohon-17a.01": {
+   "a": "beckerath-18.09 (Amenophis III.)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "leprohon-leprohon-17a.01 (Nebmaatre)",
+   "dynasty": [
+    18,
+    17
+   ],
+   "ordinal": [
+    "III",
+    null
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -1388,
+    null
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "nbmaatra",
+    "nbmtr"
+   ]
+  },
   "cand-beckerath-18.12|leprohon-leprohon-18.11": {
    "a": "beckerath-18.12 (Semench-ka-rê Nefer-nefru-aten)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -2343,31 +1910,6 @@
    "shared_prenomen_keys": [
     "nkhkhprr"
    ]
-  },
-  "cand-beckerath-19.01|leprohon-leprohon-19.01": {
-   "a": "beckerath-19.01 (Ramses I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-19.01 (Ramesses I)",
-   "dynasty": [
-    19,
-    19
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1292,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "ramessu"
-   ],
-   "shared_prenomen_keys": []
   },
   "cand-beckerath-19.01|leprohon-leprohon-19.03": {
    "a": "beckerath-19.01 (Ramses I.)",
@@ -2444,131 +1986,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-beckerath-19.04|leprohon-leprohon-19.04": {
-   "a": "beckerath-19.04 (Mer-en-ptah)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-19.04 (Merenptah/Merneptah)",
-   "dynasty": [
-    19,
-    19
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1213,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "merenptah"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-19.04|pharaoh_se-Merenptah": {
-   "a": "beckerath-19.04 (Mer-en-ptah)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Merenptah (Merenptah)",
-   "dynasty": [
-    19,
-    19
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1213,
-    -1213
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "merenptah"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-19.06|pharaoh_se-Seti-II": {
-   "a": "beckerath-19.06 (Sethôs II.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Seti-II (Seti II)",
-   "dynasty": [
-    19,
-    19
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1199,
-    -1202
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "sethosii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-20.02|pharaoh_se-Ramesses-III": {
-   "a": "beckerath-20.02 (Ramses III.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ramesses-III (Ramesses III)",
-   "dynasty": [
-    20,
-    20
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1182,
-    -1187
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "ramsesiii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-20.06|pharaoh_se-Ramesses-VII": {
-   "a": "beckerath-20.06 (Ramses VII.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ramesses-VII (Ramesses VII)",
-   "dynasty": [
-    20,
-    20
-   ],
-   "ordinal": [
-    "VII",
-    "VII"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1132,
-    -1138
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "ramsesvii"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-beckerath-21.01|leprohon-leprohon-21.02": {
    "a": "beckerath-21.01 (Smendes)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -2641,56 +2058,6 @@
     "hdjkhprrstpnr"
    ]
   },
-  "cand-beckerath-21.02|kitchen-21.02": {
-   "a": "beckerath-21.02 (Amen-em-nisu)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-21.02 (Amenemnisu)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1043,
-    -1043
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "amenemnisu"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.03|kitchen-21.03": {
-   "a": "beckerath-21.03 (Psusennes I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-21.03 (Psusennes I)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1043,
-    -1039
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psusennesi"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-beckerath-21.03|leprohon-leprohon-21.04": {
    "a": "beckerath-21.03 (Psusennes I.)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -2704,7 +2071,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1043,
     null
@@ -2729,10 +2096,13 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     -1043,
     -1051
+   ],
+   "rival_pairs": [
+    "beckerath-21.09 (Psusennes) ~ pharaoh_se-Psusennes-I (Psusennes I) via name_dynasty"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -2775,31 +2145,6 @@
     "srmtrstpnmn"
    ]
   },
-  "cand-beckerath-21.05|kitchen-21.05": {
-   "a": "beckerath-21.05 (Osochor)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-21.05 (Osochor)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -984,
-    -984
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osokhor"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-beckerath-21.05|leprohon-leprohon-21.06": {
    "a": "beckerath-21.05 (Osochor)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -2829,106 +2174,6 @@
     "khprrstpnr"
    ]
   },
-  "cand-beckerath-21.06|kitchen-21.06": {
-   "a": "beckerath-21.06 (Si-amun)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-21.06 (Siamun)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -978,
-    -978
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "siamun"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.06|leprohon-leprohon-21.07": {
-   "a": "beckerath-21.06 (Si-amun)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-21.07 (Siamun)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -978,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "siamun"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.06|pharaoh_se-Siamun": {
-   "a": "beckerath-21.06 (Si-amun)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Siamun (Siamun)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -978,
-    -986
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "siamun"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.07|leprohon-leprohon-21.08": {
-   "a": "beckerath-21.07 (Psusennes II.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-21.08 (Pa-Seba-Kha-En-Niut II)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -959,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psusennesii"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-beckerath-21.07|pharaoh_se-Psusennes-II": {
    "a": "beckerath-21.07 (Psusennes II.)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -2942,90 +2187,18 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     -959,
     -967
+   ],
+   "rival_pairs": [
+    "beckerath-21.09 (Psusennes) ~ pharaoh_se-Psusennes-II (Psusennes II) via name_dynasty"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
    "shared_name_keys": [
     "psusennesii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.08|leprohon-leprohon-21a.01": {
-   "a": "beckerath-21.08 (Pi-nodjem I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-21a.01 (Pinodjem I)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "pinodjemi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.09|pharaoh_se-Psusennes-I": {
-   "a": "beckerath-21.09 (Psusennes)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Psusennes-I (Psusennes I)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    "I"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1051
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psusennes"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-21.09|pharaoh_se-Psusennes-II": {
-   "a": "beckerath-21.09 (Psusennes)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Psusennes-II (Psusennes II)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    "II"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -967
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psusennes"
    ],
    "shared_prenomen_keys": []
   },
@@ -3102,6 +2275,31 @@
     "hdjkhprrstpnr"
    ]
   },
+  "cand-beckerath-22.01|leprohon-leprohon-22.10": {
+   "a": "beckerath-22.01 (Schoschenq I.)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "leprohon-leprohon-22.10 (Sheshonq IV)",
+   "dynasty": [
+    22,
+    22
+   ],
+   "ordinal": [
+    "I",
+    "IV"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -945,
+    null
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "hdjkhprrstpnr"
+   ]
+  },
   "cand-beckerath-22.01|pharaoh_se-Shoshenq-I": {
    "a": "beckerath-22.01 (Schoschenq I.)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -3164,6 +2362,31 @@
     "osorthon"
    ],
    "shared_prenomen_keys": []
+  },
+  "cand-beckerath-22.03|kitchen-22.07": {
+   "a": "beckerath-22.03 (Takelot I.)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "kitchen-22.07 (Takeloth II)",
+   "dynasty": [
+    22,
+    22
+   ],
+   "ordinal": [
+    "I",
+    "II"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -890,
+    -850
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "hdjkhprrstpnr"
+   ]
   },
   "cand-beckerath-22.03|leprohon-leprohon-22.05": {
    "a": "beckerath-22.03 (Takelot I.)",
@@ -3241,55 +2464,30 @@
     "hdjkhprrstpnr"
    ]
   },
-  "cand-beckerath-22.05|kitchen-22.05": {
-   "a": "beckerath-22.05 (Osorkon II.)",
+  "cand-beckerath-22.03|pharaoh_se-Takelot-II": {
+   "a": "beckerath-22.03 (Takelot I.)",
    "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-22.05 (Osorkon II)",
+   "b": "pharaoh_se-Takelot-II (Takelot II)",
    "dynasty": [
     22,
-    22
+    23
    ],
    "ordinal": [
-    "II",
+    "I",
     "II"
    ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
-    -875,
-    -874
+    -890,
+    -840
    ],
-   "same_dynasty": true,
+   "same_dynasty": false,
    "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osorkonii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-22.05|leprohon-leprohon-22.06": {
-   "a": "beckerath-22.05 (Osorkon II.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-22.06 (Osorkon II)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -875,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osorkonii"
-   ],
-   "shared_prenomen_keys": []
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "hdjkhprrstpnr"
+   ]
   },
   "cand-beckerath-22.05|pharaoh_se-Osorkon-II": {
    "a": "beckerath-22.05 (Osorkon II.)",
@@ -3336,56 +2534,6 @@
    "shared_prenomen_keys": [
     "srmtrstpnmn"
    ]
-  },
-  "cand-beckerath-22.06|kitchen-22.08": {
-   "a": "beckerath-22.06 (Schoschenq III.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-22.08 (Shoshenq III)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -837,
-    -825
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqiii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-22.06|leprohon-leprohon-22.09": {
-   "a": "beckerath-22.06 (Schoschenq III.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-22.09 (Sheshonq III)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -837,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqiii"
-   ],
-   "shared_prenomen_keys": []
   },
   "cand-beckerath-22.06|pharaoh_se-Shoshenq-III": {
    "a": "beckerath-22.06 (Schoschenq III.)",
@@ -3454,7 +2602,8 @@
     "beckerath-22.07 ((Schoschenq IIIa.)) ~ leprohon-leprohon-22.05 (Takelot I) via hdjkhprrstpnr",
     "beckerath-22.07 ((Schoschenq IIIa.)) ~ leprohon-leprohon-22.07 (Takelot II) via hdjkhprrstpnr",
     "beckerath-22.10 (Har-si-êset) ~ leprohon-leprohon-22.10 (Sheshonq IV) via hdjkhprrstpnr",
-    "beckerath-22.11 (Takelot II.) ~ leprohon-leprohon-22.10 (Sheshonq IV) via hdjkhprrstpnr"
+    "beckerath-22.11 (Takelot II.) ~ leprohon-leprohon-22.10 (Sheshonq IV) via hdjkhprrstpnr",
+    "beckerath-22.14 (Schoschenq IV.) ~ leprohon-leprohon-22.10 (Sheshonq IV) via name_dynasty"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -3499,31 +2648,6 @@
    "shared_prenomen_keys": [
     "srmtrstpnr"
    ]
-  },
-  "cand-beckerath-22.09|kitchen-22.10": {
-   "a": "beckerath-22.09 (Schoschenq V.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "kitchen-22.10 (Shoshenq V)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "V",
-    "V"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -774,
-    -767
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqv"
-   ],
-   "shared_prenomen_keys": []
   },
   "cand-beckerath-22.09|leprohon-leprohon-22.12": {
    "a": "beckerath-22.09 (Schoschenq V.)",
@@ -3615,6 +2739,31 @@
     "beckerath-22.07 ((Schoschenq IIIa.)) ~ kitchen-22.07 (Takeloth II) via hdjkhprrstpnr",
     "beckerath-22.10 (Har-si-êset) ~ kitchen-22.07 (Takeloth II) via hdjkhprrstpnr",
     "beckerath-22.11 (Takelot II.) ~ kitchen-22.01 (Shoshenq I) via hdjkhprrstpnr"
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "hdjkhprrstpnr"
+   ]
+  },
+  "cand-beckerath-22.11|leprohon-leprohon-22.05": {
+   "a": "beckerath-22.11 (Takelot II.)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "leprohon-leprohon-22.05 (Takelot I)",
+   "dynasty": [
+    22,
+    22
+   ],
+   "ordinal": [
+    "II",
+    "I"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -841,
+    null
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -3716,56 +2865,6 @@
     -783
    ],
    "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqiv"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-22.14|leprohon-leprohon-22.10": {
-   "a": "beckerath-22.14 (Schoschenq IV.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-22.10 (Sheshonq IV)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "IV",
-    "IV"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -800,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqiv"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-22.14|pharaoh_se-Shoshenq-IV": {
-   "a": "beckerath-22.14 (Schoschenq IV.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-IV (Shoshenq IV)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "IV",
-    "IV"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -800,
-    -798
-   ],
-   "same_dynasty": true,
    "same_dynasty_reliable": false,
    "shared_name_keys": [
     "shoshenqiv"
@@ -4049,6 +3148,31 @@
     "mnkhprr"
    ]
   },
+  "cand-beckerath-23.01|pharaoh_se-Pedubast-I": {
+   "a": "beckerath-23.01 (Petubastis II.)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Pedubast-I (Pedubast I)",
+   "dynasty": [
+    23,
+    23
+   ],
+   "ordinal": [
+    "II",
+    "I"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -756,
+    -829
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "srmtrstpnmn"
+   ]
+  },
   "cand-beckerath-23.01|pharaoh_se-Pedubast-II": {
    "a": "beckerath-23.01 (Petubastis II.)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -4213,7 +3337,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -760
@@ -4238,7 +3362,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -4365,34 +3489,9 @@
     "nfrkr"
    ]
   },
-  "cand-beckerath-26.04|kitchen-26.04": {
-   "a": "beckerath-26.04 (Apries)",
-   "ambiguous_mentions_between_its_targets": 41,
-   "b": "kitchen-26.04 (Apries)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -589,
-    -589
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "apries"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-beckerath-27.03|leprohon-leprohon-27.03": {
    "a": "beckerath-27.03 (Xerxes I.)",
-   "ambiguous_mentions_between_its_targets": 0,
+   "ambiguous_mentions_between_its_targets": 1,
    "b": "leprohon-leprohon-27.03 (Xerxes I)",
    "dynasty": [
     27,
@@ -4403,35 +3502,10 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -485,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "xerxesi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-27.03|pharaoh_se-Xerxes-I": {
-   "a": "beckerath-27.03 (Xerxes I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Xerxes-I (Xerxes I)",
-   "dynasty": [
-    27,
-    27
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -485,
-    -486
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": true,
@@ -4453,35 +3527,10 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -464,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "artaxerxesi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-27.04|pharaoh_se-Artaxerxes-I": {
-   "a": "beckerath-27.04 (Artaxerxes I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Artaxerxes-I (Artaxerxes I)",
-   "dynasty": [
-    27,
-    27
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -464,
-    -465
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": true,
@@ -4503,7 +3552,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -423,
     null
@@ -4528,7 +3577,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -404,
     null
@@ -4553,7 +3602,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -404,
     -405
@@ -4578,7 +3627,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -401,
     null
@@ -4587,56 +3636,6 @@
    "same_dynasty_reliable": true,
    "shared_name_keys": [
     "amyrtaios"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-29.01|leprohon-leprohon-29.01": {
-   "a": "beckerath-29.01 (Nepherites I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-29.01 (Nefaarudu I)",
-   "dynasty": [
-    29,
-    29
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -399,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "nepheritesi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-29.01|pharaoh_se-Neferites-I": {
-   "a": "beckerath-29.01 (Nepherites I.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferites-I (Neferites I)",
-   "dynasty": [
-    29,
-    29
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -399,
-    -399
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "nepheritesi"
    ],
    "shared_prenomen_keys": []
   },
@@ -4653,7 +3652,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -380,
     null
@@ -4678,7 +3677,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -380,
     -380
@@ -4703,7 +3702,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -338,
     null
@@ -4712,56 +3711,6 @@
    "same_dynasty_reliable": true,
    "shared_name_keys": [
     "arses"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-31.02|pharaoh_se-Arses": {
-   "a": "beckerath-31.02 (Arses)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Arses (Arses)",
-   "dynasty": [
-    31,
-    31
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -338,
-    -338
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "arses"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-beckerath-31.03|pharaoh_se-Darius-III": {
-   "a": "beckerath-31.03 (Dareios III.)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Darius-III (Darius III)",
-   "dynasty": [
-    31,
-    31
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -336,
-    -335
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "dareiosiii"
    ],
    "shared_prenomen_keys": []
   },
@@ -4778,35 +3727,10 @@
     "XI"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1098,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "ramessesxi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-20.01|pharaoh_se-Ramesses-XI": {
-   "a": "kitchen-20.01 (Ramesses XI)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ramesses-XI (Ramesses XI)",
-   "dynasty": [
-    20,
-    20
-   ],
-   "ordinal": [
-    "XI",
-    "XI"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1098,
-    -1106
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": true,
@@ -4828,10 +3752,13 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     -1069,
     -1076
+   ],
+   "rival_pairs": [
+    "kitchen-22.01 (Shoshenq I) ~ pharaoh_se-Smendes-I (Smendes I) via hdjkhprrstpnr"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -4853,7 +3780,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1043,
     null
@@ -4878,7 +3805,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1043,
     -1005
@@ -4903,35 +3830,10 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1039,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psusennesi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-21.03|pharaoh_se-Psusennes-I": {
-   "a": "kitchen-21.03 (Psusennes I)",
-   "ambiguous_mentions_between_its_targets": 309,
-   "b": "pharaoh_se-Psusennes-I (Psusennes I)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -1039,
-    -1051
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -4953,7 +3855,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -993,
     null
@@ -4978,7 +3880,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -993,
     -1002
@@ -5003,7 +3905,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     -984,
     -992
@@ -5028,35 +3930,10 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -978,
     null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "siamun"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-21.06|pharaoh_se-Siamun": {
-   "a": "kitchen-21.06 (Siamun)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Siamun (Siamun)",
-   "dynasty": [
-    21,
-    21
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -978,
-    -986
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -5078,7 +3955,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1080,
     null
@@ -5103,7 +3980,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1045,
     null
@@ -5178,7 +4055,7 @@
     "III"
    ],
    "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -969,
     null
@@ -5259,56 +4136,6 @@
    "shared_prenomen_keys": [
     "hdjkhprrstpnr"
    ]
-  },
-  "cand-kitchen-22.05|leprohon-leprohon-22.06": {
-   "a": "kitchen-22.05 (Osorkon II)",
-   "ambiguous_mentions_between_its_targets": 2,
-   "b": "leprohon-leprohon-22.06 (Osorkon II)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -874,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osorkonii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-22.05|pharaoh_se-Osorkon-II": {
-   "a": "kitchen-22.05 (Osorkon II)",
-   "ambiguous_mentions_between_its_targets": 2,
-   "b": "pharaoh_se-Osorkon-II (Osorkon II)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -874,
-    -872
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osorkonii"
-   ],
-   "shared_prenomen_keys": []
   },
   "cand-kitchen-22.06|leprohon-leprohon-22a.01": {
    "a": "kitchen-22.06 (Harsiese)",
@@ -5433,56 +4260,6 @@
     "hdjkhprrstpnr"
    ]
   },
-  "cand-kitchen-22.08|leprohon-leprohon-22.09": {
-   "a": "kitchen-22.08 (Shoshenq III)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-22.09 (Sheshonq III)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -825,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqiii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-22.08|pharaoh_se-Shoshenq-III": {
-   "a": "kitchen-22.08 (Shoshenq III)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-III (Shoshenq III)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -825,
-    -837
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqiii"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-kitchen-22.10|leprohon-leprohon-22.12": {
    "a": "kitchen-22.10 (Shoshenq V)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -5546,31 +4323,6 @@
     "khprrstpnmn"
    ]
   },
-  "cand-kitchen-23.01|pharaoh_se-Pedubast-I": {
-   "a": "kitchen-23.01 (Pedubast I)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Pedubast-I (Pedubast I)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -818,
-    -829
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "pedubasti"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-kitchen-23.02|leprohon-leprohon-23.02": {
    "a": "kitchen-23.02 (Iuput I)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -5584,7 +4336,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -804,
     null
@@ -5609,7 +4361,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -804,
     -829
@@ -5671,106 +4423,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-kitchen-23.04|leprohon-leprohon-23.04": {
-   "a": "kitchen-23.04 (Osorkon III)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-23.04 (Osorkon III)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -777,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osorkoniii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-23.04|pharaoh_se-Osorkon-III": {
-   "a": "kitchen-23.04 (Osorkon III)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Osorkon-III (Osorkon III)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -777,
-    -798
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "osorkoniii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-23.06|leprohon-leprohon-23.06": {
-   "a": "kitchen-23.06 (Rudamun)",
-   "ambiguous_mentions_between_its_targets": 1,
-   "b": "leprohon-leprohon-23.06 (Rudamun)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -734,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "rudamun"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-23.06|pharaoh_se-Rudamun": {
-   "a": "kitchen-23.06 (Rudamun)",
-   "ambiguous_mentions_between_its_targets": 1,
-   "b": "pharaoh_se-Rudamun (Rudamun)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -734,
-    -759
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "rudamun"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-kitchen-23.07|leprohon-leprohon-23.08": {
    "a": "kitchen-23.07 (Iuput II)",
    "ambiguous_mentions_between_its_targets": 1,
@@ -5784,7 +4436,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -731,
     null
@@ -5793,56 +4445,6 @@
    "same_dynasty_reliable": false,
    "shared_name_keys": [
     "iuputii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-23.08|leprohon-leprohon-23.03": {
-   "a": "kitchen-23.08 (Shoshenq VI)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-23.03 (Sheshonq VI)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    "VI",
-    "VI"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -720,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqvi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-23.08|pharaoh_se-Shoshenq-VI": {
-   "a": "kitchen-23.08 (Shoshenq VI)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-VI (Shoshenq VI)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    "VI",
-    "VI"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -720,
-    -804
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shoshenqvi"
    ],
    "shared_prenomen_keys": []
   },
@@ -5939,7 +4541,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -780,
     null
@@ -5948,31 +4550,6 @@
    "same_dynasty_reliable": false,
    "shared_name_keys": [
     "alara"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-25.02|leprohon-leprohon-25.02": {
-   "a": "kitchen-25.02 (Kashta)",
-   "ambiguous_mentions_between_its_targets": 3,
-   "b": "leprohon-leprohon-25.02 (Kashta)",
-   "dynasty": [
-    25,
-    25
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -760,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "kashta"
    ],
    "shared_prenomen_keys": []
   },
@@ -6030,134 +4607,9 @@
     "nfrkr"
    ]
   },
-  "cand-kitchen-25.06|leprohon-leprohon-25.06": {
-   "a": "kitchen-25.06 (Taharqa)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-25.06 (Taharqa)",
-   "dynasty": [
-    25,
-    25
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -690,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "taharqa"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-25.06|pharaoh_se-Taharqa": {
-   "a": "kitchen-25.06 (Taharqa)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Taharqa (Taharqa)",
-   "dynasty": [
-    25,
-    25
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -690,
-    -690
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "taharqa"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-25.07|leprohon-leprohon-25.07": {
-   "a": "kitchen-25.07 (Tantamani)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "leprohon-leprohon-25.07 (Tanutamun)",
-   "dynasty": [
-    25,
-    25
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -664,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "tantamani"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-25.07|pharaoh_se-Tenutamen": {
-   "a": "kitchen-25.07 (Tantamani)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Tenutamen (Tenutamen)",
-   "dynasty": [
-    25,
-    25
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -664,
-    -664
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "tantamani"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-26.01|pharaoh_se-Psamtik-I": {
-   "a": "kitchen-26.01 (Psammetichus I)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Psamtik-I (Psamtik I)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -664,
-    -664
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psammetikhusi"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-kitchen-26.02|leprohon-leprohon-26.02": {
    "a": "kitchen-26.02 (Necho II)",
-   "ambiguous_mentions_between_its_targets": 5,
+   "ambiguous_mentions_between_its_targets": 0,
    "b": "leprohon-leprohon-26.02 (Nekau II)",
    "dynasty": [
     26,
@@ -6168,7 +4620,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -610,
     null
@@ -6180,59 +4632,9 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-kitchen-26.02|pharaoh_se-Necho-II": {
-   "a": "kitchen-26.02 (Necho II)",
-   "ambiguous_mentions_between_its_targets": 5,
-   "b": "pharaoh_se-Necho-II (Necho II)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -610,
-    -610
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "nekhoii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-26.03|pharaoh_se-Psamtik-II": {
-   "a": "kitchen-26.03 (Psammetichus II)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Psamtik-II (Psamtik II)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -595,
-    -595
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psammetikhusii"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-kitchen-26.04|leprohon-leprohon-26.04": {
    "a": "kitchen-26.04 (Apries)",
-   "ambiguous_mentions_between_its_targets": 41,
+   "ambiguous_mentions_between_its_targets": 0,
    "b": "leprohon-leprohon-26.04 (Wahibre)",
    "dynasty": [
     26,
@@ -6243,7 +4645,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -589,
     null
@@ -6252,182 +4654,6 @@
    "same_dynasty_reliable": false,
    "shared_name_keys": [
     "apries"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-26.04|pharaoh_se-Apries": {
-   "a": "kitchen-26.04 (Apries)",
-   "ambiguous_mentions_between_its_targets": 41,
-   "b": "pharaoh_se-Apries (Apries)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -589,
-    -589
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "apries"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-kitchen-26.06|pharaoh_se-Psamtik-III": {
-   "a": "kitchen-26.06 (Psammetichus III)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Psamtik-III (Psamtik III)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    -526,
-    -526
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "psammetikhusiii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-1.03|pharaoh_se-Djet": {
-   "a": "leprohon-leprohon-1.03 (Djet/Wadjet)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Djet (Djet)",
-   "dynasty": [
-    1,
-    1
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2822
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "djet"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-11a.01|pharaoh_se-Mentuhotep-I": {
-   "a": "leprohon-leprohon-11a.01 (Mentuhotep I)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Mentuhotep-I (Mentuhotep I)",
-   "dynasty": [
-    11,
-    11
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "itnetjerumentuhotepaamerysatetnebetabu",
-    "mentuhotepi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-11a.02|pharaoh_se-Intef-I": {
-   "a": "leprohon-leprohon-11a.02 (Intef I)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Intef-I (Intef I)",
-   "dynasty": [
-    11,
-    11
-   ],
-   "ordinal": [
-    "I",
-    "I"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "intefi"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-11a.03|pharaoh_se-Intef-II": {
-   "a": "leprohon-leprohon-11a.03 (Intef II)",
-   "ambiguous_mentions_between_its_targets": 1,
-   "b": "pharaoh_se-Intef-II (Intef II)",
-   "dynasty": [
-    11,
-    11
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2066
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "intefii"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-11a.04|pharaoh_se-Intef-III": {
-   "a": "leprohon-leprohon-11a.04 (Intef III)",
-   "ambiguous_mentions_between_its_targets": 1,
-   "b": "pharaoh_se-Intef-III (Intef III)",
-   "dynasty": [
-    11,
-    11
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2016
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "intefiii"
    ],
    "shared_prenomen_keys": []
   },
@@ -7467,57 +5693,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-12.08|pharaoh_se-Neferusobek": {
-   "a": "leprohon-leprohon-12.08 ((Queen) Sobekneferu)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferusobek (Neferusobek)",
-   "dynasty": [
-    12,
-    12
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1763
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "neferusobek"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-13.01|pharaoh_se-Sekhemra-Khutawy": {
-   "a": "leprohon-leprohon-13.01 (Sobekhotep I)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Sekhemra-Khutawy (Sekhemra Khutawy)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    "I",
-    null
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    -1775
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "sekhemrakhutawy",
-    "skhmrkhtwy"
-   ]
-  },
   "cand-leprohon-leprohon-13.01|pharaoh_se-Sobekhotep-I": {
    "a": "leprohon-leprohon-13.01 (Sobekhotep I)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -7876,10 +6051,10 @@
     "skhmkr"
    ]
   },
-  "cand-leprohon-leprohon-13.04|ryholt-13.2": {
+  "cand-leprohon-leprohon-13.04|pharaoh_se-Sonbef": {
    "a": "leprohon-leprohon-13.04 (Amenemhat V)",
    "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.2 (Sonbef)",
+   "b": "pharaoh_se-Sonbef (Sonbef)",
    "dynasty": [
     13,
     13
@@ -7898,6 +6073,7 @@
    "same_dynasty_reliable": false,
    "shared_name_keys": [],
    "shared_prenomen_keys": [
+    "sekhemkara",
     "shmkr",
     "skhmkara",
     "skhmkr"
@@ -8067,20 +6243,21 @@
     "shtpibra"
    ]
   },
-  "cand-leprohon-leprohon-13.06|ryholt-13.10": {
+  "cand-leprohon-leprohon-13.06|pharaoh_se-Sewesekhtawy-Sehotepibra": {
    "a": "leprohon-leprohon-13.06 (Sa-Hornedjheritef)",
    "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.10 (Sewesekhtawy)",
+   "b": "pharaoh_se-Sewesekhtawy-Sehotepibra (Sewesekhtawy Sehotepibra)",
    "dynasty": [
     13,
     13
    ],
+   "homonym_key": "shtpbr",
    "ordinal": [
     null,
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
+   "park_reason": "homonym_list",
    "reign_start_bce": [
     null,
     -1783
@@ -8090,7 +6267,6 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": [
     "shtpbr",
-    "shtpibr",
     "shtpibra"
    ]
   },
@@ -8199,6 +6375,32 @@
     "snkhbr"
    ]
   },
+  "cand-leprohon-leprohon-13.08|pharaoh_se-Sankhibra-II": {
+   "a": "leprohon-leprohon-13.08 (Amenemhat VI)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Sankhibra-II (Sankhibra II)",
+   "dynasty": [
+    13,
+    14
+   ],
+   "ordinal": [
+    "VI",
+    "II"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    null
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "sankhibra",
+    "snkhbr"
+   ]
+  },
   "cand-leprohon-leprohon-13.08|ryholt-13.8": {
    "a": "leprohon-leprohon-13.08 (Amenemhat VI)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -8294,16 +6496,49 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
+   "ordinal_relation": "one_absent",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
     -1781
    ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.11 (Sewadjkare (I)) ~ pharaoh_se-Sewadjkara-III (Sewadjkara III) via sewadjkara, swadjkara, swdjkr, swdkr",
+    "leprohon-leprohon-13.37 (Hori) ~ pharaoh_se-Sewadjkara (Sewadjkara) via sewadjkara, swadjkara, swdjkr, swdkr",
+    "leprohon-leprohon-14.11 (Sewadjkare (II)) ~ pharaoh_se-Sewadjkara (Sewadjkara) via sewadjkara, swadjkara, swdjkr, swdkr"
+   ],
    "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "sewadjkara",
+    "swadjkara",
+    "swdjkr",
+    "swdkr"
+   ]
+  },
+  "cand-leprohon-leprohon-13.11|pharaoh_se-Sewadjkara-III": {
+   "a": "leprohon-leprohon-13.11 (Sewadjkare (I))",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Sewadjkara-III (Sewadjkara III)",
+   "dynasty": [
+    13,
+    14
+   ],
+   "ordinal": [
+    "I",
+    "III"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    null
+   ],
+   "same_dynasty": false,
    "same_dynasty_reliable": false,
    "shared_name_keys": [],
    "shared_prenomen_keys": [
@@ -8322,10 +6557,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
@@ -8336,6 +6571,33 @@
     "leprohon-leprohon-13.11 (Sewadjkare (I)) ~ ryholt-14.11 (Sewadjkare) via swdjkr",
     "leprohon-leprohon-13.37 (Hori) ~ ryholt-13.11 (Sewadjkare) via swadjkara, swdjkr, swdkr",
     "leprohon-leprohon-14.11 (Sewadjkare (II)) ~ ryholt-13.11 (Sewadjkare) via swadjkara, swdjkr, swdkr"
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "swadjkara",
+    "swdjkr",
+    "swdkr"
+   ]
+  },
+  "cand-leprohon-leprohon-13.11|ryholt-13.37": {
+   "a": "leprohon-leprohon-13.11 (Sewadjkare (I))",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-13.37 (Hori II)",
+   "dynasty": [
+    13,
+    13
+   ],
+   "ordinal": [
+    "I",
+    "II"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -1669
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -8394,6 +6656,35 @@
    ],
    "shared_prenomen_keys": []
   },
+  "cand-leprohon-leprohon-13.15|pharaoh_se-Awibra": {
+   "a": "leprohon-leprohon-13.15 (Hor (I))",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Awibra (Awibra)",
+   "dynasty": [
+    13,
+    14
+   ],
+   "ordinal": [
+    "I",
+    null
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "uniqueness_clash",
+   "reign_start_bce": [
+    null,
+    null
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.15 (Hor (I)) ~ pharaoh_se-Hor-I (Hor I) via horus",
+    "leprohon-leprohon-14.17 (Awibre) ~ pharaoh_se-Awibra (Awibra) via awibra"
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "awibra"
+   ]
+  },
   "cand-leprohon-leprohon-13.15|pharaoh_se-Hor-I": {
    "a": "leprohon-leprohon-13.15 (Hor (I))",
    "ambiguous_mentions_between_its_targets": 0,
@@ -8403,14 +6694,17 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     "I"
    ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
+   "ordinal_relation": "same",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
     -1777
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.15 (Hor (I)) ~ pharaoh_se-Awibra (Awibra) via awibra"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -8430,10 +6724,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     "I"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "same",
    "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
@@ -8461,10 +6755,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -8495,6 +6789,32 @@
    "reign_start_bce": [
     null,
     -1775
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "sekhemrakhutawy",
+    "skhmrkhtwy"
+   ]
+  },
+  "cand-leprohon-leprohon-13.16|pharaoh_se-Sobekhotep-I": {
+   "a": "leprohon-leprohon-13.16 (Sekhemre Khutawy)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Sobekhotep-I (Sobekhotep I)",
+   "dynasty": [
+    13,
+    13
+   ],
+   "ordinal": [
+    null,
+    "I"
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -1803
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -8571,10 +6891,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "II",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -8594,10 +6914,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "II",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -9169,10 +7489,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
@@ -9192,38 +7512,6 @@
     "mrhtpra"
    ]
   },
-  "cand-leprohon-leprohon-13.34|ryholt-13.30": {
-   "a": "leprohon-leprohon-13.34 (Ini (I))",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.30 (Sobkhotep V)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    null,
-    "V"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    null,
-    -1720
-   ],
-   "rival_pairs": [
-    "leprohon-leprohon-13.30 (Sobekhotep V) ~ ryholt-13.30 (Sobkhotep V) via mrhtpr, mrhtpra",
-    "leprohon-leprohon-13.34 (Ini (I)) ~ ryholt-13.34 (Ini) via mrhtpr, mrhtpra",
-    "leprohon-leprohon-13.34 (Ini (I)) ~ ryholt-13.a (Ini) via mrhtpr",
-    "leprohon-leprohon-13.34 (Ini (I)) ~ ryholt-P.1 (Merhotepre) via mrhtpr, mrhtpra"
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "mrhtpr",
-    "mrhtpra"
-   ]
-  },
   "cand-leprohon-leprohon-13.34|ryholt-13.34": {
    "a": "leprohon-leprohon-13.34 (Ini (I))",
    "ambiguous_mentions_between_its_targets": 0,
@@ -9233,10 +7521,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
@@ -9267,10 +7555,10 @@
     13
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
@@ -9300,20 +7588,14 @@
     null
    ],
    "ordinal": [
-    null,
+    "I",
     null
    ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "uniqueness_clash",
+   "ordinal_relation": "one_absent",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
-   ],
-   "rival_pairs": [
-    "leprohon-leprohon-13.30 (Sobekhotep V) ~ ryholt-P.1 (Merhotepre) via mrhtpr, mrhtpra",
-    "leprohon-leprohon-13.34 (Ini (I)) ~ ryholt-13.30 (Sobkhotep V) via mrhtpr, mrhtpra",
-    "leprohon-leprohon-13.34 (Ini (I)) ~ ryholt-13.34 (Ini) via mrhtpr, mrhtpra",
-    "leprohon-leprohon-13.34 (Ini (I)) ~ ryholt-13.a (Ini) via mrhtpr"
    ],
    "same_dynasty": false,
    "same_dynasty_reliable": false,
@@ -9424,10 +7706,10 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-13.37|ryholt-13.11": {
+  "cand-leprohon-leprohon-13.37|pharaoh_se-Sewadjkara": {
    "a": "leprohon-leprohon-13.37 (Hori)",
    "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.11 (Sewadjkare)",
+   "b": "pharaoh_se-Sewadjkara (Sewadjkara)",
    "dynasty": [
     13,
     13
@@ -9437,15 +7719,21 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
-    null
+    -1781
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.11 (Sewadjkare (I)) ~ pharaoh_se-Sewadjkara (Sewadjkara) via sewadjkara, swadjkara, swdjkr, swdkr",
+    "leprohon-leprohon-13.37 (Hori) ~ pharaoh_se-Sewadjkara-III (Sewadjkara III) via sewadjkara, swadjkara, swdjkr, swdkr",
+    "leprohon-leprohon-14.11 (Sewadjkare (II)) ~ pharaoh_se-Sewadjkara (Sewadjkara) via sewadjkara, swadjkara, swdjkr, swdkr"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
    "shared_name_keys": [],
    "shared_prenomen_keys": [
+    "sewadjkara",
     "swadjkara",
     "swdjkr",
     "swdkr"
@@ -9507,31 +7795,6 @@
     "swadjkara",
     "swdjkr",
     "swdkr"
-   ]
-  },
-  "cand-leprohon-leprohon-13.37|ryholt-14.11": {
-   "a": "leprohon-leprohon-13.37 (Hori)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-14.11 (Sewadjkare)",
-   "dynasty": [
-    13,
-    14
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "swdjkr"
    ]
   },
   "cand-leprohon-leprohon-13.38|pharaoh_se-Sobekhotep-II": {
@@ -10237,33 +8500,6 @@
     "skhnr"
    ]
   },
-  "cand-leprohon-leprohon-13a.04|ryholt-14.1": {
-   "a": "leprohon-leprohon-13a.04 (Sekhaenre)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-14.1 (Yakbim)",
-   "dynasty": [
-    13,
-    14
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    -1805
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "shnr",
-    "skhanra",
-    "skhnr"
-   ]
-  },
   "cand-leprohon-leprohon-13a.05|ryholt-H.1": {
    "a": "leprohon-leprohon-13a.05 (Horus Merytawy)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -10381,37 +8617,6 @@
     "skhnr"
    ]
   },
-  "cand-leprohon-leprohon-14.01|ryholt-13.d": {
-   "a": "leprohon-leprohon-14.01 (Yakob-mu)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.d (Sekhaenre)",
-   "dynasty": [
-    14,
-    13
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "rival_pairs": [
-    "leprohon-leprohon-13a.04 (Sekhaenre) ~ ryholt-13.d (Sekhaenre) via shnr, skhanra, skhnr",
-    "leprohon-leprohon-14.01 (Yakob-mu) ~ ryholt-14.1 (Yakbim) via shnr, skhanra, skhnr"
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "shnr",
-    "skhanra",
-    "skhnr"
-   ]
-  },
   "cand-leprohon-leprohon-14.01|ryholt-14.1": {
    "a": "leprohon-leprohon-14.01 (Yakob-mu)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -10443,6 +8648,67 @@
     "skhnr"
    ]
   },
+  "cand-leprohon-leprohon-14.11|pharaoh_se-Sewadjkara": {
+   "a": "leprohon-leprohon-14.11 (Sewadjkare (II))",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Sewadjkara (Sewadjkara)",
+   "dynasty": [
+    14,
+    13
+   ],
+   "ordinal": [
+    "II",
+    null
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -1781
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "sewadjkara",
+    "swadjkara",
+    "swdjkr",
+    "swdkr"
+   ]
+  },
+  "cand-leprohon-leprohon-14.11|pharaoh_se-Sewadjkara-III": {
+   "a": "leprohon-leprohon-14.11 (Sewadjkare (II))",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Sewadjkara-III (Sewadjkara III)",
+   "dynasty": [
+    14,
+    14
+   ],
+   "ordinal": [
+    "II",
+    "III"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "uniqueness_clash",
+   "reign_start_bce": [
+    null,
+    null
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.11 (Sewadjkare (I)) ~ pharaoh_se-Sewadjkara-III (Sewadjkara III) via sewadjkara, swadjkara, swdjkr, swdkr",
+    "leprohon-leprohon-13.37 (Hori) ~ pharaoh_se-Sewadjkara-III (Sewadjkara III) via sewadjkara, swadjkara, swdjkr, swdkr",
+    "leprohon-leprohon-14.11 (Sewadjkare (II)) ~ pharaoh_se-Sewadjkara (Sewadjkara) via sewadjkara, swadjkara, swdjkr, swdkr"
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "sewadjkara",
+    "swadjkara",
+    "swdjkr",
+    "swdkr"
+   ]
+  },
   "cand-leprohon-leprohon-14.11|ryholt-14.11": {
    "a": "leprohon-leprohon-14.11 (Sewadjkare (II))",
    "ambiguous_mentions_between_its_targets": 0,
@@ -10452,10 +8718,10 @@
     14
    ],
    "ordinal": [
-    null,
+    "II",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
@@ -10472,31 +8738,6 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": [
     "swdjkr"
-   ]
-  },
-  "cand-leprohon-leprohon-14.13|ryholt-14.13": {
-   "a": "leprohon-leprohon-14.13 (Webenre I)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-14.13 (Webenre)",
-   "dynasty": [
-    14,
-    14
-   ],
-   "ordinal": [
-    "I",
-    null
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "wbnr"
    ]
   },
   "cand-leprohon-leprohon-14.15|pharaoh_se---djefara": {
@@ -10579,6 +8820,35 @@
     "awibra"
    ]
   },
+  "cand-leprohon-leprohon-14.17|ryholt-13.15": {
+   "a": "leprohon-leprohon-14.17 (Awibre)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-13.15 (Hor I)",
+   "dynasty": [
+    14,
+    13
+   ],
+   "ordinal": [
+    null,
+    "I"
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "uniqueness_clash",
+   "reign_start_bce": [
+    null,
+    -1777
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.15 (Hor (I)) ~ ryholt-13.15 (Hor I) via awibra, wibr"
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "awibra",
+    "wibr"
+   ]
+  },
   "cand-leprohon-leprohon-14.17|ryholt-14.17": {
    "a": "leprohon-leprohon-14.17 (Awibre)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -10655,6 +8925,38 @@
    ],
    "shared_prenomen_keys": []
   },
+  "cand-leprohon-leprohon-14.24|pharaoh_se-Sankhibra-Amenemhat": {
+   "a": "leprohon-leprohon-14.24 (Sankhibre)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Sankhibra-Amenemhat (Sankhibra Amenemhat)",
+   "dynasty": [
+    14,
+    13
+   ],
+   "ordinal": [
+    null,
+    null
+   ],
+   "ordinal_relation": "both_absent",
+   "park_reason": "uniqueness_clash",
+   "reign_start_bce": [
+    null,
+    -1788
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.08 (Amenemhat VI) ~ pharaoh_se-Sankhibra-Amenemhat (Sankhibra Amenemhat) via sankhibra, snkhbr",
+    "leprohon-leprohon-14.24 (Sankhibre) ~ pharaoh_se-Sankhibra-II (Sankhibra II) via sankhibra, snkhbr"
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [
+    "sankhibre"
+   ],
+   "shared_prenomen_keys": [
+    "sankhibra",
+    "snkhbr"
+   ]
+  },
   "cand-leprohon-leprohon-14.24|pharaoh_se-Sankhibra-II": {
    "a": "leprohon-leprohon-14.24 (Sankhibre)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -10668,10 +8970,14 @@
     "II"
    ],
    "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     null,
     null
+   ],
+   "rival_pairs": [
+    "leprohon-leprohon-13.08 (Amenemhat VI) ~ pharaoh_se-Sankhibra-II (Sankhibra II) via sankhibra, snkhbr",
+    "leprohon-leprohon-14.24 (Sankhibre) ~ pharaoh_se-Sankhibra-Amenemhat (Sankhibra Amenemhat) via sankhibra, snkhbr"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -10865,33 +9171,6 @@
     "sekhemre"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-14.28|ryholt-14.28": {
-   "a": "leprohon-leprohon-14.28 (Neferibre)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-14.28 (Neferibre)",
-   "dynasty": [
-    14,
-    14
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "neferibre"
-   ],
-   "shared_prenomen_keys": [
-    "nfrbr"
-   ]
   },
   "cand-leprohon-leprohon-14.29|pharaoh_se-I--ra": {
    "a": "leprohon-leprohon-14.29 (I /// Re)",
@@ -11709,33 +9988,6 @@
     "apophis"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-15.05|ryholt-15.5": {
-   "a": "leprohon-leprohon-15.05 (Apepi)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-15.5 (Apophis)",
-   "dynasty": [
-    15,
-    15
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    -1581
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "apophis"
-   ],
-   "shared_prenomen_keys": [
-    "wsrr"
-   ]
   },
   "cand-leprohon-leprohon-15.06|pharaoh_se-Khamudy": {
    "a": "leprohon-leprohon-15.06 (Khamudi)",
@@ -12874,33 +11126,6 @@
     "skhmrkhwtwy"
    ]
   },
-  "cand-leprohon-leprohon-17.18|ryholt-P.6": {
-   "a": "leprohon-leprohon-17.18 (Pantjeny)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-P.6 (Sekhemrekhutawy)",
-   "dynasty": [
-    17,
-    null
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "shmrhwtwy",
-    "skhmrakhwtawy",
-    "skhmrkhwtwy"
-   ]
-  },
   "cand-leprohon-leprohon-17.19|pharaoh_se-Nebirau-I": {
    "a": "leprohon-leprohon-17.19 (Senaaib)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -13078,12 +11303,13 @@
     17,
     17
    ],
+   "homonym_key": "sekhemrashedtawy",
    "ordinal": [
     "I",
     "II"
    ],
    "ordinal_relation": "different",
-   "park_reason": "reviewer_escalated",
+   "park_reason": "homonym_list",
    "reign_start_bce": [
     null,
     null
@@ -13722,10 +11948,10 @@
     18
    ],
    "ordinal": [
-    null,
+    "I",
     "I"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "same",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -13737,6 +11963,58 @@
     "iahmesu"
    ],
    "shared_prenomen_keys": []
+  },
+  "cand-leprohon-leprohon-17.26|ryholt-17.7": {
+   "a": "leprohon-leprohon-17.26 (Senakhtenre Ahmose (I))",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-17.7 (Siamun (?))",
+   "dynasty": [
+    17,
+    17
+   ],
+   "ordinal": [
+    "I",
+    null
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "uncertain_reading",
+   "reign_start_bce": [
+    null,
+    -1559
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "snkhtnr"
+   ]
+  },
+  "cand-leprohon-leprohon-17.27|ryholt-17.8": {
+   "a": "leprohon-leprohon-17.27 (Seqenenre Tao)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-17.8 (Tao)",
+   "dynasty": [
+    17,
+    17
+   ],
+   "ordinal": [
+    null,
+    null
+   ],
+   "ordinal_relation": "both_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -1558
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "sknnr",
+    "sqnnr",
+    "sqnnra"
+   ]
   },
   "cand-leprohon-leprohon-17a.01|pharaoh_se-Amenhotep-III": {
    "a": "leprohon-leprohon-17a.01 (Nebmaatre)",
@@ -13775,12 +12053,13 @@
     17,
     16
    ],
+   "homonym_key": "nbmaatra",
    "ordinal": [
     null,
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
+   "park_reason": "homonym_list",
    "reign_start_bce": [
     null,
     null
@@ -13834,10 +12113,10 @@
     17
    ],
    "ordinal": [
-    null,
+    "II",
     null
    ],
-   "ordinal_relation": "both_absent",
+   "ordinal_relation": "one_absent",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -13920,39 +12199,6 @@
    "same_dynasty_reliable": false,
    "shared_name_keys": [],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-18.04|pharaoh_se-Thutmose-II": {
-   "a": "leprohon-leprohon-18.04 (Thutmose II)",
-   "ambiguous_mentions_between_its_targets": 29,
-   "b": "pharaoh_se-Thutmose-II (Thutmose II)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    null,
-    -1482
-   ],
-   "rival_pairs": [
-    "leprohon-leprohon-18.04 (Thutmose II) ~ pharaoh_se-Amenhotep-II (Amenhotep II) via khprnr"
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "thutmoseii"
-   ],
-   "shared_prenomen_keys": [
-    "aakheperenra",
-    "aakhprnra",
-    "hprnr",
-    "khprnr"
-   ]
   },
   "cand-leprohon-leprohon-18.05a|pharaoh_se-Harsiese-A": {
    "a": "leprohon-leprohon-18.05a (Thutmose III (a))",
@@ -14094,7 +12340,7 @@
   },
   "cand-leprohon-leprohon-18.07|pharaoh_se-Amenhotep-I": {
    "a": "leprohon-leprohon-18.07 (Amenhotep II)",
-   "ambiguous_mentions_between_its_targets": 0,
+   "ambiguous_mentions_between_its_targets": 2,
    "b": "pharaoh_se-Amenhotep-I (Amenhotep I)",
    "dynasty": [
     18,
@@ -14116,41 +12362,6 @@
     "imnhtpw"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-18.07|pharaoh_se-Amenhotep-II": {
-   "a": "leprohon-leprohon-18.07 (Amenhotep II)",
-   "ambiguous_mentions_between_its_targets": 129,
-   "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "ordinal": [
-    "II",
-    "II"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    null,
-    -1425
-   ],
-   "rival_pairs": [
-    "leprohon-leprohon-18.04 (Thutmose II) ~ pharaoh_se-Amenhotep-II (Amenhotep II) via khprnr"
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "amenhotepii",
-    "imnhtpw"
-   ],
-   "shared_prenomen_keys": [
-    "aakheperura",
-    "aakhprwra",
-    "hprwr",
-    "khprr",
-    "khprwr"
-   ]
   },
   "cand-leprohon-leprohon-18.07|pharaoh_se-Ramesses-II": {
    "a": "leprohon-leprohon-18.07 (Amenhotep II)",
@@ -14220,53 +12431,6 @@
    "same_dynasty_reliable": false,
    "shared_name_keys": [],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-18.08|pharaoh_se-Thutmose-IV": {
-   "a": "leprohon-leprohon-18.08 (Thutmose IV)",
-   "ambiguous_mentions_between_its_targets": 62,
-   "b": "pharaoh_se-Thutmose-IV (Thutmose IV)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "homonym_key": "mnkhprr",
-   "ordinal": [
-    "IV",
-    "IV"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "homonym_list",
-   "reign_start_bce": [
-    null,
-    -1400
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "thutmoseiv"
-   ],
-   "shared_prenomen_keys": [
-    "menkheperura",
-    "menkheperuraheqamaat",
-    "menkheperuramerenra",
-    "menkheperurasetepenra",
-    "mnhprwr",
-    "mnhprwrhkmt",
-    "mnhprwrmrnr",
-    "mnhprwrstpnr",
-    "mnkhprr",
-    "mnkhprrhqmt",
-    "mnkhprrmrnr",
-    "mnkhprrstpnr",
-    "mnkhprwr",
-    "mnkhprwra",
-    "mnkhprwrahqamaat",
-    "mnkhprwrastpnra",
-    "mnkhprwrhqmt",
-    "mnkhprwrmrnr",
-    "mnkhprwrrnr",
-    "mnkhprwrstpnr"
-   ]
   },
   "cand-leprohon-leprohon-18.09|pharaoh_se-Amenhotep-I": {
    "a": "leprohon-leprohon-18.09 (Amenhotep III)",
@@ -14341,56 +12505,6 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-18.10a|pharaoh_se-Amenhotep-I": {
-   "a": "leprohon-leprohon-18.10a (Amenhotep IV (Regnal Years 1 to 5))",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Amenhotep-I (Amenhotep I)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "ordinal": [
-    "IV",
-    "I"
-   ],
-   "ordinal_relation": "different",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1514
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "imnhtpw"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-18.10a|pharaoh_se-Amenhotep-II": {
-   "a": "leprohon-leprohon-18.10a (Amenhotep IV (Regnal Years 1 to 5))",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Amenhotep-II (Amenhotep II)",
-   "dynasty": [
-    18,
-    18
-   ],
-   "ordinal": [
-    "IV",
-    "II"
-   ],
-   "ordinal_relation": "different",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1425
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "imnhtpw"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-18.11|pharaoh_se-Neferneferuaten": {
    "a": "leprohon-leprohon-18.11 (Nefer-neferu-aten)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -14435,7 +12549,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -1336
@@ -15122,31 +13236,6 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-19.06|pharaoh_se-Amenmesse": {
-   "a": "leprohon-leprohon-19.06 (Amenmesse)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Amenmesse (Amenmesse)",
-   "dynasty": [
-    19,
-    19
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1202
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "amenmesse"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-19.06|pharaoh_se-Ramesses-III": {
    "a": "leprohon-leprohon-19.06 (Amenmesse)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -15252,7 +13341,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -15336,31 +13425,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-20.02|pharaoh_se-Ramesses-III": {
-   "a": "leprohon-leprohon-20.02 (Ramesses III)",
-   "ambiguous_mentions_between_its_targets": 40,
-   "b": "pharaoh_se-Ramesses-III (Ramesses III)",
-   "dynasty": [
-    20,
-    20
-   ],
-   "ordinal": [
-    "III",
-    "III"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1187
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "ramessesiii"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-20.03|pharaoh_se-Ramesses-I": {
    "a": "leprohon-leprohon-20.03 (Ramesses IV)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -15434,31 +13498,6 @@
    "same_dynasty_reliable": true,
    "shared_name_keys": [
     "ramessuamnherkhepeshef"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-20.06|pharaoh_se-Ramesses-VII": {
-   "a": "leprohon-leprohon-20.06 (Ramesses VII)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ramesses-VII (Ramesses VII)",
-   "dynasty": [
-    20,
-    20
-   ],
-   "ordinal": [
-    "VII",
-    "VII"
-   ],
-   "ordinal_relation": "same",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -1138
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "ramessesvii"
    ],
    "shared_prenomen_keys": []
   },
@@ -16070,8 +14109,11 @@
     "leprohon-leprohon-22.01 (Sheshonq I) ~ pharaoh_se-Smendes-I (Smendes I) via hdhprrstpnr, hdjkhprrastpnra, hdjkhprrstpnr, hedjkheperrasetepenra",
     "leprohon-leprohon-22.01 (Sheshonq I) ~ pharaoh_se-Takelot-I (Takelot I) via hdhprrstpnr, hdjkhprrastpnra, hdjkhprrstpnr, hedjkheperrasetepenra",
     "leprohon-leprohon-22.01 (Sheshonq I) ~ pharaoh_se-Takelot-II (Takelot II) via hdhprrstpnr, hdjkhprrastpnra, hdjkhprrstpnr, hedjkheperrasetepenra",
+    "leprohon-leprohon-22.03 (Sheshonq IIa) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via name_dynasty",
+    "leprohon-leprohon-22.04 (Sheshonq IIb) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via name_dynasty",
     "leprohon-leprohon-22.05 (Takelot I) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via hdhprrstpnr, hdjkhprrastpnra, hdjkhprrstpnr, hedjkheperrasetepenra",
     "leprohon-leprohon-22.07 (Takelot II) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via hdhprrstpnr, hdjkhprrastpnra, hdjkhprrstpnr, hedjkheperrasetepenra",
+    "leprohon-leprohon-22.08 (Sheshonq IIc) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via name_dynasty",
     "leprohon-leprohon-22.10 (Sheshonq IV) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via hdhprrstpnr, hdjkhprrastpnra, hdjkhprrstpnr, hedjkheperrasetepenra",
     "leprohon-leprohon-22a.01 (Harsiese) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via hdhprrstpnamn, hdjkhprrastpnimn, hdjkhprrstpnmn, hedjkheperrasetepenamn"
    ],
@@ -16097,6 +14139,34 @@
     "hedjkheperrasetepenamn",
     "hedjkheperrasetepenptah",
     "hedjkheperrasetepenra"
+   ]
+  },
+  "cand-leprohon-leprohon-22.01|pharaoh_se-Shoshenq-IV": {
+   "a": "leprohon-leprohon-22.01 (Sheshonq I)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Shoshenq-IV (Shoshenq IV)",
+   "dynasty": [
+    22,
+    22
+   ],
+   "ordinal": [
+    "I",
+    "IV"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -798
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "hdhprr",
+    "hdjkhprr",
+    "hdjkhprra",
+    "hedjkheperra"
    ]
   },
   "cand-leprohon-leprohon-22.01|pharaoh_se-Shoshenq-V": {
@@ -16225,59 +14295,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-22.03|pharaoh_se-Shoshenq-I": {
-   "a": "leprohon-leprohon-22.03 (Sheshonq IIa)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-I (Shoshenq I)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    null,
-    "I"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -943
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shesheneq",
-    "shshnq",
-    "ssnk"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-22.03|pharaoh_se-Shoshenq-V": {
-   "a": "leprohon-leprohon-22.03 (Sheshonq IIa)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-V (Shoshenq V)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    null,
-    "V"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -778
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shshnq",
-    "ssnk"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-22.03|pharaoh_se-Shoshenq-VI": {
    "a": "leprohon-leprohon-22.03 (Sheshonq IIa)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -16303,33 +14320,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-22.04|pharaoh_se-Shoshenq-I": {
-   "a": "leprohon-leprohon-22.04 (Sheshonq IIb)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-I (Shoshenq I)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    null,
-    "I"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -943
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shesheneq",
-    "shshnq",
-    "ssnk"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-22.04|pharaoh_se-Shoshenq-IIb": {
    "a": "leprohon-leprohon-22.04 (Sheshonq IIb)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -16350,7 +14340,9 @@
    ],
    "rival_pairs": [
     "leprohon-leprohon-21.08 (Pa-Seba-Kha-En-Niut II) ~ pharaoh_se-Shoshenq-IIb (Shoshenq IIb) via ttkhprr",
-    "leprohon-leprohon-21a.03 (Pa-Seba-Kha-En-Niut III) ~ pharaoh_se-Shoshenq-IIb (Shoshenq IIb) via ttkhprr"
+    "leprohon-leprohon-21a.03 (Pa-Seba-Kha-En-Niut III) ~ pharaoh_se-Shoshenq-IIb (Shoshenq IIb) via ttkhprr",
+    "leprohon-leprohon-22.04 (Sheshonq IIb) ~ pharaoh_se-Shoshenq-I (Shoshenq I) via name_dynasty",
+    "leprohon-leprohon-22.04 (Sheshonq IIb) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via name_dynasty"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -16365,32 +14357,6 @@
     "twtkhprr",
     "twtkhprra"
    ]
-  },
-  "cand-leprohon-leprohon-22.04|pharaoh_se-Shoshenq-V": {
-   "a": "leprohon-leprohon-22.04 (Sheshonq IIb)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-V (Shoshenq V)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    null,
-    "V"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -778
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shshnq",
-    "ssnk"
-   ],
-   "shared_prenomen_keys": []
   },
   "cand-leprohon-leprohon-22.04|pharaoh_se-Shoshenq-VI": {
    "a": "leprohon-leprohon-22.04 (Sheshonq IIb)",
@@ -16459,6 +14425,36 @@
     "hedjkheperrasetepenra"
    ]
   },
+  "cand-leprohon-leprohon-22.05|pharaoh_se-Takelot-II": {
+   "a": "leprohon-leprohon-22.05 (Takelot I)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Takelot-II (Takelot II)",
+   "dynasty": [
+    22,
+    23
+   ],
+   "ordinal": [
+    "I",
+    "II"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -840
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [
+    "tklt"
+   ],
+   "shared_prenomen_keys": [
+    "hdhprrstpnr",
+    "hdjkhprrastpnra",
+    "hdjkhprrstpnr",
+    "hedjkheperrasetepenra"
+   ]
+  },
   "cand-leprohon-leprohon-22.05|pharaoh_se-Takelot-III": {
    "a": "leprohon-leprohon-22.05 (Takelot I)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -16510,7 +14506,7 @@
   },
   "cand-leprohon-leprohon-22.06|pharaoh_se-Osorkon-II": {
    "a": "leprohon-leprohon-22.06 (Osorkon II)",
-   "ambiguous_mentions_between_its_targets": 2,
+   "ambiguous_mentions_between_its_targets": 0,
    "b": "pharaoh_se-Osorkon-II (Osorkon II)",
    "dynasty": [
     22,
@@ -16647,6 +14643,36 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": []
   },
+  "cand-leprohon-leprohon-22.07|pharaoh_se-Takelot-I": {
+   "a": "leprohon-leprohon-22.07 (Takelot II)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Takelot-I (Takelot I)",
+   "dynasty": [
+    22,
+    22
+   ],
+   "ordinal": [
+    "II",
+    "I"
+   ],
+   "ordinal_relation": "different",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -887
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [
+    "tklt"
+   ],
+   "shared_prenomen_keys": [
+    "hdhprrstpnr",
+    "hdjkhprrastpnra",
+    "hdjkhprrstpnr",
+    "hedjkheperrasetepenra"
+   ]
+  },
   "cand-leprohon-leprohon-22.07|pharaoh_se-Takelot-II": {
    "a": "leprohon-leprohon-22.07 (Takelot II)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -16712,59 +14738,6 @@
    "shared_name_keys": [
     "tekelet",
     "tklt"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-22.08|pharaoh_se-Shoshenq-I": {
-   "a": "leprohon-leprohon-22.08 (Sheshonq IIc)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-I (Shoshenq I)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    null,
-    "I"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -943
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shesheneq",
-    "shshnq",
-    "ssnk"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-22.08|pharaoh_se-Shoshenq-V": {
-   "a": "leprohon-leprohon-22.08 (Sheshonq IIc)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-V (Shoshenq V)",
-   "dynasty": [
-    22,
-    22
-   ],
-   "ordinal": [
-    null,
-    "V"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -778
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shshnq",
-    "ssnk"
    ],
    "shared_prenomen_keys": []
   },
@@ -17241,6 +15214,9 @@
    "rival_pairs": [
     "leprohon-leprohon-21.04 (Pa-Seba-Kha-En-Niut I) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via aakheperra, aakhprra, hprr, khprr",
     "leprohon-leprohon-21.06 (Osorkon (the Elder)) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via aakheperra, aakhprra, hprr, khprr, khprrstpnr",
+    "leprohon-leprohon-22.03 (Sheshonq IIa) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via name_dynasty",
+    "leprohon-leprohon-22.04 (Sheshonq IIb) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via name_dynasty",
+    "leprohon-leprohon-22.08 (Sheshonq IIc) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via name_dynasty",
     "leprohon-leprohon-22.12 (Sheshonq V) ~ pharaoh_se-Osochor (Osochor) via aakheperrasetepenra, aakhprrastpnra, hprrstpnr, khprrstpnr",
     "leprohon-leprohon-22.13 (Osorkon IV) ~ pharaoh_se-Shoshenq-V (Shoshenq V) via aakheperra, aakhprra, hprr, khprr"
    ],
@@ -17651,7 +15627,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -829
@@ -17735,6 +15711,7 @@
     -804
    ],
    "rival_pairs": [
+    "leprohon-leprohon-23.07 (Sheshonq VIa) ~ pharaoh_se-Shoshenq-VI (Shoshenq VI) via name_dynasty",
     "leprohon-leprohon-25.03 (Piye/Piankhy) ~ pharaoh_se-Shoshenq-VI (Shoshenq VI) via wsrmaatramryimn, wsrmtrmryamn, wsrmtrmrymn"
    ],
    "same_dynasty": true,
@@ -17963,7 +15940,7 @@
   },
   "cand-leprohon-leprohon-23.06|pharaoh_se-Rudamun": {
    "a": "leprohon-leprohon-23.06 (Rudamun)",
-   "ambiguous_mentions_between_its_targets": 1,
+   "ambiguous_mentions_between_its_targets": 0,
    "b": "pharaoh_se-Rudamun (Rudamun)",
    "dynasty": [
     23,
@@ -18020,6 +15997,34 @@
    ],
    "shared_prenomen_keys": []
   },
+  "cand-leprohon-leprohon-23.07|pharaoh_se-Shoshenq-IV": {
+   "a": "leprohon-leprohon-23.07 (Sheshonq VIa)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "pharaoh_se-Shoshenq-IV (Shoshenq IV)",
+   "dynasty": [
+    23,
+    22
+   ],
+   "ordinal": [
+    null,
+    "IV"
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    null,
+    -798
+   ],
+   "same_dynasty": false,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "hdhprr",
+    "hdjkhprr",
+    "hdjkhprra",
+    "hedjkheperra"
+   ]
+  },
   "cand-leprohon-leprohon-23.07|pharaoh_se-Shoshenq-V": {
    "a": "leprohon-leprohon-23.07 (Sheshonq VIa)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -18043,31 +16048,6 @@
    "shared_name_keys": [
     "shshnq",
     "ssnk"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-23.07|pharaoh_se-Shoshenq-VI": {
-   "a": "leprohon-leprohon-23.07 (Sheshonq VIa)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Shoshenq-VI (Shoshenq VI)",
-   "dynasty": [
-    23,
-    23
-   ],
-   "ordinal": [
-    null,
-    "VI"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -804
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "shesheneq"
    ],
    "shared_prenomen_keys": []
   },
@@ -18720,31 +16700,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-26.04|pharaoh_se-Psamtik-I": {
-   "a": "leprohon-leprohon-26.04 (Wahibre)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Psamtik-I (Psamtik I)",
-   "dynasty": [
-    26,
-    26
-   ],
-   "ordinal": [
-    null,
-    "I"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -664
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "wahibre"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-26.06|pharaoh_se-Psamtik-I": {
    "a": "leprohon-leprohon-26.06 (Psamtek III)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -18856,7 +16811,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -486
@@ -18882,7 +16837,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -465
@@ -18910,7 +16865,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -424
@@ -18935,7 +16890,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -405
@@ -18960,7 +16915,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -404
@@ -18987,7 +16942,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -380
@@ -19012,7 +16967,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -19033,11 +16988,11 @@
     2
    ],
    "ordinal": [
-    null,
+    "I",
     "I"
    ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
+   "ordinal_relation": "same",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -19091,7 +17046,7 @@
     null
    ],
    "rival_pairs": [
-    "leprohon-leprohon-3.03 (Khaba) ~ pharaoh_se-Huni (Huni) via horus_early"
+    "leprohon-leprohon-3.03 (Khaba) ~ pharaoh_se-Huni (Huni) via horus"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": true,
@@ -19159,7 +17114,7 @@
     "III"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -343
@@ -19184,7 +17139,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -338
@@ -19209,7 +17164,7 @@
     "III"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -335
@@ -19336,10 +17291,10 @@
     null
    ],
    "ordinal": [
-    "IV",
+    null,
     null
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "both_absent",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -19484,31 +17439,6 @@
    "reign_start_bce": [
     null,
     -305
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "ptolemys"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-33.02|pharaoh_se-Ptolemy-II": {
-   "a": "leprohon-leprohon-33.02 (Ptolemy II Philadelphus)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ptolemy-II (Ptolemy II)",
-   "dynasty": [
-    33,
-    null
-   ],
-   "ordinal": [
-    null,
-    "II"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -284
    ],
    "same_dynasty": false,
    "same_dynasty_reliable": false,
@@ -19835,31 +17765,6 @@
    "reign_start_bce": [
     null,
     -284
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "ptolemys"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-33.05|pharaoh_se-Ptolemy-V": {
-   "a": "leprohon-leprohon-33.05 (Ptolemy V Epiphanes)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ptolemy-V (Ptolemy V)",
-   "dynasty": [
-    33,
-    null
-   ],
-   "ordinal": [
-    null,
-    "V"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -204
    ],
    "same_dynasty": false,
    "same_dynasty_reliable": false,
@@ -20469,32 +18374,6 @@
    ],
    "shared_prenomen_keys": []
   },
-  "cand-leprohon-leprohon-33.17|pharaoh_se-Ptolemy-XV": {
-   "a": "leprohon-leprohon-33.17 (Ptolemy XV Caesarion)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Ptolemy-XV (Ptolemy XV)",
-   "dynasty": [
-    33,
-    null
-   ],
-   "ordinal": [
-    null,
-    "XV"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -44
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "ptolemys",
-    "ptwlmys"
-   ],
-   "shared_prenomen_keys": []
-  },
   "cand-leprohon-leprohon-33.17|pharaoh_se-Titus": {
    "a": "leprohon-leprohon-33.17 (Ptolemy XV Caesarion)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -20527,11 +18406,11 @@
     3
    ],
    "ordinal": [
-    null,
+    "II",
     "II"
    ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
+   "ordinal_relation": "same",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -20556,7 +18435,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -20581,7 +18460,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -2474
@@ -20590,56 +18469,6 @@
    "same_dynasty_reliable": true,
    "shared_name_keys": [
     "baufre"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-5.01|pharaoh_se-Userkaf": {
-   "a": "leprohon-leprohon-5.01 (Userkaf)",
-   "ambiguous_mentions_between_its_targets": 4,
-   "b": "pharaoh_se-Userkaf (Userkaf)",
-   "dynasty": [
-    5,
-    5
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2435
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "userkaf"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-5.02|pharaoh_se-Sahura": {
-   "a": "leprohon-leprohon-5.02 (Sahure)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Sahura (Sahura)",
-   "dynasty": [
-    5,
-    5
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2428
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "sahure"
    ],
    "shared_prenomen_keys": []
   },
@@ -20679,58 +18508,6 @@
     "mnkhr",
     "mnkwhr"
    ]
-  },
-  "cand-leprohon-leprohon-5.09|pharaoh_se-Unas": {
-   "a": "leprohon-leprohon-5.09 (Unas)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Unas (Unas)",
-   "dynasty": [
-    5,
-    5
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2321
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "unas",
-    "wenis"
-   ],
-   "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-6.01|pharaoh_se-Teti": {
-   "a": "leprohon-leprohon-6.01 (Teti)",
-   "ambiguous_mentions_between_its_targets": 4,
-   "b": "pharaoh_se-Teti (Teti)",
-   "dynasty": [
-    6,
-    6
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
-   "reign_start_bce": [
-    null,
-    -2305
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": true,
-   "shared_name_keys": [
-    "teti",
-    "tti"
-   ],
-   "shared_prenomen_keys": []
   },
   "cand-leprohon-leprohon-6.03|ryholt-H.1": {
    "a": "leprohon-leprohon-6.03 (Pepy I)",
@@ -20820,7 +18597,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "king_name_route",
    "reign_start_bce": [
     null,
     -2152
@@ -20870,7 +18647,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -20895,7 +18672,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -20916,11 +18693,11 @@
     8
    ],
    "ordinal": [
-    null,
+    "II",
     "II"
    ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "name_only",
+   "ordinal_relation": "same",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -20931,60 +18708,6 @@
     "neferkareii"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-8.04|pharaoh_se-Neferkara-II": {
-   "a": "leprohon-leprohon-8.04 (Neferkare Nebi)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferkara-II (Neferkara II)",
-   "dynasty": [
-    8,
-    8
-   ],
-   "ordinal": [
-    null,
-    "II"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "neferkara",
-    "nfrkara",
-    "nfrkr"
-   ]
-  },
-  "cand-leprohon-leprohon-8.04|pharaoh_se-Neferkara-III": {
-   "a": "leprohon-leprohon-8.04 (Neferkare Nebi)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferkara-III (Neferkara III)",
-   "dynasty": [
-    8,
-    9
-   ],
-   "ordinal": [
-    null,
-    "III"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "neferkara",
-    "nfrkara",
-    "nfrkr"
-   ]
   },
   "cand-leprohon-leprohon-8.05|pharaoh_se-Djedkara-Shemai": {
    "a": "leprohon-leprohon-8.05 (Djedkare Shemay)",
@@ -20999,7 +18722,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21024,7 +18747,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21049,7 +18772,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21074,7 +18797,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21085,33 +18808,6 @@
     "nikare"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-8.10|pharaoh_se-Neferkara-III": {
-   "a": "leprohon-leprohon-8.10 (Neferkare Tereru)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferkara-III (Neferkara III)",
-   "dynasty": [
-    8,
-    9
-   ],
-   "ordinal": [
-    null,
-    "III"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "neferkara",
-    "nfrkara",
-    "nfrkr"
-   ]
   },
   "cand-leprohon-leprohon-8.10|pharaoh_se-Neferkara-Tereru": {
    "a": "leprohon-leprohon-8.10 (Neferkare Tereru)",
@@ -21126,7 +18822,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21151,7 +18847,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21176,7 +18872,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21187,62 +18883,6 @@
     "neferkaminanu"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-leprohon-leprohon-8.15|pharaoh_se-Neferkara-III": {
-   "a": "leprohon-leprohon-8.15 (Neferkaure)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferkara-III (Neferkara III)",
-   "dynasty": [
-    8,
-    9
-   ],
-   "ordinal": [
-    null,
-    "III"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    null,
-    null
-   ],
-   "same_dynasty": false,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "nfrkr"
-   ]
-  },
-  "cand-leprohon-leprohon-8.15|pharaoh_se-Neferkaura": {
-   "a": "leprohon-leprohon-8.15 (Neferkaure)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "pharaoh_se-Neferkaura (Neferkaura)",
-   "dynasty": [
-    8,
-    8
-   ],
-   "homonym_key": "nfrkr",
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "homonym_list",
-   "reign_start_bce": [
-    null,
-    -2126
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [
-    "neferkaure"
-   ],
-   "shared_prenomen_keys": [
-    "neferkaura",
-    "nfrkawra",
-    "nfrkr",
-    "nfrkwr"
-   ]
   },
   "cand-leprohon-leprohon-8.16|pharaoh_se-Neferkahor": {
    "a": "leprohon-leprohon-8.16 (Neferkauhor Khuwihapi)",
@@ -21263,6 +18903,7 @@
     null
    ],
    "rival_pairs": [
+    "leprohon-leprohon-8.11 (Neferkahor) ~ pharaoh_se-Neferkahor (Neferkahor) via name_dynasty",
     "leprohon-leprohon-8.16 (Neferkauhor Khuwihapi) ~ pharaoh_se-Neferkauhor (Neferkauhor) via neferkauhor, nfrkawhr, nfrkhr, nfrkwhr"
    ],
    "same_dynasty": true,
@@ -21316,7 +18957,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     -2119
@@ -21578,7 +19219,7 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21628,10 +19269,10 @@
     8
    ],
    "ordinal": [
-    null,
+    "III",
     "II"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
@@ -21656,10 +19297,10 @@
    ],
    "homonym_key": "neferkara",
    "ordinal": [
-    null,
+    "III",
     "III"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "same",
    "park_reason": "homonym_list",
    "reign_start_bce": [
     null,
@@ -21716,7 +19357,7 @@
     "II"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21743,7 +19384,7 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "name_only",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
     null
@@ -21764,10 +19405,10 @@
     9
    ],
    "ordinal": [
-    null,
+    "V",
     "I"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -21792,10 +19433,10 @@
    ],
    "homonym_key": "wahkara",
    "ordinal": [
-    null,
+    "V",
     "II"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "homonym_list",
    "reign_start_bce": [
     null,
@@ -21822,10 +19463,10 @@
     9
    ],
    "ordinal": [
-    null,
+    "VI",
     "I"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -21847,10 +19488,10 @@
     9
    ],
    "ordinal": [
-    null,
+    "VII",
     "I"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -21874,10 +19515,10 @@
     9
    ],
    "ordinal": [
-    null,
+    "VII",
     "II"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -21901,10 +19542,10 @@
     9
    ],
    "ordinal": [
-    null,
+    "VIII",
     "I"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -21928,10 +19569,10 @@
     9
    ],
    "ordinal": [
-    null,
+    "VIII",
     "II"
    ],
-   "ordinal_relation": "one_absent",
+   "ordinal_relation": "different",
    "park_reason": "name_only",
    "reign_start_bce": [
     null,
@@ -22717,10 +20358,13 @@
     "I"
    ],
    "ordinal_relation": "same",
-   "park_reason": "name_only",
+   "park_reason": "uniqueness_clash",
    "reign_start_bce": [
     -1777,
     -1777
+   ],
+   "rival_pairs": [
+    "pharaoh_se-Awibra (Awibra) ~ ryholt-13.15 (Hor I) via awibra"
    ],
    "same_dynasty": true,
    "same_dynasty_reliable": false,
@@ -22877,32 +20521,6 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": []
   },
-  "cand-pharaoh_se-Ini-I|ryholt-13.30": {
-   "a": "pharaoh_se-Ini-I (Ini)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.30 (Sobkhotep V)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    null,
-    "V"
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    -1660,
-    -1720
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "mrhtpr",
-    "mrhtpra"
-   ]
-  },
   "cand-pharaoh_se-Ini-I|ryholt-13.34": {
    "a": "pharaoh_se-Ini-I (Ini)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -22983,16 +20601,10 @@
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "uniqueness_clash",
+   "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     -1660,
     null
-   ],
-   "rival_pairs": [
-    "pharaoh_se-Ini-I (Ini) ~ ryholt-13.30 (Sobkhotep V) via mrhtpr, mrhtpra",
-    "pharaoh_se-Ini-I (Ini) ~ ryholt-13.34 (Ini) via mrhtpr, mrhtpra",
-    "pharaoh_se-Ini-I (Ini) ~ ryholt-13.a (Ini) via mrhtpr",
-    "pharaoh_se-Sobekhotep-V (Sobekhotep V) ~ ryholt-P.1 (Merhotepre) via mrhtpr, mrhtpra"
    ],
    "same_dynasty": false,
    "same_dynasty_reliable": false,
@@ -23257,12 +20869,13 @@
     16,
     17
    ],
+   "homonym_key": "nbmaatra",
    "ordinal": [
     null,
     null
    ],
    "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
+   "park_reason": "homonym_list",
    "reign_start_bce": [
     null,
     null
@@ -23576,35 +21189,6 @@
    "shared_name_keys": [],
    "shared_prenomen_keys": []
   },
-  "cand-pharaoh_se-Qemau-Siharnedjheritef|ryholt-13.6": {
-   "a": "pharaoh_se-Qemau-Siharnedjheritef (Qemau Siharnedjheritef)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.6 (Siharnedjheritef)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "uniqueness_clash",
-   "reign_start_bce": [
-    -1791,
-    -1791
-   ],
-   "rival_pairs": [
-    "pharaoh_se-Sewesekhtawy-Sehotepibra (Sewesekhtawy Sehotepibra) ~ ryholt-13.6 (Siharnedjheritef) via htpbr, htpibra"
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "htpbr",
-    "htpibra"
-   ]
-  },
   "cand-pharaoh_se-Rahotep|ryholt-17.1": {
    "a": "pharaoh_se-Rahotep (Rahotep)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -23799,6 +21383,39 @@
    ],
    "shared_prenomen_keys": []
   },
+  "cand-pharaoh_se-Sekhaenra|ryholt-13.d": {
+   "a": "pharaoh_se-Sekhaenra (Sekhaenra)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-13.d (Sekhaenre)",
+   "dynasty": [
+    13,
+    13
+   ],
+   "ordinal": [
+    null,
+    null
+   ],
+   "ordinal_relation": "both_absent",
+   "park_reason": "uniqueness_clash",
+   "reign_start_bce": [
+    null,
+    null
+   ],
+   "rival_pairs": [
+    "pharaoh_se-Sekhaenra (Sekhaenra) ~ ryholt-14.1 (Yakbim) via shnr, skhanra, skhnr",
+    "pharaoh_se-Yakbim (Yakbim) ~ ryholt-13.d (Sekhaenre) via shnr, skhnr"
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [
+    "sekhaenre"
+   ],
+   "shared_prenomen_keys": [
+    "shnr",
+    "skhanra",
+    "skhnr"
+   ]
+  },
   "cand-pharaoh_se-Sekhaenra|ryholt-14.1": {
    "a": "pharaoh_se-Sekhaenra (Sekhaenra)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -23906,33 +21523,6 @@
     "sekhemre"
    ],
    "shared_prenomen_keys": []
-  },
-  "cand-pharaoh_se-Sekhemkara-Amenemhat|ryholt-13.2": {
-   "a": "pharaoh_se-Sekhemkara-Amenemhat (Sekhemkara Amenemhat)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.2 (Sonbef)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    -1796,
-    -1800
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "shmkr",
-    "skhmkara",
-    "skhmkr"
-   ]
   },
   "cand-pharaoh_se-Sekhemkara-Amenemhat|ryholt-13.20": {
    "a": "pharaoh_se-Sekhemkara-Amenemhat (Sekhemkara Amenemhat)",
@@ -24180,27 +21770,83 @@
     "smnra"
    ]
   },
-  "cand-pharaoh_se-Sewadjkara-III|ryholt-13.37": {
+  "cand-pharaoh_se-Senakhtenra|ryholt-17.7": {
+   "a": "pharaoh_se-Senakhtenra (Senakhtenra)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-17.7 (Siamun (?))",
+   "dynasty": [
+    17,
+    17
+   ],
+   "ordinal": [
+    null,
+    null
+   ],
+   "ordinal_relation": "both_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -1559,
+    -1559
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "snkhtnr"
+   ]
+  },
+  "cand-pharaoh_se-Seqenenra|ryholt-17.8": {
+   "a": "pharaoh_se-Seqenenra (Seqenenra)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-17.8 (Tao)",
+   "dynasty": [
+    17,
+    17
+   ],
+   "ordinal": [
+    null,
+    null
+   ],
+   "ordinal_relation": "both_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -1558,
+    -1558
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [
+    "tao"
+   ],
+   "shared_prenomen_keys": [
+    "sknnr",
+    "sqnnr",
+    "sqnnra"
+   ]
+  },
+  "cand-pharaoh_se-Sewadjkara-III|ryholt-13.11": {
    "a": "pharaoh_se-Sewadjkara-III (Sewadjkara III)",
    "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.37 (Hori II)",
+   "b": "ryholt-13.11 (Sewadjkare)",
    "dynasty": [
     14,
     13
    ],
    "ordinal": [
     "III",
-    "II"
+    null
    ],
-   "ordinal_relation": "different",
+   "ordinal_relation": "one_absent",
    "park_reason": "reviewer_escalated",
    "reign_start_bce": [
     null,
-    -1669
+    null
    ],
    "same_dynasty": false,
    "same_dynasty_reliable": false,
-   "shared_name_keys": [],
+   "shared_name_keys": [
+    "sewadjkare"
+   ],
    "shared_prenomen_keys": [
     "swadjkara",
     "swdjkr",
@@ -24268,6 +21914,33 @@
     "swdkr"
    ]
   },
+  "cand-pharaoh_se-Sewadjkara|ryholt-13.37": {
+   "a": "pharaoh_se-Sewadjkara (Sewadjkara)",
+   "ambiguous_mentions_between_its_targets": 0,
+   "b": "ryholt-13.37 (Hori II)",
+   "dynasty": [
+    13,
+    13
+   ],
+   "ordinal": [
+    null,
+    "II"
+   ],
+   "ordinal_relation": "one_absent",
+   "park_reason": "reviewer_escalated",
+   "reign_start_bce": [
+    -1781,
+    -1669
+   ],
+   "same_dynasty": true,
+   "same_dynasty_reliable": false,
+   "shared_name_keys": [],
+   "shared_prenomen_keys": [
+    "swadjkara",
+    "swdjkr",
+    "swdkr"
+   ]
+  },
   "cand-pharaoh_se-Sewesekhtawy-Sehotepibra|ryholt-13.10": {
    "a": "pharaoh_se-Sewesekhtawy-Sehotepibra (Sewesekhtawy Sehotepibra)",
    "ambiguous_mentions_between_its_targets": 0,
@@ -24293,32 +21966,6 @@
    "shared_prenomen_keys": [
     "shtpbr",
     "shtpibra"
-   ]
-  },
-  "cand-pharaoh_se-Sewesekhtawy-Sehotepibra|ryholt-13.6": {
-   "a": "pharaoh_se-Sewesekhtawy-Sehotepibra (Sewesekhtawy Sehotepibra)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.6 (Siharnedjheritef)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    null,
-    null
-   ],
-   "ordinal_relation": "both_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    -1783,
-    -1791
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "htpbr",
-    "htpibra"
    ]
   },
   "cand-pharaoh_se-Shabaka|ryholt-N.4": {
@@ -25642,31 +23289,6 @@
    ],
    "shared_prenomen_keys": [
     "mrkwr"
-   ]
-  },
-  "cand-pharaoh_se-Sobekhotep-VII|ryholt-13.48": {
-   "a": "pharaoh_se-Sobekhotep-VII (Sobekhotep VII)",
-   "ambiguous_mentions_between_its_targets": 0,
-   "b": "ryholt-13.48 (Merkare)",
-   "dynasty": [
-    13,
-    13
-   ],
-   "ordinal": [
-    "VII",
-    null
-   ],
-   "ordinal_relation": "one_absent",
-   "park_reason": "reviewer_escalated",
-   "reign_start_bce": [
-    -1664,
-    null
-   ],
-   "same_dynasty": true,
-   "same_dynasty_reliable": false,
-   "shared_name_keys": [],
-   "shared_prenomen_keys": [
-    "mrkr"
    ]
   },
   "cand-pharaoh_se-Sobekhotep-VII|ryholt-16.3": {

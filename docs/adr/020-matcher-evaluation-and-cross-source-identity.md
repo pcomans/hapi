@@ -429,3 +429,90 @@ implemented in `pipeline/authority/claimgraph/` and pinned by
    reproduce a decision; the persisted thinking and inputs are the record.)* *(Added
    2026-10-11:)* Because such a run is not "completely determined by its digital input",
    it is typed `hapi:LLMReviewerRun` (CRMdig D7), not D10 (ADR-018 amendment 2026-10-11).
+
+## Amendment 2026-10-12 — working off the escalation queue
+
+The #337 re-registration lost correct ruler matches that plain text makes (Apries,
+Userkaf, Psusennes I) because the graph kept one king's records from different sources
+apart. The audit in `docs/evaluations/ruler-escalation-queue/` found 974 parked pairs
+against 354 approved links, 735 of them `name_only` and never reviewed: 302 of the 1,159
+ruler records carry no throne or Horus name at all (Kitchen 34 of 60), so the
+corroborate-or-escalate rule of decision 6 could never accept them, and nothing ever
+worked the queue off. The project owner approved working it off on 2026-10-12. Each rule
+below only sends a pair to the reviewer; none approves by itself, and the deterministic
+policy (`--deterministic`) still escalates every pair the rules newly reach.
+
+1. **Same name in the same dynasty goes to the reviewer** (`name_dynasty`), when the two
+   records share a king name, carry the same dynasty number and no conflicting regnal
+   number (one missing is not a conflict; regnal numbers are read from the display name,
+   including Leprohon's own "(I)" numbering and stage-suffixed "III (a)"). *Refines
+   decision 6*, which made shared dynasty and regnal numeral non-load-bearing: they still
+   never carry a merge alone. When a record has no throne and no Horus name, approval is
+   **enforced in code** (`verdicts.king_name_route_corroborated`): both reign windows
+   known and overlapping by at least half the shorter, and the same regnal number or none
+   on both; any other approval is downgraded to an escalation. Excluded in Dynasties
+   13–17, where a matching regnal number on a shared name can name different kings
+   (Ryholt's Sobekhotep renumbering). The same can happen later: Beckerath's Schoschenq IV
+   (Usermaatre) and pharaoh.se's Shoshenq IV (Hedjkheperre, whose Shoshenq VI was
+   "previously known as Shoshenq IV") are different Dyn 22 kings, and the window rule
+   does not separate them: Beckerath gives −800..−790, pharaoh.se −798..−785, the same
+   numeral. Both records carry throne names, so the reviewer compared those and rejected
+   the pair. For a record without titulary in such a case the reviewer is the only
+   defence. Two deterministic alternatives were measured and not adopted, as each costs
+   312 resolved mentions (Psusennes I alone 309): excluding Dyn 21–24
+   (`results/alternative-exclude-dyn-21-24/`), and refusing a name whose regnal-number set
+   differs between sources (Beckerath also lists an unnumbered High Priest "Psusennes";
+   Kitchen only I). The project owner accepted the risk on 2026-10-12: two kings with the
+   same name, number, dynasty and reign may be merged, which only more data can resolve;
+   to be revisited if it occurs. A disagreeing
+   dynasty number (the Third Intermediate Period cases of decision 6) withholds the
+   basis, which can only miss a match, never make a false one.
+2. **A Horus name corroborates beyond Dynasty 3 only with a shared king name.** Later
+   Horus names are widely reused (Kanakht-meryre: Thutmose III, Sety I, Ramesses II,
+   Sety II), so a shared Horus name alone stays `name_only`; together with the same king
+   name and no conflicting regnal number it goes to the reviewer (Ramesses III's
+   Kanakht-aanesyt; never Sety I against Sety II). In Dyn 0–3 the
+   early-dynastic carve-out of decision 6 is unchanged.
+3. **A homonym-list key that is only a skeleton collision does not trap.** When no listed
+   key is shared as spelled (each is a collision of the vowel-less skeleton) and the pair
+   shares a throne name as spelled that is not listed: Thutmose IV's Menkheperure folds
+   to Thutmose III's listed Menkheperre. A listed name shared in full stays trapped, even
+   beside an unlisted compound of it (Shabaka's Neferkare and Neferkare-meryamun).
+   *Refines amendment 2026-10-10, item 5.*
+4. **A uniqueness clash resolves to the target matched through both primary throne
+   names** when exactly one competing target is, and every other matches only through a
+   secondary variant or through no throne name at all (a Horus or king name), with no
+   rival of unknown dynasty (a source's first-listed throne name is its primary form):
+   pharaoh.se's Amenhotep II lists the variant Aakheperuenre, whose skeleton is Thutmose
+   II's Aakheperenre. *Refines amendment 2026-10-10, item 6.*
+
+5. **A rejection cannot rest on a reading the source marks uncertain.** When the reviewer
+   rejects a pair and either record carries a name its source flags as an uncertain
+   reading (Ryholt's `is_uncertain_attribution`, e.g. 17.7 "Siamun (?)"), a code guard
+   escalates it instead, so the pair stays in the queue rather than being recorded as two
+   kings. Like the other guards it only downgrades; the reviewer is not told. Ryholt is
+   the only source with a typed flag; Beckerath, Kitchen, Leprohon and pharaoh.se print "(?)" in
+   name strings without one, and their loaders declare an empty set until the flag is
+   added upstream (not sniffed from strings in the matcher).
+
+The live reviewer may approve a `name_dynasty` pair while the deterministic policy
+escalates it; that is intended (decision 7 of the 2026-10-10 amendment: the reviewer
+decides, the guards only downgrade). An edge's `basis` records why the matcher sent the
+pair to the reviewer, not which policy route the reviewer approved it by: `name_dynasty`
+means the pair shares no throne or Horus name *as normalised*, and the records may still
+carry throne names the normaliser does not equate (Beckerath's German transcriptions,
+"User-maat-rê" against "Usimare"). The reviewer weighs those under its throne-name route.
+Its king-name-only route applies only when at least one record has no throne and no Horus
+name at all; the code guard of item 1 enforces the window and numeral conditions there,
+stricter than the prompt's "allowing a few decades' offset", so an approval resting on a
+model's knowledge rather than the record fields is downgraded (Rule 1). A pair whose
+regnal numeral appears in one record only is therefore never approved by that route: a
+missed merge by policy, not a recall loss of the reviewer. On
+the throne-name route an offset or unknown window, or a numeral differing only by
+numbering scheme, does not by itself escalate (sources follow different chronologies);
+the first policy text applied these checks to every route and lost 97 correct links,
+which is why the routes are now separate. The policy text was leak-audited before each
+rebuild (`docs/evaluations/ruler-escalation-queue/prompt-audit-2026-10-12.md`).
+Every merge the rebuild adds is listed for review, as in #342. A `name_only` pair is
+escalated ahead of the resumable verdict cache, so a verdict reviewed under an earlier
+matcher that gave the pair a basis cannot survive the basis being withdrawn.
