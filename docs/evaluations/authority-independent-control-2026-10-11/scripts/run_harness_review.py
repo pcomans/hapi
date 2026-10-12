@@ -38,6 +38,7 @@ from review_protocol import (
     SESSION_LIMIT_TEXT,
     TOOLS,
     ProtocolFailure,
+    attempt_number,
     compose_user_content,
     read_json,
     role_inputs,
@@ -135,33 +136,31 @@ def main() -> int:
     for case in cases:
         # Attempts are <case>.attempt-<n>.json, never overwritten. A case with a valid
         # attempt is done; a rerun resumes with the cases that are not.
-        attempts = sorted(
-            out.glob(f"{case['case_id']}.attempt-*.json"),
-            key=lambda p: int(p.name.rsplit("-", 1)[1].removesuffix(".json")),
-        )
-        if any("decision" in read_json(a) for a in attempts):
-            continue
-        # A stored attempt rejected for its answer's format is first re-checked under the
-        # current rules from its saved events, with no new model call; the re-check is kept
-        # as a new attempt that names its source.
+        attempts = sorted(out.glob(f"{case['case_id']}.attempt-*.json"), key=attempt_number)
+        # The latest stored attempt is first re-checked under the current rules from its saved
+        # events, with no new model call. If its verdict changed (an answer format accepted
+        # by a later parsing rule, or a decision formed while the session limit refused tool
+        # calls), the re-check is kept as a new attempt naming the source call.
         if attempts:
             last = read_json(attempts[-1])
-            if (last.get("failure", "").startswith(FORMAT_FAILURES) and "events" in last
-                    and "revalidated_from" not in last):
+            if "events" in last:
                 stored = {k: last[k] for k in (
                     "case_id", "evidence_sha256", "requested_model", "parameters", "command",
                     "system_prompt", "user_content", "user_content_sha256", "exit_code",
-                    "stderr", "events", "reviewer")}
+                    "stderr", "events", "reviewer") if k in last}
                 recheck = validate(stored, case, role, inputs["schema"])
-                recheck["attempt"] = len(attempts) + 1
-                recheck["revalidated_from"] = attempts[-1].name
-                path = out / f"{case['case_id']}.attempt-{recheck['attempt']}.json"
-                write_atomic(path, recheck)
-                attempts.append(path)
-                print(f"{tag} {case['case_id']} re-checked {recheck['revalidated_from']}: "
-                      f"{recheck.get('failure') or 'valid'}", flush=True)
-                if "decision" in recheck:
-                    continue
+                if (recheck.get("decision"), recheck.get("failure")) != (last.get("decision"), last.get("failure")):
+                    recheck["role"] = role.name
+                    recheck["attempt"] = len(attempts) + 1
+                    recheck["revalidated_from"] = last.get("revalidated_from", attempts[-1].name)
+                    path = out / f"{case['case_id']}.attempt-{recheck['attempt']}.json"
+                    write_atomic(path, recheck)
+                    attempts.append(path)
+                    print(f"{tag} {case['case_id']} re-checked {recheck['revalidated_from']}: "
+                          f"{recheck.get('failure') or 'valid'}", flush=True)
+                    last = recheck
+            if "decision" in last:
+                continue
         while True:
             # Only model answers rejected for their format count toward the limit; a re-check
             # or a session-limit stop does not.

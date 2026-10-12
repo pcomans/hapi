@@ -364,3 +364,29 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
     assert bindings["prompts"]["stage_2_reviewer"]["path"] == (
         "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v3.txt"
     )
+
+
+def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_decision(tmp_path: Path) -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    inputs = protocol.role_inputs(role)
+    stream = events(review_answer(case, "same_entity", "useful"))
+    refused = {"type": "user", "message": {"content": [{
+        "type": "tool_result", "tool_use_id": "t2", "is_error": True,
+        "content": "You've hit your session limit · resets 5:10am (UTC)"}]}}
+    stream.insert(3, {"type": "assistant", "message": {"content": [
+        {"type": "tool_use", "id": "t2", "name": "WebFetch", "input": {"url": "https://example.org/x"}}]}})
+    stream.insert(4, refused)
+    record = protocol.validate({"events": stream}, case, role, inputs["schema"])
+    assert record["failure"] == "Claude Code session limit during research: 1 tool call(s) refused"
+    assert "decision" not in record
+
+    # A stored decision formed under such a refusal no longer counts once re-checked.
+    path = tmp_path / "review-unit-001.attempt-1.json"
+    protocol.write_atomic(path, {
+        "case_id": case["case_id"], "evidence_sha256": HASH_1, "system_prompt": inputs["system_prompt"],
+        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"]),
+        "events": stream, "decision": review_answer(case, "same_entity", "useful"),
+    })
+    with pytest.raises(protocol.ProtocolFailure, match="stored outcome differs from its re-check"):
+        protocol.decided_record(tmp_path, case, role, inputs)

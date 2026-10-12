@@ -89,7 +89,11 @@ case; a case's decision is its single valid attempt. A stored attempt rejected u
 earlier parsing rule is re-checked from its saved events, with no new call, and the re-check
 is kept as a new attempt naming its source. The answer is the JSON object that ends the final
 message; a note on its own line before it is kept, not parsed. A Claude Code session limit
-stops the run, which resumes after the reset with the cases still undecided.
+stops the run, which resumes after the reset with the cases still undecided. A call in which the session limit refused any tool
+call is a session-limit stop too, not a decision, because its research was cut short for a
+reason unrelated to the case (added 2026-10-12, applied to every stored call by re-checking
+its events: it voided reviewer A's call on unit 072, whose redo gave the same answer, and the
+first reconciler call on unit 090).
 
 ## Reconciliation, Stage 2 and scoring (2026-10-12)
 

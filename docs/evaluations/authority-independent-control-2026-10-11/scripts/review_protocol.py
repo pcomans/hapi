@@ -209,6 +209,16 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     record["usage"] = final.get("usage") if final else None
     record["notional_cost_usd"] = final.get("total_cost_usd") if final else None
 
+    # A tool call the session limit refused leaves the research cut short for a reason
+    # unrelated to the case, so the call is a session-limit stop, not a decision.
+    refused = [
+        b for kind, b, _ in blocks
+        if b.get("type") == "tool_result" and b.get("is_error")
+        and SESSION_LIMIT_TEXT in json.dumps(b.get("content"))
+    ]
+    if refused:
+        record["failure"] = f"Claude Code session limit during research: {len(refused)} tool call(s) refused"
+        return record
     if not record["stated_text"]:
         record["failure"] = "no final text"
         return record
@@ -248,45 +258,47 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     return record
 
 
+def attempt_number(path: Path) -> int:
+    match = ATTEMPT_RE.match(path.name)
+    if match is None:
+        raise ProtocolFailure(f"unexpected record name: {path}")
+    return int(match["n"])
+
+
 def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tuple[str, dict]:
     """The one stored call that decided `case`, re-validated from its events under the current rules.
 
-    Every attempt is re-checked. Exactly one model call must be valid; a re-check attempt
-    (`revalidated_from`) is the same call as its source. Exactly one stored attempt carries
-    the decision, it belongs to that call, and its decision is the re-derived one. Each
-    attempt must have been composed from the current prompt, schema, system prompt and case.
-    Returns the decided attempt file's SHA-256 and its stored record."""
-    attempts = {}
-    for path in directory.glob(f"{case['case_id']}.attempt-*.json"):
-        match = ATTEMPT_RE.match(path.name)
-        if match is None or match["case"] != case["case_id"]:
-            raise ProtocolFailure(f"unexpected record name: {path}")
-        attempts[path.name] = path
-    if not attempts:
+    Every attempt is re-checked. A re-check attempt (`revalidated_from`) is the same model
+    call as its source. Exactly one call must be valid, and the latest stored attempt of
+    every call must record what its re-check gives (a call whose verdict changed under a
+    later rule carries a re-check attempt saying so). Each attempt must have been composed
+    from the current prompt, schema, system prompt and case. Returns the SHA-256 of the
+    valid call's latest attempt file and its stored record."""
+    paths = sorted(directory.glob(f"{case['case_id']}.attempt-*.json"), key=attempt_number)
+    if not paths:
         raise ProtocolFailure(f"no record for {case['case_id']} in {directory}")
     user_content = compose_user_content(case, inputs["prompt"], inputs["schema"])
-    valid_calls, decided = set(), []
-    for name, path in attempts.items():
+    latest, valid_calls = {}, set()
+    for path in paths:
+        if ATTEMPT_RE.match(path.name)["case"] != case["case_id"]:
+            raise ProtocolFailure(f"unexpected record name: {path}")
         stored = read_json(path)
         if stored["user_content"] != user_content or stored["system_prompt"] != inputs["system_prompt"]:
             raise ProtocolFailure(f"{path}: not composed from the current prompt, schema and case")
         if "events" not in stored:
             continue
         recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
-        call = stored.get("revalidated_from", name)
+        call = stored.get("revalidated_from", path.name)
         if "decision" in recheck:
             valid_calls.add(call)
-        if "decision" in stored:
-            if stored["decision"] != recheck.get("decision"):
-                raise ProtocolFailure(f"{path}: stored decision differs from its re-check")
-            decided.append((name, call, path))
-    if len(valid_calls) != 1 or len(decided) != 1 or decided[0][1] not in valid_calls:
-        raise ProtocolFailure(
-            f"{case['case_id']} in {directory}: valid calls {sorted(valid_calls)}, "
-            f"decided attempts {[d[0] for d in decided]}"
-        )
-    path = decided[0][2]
-    return sha256_path(path), read_json(path)
+        latest[call] = (path, stored, recheck)
+    for call, (path, stored, recheck) in latest.items():
+        if stored.get("decision") != recheck.get("decision"):
+            raise ProtocolFailure(f"{path}: stored outcome differs from its re-check under the current rules")
+    if len(valid_calls) != 1:
+        raise ProtocolFailure(f"{case['case_id']} in {directory}: valid calls {sorted(valid_calls)}")
+    path, stored, _ = latest[valid_calls.pop()]
+    return sha256_path(path), stored
 
 
 def _review_order_key(case_id: str, review_sha256: str) -> str:
