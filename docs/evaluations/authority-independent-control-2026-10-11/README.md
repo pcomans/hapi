@@ -80,6 +80,14 @@ key; the driver refuses any other setup. The full event stream is the record. A 
 Pro / V4.1 Flash trial through the Vercel AI Gateway (`scripts/run_gateway_review.py`) was
 rejected: 4 of 5 calls ended with the model's tool call emitted as text.
 
+Attempts: every call is kept as `<case>.attempt-<n>.json`. An answer rejected for its format
+(not JSON, schema-invalid, miscopied case ID or hash) is retried, up to 3 such attempts per
+case; a case's decision is its single valid attempt. A stored attempt rejected under an
+earlier parsing rule is re-checked from its saved events, with no new call, and the re-check
+is kept as a new attempt naming its source. The answer is the JSON object that ends the final
+message; a note on its own line before it is kept, not parsed. A Claude Code session limit
+stops the run, which resumes after the reset with the cases still undecided.
+
 Harness-specific limitations: the thinking is not returned (only the model's stated text
 and its JSON `reasoning`); a fetch returns Claude Code's summary of the page, recorded with
 the HTTP status and page size, not the page itself; search results are recorded as titles

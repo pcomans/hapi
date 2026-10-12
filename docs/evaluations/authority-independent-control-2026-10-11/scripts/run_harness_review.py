@@ -51,6 +51,12 @@ SERVED_MODEL = "claude-sonnet-5-5"
 EFFORT = "high"
 TOOLS = ("WebFetch", "WebSearch")
 BLOCKED_DOMAINS = ("wikidata.org", "github.com", "raw.githubusercontent.com")
+# A malformed answer (not JSON, schema-invalid, or a miscopied case ID or hash) is retried,
+# up to this many attempts per case. Every attempt is kept; a case's decision is its one
+# valid attempt (the run stops retrying a case once it has one).
+MAX_ATTEMPTS = 3
+FORMAT_FAILURES = ("invalid decision:", "decision does not echo")
+SESSION_LIMIT_TEXT = "hit your session limit"
 
 
 def command(system_prompt: str, user_content: str) -> list[str]:
@@ -74,6 +80,11 @@ def _blocked(url: str | None) -> bool:
 
 
 def review_case(case: dict, role_prompt: str, schema: dict, system_prompt: str) -> dict:
+    record = call(case, role_prompt, schema, system_prompt)
+    return record if "failure" in record else validate(record, case, schema)
+
+
+def call(case: dict, role_prompt: str, schema: dict, system_prompt: str) -> dict:
     user_content = compose_user_content(case, role_prompt, schema)
     argv = command(system_prompt, user_content)
     record = {
@@ -98,7 +109,15 @@ def review_case(case: dict, role_prompt: str, schema: dict, system_prompt: str) 
         record["failure"] = f"stream is not JSON lines: {err}"
         return record
     record["events"] = events
+    return record
 
+
+def validate(record: dict, case: dict, schema: dict) -> dict:
+    """Derive the record's fields from its stored event stream and validate the answer.
+
+    Reads only `record["events"]`, so a stored attempt can be re-checked without calling the
+    model again (Rule 13)."""
+    events = record["events"]
     init = next((e for e in events if e.get("type") == "system" and e.get("subtype") == "init"), None)
     if init is None:
         record["failure"] = "no init event"
@@ -149,8 +168,16 @@ def review_case(case: dict, role_prompt: str, schema: dict, system_prompt: str) 
     if not record["stated_text"]:
         record["failure"] = "no final text"
         return record
-    text = record["stated_text"][-1].strip()
-    record["final_text"] = text
+    final_text = record["stated_text"][-1].strip()
+    record["final_text"] = final_text
+    if SESSION_LIMIT_TEXT in final_text:
+        record["failure"] = f"Claude Code session limit: {final_text}"
+        return record
+    # The answer is the JSON object that ends the final message. A note the model writes on
+    # its own line(s) before it ("I'm wrapping up ...") is kept, not parsed.
+    text = final_text
+    if not text.startswith("{") and "\n{" in text:
+        record["note_before_answer"], text = text[: text.index("\n{")].strip(), text[text.index("\n{") + 1:]
     try:
         decision = json.loads(text)
         jsonschema.validate(decision, schema)
@@ -193,22 +220,61 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
 
     for case in cases:
-        path = out / f"{case['case_id']}.json"
-        if path.exists():
-            raise ReviewFailure(f"{path} already exists; records are never overwritten")
-        record = review_case(case, role_prompt, schema, system_prompt)
-        record["reviewer"] = args.reviewer
-        write_atomic(path, record)
-        status = record.get("failure") or (
-            f"{record['decision']['same_entity']} / {record['decision']['useful_granularity']}"
-        )
-        print(f"[harness {args.reviewer}] {case['case_id']}: {status} | searches "
-              f"{len(record.get('web_searches', []))} | fetches "
-              f"{sum(f['status_code'] == 200 for f in record.get('web_fetches', []))}/"
-              f"{len(record.get('web_fetches', []))} ok", flush=True)
-        if "failure" in record:
-            raise ReviewFailure(f"{case['case_id']}: {record['failure']} (record: {path})")
-    print(f"[harness {args.reviewer}] {len(cases)} cases reviewed")
+        # Attempts are <case>.attempt-<n>.json, never overwritten. A case with a valid
+        # attempt is done; a rerun resumes with the cases that are not.
+        attempts = sorted(out.glob(f"{case['case_id']}.attempt-*.json"))
+        if any("decision" in json.loads(a.read_text("utf-8")) for a in attempts):
+            continue
+        # A stored attempt rejected for its answer's format is first re-checked under the
+        # current rules from its saved events, with no new model call; the re-check is kept
+        # as a new attempt that names its source.
+        if attempts:
+            last = json.loads(attempts[-1].read_text("utf-8"))
+            if (last.get("failure", "").startswith(FORMAT_FAILURES) and "events" in last
+                    and "revalidated_from" not in last):
+                stored = {k: last[k] for k in (
+                    "case_id", "evidence_sha256", "requested_model", "parameters", "command",
+                    "system_prompt", "user_content", "user_content_sha256", "exit_code",
+                    "stderr", "events", "reviewer")}
+                recheck = validate(stored, case, schema)
+                recheck["attempt"] = len(attempts) + 1
+                recheck["revalidated_from"] = attempts[-1].name
+                path = out / f"{case['case_id']}.attempt-{recheck['attempt']}.json"
+                write_atomic(path, recheck)
+                attempts.append(path)
+                print(f"[harness {args.reviewer}] {case['case_id']} re-checked "
+                      f"{recheck['revalidated_from']}: "
+                      f"{recheck.get('failure') or 'valid'}", flush=True)
+                if "decision" in recheck:
+                    continue
+        while True:
+            # Only model answers rejected for their format count toward the limit; a re-check
+            # or a session-limit stop does not.
+            answered = [
+                r for r in (json.loads(a.read_text("utf-8")) for a in attempts)
+                if r.get("failure", "").startswith(FORMAT_FAILURES) and "revalidated_from" not in r
+                and SESSION_LIMIT_TEXT not in r.get("final_text", "")
+            ]
+            if len(answered) >= MAX_ATTEMPTS:
+                raise ReviewFailure(f"{case['case_id']}: no valid answer in {MAX_ATTEMPTS} attempts")
+            path = out / f"{case['case_id']}.attempt-{len(attempts) + 1}.json"
+            record = review_case(case, role_prompt, schema, system_prompt)
+            record["reviewer"] = args.reviewer
+            record["attempt"] = len(attempts) + 1
+            write_atomic(path, record)
+            attempts.append(path)
+            status = record.get("failure") or (
+                f"{record['decision']['same_entity']} / {record['decision']['useful_granularity']}"
+            )
+            print(f"[harness {args.reviewer}] {case['case_id']} attempt {record['attempt']}: {status} | "
+                  f"searches {len(record.get('web_searches', []))} | fetches "
+                  f"{sum(f['status_code'] == 200 for f in record.get('web_fetches', []))}/"
+                  f"{len(record.get('web_fetches', []))} ok", flush=True)
+            if "failure" not in record:
+                break
+            if not record["failure"].startswith(FORMAT_FAILURES):
+                raise ReviewFailure(f"{case['case_id']}: {record['failure']} (record: {path})")
+    print(f"[harness {args.reviewer}] {len(cases)} cases done")
     return 0
 
 
