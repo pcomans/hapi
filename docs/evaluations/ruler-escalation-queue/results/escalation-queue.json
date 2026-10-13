@@ -260,7 +260,7 @@
  "inputs": {
   "control_sha256": "aaec22bc9ce04cd7d566c12a1eabd55ade185c868907af5968f77c4592268c69",
   "graph_sha256": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66",
-  "matcher_sha256": "29694af2f4a38a2d2798d2b4edc3203aff62444f8c303ef982982db7b512ee2b",
+  "matcher_sha256": "a56a4aeff4ddb3af1bdfbe8f2470e82bf2dd7ebf8c5290e5bc0b0e47db0c7286",
   "mention_ledger": {
    "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
    "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
@@ -18903,7 +18903,6 @@
     null
    ],
    "rival_pairs": [
-    "leprohon-leprohon-8.11 (Neferkahor) ~ pharaoh_se-Neferkahor (Neferkahor) via name_dynasty",
     "leprohon-leprohon-8.16 (Neferkauhor Khuwihapi) ~ pharaoh_se-Neferkauhor (Neferkauhor) via neferkauhor, nfrkawhr, nfrkhr, nfrkwhr"
    ],
    "same_dynasty": true,

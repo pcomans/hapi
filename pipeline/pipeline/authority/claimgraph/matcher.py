@@ -190,6 +190,10 @@ class Candidate:
     # The two records' PRIMARY throne names (each source's first-listed form, with its
     # added epithets) share a key — not only a secondary variant (see uniqueness_clashes).
     primary_prenomen_match: bool = False
+    # A `name_dynasty` pair one of whose records has no throne and no Horus name, failing
+    # king_name_route_corroborated: no approval of it can stand (verdicts.finalize), so it
+    # is not an approvable rival in a uniqueness clash either.
+    king_name_route_blocked: bool = False
 
 
 def _join(a: str | None, b: str | None) -> str | None:
@@ -331,6 +335,23 @@ def lacks_titulary(rec: RulerRecord) -> bool:
     return not _corroborating(rec.prenomina, compound=True) and not _corroborating(rec.horus_names)
 
 
+def king_name_route_corroborated(a: RulerRecord, b: RulerRecord) -> bool:
+    """What a `name_dynasty` approval needs when a record has no throne and no Horus name
+    (ADR-020 amendment 2026-10-12): both reign windows known and overlapping by at least
+    half the shorter one (whole years, inclusive), and the same regnal number or none on
+    both. The reviewer's policy says the same; this is its enforcement (Rule 3)."""
+    windows = []
+    for rec in (a, b):
+        if rec.reign_start_bce is None or rec.reign_end_bce is None:
+            return False
+        lo, hi = sorted((rec.reign_start_bce, rec.reign_end_bce))
+        windows.append((lo, hi))
+    (alo, ahi), (blo, bhi) = windows
+    overlap = min(ahi, bhi) - max(alo, blo) + 1
+    shorter = min(ahi - alo, bhi - blo) + 1
+    return 2 * overlap >= shorter and regnal_number(a) == regnal_number(b)
+
+
 @dataclass
 class _Indexed:
     rec: RulerRecord
@@ -458,6 +479,9 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
                         shared_horus_keys=shared_horus,
                         early_dynastic=early,
                         primary_prenomen_match=bool(x.pren_primary & y.pren_primary),
+                        king_name_route_blocked=basis == "name_dynasty"
+                        and (lacks_titulary(x.rec) or lacks_titulary(y.rec))
+                        and not king_name_route_corroborated(x.rec, y.rec),
                     )
                 )
 
@@ -522,7 +546,8 @@ def same_person_groups(records: list[RulerRecord]) -> dict[str, str]:
 def clash_groups(
     candidates: list[Candidate], person_of: dict[str, str]
 ) -> dict[str, list[Candidate]]:
-    """Approvable candidates (not name-only, trapped or era-gated) grouped by one side's
+    """Approvable candidates (not name-only, trapped, era-gated or king-name-route
+    blocked) grouped by one side's
     person and the other side's source: a group with more than one distinct pair of persons
     is a uniqueness clash. Grouped by PERSON too: two stage rows of one king matching two
     distinct records of the other source is still that one king matching two people."""
@@ -532,7 +557,7 @@ def clash_groups(
 
     groups: dict[str, list[Candidate]] = {}
     for c in candidates:
-        if c.basis == "name_only" or c.homonym_trap or c.era_conflict:
+        if c.basis == "name_only" or c.homonym_trap or c.era_conflict or c.king_name_route_blocked:
             continue
         groups.setdefault(f"{person(c.a_id)}|{c.b_source}", []).append(c)
         groups.setdefault(f"{person(c.b_id)}|{c.a_source}", []).append(c)

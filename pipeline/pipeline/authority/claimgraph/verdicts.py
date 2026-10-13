@@ -14,8 +14,6 @@ from typing import Callable
 from .matcher import (
     Candidate,
     generate_candidates,
-    lacks_titulary,
-    regnal_number,
     same_person_groups,
     uniqueness_clashes,
 )
@@ -55,23 +53,6 @@ _PARSE_FAILURE_ESCALATION_REASON = (
     "Reviewer output could not be parsed after retries; escalated for manual review."
 )
 from .sources import RulerRecord
-
-
-def king_name_route_corroborated(a: RulerRecord, b: RulerRecord) -> bool:
-    """What a `name_dynasty` approval needs when a record has no throne and no Horus name
-    (ADR-020 amendment 2026-10-12): both reign windows known and overlapping by at least
-    half the shorter one (whole years, inclusive), and the same regnal number or none on
-    both. The reviewer's policy says the same; this is its enforcement (Rule 3)."""
-    windows = []
-    for rec in (a, b):
-        if rec.reign_start_bce is None or rec.reign_end_bce is None:
-            return False
-        lo, hi = sorted((rec.reign_start_bce, rec.reign_end_bce))
-        windows.append((lo, hi))
-    (alo, ahi), (blo, bhi) = windows
-    overlap = min(ahi, bhi) - max(alo, blo) + 1
-    shorter = min(ahi - alo, bhi - blo) + 1
-    return 2 * overlap >= shorter and regnal_number(a) == regnal_number(b)
 
 
 @dataclass
@@ -414,11 +395,7 @@ def resolve_matches(
             # source — never resolved by an order-dependent incumbent.
             verdict.outcome = VERDICT_ESCALATED
             verdict.reason = f"{verdict.reason} [overridden to escalate: uniqueness clash]"
-        elif (
-            c.basis == "name_dynasty"
-            and (lacks_titulary(by_id[c.a_id]) or lacks_titulary(by_id[c.b_id]))
-            and not king_name_route_corroborated(by_id[c.a_id], by_id[c.b_id])
-        ):
+        elif c.king_name_route_blocked:
             verdict.outcome = VERDICT_ESCALATED
             verdict.reason = (
                 f"{verdict.reason} [overridden to escalate: king-name route needs both reign "

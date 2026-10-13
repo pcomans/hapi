@@ -31,6 +31,7 @@ from pipeline.authority.claimgraph.matcher import (
     _HOMONYM_KEYS,
     _is_homonym_key,
     generate_candidates,
+    king_name_route_corroborated,
     lacks_titulary,
     regnal_number_of,
     uniqueness_clashes,
@@ -63,7 +64,7 @@ from pipeline.authority.claimgraph.reviewer import (
 from pipeline.authority.claimgraph.matcher import _HOMONYM_SPELLINGS
 from pipeline.authority.claimgraph.sources import SOURCE_AUTHORITY, RulerRecord
 from pipeline.authority.claimgraph import verdicts as verdicts_mod
-from pipeline.authority.claimgraph.verdicts import king_name_route_corroborated
+
 
 
 # --- normalize.py ----------------------------------------------------------
@@ -1404,6 +1405,25 @@ def test_king_name_route_needs_the_same_regnal_number():
     x = _window(_rec("kitchen", "kitchen-1", "Psusennes I", dynasty=21), -1047, -1001)
     assert king_name_route_corroborated(x, _window(_rec("beckerath", "b-1", "Psusennes I", dynasty=21), -1047, -1001))
     assert not king_name_route_corroborated(x, _window(_rec("beckerath", "b-1", "Psusennes", dynasty=21), -1047, -1001))
+
+
+def test_a_blocked_king_name_pair_is_not_a_rival_in_a_uniqueness_clash():
+    # Beckerath's Amasis matches one Kitchen record through a secondary throne-name variant
+    # (so the primary-name rule cannot settle a clash) and another, without titulary and with
+    # no reign window, by name and dynasty. finalize can never approve the second, so it
+    # must not escalate the first as a clash (Codex review of #357).
+    becke = _window(_rec("beckerath", "beckerath-26.05", "Amasis", dynasty=26, prenomina=["Khnemibre"]), -570, -526)
+    by_throne = _window(_rec("kitchen", "kitchen-26.5", "Ahmose II", dynasty=26, prenomina=["Wahkare", "Khnemibre"]), -570, -526)
+    by_name = _rec("kitchen", "kitchen-26.x", "Amasis", dynasty=26)
+    cands = {(c.a_id, c.b_id): c for c in generate_candidates([becke, by_throne, by_name])}
+    throne = cands[("beckerath-26.05", "kitchen-26.5")]
+    name = cands[("beckerath-26.05", "kitchen-26.x")]
+    assert (throne.basis, throne.king_name_route_blocked, throne.primary_prenomen_match) == ("prenomen", False, False)
+    assert (name.basis, name.king_name_route_blocked) == ("name_dynasty", True)
+    assert uniqueness_clashes([throne, name]) == set()
+    # With a window the name pair is approvable, and the two targets clash.
+    windowed = replace(name, king_name_route_blocked=False)
+    assert uniqueness_clashes([throne, windowed]) == {throne.id, windowed.id}
 
 
 def _always_approve(client, c, a, b, model):

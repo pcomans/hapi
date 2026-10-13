@@ -448,7 +448,7 @@ policy (`--deterministic`) still escalates every pair the rules newly reach.
    including Leprohon's own "(I)" numbering and stage-suffixed "III (a)"). *Refines
    decision 6*, which made shared dynasty and regnal numeral non-load-bearing: they still
    never carry a merge alone. When a record has no throne and no Horus name, approval is
-   **enforced in code** (`verdicts.king_name_route_corroborated`): both reign windows
+   **enforced in code** (`matcher.king_name_route_corroborated`, applied in `verdicts.finalize`): both reign windows
    known and overlapping by at least half the shorter, and the same regnal number or none
    on both; any other approval is downgraded to an escalation. Excluded in Dynasties
    13–17, where a matching regnal number on a shared name can name different kings
