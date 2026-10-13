@@ -450,7 +450,8 @@ policy (`--deterministic`) still escalates every pair the rules newly reach.
    never carry a merge alone. When a record has no throne and no Horus name, approval is
    **enforced in code** (`matcher.king_name_route_corroborated`, applied in `verdicts.finalize`): both reign windows
    known and overlapping by at least half the shorter, and the same regnal number or none
-   on both; any other approval is downgraded to an escalation. Excluded in Dynasties
+   on both; any other approval is downgraded to an escalation, and a pair blocked this way
+   (`Candidate.king_name_route_blocked`) is never a rival in a uniqueness clash. Excluded in Dynasties
    13–17, where a matching regnal number on a shared name can name different kings
    (Ryholt's Sobekhotep renumbering). The same can happen later: Beckerath's Schoschenq IV
    (Usermaatre) and pharaoh.se's Shoshenq IV (Hedjkheperre, whose Shoshenq VI was
