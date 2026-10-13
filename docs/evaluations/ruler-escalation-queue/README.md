@@ -138,10 +138,13 @@ attempts are in `results/aborted-attempts-2026-10-12.jsonl`, and the run was res
 the verdict cache.
 
 **Follow-ups (not in this change).** Beckerath, Kitchen, Leprohon and pharaoh.se print "(?)" readings
-without a typed flag, so item 5 covers Ryholt only until the flag is added upstream. The
+without a typed flag, so item 5 covers Ryholt only until the flag is added upstream (#352). The
 normaliser keys "mery ib ra" and "Mer ib Ra" differently, which leaves Meryibre Khety
-`name_only`. pharaoh.se's Ptolemy V row is column-shifted, and its Qemau-Siharnedjheritef
-carries the alt label "Amenemhat VI" (Ryholt 13.8). Queens have no authority entries.
+`name_only` (#353). pharaoh.se's Ptolemy V row is column-shifted (#354), and its
+Qemau-Siharnedjheritef carries the alt label "Amenemhat VI" (Ryholt 13.8; #355).
+`regnal_number_of` reads only a trailing numeral, so an epithet ordinal ("Soter II") can
+stand in for the king's number (#356; no current pair affected). Queens have no authority
+entries.
 
 ## Reproduce
 
