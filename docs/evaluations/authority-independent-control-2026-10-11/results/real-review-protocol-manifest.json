@@ -58,7 +58,7 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "e185487f83432c9a32f172225edb462c7d156f69d671444277545793aafd1ad3"
+      "sha256": "d8aa9f7b57e26d7e253cdb336ca77adab0fe9f65744b6d25b3a58ce808cb3bc3"
     }
   },
   "queue_inputs": {

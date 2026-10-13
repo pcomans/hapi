@@ -135,9 +135,57 @@ def load_review_protocol_module(repo_root: Path):
     return module
 
 
-def validate_run(run: Path) -> tuple[dict, dict]:
+def load_extractor_module(repo_root: Path):
+    path = repo_root / EVALUATION_ROOT / "scripts/extract_mentions.py"
+    spec = importlib.util.spec_from_file_location("_authority_control_extractor_for_queue", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("cannot load mention extractor module")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def validate_run(repo_root: Path, run: Path) -> tuple[dict, dict]:
+    """Accept a comparison run only if it was made from the frozen inputs.
+
+    The run's own manifest must name the frozen base commit, the current comparison script and
+    resolver inputs, and an extraction manifest (stored in the run) that the current extractor
+    made from the frozen corpus archive and whose ledger is the run's ledger. A run made by
+    another comparison or extractor, or from another archive, fails here.
+    """
+    comparison = load_comparison_module(repo_root)
+    extractor = load_extractor_module(repo_root)
     manifest = read_json(run / "run-manifest.json")
     report = read_json(run / "report.json")
+    if manifest["base_commit"] != comparison.BASE_COMMIT:
+        raise ValueError(f"run was made at another base commit: {manifest['base_commit']}")
+    inputs = manifest["inputs"]
+    if inputs["compare_arms_sha256"] != sha256_path(repo_root / EVALUATION_ROOT / "scripts/compare_arms.py"):
+        raise ValueError("run was made by another comparison script")
+    if inputs["current_resolver_inputs_sha256"] != dict(sorted(comparison.CURRENT_INPUTS.items())):
+        raise ValueError("run was made from other resolver inputs")
+    comparison.verify_current_inputs(repo_root)
+    extraction_path = run / "extraction-manifest.json"
+    if sha256_path(extraction_path) != inputs["extraction_manifest_sha256"]:
+        raise ValueError("extraction manifest does not match the run manifest")
+    extraction = read_json(extraction_path)
+    if extraction["extractor_sha256"] != sha256_path(repo_root / EVALUATION_ROOT / "scripts/extract_mentions.py"):
+        raise ValueError("mention ledger was made by another extractor")
+    if extraction["independence_contract"]["authority_labels_aliases_ids_consulted"] is not False:
+        raise ValueError("mention extraction manifest does not assert authority independence")
+    frozen_archive = {
+        "snapshot_date": extractor.CORPUS_SNAPSHOT_DATE,
+        "sha256": extractor.EXPECTED_ARCHIVE_SHA256,
+        "member_sha256": dict(sorted(extractor.EXPECTED_MEMBER_SHA256.items())),
+        "canonical_counts": extractor.EXPECTED_CANONICAL_COUNTS,
+        "raw_counts": extractor.EXPECTED_RAW_COUNTS,
+    }
+    if extraction["archive"] != frozen_archive or inputs["corpus_archive"] != frozen_archive:
+        raise ValueError("run was made from another corpus archive")
+    ledger_binding = {key: value for key, value in extraction["ledger"].items() if key != "path_basename"}
+    if ledger_binding != inputs["mention_ledger"]:
+        raise ValueError("run manifest ledger is not the extraction manifest's ledger")
     ledger = run / "mentions.ndjson.gz"
     if sha256_path(ledger) != manifest["inputs"]["mention_ledger"]["gzip_sha256"]:
         raise ValueError("review population mention ledger does not match run manifest")
@@ -155,13 +203,7 @@ def load_source_urls(repo_root: Path, archive: Path) -> dict[str, str]:
     Read from the frozen corpus archive's canonical records (the required `source_url`
     field), verified by the extractor's archive and member SHA-256 checks.
     """
-    path = repo_root / EVALUATION_ROOT / "scripts/extract_mentions.py"
-    spec = importlib.util.spec_from_file_location("_authority_control_extractor_for_queue", path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("cannot load mention extractor module")
-    extractor = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = extractor
-    spec.loader.exec_module(extractor)
+    extractor = load_extractor_module(repo_root)
     members = extractor.read_exact_archive_members(archive)
     canonical = extractor.load_gzip_ndjson(members["data/artifacts.ndjson.gz"], "canonical")
     urls: dict[str, str] = {}
@@ -368,7 +410,7 @@ def expected_counts_from_report(report: dict) -> dict[str, dict[str, int]]:
 def derive_candidates(
     repo_root: Path, run: Path
 ) -> tuple[list[dict], dict, dict, dict[str, dict], dict[str, dict]]:
-    run_manifest, report = validate_run(run)
+    run_manifest, report = validate_run(repo_root, run)
     mentions_list = read_gzip_rows(run / "mentions.ndjson.gz")
     literal_list = read_gzip_rows(run / "typed-literal-arm.ndjson.gz")
     authority_list = read_gzip_rows(run / "current-authority-arm.ndjson.gz")

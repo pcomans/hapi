@@ -47,11 +47,11 @@ def stage_1_case(case_id: str, evidence_sha256: str) -> dict:
 
 def events(answer: dict | str, *, search_url: str = "https://www.metmuseum.org/art/collection/search/1",
            api_key_source: str = "none", tools: tuple[str, ...] = ("WebFetch", "WebSearch"),
-           model: str = "claude-sonnet-5-5") -> list[dict]:
+           model: str = "claude-sonnet-5-5", session_id: str = "session-1") -> list[dict]:
     text = answer if isinstance(answer, str) else json.dumps(answer)
     return [
         {"type": "system", "subtype": "init", "model": model, "apiKeySource": api_key_source,
-         "tools": list(tools), "mcp_servers": []},
+         "tools": list(tools), "mcp_servers": [], "session_id": session_id},
         {"type": "assistant", "message": {"content": [
             {"type": "tool_use", "id": "t1", "name": "WebSearch", "input": {"query": "Abydos"}}]}},
         {"type": "user", "message": {"content": [{"type": "tool_result", "tool_use_id": "t1"}]},
@@ -78,7 +78,9 @@ def write_attempt(directory: Path, role_name: str, case: dict, n: int, answer, *
         "evidence_sha256": case["evidence_sha256"],
         "system_prompt": inputs["system_prompt"],
         "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"]),
-        "events": events(answer),
+        # One session per stored call; a re-check carries its source call's events.
+        "events": events(answer, session_id=directory.name + "/" + extra.get(
+            "revalidated_from", f"{case['case_id']}.attempt-{n}.json")),
         **extra,
     }
     if "failure" not in extra:
@@ -541,6 +543,17 @@ def test_hook_output_fails_the_call() -> None:
     assert record["failure"] == "hook output reached the session: ['SessionStart:startup']"
 
 
+def test_one_stored_call_cannot_be_both_reviews_of_a_case(tmp_path: Path) -> None:
+    queue_path, records, agree, _ = _stage_1_records(tmp_path)
+    queue = json.loads(queue_path.read_text())
+    assert set(protocol.reviewer_decisions("1", queue, records)) == {"review-unit-001", "review-unit-002"}
+    copied = records / "reviewer-B" / "review-unit-001.attempt-1.json"
+    copied.write_bytes((records / "reviewer-A" / "review-unit-001.attempt-1.json").read_bytes())
+    with pytest.raises(protocol.ProtocolFailure, match=r"stage 1: one call decides more than one review: "
+                       r"\['reviewer-A/review-unit-001.attempt-1.json'\]"):
+        protocol.reviewer_decisions("1", queue, records)
+
+
 def test_reconciliation_item_does_not_depend_on_which_reviewer_is_a(tmp_path: Path) -> None:
     queue_path, records, _, _ = _stage_1_records(tmp_path)
     first = protocol.reconciliation_queue("1", json.loads(queue_path.read_text()), records)
@@ -702,3 +715,79 @@ def test_audited_prompt_hashes_match_the_prompts_that_run() -> None:
     table = audit[audit.index("## Audited prompt bytes"):]
     for name, role in protocol.ROLES.items():
         assert f"| `{role.prompt.name}` | `{protocol.sha256_path(role.prompt)}` |" in table, name
+
+
+def _write_run(run: Path, manifest: dict, extraction: dict) -> None:
+    (run / "extraction-manifest.json").write_text(json.dumps(extraction))
+    manifest["inputs"]["extraction_manifest_sha256"] = queue_builder.sha256_path(run / "extraction-manifest.json")
+    (run / "run-manifest.json").write_text(json.dumps(manifest))
+
+
+def _frozen_run(run: Path) -> tuple[dict, dict]:
+    """A minimal run directory whose manifests carry the frozen provenance."""
+    import gzip
+
+    comparison = queue_builder.load_comparison_module(ROOT)
+    extractor = queue_builder.load_extractor_module(ROOT)
+    run.mkdir()
+    with gzip.open(run / "mentions.ndjson.gz", "wb") as handle:
+        handle.write(b"{}\n")
+    (run / "report.json").write_text("{}")
+    ledger = {"rows": 1, "gzip_sha256": queue_builder.sha256_path(run / "mentions.ndjson.gz"),
+              "canonical_uncompressed_sha256": "c" * 64, "ordered_mention_ids_sha256": "d" * 64}
+    archive = {
+        "snapshot_date": extractor.CORPUS_SNAPSHOT_DATE,
+        "sha256": extractor.EXPECTED_ARCHIVE_SHA256,
+        "member_sha256": dict(sorted(extractor.EXPECTED_MEMBER_SHA256.items())),
+        "canonical_counts": extractor.EXPECTED_CANONICAL_COUNTS,
+        "raw_counts": extractor.EXPECTED_RAW_COUNTS,
+    }
+    extraction = {
+        "archive": archive,
+        "independence_contract": {"authority_labels_aliases_ids_consulted": False},
+        "ledger": {**ledger, "path_basename": "mentions.ndjson.gz"},
+        "extractor_sha256": queue_builder.sha256_path(SCRIPTS / "extract_mentions.py"),
+    }
+    manifest = {
+        "base_commit": comparison.BASE_COMMIT,
+        "inputs": {
+            "corpus_archive": copy.deepcopy(archive),
+            "mention_ledger": dict(ledger),
+            "current_resolver_inputs_sha256": dict(sorted(comparison.CURRENT_INPUTS.items())),
+            "compare_arms_sha256": queue_builder.sha256_path(SCRIPTS / "compare_arms.py"),
+        },
+        "outputs_sha256": {"report.json": queue_builder.sha256_path(run / "report.json")},
+    }
+    _write_run(run, manifest, extraction)
+    return manifest, extraction
+
+
+@pytest.mark.parametrize(("mutate", "failure"), [
+    (lambda m, e: m.update(base_commit="0" * 40), "run was made at another base commit"),
+    (lambda m, e: m["inputs"].update(compare_arms_sha256="0" * 64), "run was made by another comparison script"),
+    (lambda m, e: m["inputs"]["current_resolver_inputs_sha256"].update({"web-claimgraph/data/claim-graph.json": "0" * 64}),
+     "run was made from other resolver inputs"),
+    (lambda m, e: e.update(extractor_sha256="0" * 64), "mention ledger was made by another extractor"),
+    (lambda m, e: e["independence_contract"].update(authority_labels_aliases_ids_consulted=True),
+     "does not assert authority independence"),
+    (lambda m, e: (e["archive"].update(sha256="0" * 64), m["inputs"]["corpus_archive"].update(sha256="0" * 64)),
+     "run was made from another corpus archive"),
+    (lambda m, e: m["inputs"]["mention_ledger"].update(rows=2), "run manifest ledger is not the extraction manifest's ledger"),
+])
+def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(tmp_path: Path, mutate, failure) -> None:
+    run = tmp_path / "run"
+    manifest, extraction = _frozen_run(run)
+    accepted, report = queue_builder.validate_run(ROOT, run)
+    assert (accepted["base_commit"], report) == (manifest["base_commit"], {})
+    mutate(manifest, extraction)
+    _write_run(run, manifest, extraction)
+    with pytest.raises(ValueError, match=failure):
+        queue_builder.validate_run(ROOT, run)
+
+
+def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(tmp_path: Path) -> None:
+    run = tmp_path / "run"
+    _frozen_run(run)
+    (run / "extraction-manifest.json").write_text("{}")
+    with pytest.raises(ValueError, match="extraction manifest does not match the run manifest"):
+        queue_builder.validate_run(ROOT, run)

@@ -23,6 +23,7 @@ exactly what this module rebuilds from the stored records.
 from __future__ import annotations
 
 import argparse
+import collections
 import hashlib
 import json
 import re
@@ -393,16 +394,34 @@ def _review_order_key(case_id: str, review_sha256: str) -> str:
     return sha256_bytes(f"{REVIEW_ORDER_SEED}|{case_id}|{review_sha256}".encode("utf-8"))
 
 
+def session_id(record: dict) -> str:
+    """The Claude Code session that made a stored call (its init event's `session_id`)."""
+    init = next(e for e in record["events"] if e.get("type") == "system" and e.get("subtype") == "init")
+    if not init.get("session_id"):
+        raise ProtocolFailure(f"{record['case_id']}: a call without a session ID")
+    return init["session_id"]
+
+
 def reviewer_decisions(stage: str, queue: dict, records: Path) -> dict[str, dict[str, tuple[str, dict]]]:
+    """Each case's two independent reviews. Every deciding call must be its own session: the
+    same stored call under both labels (or under two cases) would turn one judgment into an
+    agreement, so a repeated session fails loud."""
     role = ROLES[f"stage_{stage}_reviewer"]
     inputs = role_inputs(role)
-    return {
+    decisions = {
         case["case_id"]: {
             label: decided_record(records / f"reviewer-{label}", case, role, inputs)
             for label in REVIEWERS
         }
         for case in queue["cases"]
     }
+    sessions = collections.Counter(
+        session_id(record) for by_label in decisions.values() for _, record in by_label.values()
+    )
+    repeated = sorted(session for session, count in sessions.items() if count > 1)
+    if repeated:
+        raise ProtocolFailure(f"stage {stage}: one call decides more than one review: {repeated}")
+    return decisions
 
 
 def reconciliation_queue(stage: str, queue: dict, records: Path) -> dict:
