@@ -1,0 +1,76 @@
+{
+ "$id": "hapi-authority-control-raw-response/stage-2-reconciler-case/2",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "properties": {
+  "case_id": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "evidence_sha256": {
+   "pattern": "^[0-9a-f]{64}$",
+   "type": "string"
+  },
+  "resolutions": {
+   "additionalProperties": false,
+   "minProperties": 1,
+   "properties": {
+    "canonical_identity": {
+     "additionalProperties": false,
+     "else": {
+      "properties": {
+       "citations": {
+        "minItems": 1
+       }
+      }
+     },
+     "if": {
+      "properties": {
+       "outcome": {
+        "const": "insufficient_evidence"
+       }
+      },
+      "required": [
+       "outcome"
+      ]
+     },
+     "properties": {
+      "citations": {
+       "items": {
+        "pattern": "^https?://",
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "outcome": {
+       "enum": [
+        "exact_identity",
+        "different_identity",
+        "insufficient_evidence"
+       ]
+      },
+      "rationale": {
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "rationale",
+      "citations"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "case_id",
+  "evidence_sha256",
+  "resolutions"
+ ],
+ "title": "Stage 2 reconciler raw response for one case",
+ "type": "object",
+ "x-hapi-role": "stage_2_reconciler"
+}

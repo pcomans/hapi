@@ -87,9 +87,9 @@ the class is uniform within each recurring target. No single request can see thi
 is a separate call); it matters only when reading results, because a reviewer's knowledge of
 one recurring target is confounded with class.
 
-## Audited prompt bytes
+## v3 prompt bytes (the superseded 2026-10-12 run)
 
-The prompts that ran, by SHA-256 (a test checks these against the files). The Stage 1 reviewer
+The v3 prompts that ran in the superseded run, by SHA-256. The Stage 1 reviewer
 prompt is the round-9 text plus the post-audit cosmetic edits above, which the project owner
 waived from re-audit; the other three are the round-11 text. The Stage 1 reviewer was audited
 on requests composed for the API runtime; the harness runtime sends the same user content
@@ -103,3 +103,42 @@ summarised in this file, not stored verbatim.
 | `stage-1-reconciler-v3.txt` | `91c4c701f5d4d5a213592a10abda4726db90619cb31637ac0c38ec0c57a7a1e2` |
 | `stage-2-reviewer-v3.txt` | `e50e33ba0c0f1cf51c75674c2aafe88c8b2dd15ecb3ebb87dbfbd18e20c295a0` |
 | `stage-2-reconciler-v3.txt` | `a8fafe930b5ab6fbdd280f6734354f8adb132bf00936d0b52c95a2313a3c3055` |
+
+## Rounds 12–13: v4 prompts, opened pages only (2026-10-13)
+
+In the v3 run the agents read pages with Claude Code's WebFetch, which cannot pass the
+JavaScript "Security Checkpoint" (Vercel) in front of the Met and Brooklyn collection sites:
+69% of Met and 96% of Brooklyn fetches got HTTP 429, so most judgments about those records
+rested on search summaries or on the field text the case supplies. The project owner ruled
+that a citation the agent could not access is not a citation. v4 replaces WebFetch with
+`open_page` (`scripts/open_page_server.py`, a headless Chromium that passes the checkpoint),
+counts as a citation only a page the call itself opened and that loaded, and removes the
+artifact-evidence exception route and its schema field (`raw-response-contracts/*-case-v2`).
+Audited on freshly composed requests (Stage 1 units 001 and 002, Stage 2 cases 001 and 003,
+reconciler requests for Stage 1 unit 023 and Stage 2 case 001), with the system prompt
+(`review-system-v3.txt`) and the rendered tool description.
+
+| Round | Prompt state | Verdict | Findings acted on |
+|---|---|---|---|
+| 12 | first v4 drafts | PASS on leakage; **P2** in all four | P2 "Always cite at least one" beside "cite only pages that loaded" left no honest answer when no page loads, pushing toward a non-loaded citation; fixed with the auditor's wording (an outcome other than `insufficient_evidence` needs ≥1 citation; `insufficient_evidence` may cite nothing if no page loaded) and conditional `minItems` in the schemas; an uncited reconciler `insufficient_evidence` is labelled `reconciler_insufficient_evidence_without_source` in the consensus, not a cited override. P3 applied: cite by opened or final URL; "institutional source" restored; an error or checkpoint page is not a source. |
+| 13 | round-12 fixes | **PASS** all four (no P0/P1/P2) | none |
+
+Post-audit edit (no re-audit; identical for every case, names no outcome): the tool
+description's `loaded` now reads "true only if status is 200 and the page is not a bot
+checkpoint", matching the code (round-13 P3). Carried residual: builder-internal Stage 2
+target metadata (`representation`), accepted in rounds 10–11. Gate (round-12 P3, Rule 14
+round-9 check): the `open_page` loaded rate per museum and per case class is measured
+against the private answer key, in aggregate, after the Stage 1 reviewers and before any
+result is read; without the exception route an unloadable record forces
+`insufficient_evidence`, which is class-neutral only if the loaded rate is.
+
+## Audited prompt bytes
+
+The v4 prompts that run, by SHA-256 (a test checks these against the files).
+
+| Prompt | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v4.txt` | `8c6a3d8dd4154203f493d1f9d00beaec23126a33aeeefb1f14b671cfbcbd2c2b` |
+| `stage-1-reconciler-v4.txt` | `52ad6e48acf6b54214d2c3dfd72bb4e8bcd29515ce1363a054cd7859215a58e4` |
+| `stage-2-reviewer-v4.txt` | `723a242914ecd6aeaf28d1f25efe74b5858ecff9d54dbc8cc72f2b3c1118b9ab` |
+| `stage-2-reconciler-v4.txt` | `e6cd8dfb1aa7e4d5d733e239915f19bd5bd726f2c6df26a440fcd6fda9c2ec8d` |

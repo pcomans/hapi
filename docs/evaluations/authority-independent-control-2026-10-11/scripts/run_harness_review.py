@@ -3,22 +3,23 @@
 Runs any review role (`review_protocol.ROLES`): the Stage 1 and Stage 2 reviewers over their
 queues, and the reconcilers over a reconciliation queue (`review_protocol.py
 prepare-reconciliation`). Each case is a separate `claude -p` process in a fresh empty
-directory, so no project CLAUDE.md, memory or other case can reach it, with only the
-WebSearch and WebFetch tools, no MCP servers, and ANTHROPIC_API_KEY removed from its
-environment, so it runs on the Claude Code subscription and is never billed at API rates.
+directory, so no project CLAUDE.md, memory or other case can reach it, with only two tools:
+WebSearch, to find pages, and `open_page`, the one MCP server (`open_page_server.py`, a
+headless Chromium), to read them. ANTHROPIC_API_KEY is removed from its environment, so it
+runs on the Claude Code subscription and is never billed at API rates.
 User-level plugins and hooks still load; any hook output fails the call.
 
 Each call's complete record is persisted before its decision is used (Constitutional Rule
 13): the exact command, system prompt and user content, and the full stream-json event log
-verbatim (every message, each search query with its result titles and URLs, each fetch with
-its HTTP status, size and the page summary the model received, the final answer, usage).
+verbatim (every message, each search query with its result titles and URLs, each opened
+page with its HTTP status, final URL, title and the visible text the model received, the
+final answer, usage).
 
-Fail loud (Rule 2): API-key (billed) auth, any tool beyond the two web tools, an MCP
-server, hook output, a model other than the requested one, or a case decided without a
-search result or successful fetch stops the run after the case's record is written, and a
-later run does not resume that case. An answer rejected for its format, or a call whose
-search results, fetches or citations touched a blocked domain, is retried (`MAX_ATTEMPTS`
-such calls per case). A session limit stops the run; a later run resumes the case.
+Fail loud (Rule 2): API-key (billed) auth, any tool or MCP server beyond the two, hook
+output, or a model other than the requested one stops the run after the case's record is
+written, and a later run does not resume that case. An answer rejected for its format, one
+that cites a page the call did not open, or a call whose search results, opened pages or
+citations touched a blocked domain, is retried (`MAX_ATTEMPTS` such calls per case). A session limit stops the run; a later run resumes the case.
 
     pipeline/.venv/bin/python \\
       docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py \\
@@ -38,13 +39,14 @@ from pathlib import Path
 from review_protocol import (
     ROLES,
     TOOLS,
+    OPEN_PAGE_SERVER,
+    OPEN_PAGE_SERVER_PATH,
     ProtocolFailure,
     Role,
     attempt_number,
     calls_by_latest_attempt,
     compose_user_content,
     read_json,
-    reviewer_research,
     role_inputs,
     sha256_bytes,
     validate,
@@ -54,12 +56,18 @@ from review_protocol import (
 MODEL_ALIAS = "sonnet"
 EFFORT = "high"
 # A malformed answer (not JSON, schema-invalid, a miscopied case ID or hash, or a reconciler
-# answer that resolves other than the disputed questions), or a run whose search results or
-# fetches touched a blocked domain (the search tool cannot exclude them, and its summary may
-# draw on them), is retried, up to this many attempts per case. Every attempt is kept; a
+# answer that resolves other than the disputed questions), an answer citing a page the call
+# did not open, or a run whose search results or opened pages touched a blocked domain (the
+# search tool cannot exclude them), is retried, up to this many attempts per case. Every attempt is kept; a
 # case's decision is its one valid attempt (the run stops retrying a case once it has one).
 MAX_ATTEMPTS = 3
-FORMAT_FAILURES = ("invalid decision:", "decision does not echo", "blocked domain used:")
+FORMAT_FAILURES = (
+    "invalid decision:", "decision does not echo", "blocked domain used:", "cites a page it did not open:",
+)
+# The browser server runs from the evaluation's own interpreter (the pipeline venv).
+MCP_CONFIG = json.dumps({"mcpServers": {OPEN_PAGE_SERVER: {
+    "command": sys.executable, "args": [str(OPEN_PAGE_SERVER_PATH)],
+}}}, sort_keys=True)
 SESSION_LIMIT_FAILURE = "Claude Code session limit"
 RECORD_KEYS = (
     "case_id", "evidence_sha256", "requested_model", "parameters", "command", "system_prompt",
@@ -77,6 +85,7 @@ def command(system_prompt: str, user_content: str) -> list[str]:
         "--system-prompt", system_prompt,
         "--tools", ",".join(TOOLS),
         "--allowedTools", *TOOLS,
+        "--mcp-config", MCP_CONFIG,
         "--strict-mcp-config",
         "--output-format", "stream-json",
         "--verbose",
@@ -91,7 +100,8 @@ def call(case: dict, inputs: dict) -> dict:
         "case_id": case["case_id"],
         "evidence_sha256": case["evidence_sha256"],
         "requested_model": MODEL_ALIAS,
-        "parameters": {"effort": EFFORT, "thinking_display": "summarized", "tools": list(TOOLS), "mcp_servers": []},
+        "parameters": {"effort": EFFORT, "thinking_display": "summarized", "tools": list(TOOLS),
+                       "mcp_servers": [OPEN_PAGE_SERVER]},
         "command": argv[:2] + ["<user_content>"] + argv[3:],
         "system_prompt": inputs["system_prompt"],
         "user_content": user_content,
@@ -99,7 +109,7 @@ def call(case: dict, inputs: dict) -> dict:
     }
     env = {key: value for key, value in os.environ.items() if key != "ANTHROPIC_API_KEY"}
     with tempfile.TemporaryDirectory(prefix="hapi-337-review-") as cwd:
-        proc = subprocess.run(argv, capture_output=True, text=True, cwd=cwd, env=env)
+        proc = subprocess.run(argv, stdin=subprocess.DEVNULL, capture_output=True, text=True, cwd=cwd, env=env)
     record["exit_code"] = proc.returncode
     record["stderr"] = proc.stderr
     try:
@@ -126,11 +136,6 @@ def next_path(out: Path, case_id: str) -> Path:
     return out / f"{case_id}.attempt-{max(numbers, default=0) + 1}.json"
 
 
-def _shown(case: dict, role: Role, out: Path) -> set | None:
-    """A reconciler's shown research: what the two reviews of the case consulted."""
-    return reviewer_research(out.parent, case, role) if role.reconciler else None
-
-
 def recheck_calls(case: dict, role: Role, inputs: dict, out: Path, tag: str) -> dict[str, dict]:
     """Re-check the latest attempt of every stored call under the current rules, from its saved
     events, with no new model call. A call whose verdict changed (an answer format accepted by
@@ -141,7 +146,7 @@ def recheck_calls(case: dict, role: Role, inputs: dict, out: Path, tag: str) -> 
         last = read_json(path)
         if "events" in last:
             stored = {k: last[k] for k in RECORD_KEYS if k in last}
-            recheck = validate(stored, case, role, inputs["schema"], _shown(case, role, out))
+            recheck = validate(stored, case, role, inputs["schema"])
             if (recheck.get("decision"), recheck.get("failure")) != (last.get("decision"), last.get("failure")):
                 target = next_path(out, case["case_id"])
                 recheck.update(role=role.name, attempt=attempt_number(target), revalidated_from=call)
@@ -169,14 +174,14 @@ def review_case(case: dict, role: Role, inputs: dict, out: Path, label: str | No
         path = next_path(out, case["case_id"])
         record = call(case, inputs)
         if "failure" not in record:
-            record = validate(record, case, role, inputs["schema"], _shown(case, role, out))
+            record = validate(record, case, role, inputs["schema"])
         record.update(reviewer="reconciler" if role.reconciler else label, role=role.name,
                       attempt=attempt_number(path))
         write_new(path, record)
         print(f"{tag} {case['case_id']} attempt {record['attempt']}: {_status(record, role.fields)} | "
-              f"searches {len(record.get('web_searches', []))} | fetches "
-              f"{sum(f['status_code'] == 200 for f in record.get('web_fetches', []))}/"
-              f"{len(record.get('web_fetches', []))} ok", flush=True)
+              f"searches {len(record.get('web_searches', []))} | pages "
+              f"{sum(o['loaded'] for o in record.get('page_opens', []))}/"
+              f"{len(record.get('page_opens', []))} loaded", flush=True)
         if "failure" not in record:
             return
         if not record["failure"].startswith(FORMAT_FAILURES):

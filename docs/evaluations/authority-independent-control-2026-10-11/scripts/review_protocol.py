@@ -10,7 +10,8 @@ reconciliation queue of the cases two reviewers disagree on, and the frozen cons
 
 Consensus (Rule 2): a question two reviewers answer identically is settled by that
 agreement. A disputed question is settled only by the reconciler's explicit override, which
-must cite at least one source; nothing else (reviewer order, label, or a tie-break) can
+must cite at least one page it opened, unless it answers insufficient_evidence because no
+page it opened loaded; nothing else (reviewer order, label, or a tie-break) can
 settle it, and a missing override fails loud. A consensus file is accepted only if it is
 exactly what this module rebuilds from the stored records.
 
@@ -34,9 +35,17 @@ from urllib.parse import urlparse
 import jsonschema
 
 EVALUATION_ROOT = Path(__file__).resolve().parents[1]
-SYSTEM_PROMPT_PATH = EVALUATION_ROOT / "launcher-instructions" / "review-system-v2.txt"
+SYSTEM_PROMPT_PATH = EVALUATION_ROOT / "launcher-instructions" / "review-system-v3.txt"
 SERVED_MODEL = "claude-sonnet-5-5"
-TOOLS = ("WebFetch", "WebSearch")
+# The agents read pages only through `open_page` (open_page_server.py, a headless Chromium):
+# Claude Code's WebFetch cannot pass the JavaScript checkpoint in front of the Met and
+# Brooklyn collection sites. Web search finds pages; it is never a source.
+OPEN_PAGE_SERVER = "museum-browser"
+OPEN_PAGE_SERVER_PATH = EVALUATION_ROOT / "scripts" / "open_page_server.py"
+OPEN_PAGE_TOOL = f"mcp__{OPEN_PAGE_SERVER}__open_page"
+TOOLS = ("WebSearch", OPEN_PAGE_TOOL)
+# Titles of the bot-challenge interstitials (Vercel, Cloudflare): such a page never loaded.
+CHECKPOINT_TITLES = ("Security Checkpoint", "Just a moment")
 # Wikidata is never a source (role prompts), and this public repository lives on GitHub.
 BLOCKED_DOMAINS = ("wikidata.org", "github.com", "raw.githubusercontent.com")
 SESSION_LIMIT_TEXT = "hit your session limit"
@@ -62,17 +71,17 @@ STAGE_FIELDS = {"1": ("same_entity", "useful_granularity"), "2": ("canonical_ide
 ROLES = {
     role.name: role
     for role in (
-        Role("stage_1_reviewer", EVALUATION_ROOT / "prompts/stage-1-reviewer-v3.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v1.schema.json",
+        Role("stage_1_reviewer", EVALUATION_ROOT / "prompts/stage-1-reviewer-v4.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v2.schema.json",
              STAGE_FIELDS["1"], False),
-        Role("stage_1_reconciler", EVALUATION_ROOT / "prompts/stage-1-reconciler-v3.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-case-v1.schema.json",
+        Role("stage_1_reconciler", EVALUATION_ROOT / "prompts/stage-1-reconciler-v4.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-case-v2.schema.json",
              STAGE_FIELDS["1"], True),
-        Role("stage_2_reviewer", EVALUATION_ROOT / "prompts/stage-2-reviewer-v3.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-case-v1.schema.json",
+        Role("stage_2_reviewer", EVALUATION_ROOT / "prompts/stage-2-reviewer-v4.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-case-v2.schema.json",
              STAGE_FIELDS["2"], False),
-        Role("stage_2_reconciler", EVALUATION_ROOT / "prompts/stage-2-reconciler-v3.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-case-v1.schema.json",
+        Role("stage_2_reconciler", EVALUATION_ROOT / "prompts/stage-2-reconciler-v4.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-case-v2.schema.json",
              STAGE_FIELDS["2"], True),
     )
 }
@@ -157,9 +166,6 @@ def _blocked(url: str | None) -> bool:
     return any(host == domain or host.endswith("." + domain) for domain in BLOCKED_DOMAINS)
 
 
-URL_RE = re.compile(r"https?://[^\s\"'<>)\]]+")
-
-
 def _page(url: str | None) -> tuple[str, str]:
     """A URL's page identity: host without `www.` and path without trailing slash. The query
     is dropped, since a fetch of `.../object/292258?position=0` reads the cited object page."""
@@ -167,40 +173,34 @@ def _page(url: str | None) -> tuple[str, str]:
     return (parsed.hostname or "").lower().removeprefix("www."), parsed.path.rstrip("/")
 
 
-def consulted_pages(record: dict) -> set[tuple[str, str]]:
-    """The pages a validated record shows were consulted: its search results and its
-    successful fetches."""
-    return (
-        {_page(r["url"]) for r in record["web_search_results"]}
-        | {_page(f["url"]) for f in record["web_fetches"] if f["status_code"] == 200}
-    )
+def opened_pages(record: dict) -> set[tuple[str, str]]:
+    """The pages a validated record shows the call read: every `open_page` result that loaded,
+    under both its requested and its final (post-redirect) URL."""
+    return {
+        _page(url) for opened in record["page_opens"] if opened["loaded"]
+        for url in (opened["requested_url"], opened["final_url"])
+    }
 
 
-def reviewer_research(stage_records: Path, item: dict, role: Role) -> set[tuple[str, str]]:
-    """The pages a reconciler is shown as consulted: each of the two reviews' citations that
-    the review's own decided record shows it consulted (`stage_records` holds reviewer-A/,
-    reviewer-B/ and reconciler/). A page only in a reviewer's search results, uncited, was
-    never shown to the reconciler and does not count."""
-    reviewer = ROLES[role.name.replace("reconciler", "reviewer")]
-    inputs = role_inputs(reviewer)
-    shown = set()
-    for label in REVIEWERS:
-        record = decided_record(stage_records / f"reviewer-{label}", item["case"], reviewer, inputs)[1]
-        shown |= consulted_pages(record) & {_page(url) for url in record["decision"]["citations"]}
-    return shown
+def _open_page_result(block: dict) -> dict:
+    """The record `open_page` returned (open_page_server.py), or its error."""
+    content = block.get("content")
+    if isinstance(content, list):
+        texts = [part["text"] for part in content if part.get("type") == "text"]
+        if len(texts) != 1:
+            raise ProtocolFailure(f"open_page result without exactly one text part: {content!r:.300}")
+        content = texts[0]
+    if block.get("is_error"):
+        return {"error": content}
+    return json.loads(content)
 
 
-def validate(
-    record: dict, case: dict, role: Role, schema: dict,
-    shown_research: set[tuple[str, str]] | None = None,
-) -> dict:
+def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     """Derive the record's fields from its stored event stream and validate the answer.
 
     Reads only `record["events"]`, so a stored attempt is re-checked without calling the
-    model again (Rule 13). A reconciler is validated with `shown_research`, the pages the two
-    reviews it is shown consulted (`reviewer_research`); a reviewer, without."""
-    if role.reconciler != (shown_research is not None):
-        raise ProtocolFailure(f"{role.name}: shown_research is required for a reconciler only")
+    model again (Rule 13)."""
+
     events = record["events"]
     init = next((e for e in events if e.get("type") == "system" and e.get("subtype") == "init"), None)
     if init is None:
@@ -211,7 +211,8 @@ def validate(
     if init.get("apiKeySource") != "none":
         record["failure"] = f"API-key auth would bill this call: {init.get('apiKeySource')!r}"
         return record
-    if sorted(init.get("tools") or []) != sorted(TOOLS) or init.get("mcp_servers"):
+    servers = [(server.get("name"), server.get("status")) for server in init.get("mcp_servers") or []]
+    if sorted(init.get("tools") or []) != sorted(TOOLS) or servers != [(OPEN_PAGE_SERVER, "connected")]:
         record["failure"] = f"unexpected tools {init.get('tools')} or MCP servers {init.get('mcp_servers')}"
         return record
     if init.get("model") != SERVED_MODEL:
@@ -238,21 +239,24 @@ def validate(
     record["thinking"] = [b.get("thinking", "") for kind, b, _ in blocks if b.get("type") == "thinking"]
     record["web_searches"] = [b["input"].get("query") for b in calls.values() if b["name"] == "WebSearch"]
     record["web_search_results"] = []
-    record["web_fetches"] = []
+    record["page_opens"] = []
     for kind, b, result in blocks:
-        if b.get("type") != "tool_result" or not isinstance(result, dict):
+        if b.get("type") != "tool_result":
             continue
         name = calls[b["tool_use_id"]]["name"]
-        if name == "WebSearch":
+        if name == "WebSearch" and isinstance(result, dict):
             record["web_search_results"].extend(
                 {"title": item.get("title"), "url": item.get("url")}
                 for group in result.get("results") or [] if isinstance(group, dict)
                 for item in group.get("content") or []
             )
-        elif name == "WebFetch":
-            record["web_fetches"].append({
+        elif name == OPEN_PAGE_TOOL:
+            opened = _open_page_result(b)
+            record["page_opens"].append({
                 "url": calls[b["tool_use_id"]]["input"].get("url"),
-                "status_code": result.get("code"), "bytes": result.get("bytes"),
+                **({"loaded": False, "error": opened["error"]} if "error" in opened else {
+                    key: opened[key] for key in ("requested_url", "final_url", "status", "title", "loaded")
+                }),
             })
     final = next((e for e in reversed(events) if e.get("type") == "result"), None)
     record["usage"] = final.get("usage") if final else None
@@ -296,37 +300,20 @@ def validate(
             f"not the disputed questions {sorted(case['disputed_questions'])}"
         )
         return record
-    if not record["web_search_results"] and not any(f["status_code"] == 200 for f in record["web_fetches"]):
-        record["failure"] = "case decided without a search result or successful fetch"
-        return record
     cited = decision.get("citations", []) + [
         url for resolution in decision.get("resolutions", {}).values() for url in resolution["citations"]
     ]
-    touched = [r["url"] for r in record["web_search_results"]] + [f["url"] for f in record["web_fetches"]] + cited
+    touched = [r["url"] for r in record["web_search_results"]] + [o["url"] for o in record["page_opens"]] + cited
     if any(_blocked(url) for url in touched):
         record["failure"] = f"blocked domain used: {[u for u in touched if _blocked(u)]}"
         return record
-    # A citation is consulted when the record shows it: a search result, a successful fetch,
-    # or a URL of the case evidence shown. A reviewer's judgment must rest on at least one;
-    # its other citations are listed (`unconsulted_citations`), not counted, and never reach
-    # the consensus. A reconciler's resolution settles a disputed value and its citations are
-    # copied into the consensus as the override's sources, so every one must be consulted,
-    # by the reconciler or by a review it was shown (that review's own record shows it).
-    evidence = case["case"] if role.reconciler else case
-    consulted = consulted_pages(record) | {
-        _page(url) for url in URL_RE.findall(json.dumps(evidence, ensure_ascii=False))
-    } | (shown_research or set())
-    record["unconsulted_citations"] = sorted({url for url in cited if _page(url) not in consulted})
-    if role.reconciler:
-        unsupported = sorted(
-            question for question, resolution in decision["resolutions"].items()
-            if any(_page(url) not in consulted for url in resolution["citations"])
-        )
-        if unsupported:
-            record["failure"] = f"resolution cites an unconsulted source: {unsupported}"
-            return record
-    elif not any(_page(url) in consulted for url in decision["citations"]):
-        record["failure"] = "judgment cites no consulted source"
+    # A citation is a page this call opened and that loaded; nothing else is a source (not a
+    # search result, not a URL the case shows, not a page another call opened). Every
+    # citation must be one, and a reconciler must open what it cites itself.
+    opened = opened_pages(record)
+    unopened = sorted({url for url in cited if _page(url) not in opened})
+    if unopened:
+        record["failure"] = f"cites a page it did not open: {unopened}"
         return record
     record["decision"] = decision
     return record
@@ -360,7 +347,6 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
     if not paths:
         raise ProtocolFailure(f"no record for {case['case_id']} in {directory}")
     user_content = compose_user_content(case, inputs["prompt"], inputs["schema"])
-    shown = reviewer_research(directory.parent, case, role) if role.reconciler else None
     latest, valid_calls = {}, set()
     for path in paths:
         if ATTEMPT_RE.match(path.name)["case"] != case["case_id"]:
@@ -377,7 +363,7 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
             source = directory / call
             if not source.exists() or read_json(source).get("events") != stored["events"]:
                 raise ProtocolFailure(f"{path}: a re-check whose events are not those of {call}")
-        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"], shown)
+        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
         if "decision" in recheck:
             valid_calls.add(call)
         latest[call] = (path, stored, recheck)
@@ -447,7 +433,7 @@ def reconciliation_queue(stage: str, queue: dict, records: Path) -> dict:
                 {
                     "label": f"review-{index}",
                     **{key: record["decision"][key] for key in (
-                        *fields, "reasoning", "citations", "artifact_exceptions")},
+                        *fields, "reasoning", "citations")},
                 }
                 for index, (_, record) in enumerate(ordered, 1)
             ],
@@ -456,7 +442,8 @@ def reconciliation_queue(stage: str, queue: dict, records: Path) -> dict:
 
 
 def build_consensus(stage: str, queue_path: Path, records: Path) -> dict:
-    """Every case's outcome per question: reviewer agreement, or the reconciler's cited override."""
+    """Every case's outcome per question: reviewer agreement, or the reconciler's cited override
+    (or its uncited insufficient_evidence when no page it opened loaded)."""
     queue = read_json(queue_path)
     fields = STAGE_FIELDS[stage]
     reviews = reviewer_decisions(stage, queue, records)
@@ -485,8 +472,12 @@ def build_consensus(stage: str, queue_path: Path, records: Path) -> dict:
                 continue
             resolution = override[1]["decision"]["resolutions"][field]
             decision[field] = resolution["outcome"]
+            # A reconciler may answer insufficient_evidence with no citation when no page it
+            # opened loaded (the schema allows that only for insufficient_evidence); that is
+            # recorded as what it is, not as a cited override.
             resolutions[field] = {
-                "method": "explicit_cited_override",
+                "method": "explicit_cited_override" if resolution["citations"]
+                else "reconciler_insufficient_evidence_without_source",
                 "source_outcomes": sources,
                 "reconciler_record_sha256": override[0],
                 "rationale": resolution["rationale"],
@@ -513,42 +504,6 @@ def verify_consensus(stage: str, consensus_path: Path, queue_path: Path, records
     return consensus
 
 
-def citation_support(stage: str, queue_path: Path, records: Path) -> dict:
-    """For every deciding call of a stage: the citations its record does not show were
-    consulted, and how its judgment is supported (by research the record shows, or only by a
-    URL of the case evidence shown). Derived from the stored records alone."""
-    queue = read_json(queue_path)
-    reviewer = ROLES[f"stage_{stage}_reviewer"]
-    calls = [
-        (case, f"reviewer-{label}", reviewer, sha, record)
-        for case in queue["cases"]
-        for label, (sha, record) in reviewer_decisions(stage, queue, records)[case["case_id"]].items()
-    ]
-    reconciler = ROLES[f"stage_{stage}_reconciler"]
-    for item in reconciliation_queue(stage, queue, records)["cases"]:
-        sha, record = decided_record(records / "reconciler", item, reconciler, role_inputs(reconciler))
-        calls.append((item, "reconciler", reconciler, sha, record))
-    unconsulted, support = [], {"research": 0, "case_evidence_only": 0}
-    for case, role_dir, role, sha, record in sorted(calls, key=lambda c: (c[0]["case_id"], c[1])):
-        shown = reviewer_research(records, case, role) if role.reconciler else None
-        recheck = validate({"events": record["events"]}, case, role, role_inputs(role)["schema"], shown)
-        unconsulted += [
-            {"case_id": case["case_id"], "role": role_dir, "record_sha256": sha, "url": url}
-            for url in recheck["unconsulted_citations"]
-        ]
-        researched = consulted_pages(recheck) | (shown or set())
-        for urls in ([d["citations"] for d in recheck["decision"]["resolutions"].values()]
-                     if role.reconciler else [recheck["decision"]["citations"]]):
-            support["research" if any(_page(u) in researched for u in urls) else "case_evidence_only"] += 1
-    return {
-        "stage": stage,
-        "queue_sha256": sha256_path(queue_path),
-        "deciding_calls": len(calls),
-        "judgments_by_support": support,
-        "unconsulted_citations": unconsulted,
-    }
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     commands = parser.add_subparsers(dest="command", required=True)
@@ -559,23 +514,8 @@ def main() -> None:
         sub.add_argument("--records", type=Path, required=True,
                          help="private dir holding reviewer-A/, reviewer-B/ and reconciler/")
         sub.add_argument("--out", type=Path, required=True)
-    sub = commands.add_parser("citation-support")
-    sub.add_argument("--stage-queue", nargs=2, action="append", metavar=("QUEUE", "RECORDS"),
-                     type=Path, required=True)
-    sub.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    if args.command == "citation-support":
-        value = {
-            "schema_version": "hapi-authority-control-citation-support/1",
-            "stages": [
-                citation_support(stage, queue, records)
-                for stage, (queue, records) in zip(sorted(STAGE_FIELDS), args.stage_queue, strict=True)
-            ],
-        }
-        write_atomic(args.out, value)
-        print(json.dumps([{k: v for k, v in st.items() if k != "unconsulted_citations"} | {
-            "unconsulted": len(st["unconsulted_citations"])} for st in value["stages"]], indent=1))
-    elif args.command == "prepare-reconciliation":
+    if args.command == "prepare-reconciliation":
         value = reconciliation_queue(args.stage, read_json(args.queue), args.records)
         write_new(args.out, value)
         print(f"Stage {args.stage}: {len(value['cases'])} cases to reconcile")

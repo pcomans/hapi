@@ -45,17 +45,45 @@ def stage_1_case(case_id: str, evidence_sha256: str) -> dict:
     }
 
 
-def events(answer: dict | str, *, search_url: str = "https://www.metmuseum.org/art/collection/search/1",
-           api_key_source: str = "none", tools: tuple[str, ...] = ("WebFetch", "WebSearch"),
+OPENED = "https://www.metmuseum.org/art/collection/search/1"
+SEARCHED = "https://www.metmuseum.org/art/collection/search/9"
+
+
+def opened_page(url: str = OPENED, *, loaded: bool = True, final_url: str | None = None) -> dict:
+    """What `open_page` returns (open_page_server.py) for one page."""
+    return {"requested_url": url, "final_url": final_url or url, "status": 200 if loaded else 429,
+            "title": "Object" if loaded else "Vercel Security Checkpoint", "loaded": loaded,
+            "text": "Object record" if loaded else "", "text_truncated": False}
+
+
+def events(answer: dict | str, *, search_url: str = SEARCHED, opens: tuple = (opened_page(),),
+           api_key_source: str = "none", tools: tuple[str, ...] = protocol.TOOLS,
+           mcp_servers: tuple[str, ...] = (protocol.OPEN_PAGE_SERVER,),
            model: str = "claude-sonnet-5-5", session_id: str = "session-1") -> list[dict]:
+    """A stored call's event stream: one search, then one `open_page` call per entry of
+    `opens` (a page record, or an error string for a failed call), then the answer."""
     text = answer if isinstance(answer, str) else json.dumps(answer)
-    return [
+    stream = [
         {"type": "system", "subtype": "init", "model": model, "apiKeySource": api_key_source,
-         "tools": list(tools), "mcp_servers": [], "session_id": session_id},
+         "tools": list(tools), "session_id": session_id,
+         "mcp_servers": [{"name": name, "status": "connected"} for name in mcp_servers]},
         {"type": "assistant", "message": {"content": [
             {"type": "tool_use", "id": "t1", "name": "WebSearch", "input": {"query": "Abydos"}}]}},
         {"type": "user", "message": {"content": [{"type": "tool_result", "tool_use_id": "t1"}]},
          "tool_use_result": {"results": [{"content": [{"title": "Abydos", "url": search_url}]}]}},
+    ]
+    for n, page in enumerate(opens):
+        url = page if isinstance(page, str) else page["requested_url"]
+        error = isinstance(page, str)
+        stream += [
+            {"type": "assistant", "message": {"content": [
+                {"type": "tool_use", "id": f"o{n}", "name": protocol.OPEN_PAGE_TOOL,
+                 "input": {"url": f"https://unreachable.example/{n}" if error else url}}]}},
+            {"type": "user", "message": {"content": [{
+                "type": "tool_result", "tool_use_id": f"o{n}", "is_error": error,
+                "content": page if error else json.dumps(page)}]}},
+        ]
+    return stream + [
         {"type": "assistant", "message": {"content": [{"type": "text", "text": text}]}},
         {"type": "result", "usage": {"output_tokens": 10}, "total_cost_usd": 0.5},
     ]
@@ -65,8 +93,7 @@ def review_answer(case: dict, same: str, useful: str) -> dict:
     return {
         "case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"],
         "same_entity": same, "useful_granularity": useful, "reasoning": f"{same}/{useful}",
-        "citations": ["https://www.metmuseum.org/art/collection/search/1"],
-        "artifact_exceptions": [],
+        "citations": [OPENED],
     }
 
 
@@ -84,8 +111,7 @@ def write_attempt(directory: Path, role_name: str, case: dict, n: int, answer, *
         **extra,
     }
     if "failure" not in extra:
-        shown = protocol.reviewer_research(directory.parent, case, role) if role.reconciler else None
-        record = protocol.validate(record, case, role, inputs["schema"], shown)
+        record = protocol.validate(record, case, role, inputs["schema"])
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{case['case_id']}.attempt-{n}.json"
     protocol.write_atomic(path, record)
@@ -103,10 +129,9 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
     assert record["served_model"] == "claude-sonnet-5-5"
     assert record["auth"] == "none"
     assert record["web_searches"] == ["Abydos"]
-    assert record["web_search_results"] == [
-        {"title": "Abydos", "url": "https://www.metmuseum.org/art/collection/search/1"}
-    ]
-    assert record["web_fetches"] == []
+    assert record["web_search_results"] == [{"title": "Abydos", "url": SEARCHED}]
+    assert record["page_opens"] == [{"url": OPENED, "requested_url": OPENED, "final_url": OPENED,
+                                     "status": 200, "title": "Object", "loaded": True}]
     assert record["usage"] == {"output_tokens": 10}
     assert record["notional_cost_usd"] == 0.5
     assert "failure" not in record
@@ -116,7 +141,10 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
     ("kwargs", "mutate", "failure"),
     [
         ({"api_key_source": "ANTHROPIC_API_KEY"}, None, "API-key auth would bill this call: 'ANTHROPIC_API_KEY'"),
-        ({"tools": ("WebFetch", "WebSearch", "Bash")}, None, "unexpected tools ['WebFetch', 'WebSearch', 'Bash'] or MCP servers []"),
+        ({"tools": (*protocol.TOOLS, "WebFetch")}, None,
+         "unexpected tools ['WebSearch', 'mcp__museum-browser__open_page', 'WebFetch'] or MCP servers "
+         "[{'name': 'museum-browser', 'status': 'connected'}]"),
+        ({"mcp_servers": ()}, None, "unexpected tools ['WebSearch', 'mcp__museum-browser__open_page'] or MCP servers []"),
         ({"model": "claude-opus-5-5"}, None, "served model 'claude-opus-5-5', not 'claude-sonnet-5-5'"),
         ({"search_url": "https://www.wikidata.org/wiki/Q1"}, None, "blocked domain used: ['https://www.wikidata.org/wiki/Q1']"),
         ({}, {"case_id": "review-unit-002"}, "decision does not echo the case ID and evidence hash exactly"),
@@ -143,17 +171,17 @@ def test_reconciler_must_resolve_exactly_the_disputed_questions() -> None:
             "disputed_questions": ["useful_granularity"], "reviews": []}
     role = protocol.ROLES["stage_1_reconciler"]
     schema = protocol.role_inputs(role)["schema"]
-    resolution = {"outcome": "too_broad", "rationale": "r", "citations": ["https://www.metmuseum.org/art/collection/search/1"]}
-    wrong = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "artifact_exceptions": [],
+    resolution = {"outcome": "too_broad", "rationale": "r", "citations": [OPENED]}
+    wrong = {"case_id": case["case_id"], "evidence_sha256": HASH_1,
              "resolutions": {"same_entity": {**resolution, "outcome": "same_entity"},
                              "useful_granularity": resolution}}
-    record = protocol.validate({"events": events(wrong)}, item, role, schema, set())
+    record = protocol.validate({"events": events(wrong)}, item, role, schema)
     assert record["failure"] == (
         "invalid decision: resolves ['same_entity', 'useful_granularity'], "
         "not the disputed questions ['useful_granularity']"
     )
     right = {**wrong, "resolutions": {"useful_granularity": resolution}}
-    assert protocol.validate({"events": events(right)}, item, role, schema, set())["decision"] == right
+    assert protocol.validate({"events": events(right)}, item, role, schema)["decision"] == right
 
 
 def test_model_input_refuses_private_keys() -> None:
@@ -185,16 +213,15 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
     assert item["case"] == dispute
     assert sorted(r["useful_granularity"] for r in item["reviews"]) == ["too_broad", "useful"]
     assert [r["label"] for r in item["reviews"]] == ["review-1", "review-2"]
-    assert all(set(r) == {"label", "same_entity", "useful_granularity", "reasoning", "citations",
-                          "artifact_exceptions"} for r in item["reviews"])
+    assert all(set(r) == {"label", "same_entity", "useful_granularity", "reasoning", "citations"}
+               for r in item["reviews"])
 
     with pytest.raises(protocol.ProtocolFailure, match="no record for review-unit-002"):
         protocol.build_consensus("1", queue_path, records)
 
-    resolution = {"outcome": "too_broad", "rationale": "Region, not a site.",
-                  "citations": ["https://www.metmuseum.org/art/collection/search/1"]}
+    resolution = {"outcome": "too_broad", "rationale": "Region, not a site.", "citations": [OPENED]}
     override = write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, {
-        "case_id": "review-unit-002", "evidence_sha256": HASH_2, "artifact_exceptions": [],
+        "case_id": "review-unit-002", "evidence_sha256": HASH_2,
         "resolutions": {"useful_granularity": resolution},
     })
     consensus = protocol.build_consensus("1", queue_path, records)
@@ -202,7 +229,7 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
     assert consensus["stage"] == "1"
     assert consensus["queue_sha256"] == protocol.sha256_path(queue_path)
     assert consensus["roles"]["stage_1_reconciler"]["prompt"] == {
-        "path": "stage-1-reconciler-v3.txt",
+        "path": "stage-1-reconciler-v4.txt",
         "sha256": protocol.sha256_path(protocol.ROLES["stage_1_reconciler"].prompt),
     }
     agreed, disputed = consensus["decisions"]
@@ -225,7 +252,7 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
             key=lambda s: s["review_sha256"]),
         "reconciler_record_sha256": protocol.sha256_path(override),
         "rationale": "Region, not a site.",
-        "citations": ["https://www.metmuseum.org/art/collection/search/1"],
+        "citations": [OPENED],
     }
 
     frozen = tmp_path / "consensus.json"
@@ -384,81 +411,54 @@ def test_scorer_requires_the_reviewed_stage_2_queue_to_be_the_release_of_the_cus
             scorer.verify_stage_2_release(ROOT, edited, {"cases": [stage_1]}, custodian, **hashes)
 
 
-def test_every_judgment_must_cite_a_source_the_record_shows_was_consulted() -> None:
+def test_a_citation_is_only_a_page_the_call_opened_and_that_loaded() -> None:
+    shown = "https://www.metmuseum.org/art/collection/search/7"
     case = {**stage_1_case("review-unit-001", HASH_1), "sides": {
-        "met": [{"source_url": "https://www.metmuseum.org/art/collection/search/7"}],
-        "brooklyn": [{"representative_exact_mention": "Abydos"}]}}
+        "met": [{"source_url": shown}], "brooklyn": [{"representative_exact_mention": "Abydos"}]}}
     role = protocol.ROLES["stage_1_reviewer"]
     schema = protocol.role_inputs(role)["schema"]
     base = review_answer(case, "same_entity", "useful")
-    unseen = "https://www.metmuseum.org/toah/works-of-art/14.6.179"
+    checkpoint = "https://www.brooklynmuseum.org/objects/3300"
+    redirected = ("https://hvrd.art/o/290793", "https://harvardartmuseums.org/collections/object/290793")
+    opens = (opened_page(), opened_page(checkpoint, loaded=False),
+             opened_page(redirected[0], final_url=redirected[1]), "Error: net::ERR_NAME_NOT_RESOLVED")
 
-    only_unseen = protocol.validate({"events": events({**base, "citations": [unseen]})}, case, role, schema)
-    assert "decision" not in only_unseen
-    assert only_unseen["failure"] == "judgment cites no consulted source"
-    assert only_unseen["unconsulted_citations"] == [unseen]
+    def check(citations: list[str]) -> dict:
+        return protocol.validate({"events": events({**base, "citations": citations}, opens=opens)}, case, role, schema)
 
-    # A search result (query and www. ignored) or a URL of the shown case evidence is consulted;
-    # an extra unconsulted citation is recorded but does not void the judgment.
-    for citations in (
-        ["https://metmuseum.org/art/collection/search/1/?position=0", unseen],
-        ["https://www.metmuseum.org/art/collection/search/7"],
-    ):
-        record = protocol.validate({"events": events({**base, "citations": citations})}, case, role, schema)
-        assert record["decision"]["citations"] == citations
-        assert record["unconsulted_citations"] == sorted({unseen} & set(citations))
+    # An opened page counts under its requested and final URL; host case, www. and query are ignored.
+    for citations in ([OPENED, *redirected], ["https://metmuseum.org/art/collection/search/1/?position=0"]):
+        assert check(citations)["decision"]["citations"] == citations
+    # A search result, a URL the case shows, a page that hit a checkpoint and a failed open are
+    # never citations, alone or beside an opened page.
+    for unopened in (SEARCHED, shown, checkpoint, "https://unreachable.example/3"):
+        for citations in ([unopened], [OPENED, unopened]):
+            record = check(citations)
+            assert "decision" not in record
+            assert record["failure"] == f"cites a page it did not open: {[unopened]}"
+    record = check([OPENED])
+    assert [o["loaded"] for o in record["page_opens"]] == [True, False, True, False]
+    assert record["page_opens"][3] == {"url": "https://unreachable.example/3", "loaded": False,
+                                       "error": "Error: net::ERR_NAME_NOT_RESOLVED"}
 
 
-def test_a_reconciler_resolution_cites_only_consulted_sources_its_own_or_a_shown_reviews() -> None:
+def test_a_reconciler_cites_only_pages_it_opened_itself() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
+    reviewed = "https://collectionapi.metmuseum.org/public/collection/v1/objects/543936"
     item = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "case": case,
-            "disputed_questions": ["useful_granularity"], "reviews": []}
+            "disputed_questions": ["useful_granularity"],
+            "reviews": [{"label": "review-1", "citations": [reviewed]}]}
     role = protocol.ROLES["stage_1_reconciler"]
     schema = protocol.role_inputs(role)["schema"]
-    searched = "https://www.metmuseum.org/art/collection/search/1"
-    fetched_by_a_review = "https://collectionapi.metmuseum.org/public/collection/v1/objects/543936"
 
-    def answer(citations):
-        return {"case_id": case["case_id"], "evidence_sha256": HASH_1, "artifact_exceptions": [],
+    def answer(citations: list[str]) -> dict:
+        return {"case_id": case["case_id"], "evidence_sha256": HASH_1,
                 "resolutions": {"useful_granularity": {"outcome": "too_broad", "rationale": "r",
                                                        "citations": citations}}}
 
-    # One consulted citation is not enough for an override: its citations reach the consensus.
-    record = protocol.validate({"events": events(answer([searched, fetched_by_a_review]))}, item, role, schema, set())
-    assert record["failure"] == "resolution cites an unconsulted source: ['useful_granularity']"
-    assert record["unconsulted_citations"] == [fetched_by_a_review]
-    shown = {protocol._page(fetched_by_a_review)}
-    record = protocol.validate({"events": events(answer([searched, fetched_by_a_review]))}, item, role, schema, shown)
-    assert record["decision"] == answer([searched, fetched_by_a_review])
-    assert record["unconsulted_citations"] == []
-    with pytest.raises(protocol.ProtocolFailure, match="shown_research is required for a reconciler only"):
-        protocol.validate({"events": events(answer([searched]))}, item, role, schema)
-    with pytest.raises(protocol.ProtocolFailure, match="shown_research is required for a reconciler only"):
-        protocol.validate({"events": events(review_answer(case, "same_entity", "useful"))}, case,
-                          protocol.ROLES["stage_1_reviewer"], schema, set())
-
-
-def test_committed_citation_support_matches_the_scored_queues() -> None:
-    results = EVALUATION / "results"
-    support = json.loads((results / "real-citation-support.json").read_text())
-    score = json.loads((results / "real-adjudicated-score.json").read_text())
-    stage_1, stage_2 = support["stages"]
-    assert (stage_1["stage"], stage_1["queue_sha256"]) == ("1", score["input_hashes"]["stage_1_queue"])
-    assert (stage_2["stage"], stage_2["queue_sha256"]) == ("2", score["input_hashes"]["stage_2_queue"])
-    assert [s["deciding_calls"] for s in support["stages"]] == [219, 132]
-    assert [s["judgments_by_support"] for s in support["stages"]] == [
-        {"research": 219, "case_evidence_only": 1}, {"research": 132, "case_evidence_only": 0}]
-    listed = [(s["stage"], u["case_id"], u["role"], u["url"]) for s in support["stages"] for u in s["unconsulted_citations"]]
-    assert listed == [
-        ("1", "review-unit-050", "reviewer-B", "https://www.metmuseum.org/departments/egyptian-art/research"),
-        ("1", "review-unit-055", "reviewer-A", "https://www.metmuseum.org/perspectives/from-the-vaults-fayum-funerary-portraits"),
-        ("1", "review-unit-077", "reviewer-A", "https://whc.unesco.org/en/list/295/"),
-        ("1", "review-unit-080", "reviewer-A", "https://www.metmuseum.org/art/collection/search/549625"),
-        ("1", "review-unit-104", "reviewer-B", "https://whc.unesco.org/en/list/87"),
-        ("2", "case-065", "reviewer-B", "https://www.metmuseum.org/art/collection/search/549625"),
-        ("2", "case-071", "reviewer-A", "https://www.metmuseum.org/perspectives/malqata-excavation"),
-    ]
-    assert all(len(u["record_sha256"]) == 64 for s in support["stages"] for u in s["unconsulted_citations"])
+    record = protocol.validate({"events": events(answer([OPENED, reviewed]))}, item, role, schema)
+    assert record["failure"] == f"cites a page it did not open: {[reviewed]}"
+    assert protocol.validate({"events": events(answer([OPENED]))}, item, role, schema)["decision"] == answer([OPENED])
 
 
 def test_committed_digest_binds_every_current_protocol_file() -> None:
@@ -469,8 +469,12 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
         "stage_1_reconciler", "stage_1_reviewer", "stage_2_reconciler", "stage_2_reviewer",
     ]
     assert bindings["prompts"]["stage_2_reviewer"]["path"] == (
-        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v3.txt"
+        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v4.txt"
     )
+    assert bindings["browser_tool"] == {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
+        "sha256": protocol.sha256_path(protocol.OPEN_PAGE_SERVER_PATH),
+    }
 
 
 def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_decision(tmp_path: Path) -> None:
@@ -482,7 +486,7 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
         "type": "tool_result", "tool_use_id": "t2", "is_error": True,
         "content": "You've hit your session limit · resets 5:10am (UTC)"}]}}
     stream.insert(3, {"type": "assistant", "message": {"content": [
-        {"type": "tool_use", "id": "t2", "name": "WebFetch", "input": {"url": "https://example.org/x"}}]}})
+        {"type": "tool_use", "id": "t2", "name": protocol.OPEN_PAGE_TOOL, "input": {"url": "https://example.org/x"}}]}})
     stream.insert(4, refused)
     record = protocol.validate({"events": stream}, case, role, inputs["schema"])
     assert record["failure"] == "Claude Code session limit during research: 1 tool call(s) refused"
@@ -613,9 +617,8 @@ def test_runner_retries_format_failures_up_to_the_cap(monkeypatch, tmp_path: Pat
 def test_runner_does_not_resume_a_stopped_case_but_resumes_a_session_limit(monkeypatch, tmp_path: Path) -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     good = review_answer(case, "same_entity", "useful")
-    no_research = events(good)[:1] + events(good)[3:]
-    with pytest.raises(protocol.ProtocolFailure, match="case decided without a search result"):
-        run_case(monkeypatch, tmp_path, case, [no_research])
+    with pytest.raises(protocol.ProtocolFailure, match="served model 'claude-opus-5-5'"):
+        run_case(monkeypatch, tmp_path, case, [events(good, model="claude-opus-5-5")])
     with pytest.raises(protocol.ProtocolFailure, match="not resumed automatically"):
         run_case(monkeypatch, tmp_path, case, [good])
 
@@ -791,3 +794,42 @@ def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(
     (run / "extraction-manifest.json").write_text("{}")
     with pytest.raises(ValueError, match="extraction manifest does not match the run manifest"):
         queue_builder.validate_run(ROOT, run)
+
+
+def test_only_insufficient_evidence_may_cite_nothing() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    nothing_loaded = (opened_page(loaded=False),)
+    unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
+    record = protocol.validate({"events": events(unsure, opens=nothing_loaded)}, case, role, schema)
+    assert record["decision"] == unsure
+    for judged in ({"same_entity": "different_entity"}, {"useful_granularity": "too_broad"}):
+        record = protocol.validate({"events": events({**unsure, **judged}, opens=nothing_loaded)}, case, role, schema)
+        assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
+
+    stage_2 = protocol.ROLES["stage_2_reviewer"]
+    answer = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "canonical_identity": "insufficient_evidence",
+              "reasoning": "r", "citations": []}
+    schema_2 = protocol.role_inputs(stage_2)["schema"]
+    assert protocol.validate({"events": events(answer, opens=nothing_loaded)}, case, stage_2, schema_2)["decision"] == answer
+    record = protocol.validate({"events": events({**answer, "canonical_identity": "exact_identity"}, opens=nothing_loaded)},
+                               case, stage_2, schema_2)
+    assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
+
+
+def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(tmp_path: Path) -> None:
+    queue_path, records, _, dispute = _stage_1_records(tmp_path)
+    item = protocol.reconciliation_queue("1", json.loads(queue_path.read_text()), records)["cases"][0]
+    role = protocol.ROLES["stage_1_reconciler"]
+    schema = protocol.role_inputs(role)["schema"]
+    uncited = {"case_id": "review-unit-002", "evidence_sha256": HASH_2, "resolutions": {
+        "useful_granularity": {"outcome": "too_broad", "rationale": "No page loaded.", "citations": []}}}
+    record = protocol.validate({"events": events(uncited)}, item, role, schema)
+    assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
+    uncited["resolutions"]["useful_granularity"]["outcome"] = "insufficient_evidence"
+    write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, uncited)
+    disputed = protocol.build_consensus("1", queue_path, records)["decisions"][1]
+    assert disputed["useful_granularity"] == "insufficient_evidence"
+    assert disputed["field_resolutions"]["useful_granularity"]["method"] == "reconciler_insufficient_evidence_without_source"
+    assert disputed["field_resolutions"]["useful_granularity"]["citations"] == []

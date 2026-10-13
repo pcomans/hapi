@@ -103,6 +103,7 @@ def review_protocol_inputs(repo_root: Path) -> dict:
         "protocol_version": protocol.CONSENSUS_SCHEMA_VERSION,
         "validator": binding(repo_root / EVALUATION_ROOT / "scripts/review_protocol.py"),
         "runner": binding(repo_root / EVALUATION_ROOT / "scripts/run_harness_review.py"),
+        "browser_tool": binding(protocol.OPEN_PAGE_SERVER_PATH),
         "scorer": binding(repo_root / EVALUATION_ROOT / "scripts/score_review.py"),
         "artifact_schema": binding(repo_root / REVIEW_SCHEMA_PATH),
         "prompts": {name: binding(role.prompt) for name, role in sorted(protocol.ROLES.items())},
