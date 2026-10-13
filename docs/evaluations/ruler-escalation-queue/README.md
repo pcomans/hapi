@@ -148,7 +148,7 @@ entries.
 
 ## Reproduce
 
-The graph is replayed, not re-reviewed: `web-claimgraph/data/claim-graph.reviewer-run.jsonl`
+The graph is re-derived from the record, not re-reviewed: `web-claimgraph/data/claim-graph.reviewer-run.jsonl`
 holds every reviewer interaction, and `test_committed_decisions_follow_from_the_run_and_the_current_matcher`
 re-derives every committed decision from it with the current matcher and guards (Rule 13).
 The 13 paid verdicts on pairs the final matcher calls `name_only` (so never reviewer-decided)
