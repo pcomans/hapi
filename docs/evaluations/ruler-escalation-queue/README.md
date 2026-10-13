@@ -103,7 +103,7 @@ Senakhtenre (Leprohon 17.26 and pharaoh.se against Ryholt 17.7 "Siamun (?)") and
 Tao (Leprohon 17.27 and pharaoh.se against Ryholt 17.8; the sources print different Horus
 names). The Egyptologist judged all four the same king and the escalations defensible.
 
-**Review.** The `egyptologist-reviewer` checked all 58 merged clusters of the rebuilt graph:
+**Review.** The `egyptologist-reviewer` checked all 58 merged clusters of the graph before the guards (51 remain, each a subset of a reviewed one):
 no false merge (`results/merge-review.md`). It raised two P1s, fixed here: the reviewer
 *rejected* Senakhtenre on Ryholt's uncertain "Siamun (?)", so a rejection touching a reading
 its source flags uncertain is now escalated (item 5); and `name_dynasty` edges joining

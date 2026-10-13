@@ -76,7 +76,7 @@ def test_rebuild_measurement_is_bound_to_the_committed_graph_and_script() -> Non
         ("pharaoh_se-Senakhtenra (Senakhtenra)", "ryholt-17.7 (Siamun (?))"),
         ("pharaoh_se-Seqenenra (Seqenenra)", "ryholt-17.8 (Tao)"),
     ]
-    assert all("escalated" in r["now"] for r in result["approved_links_lost"])
+    assert all(isinstance(r["now"], dict) and set(r["now"]) == {"escalated"} for r in result["approved_links_lost"])
 
 
 def test_the_distinct_shoshenq_iv_kings_stay_apart() -> None:

@@ -458,11 +458,11 @@ policy (`--deterministic`) still escalates every pair the rules newly reach.
    does not separate them: Beckerath gives −800..−790, pharaoh.se −798..−785, the same
    numeral. Both records carry throne names, so the reviewer compared those and rejected
    the pair. For a record without titulary in such a case the reviewer is the only
-   defence. Two deterministic alternatives were measured and not adopted, as each costs
-   312 resolved mentions (Psusennes I alone 309): excluding Dyn 21–24
-   (`results/alternative-exclude-dyn-21-24/`), and refusing a name whose regnal-number set
-   differs between sources (Beckerath also lists an unnumbered High Priest "Psusennes";
-   Kitchen only I). The project owner accepted the risk on 2026-10-12: two kings with the
+   defence. Excluding Dyn 21–24 from the basis was measured and not adopted: it costs
+   312 resolved mentions, Psusennes I alone 309 (`results/alternative-exclude-dyn-21-24/`).
+   Refusing a name whose regnal-number set differs between sources was not measured; it
+   would block Psusennes I the same way, since Beckerath also lists an unnumbered High
+   Priest "Psusennes" and Kitchen only I. The project owner accepted the risk on 2026-10-12: two kings with the
    same name, number, dynasty and reign may be merged, which only more data can resolve;
    to be revisited if it occurs. A disagreeing
    dynasty number (the Third Intermediate Period cases of decision 6) withholds the
