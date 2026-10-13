@@ -44,6 +44,7 @@ from review_protocol import (
     calls_by_latest_attempt,
     compose_user_content,
     read_json,
+    reviewer_research,
     role_inputs,
     sha256_bytes,
     validate,
@@ -125,6 +126,11 @@ def next_path(out: Path, case_id: str) -> Path:
     return out / f"{case_id}.attempt-{max(numbers, default=0) + 1}.json"
 
 
+def _shown(case: dict, role: Role, out: Path) -> set | None:
+    """A reconciler's shown research: what the two reviews of the case consulted."""
+    return reviewer_research(out.parent, case, role) if role.reconciler else None
+
+
 def recheck_calls(case: dict, role: Role, inputs: dict, out: Path, tag: str) -> dict[str, dict]:
     """Re-check the latest attempt of every stored call under the current rules, from its saved
     events, with no new model call. A call whose verdict changed (an answer format accepted by
@@ -135,7 +141,7 @@ def recheck_calls(case: dict, role: Role, inputs: dict, out: Path, tag: str) -> 
         last = read_json(path)
         if "events" in last:
             stored = {k: last[k] for k in RECORD_KEYS if k in last}
-            recheck = validate(stored, case, role, inputs["schema"])
+            recheck = validate(stored, case, role, inputs["schema"], _shown(case, role, out))
             if (recheck.get("decision"), recheck.get("failure")) != (last.get("decision"), last.get("failure")):
                 target = next_path(out, case["case_id"])
                 recheck.update(role=role.name, attempt=attempt_number(target), revalidated_from=call)
@@ -163,7 +169,7 @@ def review_case(case: dict, role: Role, inputs: dict, out: Path, label: str | No
         path = next_path(out, case["case_id"])
         record = call(case, inputs)
         if "failure" not in record:
-            record = validate(record, case, role, inputs["schema"])
+            record = validate(record, case, role, inputs["schema"], _shown(case, role, out))
         record.update(reviewer="reconciler" if role.reconciler else label, role=role.name,
                       attempt=attempt_number(path))
         write_new(path, record)

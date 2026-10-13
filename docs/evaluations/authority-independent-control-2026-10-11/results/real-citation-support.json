@@ -1,0 +1,69 @@
+{
+ "schema_version": "hapi-authority-control-citation-support/1",
+ "stages": [
+  {
+   "deciding_calls": 219,
+   "judgments_by_support": {
+    "case_evidence_only": 1,
+    "research": 219
+   },
+   "queue_sha256": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
+   "stage": "1",
+   "unconsulted_citations": [
+    {
+     "case_id": "review-unit-050",
+     "record_sha256": "ca96c8127a91b878181d3f0c080c2b109637ebbc59e408c285f34c7086ee13b2",
+     "role": "reviewer-B",
+     "url": "https://www.metmuseum.org/departments/egyptian-art/research"
+    },
+    {
+     "case_id": "review-unit-055",
+     "record_sha256": "5f05408d8d6c6e3643d9071e0c235d3a246bcbac5a0b79a94b03acb578b2ece8",
+     "role": "reviewer-A",
+     "url": "https://www.metmuseum.org/perspectives/from-the-vaults-fayum-funerary-portraits"
+    },
+    {
+     "case_id": "review-unit-077",
+     "record_sha256": "916294d501e27ced0f449e683de1563b4e1dd5b1624b113bae3066ed1121b575",
+     "role": "reviewer-A",
+     "url": "https://whc.unesco.org/en/list/295/"
+    },
+    {
+     "case_id": "review-unit-080",
+     "record_sha256": "b3138d306d9f8fc503e1c5259c02be934984faec919154a952427fde18d7ed19",
+     "role": "reviewer-A",
+     "url": "https://www.metmuseum.org/art/collection/search/549625"
+    },
+    {
+     "case_id": "review-unit-104",
+     "record_sha256": "152684da5b16b3300d2c273ddbf66e606551d94384eb6e4edfe3117515c4e1a5",
+     "role": "reviewer-B",
+     "url": "https://whc.unesco.org/en/list/87"
+    }
+   ]
+  },
+  {
+   "deciding_calls": 132,
+   "judgments_by_support": {
+    "case_evidence_only": 0,
+    "research": 132
+   },
+   "queue_sha256": "92baab7f8fd79639398eb17b76240762eb91d675a8a0430108c70bef7cd3d89c",
+   "stage": "2",
+   "unconsulted_citations": [
+    {
+     "case_id": "case-065",
+     "record_sha256": "5346ae20cf6a0623bcb2aabe9509d906c8d23b18a1c9a272af8d4326d118b6cc",
+     "role": "reviewer-B",
+     "url": "https://www.metmuseum.org/art/collection/search/549625"
+    },
+    {
+     "case_id": "case-071",
+     "record_sha256": "ccc6147e566fbbf5a857c044d189044ce437f7ba3bc3a18ad477e5f3ac9df76a",
+     "role": "reviewer-A",
+     "url": "https://www.metmuseum.org/perspectives/malqata-excavation"
+    }
+   ]
+  }
+ ]
+}

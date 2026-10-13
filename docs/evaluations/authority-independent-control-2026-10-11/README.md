@@ -142,14 +142,21 @@ per-case pattern.
    consensus (`freeze-consensus`) is written once and accepted only if it is exactly what the
    protocol rebuilds from the stored records: every attempt is re-checked from its saved
    events, each case must have exactly one valid call per role, and each record must have
-   been composed from the current prompt, schema and case. Each judgment (a reviewer's
-   decision, each reconciler resolution) must cite at least one source the record shows was
-   consulted: a search result, a successful fetch, or a URL of the case evidence shown
-   (added after scoring on Codex review of #351; host without `www.`, path, query ignored).
-   Every stored decision passes it, so both consensus files are unchanged; 9 of the 353
-   stored attempts with a decision also cite a page the record does not show was opened
-   (e.g. a Met Heilbrunn essay), which the re-check lists as `unconsulted_citations` and
-   does not count as support.
+   been composed from the current prompt, schema and case.
+   Citations (added after scoring, on Codex review of #351): a citation counts as consulted
+   when the record shows it, as a search result, a successful fetch or a URL of the case
+   evidence shown (host without `www.`, path; query ignored). A reviewer's judgment must cite
+   at least one consulted source; its other citations are listed, not counted, and never
+   reach the consensus. A reconciler's resolution is copied into the consensus as the
+   override's sources, so every citation must be consulted, by the reconciler or by a review
+   it was shown (as that review's record shows). Requiring every reviewer citation to be
+   consulted would void stored decisions whose judgments rest on consulted sources, and
+   redrawing them after the verdict is known would let the outcome shape the data, so it is
+   not done. All stored decisions pass both rules and both consensus files re-freeze
+   byte-identical. `results/real-citation-support.json` lists the 7 unconsulted reviewer
+   citations (e.g. a Met essay page, a UNESCO listing) by case, role and record hash, and
+   counts the judgments by support: 351 of 352 rest on research the record shows; one
+   (review-unit-032, reviewer A) rests only on the museum record URLs of its case evidence.
 2. **Stage 2 release.** `build_review_queue.py release-stage-2` releases the 65 proposed-target
    cases only after verifying the frozen Stage 1 consensus, and binds its hash. The scorer
    rebuilds the release from the digest-bound custodian and requires the reviewed queue to be

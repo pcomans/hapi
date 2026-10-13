@@ -166,11 +166,37 @@ def _page(url: str | None) -> tuple[str, str]:
     return (parsed.hostname or "").lower().removeprefix("www."), parsed.path.rstrip("/")
 
 
-def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
+def consulted_pages(record: dict) -> set[tuple[str, str]]:
+    """The pages a validated record shows were consulted: its search results and its
+    successful fetches."""
+    return (
+        {_page(r["url"]) for r in record["web_search_results"]}
+        | {_page(f["url"]) for f in record["web_fetches"] if f["status_code"] == 200}
+    )
+
+
+def reviewer_research(stage_records: Path, item: dict, role: Role) -> set[tuple[str, str]]:
+    """The pages the two reviews a reconciler is shown consulted, from their decided records
+    (`stage_records` holds reviewer-A/, reviewer-B/ and reconciler/)."""
+    reviewer = ROLES[role.name.replace("reconciler", "reviewer")]
+    inputs = role_inputs(reviewer)
+    return set().union(*(
+        consulted_pages(decided_record(stage_records / f"reviewer-{label}", item["case"], reviewer, inputs)[1])
+        for label in REVIEWERS
+    ))
+
+
+def validate(
+    record: dict, case: dict, role: Role, schema: dict,
+    shown_research: set[tuple[str, str]] | None = None,
+) -> dict:
     """Derive the record's fields from its stored event stream and validate the answer.
 
     Reads only `record["events"]`, so a stored attempt is re-checked without calling the
-    model again (Rule 13)."""
+    model again (Rule 13). A reconciler is validated with `shown_research`, the pages the two
+    reviews it is shown consulted (`reviewer_research`); a reviewer, without."""
+    if role.reconciler != (shown_research is not None):
+        raise ProtocolFailure(f"{role.name}: shown_research is required for a reconciler only")
     events = record["events"]
     init = next((e for e in events if e.get("type") == "system" and e.get("subtype") == "init"), None)
     if init is None:
@@ -277,25 +303,26 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
         record["failure"] = f"blocked domain used: {[u for u in touched if _blocked(u)]}"
         return record
     # A citation is consulted when the record shows it: a search result, a successful fetch,
-    # or a URL of the case evidence the reviewer was shown (for a reconciler, the case itself,
-    # not the reviews' citations). Every judgment must rest on at least one; citations the
-    # record does not show are kept on the record, not counted.
+    # or a URL of the case evidence shown. A reviewer's judgment must rest on at least one;
+    # its other citations are listed (`unconsulted_citations`), not counted, and never reach
+    # the consensus. A reconciler's resolution settles a disputed value and its citations are
+    # copied into the consensus as the override's sources, so every one must be consulted,
+    # by the reconciler or by a review it was shown (that review's own record shows it).
     evidence = case["case"] if role.reconciler else case
-    consulted = (
-        {_page(r["url"]) for r in record["web_search_results"]}
-        | {_page(f["url"]) for f in record["web_fetches"] if f["status_code"] == 200}
-        | {_page(url) for url in URL_RE.findall(json.dumps(evidence, ensure_ascii=False))}
-    )
-    judgments = {"decision": decision.get("citations", [])} | {
-        question: resolution["citations"] for question, resolution in decision.get("resolutions", {}).items()
-    }
-    unsupported = sorted(
-        question for question, urls in judgments.items()
-        if (urls or question != "decision") and not any(_page(url) in consulted for url in urls)
-    )
+    consulted = consulted_pages(record) | {
+        _page(url) for url in URL_RE.findall(json.dumps(evidence, ensure_ascii=False))
+    } | (shown_research or set())
     record["unconsulted_citations"] = sorted({url for url in cited if _page(url) not in consulted})
-    if unsupported:
-        record["failure"] = f"judgment cites no consulted source: {unsupported}"
+    if role.reconciler:
+        unsupported = sorted(
+            question for question, resolution in decision["resolutions"].items()
+            if any(_page(url) not in consulted for url in resolution["citations"])
+        )
+        if unsupported:
+            record["failure"] = f"resolution cites an unconsulted source: {unsupported}"
+            return record
+    elif not any(_page(url) in consulted for url in decision["citations"]):
+        record["failure"] = "judgment cites no consulted source"
         return record
     record["decision"] = decision
     return record
@@ -329,6 +356,7 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
     if not paths:
         raise ProtocolFailure(f"no record for {case['case_id']} in {directory}")
     user_content = compose_user_content(case, inputs["prompt"], inputs["schema"])
+    shown = reviewer_research(directory.parent, case, role) if role.reconciler else None
     latest, valid_calls = {}, set()
     for path in paths:
         if ATTEMPT_RE.match(path.name)["case"] != case["case_id"]:
@@ -345,7 +373,7 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
             source = directory / call
             if not source.exists() or read_json(source).get("events") != stored["events"]:
                 raise ProtocolFailure(f"{path}: a re-check whose events are not those of {call}")
-        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
+        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"], shown)
         if "decision" in recheck:
             valid_calls.add(call)
         latest[call] = (path, stored, recheck)
@@ -463,6 +491,42 @@ def verify_consensus(stage: str, consensus_path: Path, queue_path: Path, records
     return consensus
 
 
+def citation_support(stage: str, queue_path: Path, records: Path) -> dict:
+    """For every deciding call of a stage: the citations its record does not show were
+    consulted, and how its judgment is supported (by research the record shows, or only by a
+    URL of the case evidence shown). Derived from the stored records alone."""
+    queue = read_json(queue_path)
+    reviewer = ROLES[f"stage_{stage}_reviewer"]
+    calls = [
+        (case, f"reviewer-{label}", reviewer, sha, record)
+        for case in queue["cases"]
+        for label, (sha, record) in reviewer_decisions(stage, queue, records)[case["case_id"]].items()
+    ]
+    reconciler = ROLES[f"stage_{stage}_reconciler"]
+    for item in reconciliation_queue(stage, queue, records)["cases"]:
+        sha, record = decided_record(records / "reconciler", item, reconciler, role_inputs(reconciler))
+        calls.append((item, "reconciler", reconciler, sha, record))
+    unconsulted, support = [], {"research": 0, "case_evidence_only": 0}
+    for case, role_dir, role, sha, record in sorted(calls, key=lambda c: (c[0]["case_id"], c[1])):
+        shown = reviewer_research(records, case, role) if role.reconciler else None
+        recheck = validate({"events": record["events"]}, case, role, role_inputs(role)["schema"], shown)
+        unconsulted += [
+            {"case_id": case["case_id"], "role": role_dir, "record_sha256": sha, "url": url}
+            for url in recheck["unconsulted_citations"]
+        ]
+        researched = consulted_pages(recheck) | (shown or set())
+        for urls in ([d["citations"] for d in recheck["decision"]["resolutions"].values()]
+                     if role.reconciler else [recheck["decision"]["citations"]]):
+            support["research" if any(_page(u) in researched for u in urls) else "case_evidence_only"] += 1
+    return {
+        "stage": stage,
+        "queue_sha256": sha256_path(queue_path),
+        "deciding_calls": len(calls),
+        "judgments_by_support": support,
+        "unconsulted_citations": unconsulted,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     commands = parser.add_subparsers(dest="command", required=True)
@@ -473,8 +537,23 @@ def main() -> None:
         sub.add_argument("--records", type=Path, required=True,
                          help="private dir holding reviewer-A/, reviewer-B/ and reconciler/")
         sub.add_argument("--out", type=Path, required=True)
+    sub = commands.add_parser("citation-support")
+    sub.add_argument("--stage-queue", nargs=2, action="append", metavar=("QUEUE", "RECORDS"),
+                     type=Path, required=True)
+    sub.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    if args.command == "prepare-reconciliation":
+    if args.command == "citation-support":
+        value = {
+            "schema_version": "hapi-authority-control-citation-support/1",
+            "stages": [
+                citation_support(stage, queue, records)
+                for stage, (queue, records) in zip(sorted(STAGE_FIELDS), args.stage_queue, strict=True)
+            ],
+        }
+        write_atomic(args.out, value)
+        print(json.dumps([{k: v for k, v in st.items() if k != "unconsulted_citations"} | {
+            "unconsulted": len(st["unconsulted_citations"])} for st in value["stages"]], indent=1))
+    elif args.command == "prepare-reconciliation":
         value = reconciliation_queue(args.stage, read_json(args.queue), args.records)
         write_new(args.out, value)
         print(f"Stage {args.stage}: {len(value['cases'])} cases to reconcile")

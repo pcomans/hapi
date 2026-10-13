@@ -50,7 +50,7 @@
     },
     "runner": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
-      "sha256": "56c158644e0c9978b05c9b1124fce06a47341b80b70c1c44372de60d3875a3ec"
+      "sha256": "f3026a4e4991f1c49a0f6ff837439cf99d9a223aca4407156fc3676927ee2005"
     },
     "scorer": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
@@ -58,7 +58,7 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "426011ac982bcfa75abdeb8e90e357c86342d8530e743990d0fa838710d80d17"
+      "sha256": "9acc3658cae0455489a29d8ac2475fc9639ecc0773e45a6ccaaada63ae2e282c"
     }
   },
   "queue_inputs": {

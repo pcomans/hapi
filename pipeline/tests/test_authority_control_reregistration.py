@@ -82,7 +82,8 @@ def write_attempt(directory: Path, role_name: str, case: dict, n: int, answer, *
         **extra,
     }
     if "failure" not in extra:
-        record = protocol.validate(record, case, role, inputs["schema"])
+        shown = protocol.reviewer_research(directory.parent, case, role) if role.reconciler else None
+        record = protocol.validate(record, case, role, inputs["schema"], shown)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{case['case_id']}.attempt-{n}.json"
     protocol.write_atomic(path, record)
@@ -144,13 +145,13 @@ def test_reconciler_must_resolve_exactly_the_disputed_questions() -> None:
     wrong = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "artifact_exceptions": [],
              "resolutions": {"same_entity": {**resolution, "outcome": "same_entity"},
                              "useful_granularity": resolution}}
-    record = protocol.validate({"events": events(wrong)}, item, role, schema)
+    record = protocol.validate({"events": events(wrong)}, item, role, schema, set())
     assert record["failure"] == (
         "invalid decision: resolves ['same_entity', 'useful_granularity'], "
         "not the disputed questions ['useful_granularity']"
     )
     right = {**wrong, "resolutions": {"useful_granularity": resolution}}
-    assert protocol.validate({"events": events(right)}, item, role, schema)["decision"] == right
+    assert protocol.validate({"events": events(right)}, item, role, schema, set())["decision"] == right
 
 
 def test_model_input_refuses_private_keys() -> None:
@@ -392,7 +393,7 @@ def test_every_judgment_must_cite_a_source_the_record_shows_was_consulted() -> N
 
     only_unseen = protocol.validate({"events": events({**base, "citations": [unseen]})}, case, role, schema)
     assert "decision" not in only_unseen
-    assert only_unseen["failure"] == "judgment cites no consulted source: ['decision']"
+    assert only_unseen["failure"] == "judgment cites no consulted source"
     assert only_unseen["unconsulted_citations"] == [unseen]
 
     # A search result (query and www. ignored) or a URL of the shown case evidence is consulted;
@@ -404,6 +405,53 @@ def test_every_judgment_must_cite_a_source_the_record_shows_was_consulted() -> N
         record = protocol.validate({"events": events({**base, "citations": citations})}, case, role, schema)
         assert record["decision"]["citations"] == citations
         assert record["unconsulted_citations"] == sorted({unseen} & set(citations))
+
+
+def test_a_reconciler_resolution_cites_only_consulted_sources_its_own_or_a_shown_reviews() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    item = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "case": case,
+            "disputed_questions": ["useful_granularity"], "reviews": []}
+    role = protocol.ROLES["stage_1_reconciler"]
+    schema = protocol.role_inputs(role)["schema"]
+    searched = "https://www.metmuseum.org/art/collection/search/1"
+    fetched_by_a_review = "https://collectionapi.metmuseum.org/public/collection/v1/objects/543936"
+
+    def answer(citations):
+        return {"case_id": case["case_id"], "evidence_sha256": HASH_1, "artifact_exceptions": [],
+                "resolutions": {"useful_granularity": {"outcome": "too_broad", "rationale": "r",
+                                                       "citations": citations}}}
+
+    # One consulted citation is not enough for an override: its citations reach the consensus.
+    record = protocol.validate({"events": events(answer([searched, fetched_by_a_review]))}, item, role, schema, set())
+    assert record["failure"] == "resolution cites an unconsulted source: ['useful_granularity']"
+    assert record["unconsulted_citations"] == [fetched_by_a_review]
+    shown = {protocol._page(fetched_by_a_review)}
+    record = protocol.validate({"events": events(answer([searched, fetched_by_a_review]))}, item, role, schema, shown)
+    assert record["decision"] == answer([searched, fetched_by_a_review])
+    assert record["unconsulted_citations"] == []
+    with pytest.raises(protocol.ProtocolFailure, match="shown_research is required for a reconciler only"):
+        protocol.validate({"events": events(answer([searched]))}, item, role, schema)
+    with pytest.raises(protocol.ProtocolFailure, match="shown_research is required for a reconciler only"):
+        protocol.validate({"events": events(review_answer(case, "same_entity", "useful"))}, case,
+                          protocol.ROLES["stage_1_reviewer"], schema, set())
+
+
+def test_committed_citation_support_matches_the_scored_queues() -> None:
+    results = EVALUATION / "results"
+    support = json.loads((results / "real-citation-support.json").read_text())
+    score = json.loads((results / "real-adjudicated-score.json").read_text())
+    stage_1, stage_2 = support["stages"]
+    assert (stage_1["stage"], stage_1["queue_sha256"]) == ("1", score["input_hashes"]["stage_1_queue"])
+    assert (stage_2["stage"], stage_2["queue_sha256"]) == ("2", score["input_hashes"]["stage_2_queue"])
+    assert [s["deciding_calls"] for s in support["stages"]] == [219, 132]
+    assert [s["judgments_by_support"] for s in support["stages"]] == [
+        {"research": 219, "case_evidence_only": 1}, {"research": 132, "case_evidence_only": 0}]
+    listed = [(s["stage"], u["case_id"], u["role"]) for s in support["stages"] for u in s["unconsulted_citations"]]
+    assert listed == [
+        ("1", "review-unit-050", "reviewer-B"), ("1", "review-unit-055", "reviewer-A"),
+        ("1", "review-unit-077", "reviewer-A"), ("1", "review-unit-080", "reviewer-A"),
+        ("1", "review-unit-104", "reviewer-B"), ("2", "case-065", "reviewer-B"), ("2", "case-071", "reviewer-A"),
+    ]
 
 
 def test_committed_digest_binds_every_current_protocol_file() -> None:
