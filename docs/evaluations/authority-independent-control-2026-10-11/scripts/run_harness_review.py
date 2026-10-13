@@ -18,10 +18,15 @@ final answer, usage).
 Fail loud (Rule 2): API-key (billed) auth, any tool or MCP server beyond the two, hook
 output, or a model other than the requested one stops the run after the case's record is
 written, and a later run does not resume that case. An answer rejected for its format, one
-that cites a page the call did not open, or a call whose search results, opened pages or
-citations touched a blocked domain, is retried (`MAX_ATTEMPTS` such calls per case). A session limit stops the run; a later run resumes the case.
+that cites a page the call did not open or a page outside the citable sources
+(`citable-sources.json`), or a call whose search results, opened pages or citations touched
+a blocked domain, is retried (`MAX_ATTEMPTS` such calls per case). A session limit stops
+the run; a later run resumes the case.
 
-    pipeline/.venv/bin/python \\
+Run it with the interpreter of the recorded runtime (`runtime/`, README); the browser server
+starts with the same interpreter.
+
+    docs/evaluations/authority-independent-control-2026-10-11/runtime/.venv/bin/python \\
       docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py \\
       --role stage_1_reviewer --queue <stage-1-queue.json> --label A --out <private stage-1 dir>
 """
@@ -48,6 +53,7 @@ from review_protocol import (
     compose_user_content,
     read_json,
     role_inputs,
+    run_bindings,
     sha256_bytes,
     validate,
     write_new,
@@ -57,21 +63,23 @@ MODEL_ALIAS = "sonnet"
 EFFORT = "high"
 # A malformed answer (not JSON, schema-invalid, a miscopied case ID or hash, or a reconciler
 # answer that resolves other than the disputed questions), an answer citing a page the call
-# did not open, or a run whose search results or opened pages touched a blocked domain (the
+# did not open or a non-citable source, or a run whose search results or opened pages touched a blocked domain (the
 # search tool cannot exclude them), is retried, up to this many attempts per case. Every attempt is kept; a
 # case's decision is its one valid attempt (the run stops retrying a case once it has one).
 MAX_ATTEMPTS = 3
 FORMAT_FAILURES = (
     "invalid decision:", "decision does not echo", "blocked domain used:", "cites a page it did not open:",
+    "cites a non-citable source:",
 )
-# The browser server runs from the evaluation's own interpreter (the pipeline venv).
+# The browser server runs from the evaluation's own interpreter (the recorded runtime),
+# under a virtual X display, so the browser can run headful (open_page_server.py).
 MCP_CONFIG = json.dumps({"mcpServers": {OPEN_PAGE_SERVER: {
-    "command": sys.executable, "args": [str(OPEN_PAGE_SERVER_PATH)],
+    "command": "xvfb-run", "args": ["-a", sys.executable, str(OPEN_PAGE_SERVER_PATH)],
 }}}, sort_keys=True)
 SESSION_LIMIT_FAILURE = "Claude Code session limit"
 RECORD_KEYS = (
     "case_id", "evidence_sha256", "requested_model", "parameters", "command", "system_prompt",
-    "user_content", "user_content_sha256", "exit_code", "stderr", "events", "reviewer",
+    "user_content", "user_content_sha256", "run_bindings", "exit_code", "stderr", "events", "reviewer",
 )
 
 
@@ -94,7 +102,7 @@ def command(system_prompt: str, user_content: str) -> list[str]:
 
 
 def call(case: dict, inputs: dict) -> dict:
-    user_content = compose_user_content(case, inputs["prompt"], inputs["schema"])
+    user_content = compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"])
     argv = command(inputs["system_prompt"], user_content)
     record = {
         "case_id": case["case_id"],
@@ -106,6 +114,7 @@ def call(case: dict, inputs: dict) -> dict:
         "system_prompt": inputs["system_prompt"],
         "user_content": user_content,
         "user_content_sha256": sha256_bytes(user_content.encode("utf-8")),
+        "run_bindings": run_bindings(),
     }
     env = {key: value for key, value in os.environ.items() if key != "ANTHROPIC_API_KEY"}
     with tempfile.TemporaryDirectory(prefix="hapi-337-review-") as cwd:

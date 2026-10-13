@@ -1,41 +1,165 @@
 {
- "calls_without_a_loaded_page": 0,
- "deciding_calls": 216,
  "inputs": {
   "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-  "stage_1_queue_sha256": "220c9b30b6306e4f0637b76c4dd86de7f4c1c6a29d9fce5f1cdb82596ebde17e"
+  "stage_1_queue_sha256": "220c9b30b6306e4f0637b76c4dd86de7f4c1c6a29d9fce5f1cdb82596ebde17e",
+  "stage_2_queue_sha256": "410be70a0edd770867092265f0c3c799ea3f633ffa14b598e01fcc8140252c96"
  },
- "museum_record_opens_by_transition_class": {
-  "authority_only_transition": {
-   "loaded": 94,
-   "opened": 95
+ "max_class_deviation_percentage_points": 5,
+ "passed": false,
+ "schema_version": "hapi-337-v4-page-load-gate/2",
+ "stages": {
+  "1": {
+   "all_opens": {
+    "loaded": 773,
+    "opened": 802
+   },
+   "all_opens_by_transition_class": {
+    "authority_only_transition": {
+     "loaded": 105,
+     "opened": 117
+    },
+    "literal_only_transition": {
+     "loaded": 231,
+     "opened": 233
+    },
+    "retained_control": {
+     "loaded": 437,
+     "opened": 452
+    }
+   },
+   "calls_without_a_loaded_page": 0,
+   "class_deviation_percentage_points": {
+    "all/authority_only_transition": -6.64,
+    "all/literal_only_transition": 2.76,
+    "all/retained_control": 0.3,
+    "museum_host/authority_only_transition": -0.79,
+    "museum_host/literal_only_transition": 0.27,
+    "museum_host/retained_control": 0.03
+   },
+   "deciding_reviewer_calls": 216,
+   "museum_host_opens_by_transition_class": {
+    "authority_only_transition": {
+     "loaded": 94,
+     "opened": 95
+    },
+    "literal_only_transition": {
+     "loaded": 228,
+     "opened": 228
+    },
+    "retained_control": {
+     "loaded": 425,
+     "opened": 426
+    }
+   },
+   "not_loaded_opens_by_host": {
+    "archiv.ub.uni-heidelberg.de": 2,
+    "ashmolean.org": 1,
+    "books.ub.uni-heidelberg.de": 1,
+    "britannica.com": 3,
+    "brooklynmuseum.org": 1,
+    "cfeetk.cnrs.fr": 1,
+    "daw.philhist.unibas.ch": 1,
+    "egyptartefacts.griffith.ox.ac.uk": 3,
+    "metmuseum.org": 1,
+    "pcma.uw.edu.pl": 1,
+    "trismegistos.org": 2,
+    "ucl.ac.uk": 6,
+    "whc.unesco.org": 4,
+    "whitelevy.fas.harvard.edu": 1,
+    "worldheritagesite.org": 1
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 363,
+     "opened": 364
+    },
+    "harvard": {
+     "loaded": 47,
+     "opened": 47
+    },
+    "met": {
+     "loaded": 337,
+     "opened": 338
+    },
+    "other": {
+     "loaded": 26,
+     "opened": 53
+    }
+   },
+   "passed": false
   },
-  "literal_only_transition": {
-   "loaded": 228,
-   "opened": 228
-  },
-  "retained_control": {
-   "loaded": 425,
-   "opened": 426
+  "2": {
+   "all_opens": {
+    "loaded": 673,
+    "opened": 762
+   },
+   "all_opens_by_transition_class": {
+    "authority_only_transition": {
+     "loaded": 156,
+     "opened": 172
+    },
+    "retained_control": {
+     "loaded": 517,
+     "opened": 590
+    }
+   },
+   "calls_without_a_loaded_page": 0,
+   "class_deviation_percentage_points": {
+    "all/authority_only_transition": 2.38,
+    "all/retained_control": -0.69,
+    "museum_host/authority_only_transition": 0.0,
+    "museum_host/retained_control": 0.0
+   },
+   "deciding_reviewer_calls": 130,
+   "museum_host_opens_by_transition_class": {
+    "authority_only_transition": {
+     "loaded": 88,
+     "opened": 88
+    },
+    "retained_control": {
+     "loaded": 298,
+     "opened": 298
+    }
+   },
+   "not_loaded_opens_by_host": {
+    "britannica.com": 5,
+    "d-nb.info": 2,
+    "doaks.org": 1,
+    "egyptartefacts.griffith.ox.ac.uk": 8,
+    "english.ahram.org.eg": 1,
+    "gazetteer.dainst.org": 12,
+    "hal-univ-montpellier3-paul-valery.archives-ouvertes.fr": 1,
+    "ifao.egnet.net": 6,
+    "oeaw.ac.at": 1,
+    "pcma.uw.edu.pl": 1,
+    "pharaoh.se": 2,
+    "pleiades.jazkarta.com": 1,
+    "pleiades.stoa.org": 30,
+    "thebanmappingproject.com": 2,
+    "trismegistos.org": 2,
+    "ucl.ac.uk": 5,
+    "whc.unesco.org": 7,
+    "zenon.dainst.org": 2
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 196,
+     "opened": 196
+    },
+    "harvard": {
+     "loaded": 18,
+     "opened": 18
+    },
+    "met": {
+     "loaded": 172,
+     "opened": 172
+    },
+    "other": {
+     "loaded": 287,
+     "opened": 376
+    }
+   },
+   "passed": true
   }
- },
- "open_page_by_museum": {
-  "brooklyn": {
-   "loaded": 363,
-   "opened": 364
-  },
-  "harvard": {
-   "loaded": 47,
-   "opened": 47
-  },
-  "met": {
-   "loaded": 337,
-   "opened": 338
-  },
-  "other": {
-   "loaded": 30,
-   "opened": 53
-  }
- },
- "schema_version": "hapi-337-v4-page-load-gate/1"
+ }
 }

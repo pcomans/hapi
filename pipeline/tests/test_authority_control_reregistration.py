@@ -31,6 +31,7 @@ queue_builder = _load("_reregistration_build_review_queue", "build_review_queue.
 runner = _load("_reregistration_run_harness_review", "run_harness_review.py")
 
 HASH_1 = "1" * 64
+RUNTIME_PYPROJECT_SHA256 = "8c584c759b96f174115106336231535fc4b0fe10ae09e1612c57aaf1c3ea6a81"
 HASH_2 = "2" * 64
 
 
@@ -49,10 +50,11 @@ OPENED = "https://www.metmuseum.org/art/collection/search/1"
 SEARCHED = "https://www.metmuseum.org/art/collection/search/9"
 
 
-def opened_page(url: str = OPENED, *, loaded: bool = True, final_url: str | None = None) -> dict:
+def opened_page(url: str = OPENED, *, loaded: bool = True, final_url: str | None = None,
+                title: str | None = None, status: int | None = None) -> dict:
     """What `open_page` returns (open_page_server.py) for one page."""
-    return {"requested_url": url, "final_url": final_url or url, "status": 200 if loaded else 429,
-            "title": "Object" if loaded else "Vercel Security Checkpoint", "loaded": loaded,
+    return {"requested_url": url, "final_url": final_url or url, "status": status or (200 if loaded else 429),
+            "title": title or ("Object" if loaded else "Vercel Security Checkpoint"), "loaded": loaded,
             "text": "Object record" if loaded else "", "text_truncated": False}
 
 
@@ -97,16 +99,18 @@ def review_answer(case: dict, same: str, useful: str) -> dict:
     }
 
 
-def write_attempt(directory: Path, role_name: str, case: dict, n: int, answer, **extra) -> Path:
+def write_attempt(directory: Path, role_name: str, case: dict, n: int, answer, opens: tuple = (opened_page(),),
+                  **extra) -> Path:
     role = protocol.ROLES[role_name]
     inputs = protocol.role_inputs(role)
     record = {
         "case_id": case["case_id"],
         "evidence_sha256": case["evidence_sha256"],
         "system_prompt": inputs["system_prompt"],
-        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"]),
+        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
+        "run_bindings": protocol.run_bindings(),
         # One session per stored call; a re-check carries its source call's events.
-        "events": events(answer, session_id=directory.name + "/" + extra.get(
+        "events": events(answer, opens=opens, session_id=directory.name + "/" + extra.get(
             "revalidated_from", f"{case['case_id']}.attempt-{n}.json")),
         **extra,
     }
@@ -131,7 +135,7 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
     assert record["web_searches"] == ["Abydos"]
     assert record["web_search_results"] == [{"title": "Abydos", "url": SEARCHED}]
     assert record["page_opens"] == [{"url": OPENED, "requested_url": OPENED, "final_url": OPENED,
-                                     "status": 200, "title": "Object", "loaded": True}]
+                                     "status": 200, "title": "Object", "reported_loaded": True, "loaded": True}]
     assert record["usage"] == {"output_tokens": 10}
     assert record["notional_cost_usd"] == 0.5
     assert "failure" not in record
@@ -187,7 +191,7 @@ def test_reconciler_must_resolve_exactly_the_disputed_questions() -> None:
 def test_model_input_refuses_private_keys() -> None:
     case = {**stage_1_case("review-unit-001", HASH_1), "transition_class": "retained_control"}
     with pytest.raises(protocol.ProtocolFailure, match=r"private keys: \['\$.transition_class'\]"):
-        protocol.compose_user_content(case, "prompt", {})
+        protocol.compose_user_content(case, "prompt", {}, "")
 
 
 def _stage_1_records(tmp_path: Path) -> tuple[Path, Path, dict, dict]:
@@ -229,8 +233,11 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
     assert consensus["stage"] == "1"
     assert consensus["queue_sha256"] == protocol.sha256_path(queue_path)
     assert consensus["roles"]["stage_1_reconciler"]["prompt"] == {
-        "path": "stage-1-reconciler-v4.txt",
+        "path": "stage-1-reconciler-v5.txt",
         "sha256": protocol.sha256_path(protocol.ROLES["stage_1_reconciler"].prompt),
+    }
+    assert consensus["roles"]["stage_1_reconciler"]["citable_sources"] == {
+        "path": "citable-sources.json", "sha256": protocol.sha256_path(protocol.CITABLE_SOURCES_PATH),
     }
     agreed, disputed = consensus["decisions"]
     assert agreed["case_id"] == "review-unit-001"
@@ -426,12 +433,13 @@ def test_a_citation_is_only_a_page_the_call_opened_and_that_loaded() -> None:
     def check(citations: list[str]) -> dict:
         return protocol.validate({"events": events({**base, "citations": citations}, opens=opens)}, case, role, schema)
 
-    # An opened page counts under its requested and final URL; host case, www. and query are ignored.
-    for citations in ([OPENED, *redirected], ["https://metmuseum.org/art/collection/search/1/?position=0"]):
+    # An opened page counts under its requested and final URL; host case, www., scheme and a
+    # trailing slash are ignored, a query is not.
+    for citations in ([OPENED, *redirected], ["http://metmuseum.org/art/collection/search/1/"]):
         assert check(citations)["decision"]["citations"] == citations
     # A search result, a URL the case shows, a page that hit a checkpoint and a failed open are
     # never citations, alone or beside an opened page.
-    for unopened in (SEARCHED, shown, checkpoint, "https://unreachable.example/3"):
+    for unopened in (SEARCHED, shown, checkpoint, "https://unreachable.example/3", OPENED + "?position=0"):
         for citations in ([unopened], [OPENED, unopened]):
             record = check(citations)
             assert "decision" not in record
@@ -469,8 +477,12 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
         "stage_1_reconciler", "stage_1_reviewer", "stage_2_reconciler", "stage_2_reviewer",
     ]
     assert bindings["prompts"]["stage_2_reviewer"]["path"] == (
-        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v4.txt"
+        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v5.txt"
     )
+    assert bindings["citable_sources"] == {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
+        "sha256": protocol.sha256_path(protocol.CITABLE_SOURCES_PATH),
+    }
     assert bindings["browser_tool"] == {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
         "sha256": protocol.sha256_path(protocol.OPEN_PAGE_SERVER_PATH),
@@ -496,8 +508,8 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
     path = tmp_path / "review-unit-001.attempt-1.json"
     protocol.write_atomic(path, {
         "case_id": case["case_id"], "evidence_sha256": HASH_1, "system_prompt": inputs["system_prompt"],
-        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"]),
-        "events": stream, "decision": review_answer(case, "same_entity", "useful"),
+        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
+        "run_bindings": protocol.run_bindings(), "events": stream, "decision": review_answer(case, "same_entity", "useful"),
     })
     with pytest.raises(protocol.ProtocolFailure, match="stored outcome differs from its re-check"):
         protocol.decided_record(tmp_path, case, role, inputs)
@@ -581,7 +593,8 @@ class FakeCalls:
         answer = self.answers.pop(0)
         return {"case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"],
                 "system_prompt": inputs["system_prompt"],
-                "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"]),
+                "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
+                "run_bindings": protocol.run_bindings(),
                 "events": answer if isinstance(answer, list) else events(answer)}
 
 
@@ -639,8 +652,8 @@ def test_runner_writes_a_recheck_when_a_stored_decision_no_longer_stands(monkeyp
     stream[2]["tool_use_result"]["results"][0]["content"][0]["url"] = "https://www.wikidata.org/wiki/Q1"
     protocol.write_atomic(tmp_path / "review-unit-001.attempt-1.json", {
         "case_id": case["case_id"], "evidence_sha256": HASH_1, "system_prompt": inputs["system_prompt"],
-        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"]),
-        "events": stream, "decision": review_answer(case, "same_entity", "useful"),
+        "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
+        "run_bindings": protocol.run_bindings(), "events": stream, "decision": review_answer(case, "same_entity", "useful"),
     })
     fake = run_case(monkeypatch, tmp_path, case, [review_answer(case, "different_entity", "too_broad")])
     assert fake.made == 1
@@ -718,6 +731,10 @@ def test_audited_prompt_hashes_match_the_prompts_that_run() -> None:
     table = audit[audit.index("## Audited prompt bytes"):]
     for name, role in protocol.ROLES.items():
         assert f"| `{role.prompt.name}` | `{protocol.sha256_path(role.prompt)}` |" in table, name
+    # The rest of what the model reads: the system prompt, the citable-source list and the
+    # browser tool (whose description is part of the model input).
+    for path in (protocol.SYSTEM_PROMPT_PATH, protocol.CITABLE_SOURCES_PATH, protocol.OPEN_PAGE_SERVER_PATH):
+        assert f"| `{path.name}` | `{protocol.sha256_path(path)}` |" in table, path.name
 
 
 def _write_run(run: Path, manifest: dict, extraction: dict) -> None:
@@ -828,7 +845,7 @@ def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(t
     record = protocol.validate({"events": events(uncited)}, item, role, schema)
     assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
     uncited["resolutions"]["useful_granularity"]["outcome"] = "insufficient_evidence"
-    write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, uncited)
+    write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, uncited, opens=(opened_page(loaded=False),))
     disputed = protocol.build_consensus("1", queue_path, records)["decisions"][1]
     assert disputed["useful_granularity"] == "insufficient_evidence"
     assert disputed["field_resolutions"]["useful_granularity"]["method"] == "reconciler_insufficient_evidence_without_source"
@@ -852,13 +869,106 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     }
 
 
-def test_recorded_runtime_is_the_pipeline_environment_plus_the_mcp_sdk() -> None:
+def test_recorded_runtime_is_pinned_and_carries_the_mcp_sdk_and_pdf_reader() -> None:
+    # The record of the environment the run used; pinned by hash, never compared with the live
+    # pipeline project (which may move on).
     runtime = EVALUATION / "runtime"
-    pipeline = (ROOT / "pipeline" / "pyproject.toml").read_text().splitlines()
-    recorded = (runtime / "pyproject.toml").read_text().splitlines()
-    assert [line for line in recorded if line not in pipeline] == ['    "mcp>=1.20",']
-    assert [line for line in pipeline if line not in recorded] == []
+    assert protocol.sha256_path(runtime / "pyproject.toml") == RUNTIME_PYPROJECT_SHA256
     lock = (runtime / "uv.lock").read_text()
     assert protocol.sha256_path(runtime / "uv.lock") == "a79d7b77103eb3de232e323474213842218c3f19c8a3efb1b4f2df0cc19df5b1"
+    assert '[[package]]\nname = "pypdf"\nversion = "6.10.2"' in lock
     assert '[[package]]\nname = "mcp"\nversion = "2.3.0"' in lock
     assert '[[package]]\nname = "playwright"\nversion = "1.58.0"' in lock
+
+
+def test_a_citation_must_be_a_citable_source() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    wiki = "https://en.wikipedia.org/wiki/Abydos,_Egypt"
+    ucl_news = "https://www.ucl.ac.uk/news/2020/abydos"
+    digital_egypt = "https://www.ucl.ac.uk/museums-static/digitalegypt/abydos/index.html"
+    opens = (opened_page(), opened_page(wiki), opened_page(ucl_news), opened_page(digital_egypt))
+    base = review_answer(case, "same_entity", "useful")
+    for uncitable in (wiki, ucl_news):
+        record = protocol.validate({"events": events({**base, "citations": [OPENED, uncitable]}, opens=opens)}, case, role, schema)
+        assert record["failure"] == f"cites a non-citable source: {[uncitable]}"
+    record = protocol.validate({"events": events({**base, "citations": [OPENED, digital_egypt]}, opens=opens)}, case, role, schema)
+    assert record["decision"]["citations"] == [OPENED, digital_egypt]
+    assert protocol.citable_source_of(digital_egypt)["role"] == "independent"
+    assert protocol.citable_source_of(OPENED)["role"] == "case_input"
+    assert protocol.citable_source_of("https://gazetteer.dainst.org/doc/2042907.json")["role"] == "target_record"
+
+
+def test_the_citable_source_list_is_well_formed() -> None:
+    sources = json.loads(protocol.CITABLE_SOURCES_PATH.read_text())
+    keys = [(s["domain"], s.get("path_prefix", "")) for s in sources["sources"]]
+    assert len(keys) == len(set(keys))
+    assert all(s["category"] in sources["criteria"] and s["role"] in sources["citation_roles"]
+               for s in sources["sources"])
+    excluded = {e["domain"] for e in sources["excluded_examples"]}
+    assert not excluded & {s["domain"] for s in sources["sources"]}
+    assert {s["domain"] for s in sources["sources"] if s["role"] == "case_input"} == {
+        "metmuseum.org", "brooklynmuseum.org", "harvardartmuseums.org", "hvrd.art"}
+    assert {s["domain"] for s in sources["sources"] if s["role"] == "target_record"} == {"dainst.org"}
+    for domain in excluded:
+        assert protocol.citable_source_of(f"https://{domain}/x") is None
+
+
+def test_loaded_is_re_derived_from_the_stored_status_and_title() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    walled = "https://pleiades.stoa.org/places/786036"
+    # The server reported these as loaded; the validator does not take its word.
+    opens = (opened_page(), opened_page(walled, title="Oh noes!"),
+             opened_page("https://pcma.uw.edu.pl/?p=1", title="Captcha Verification Needed"),
+             opened_page("https://whc.unesco.org/en/list/86", status=404, title="Not found"))
+    record = protocol.validate({"events": events(review_answer(case, "same_entity", "useful"), opens=opens)},
+                               case, role, schema)
+    assert [(o["reported_loaded"], o["loaded"]) for o in record["page_opens"]] == [
+        (True, True), (True, False), (True, False), (True, False)]
+    record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+                                                  "citations": [OPENED, walled]}, opens=opens)}, case, role, schema)
+    assert record["failure"] == f"cites a page it did not open: {[walled]}"
+
+
+def test_a_redirect_to_a_blocked_domain_fails_the_call() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    opens = (opened_page(), opened_page("https://w.wiki/Abc", final_url="https://www.wikidata.org/wiki/Q1"))
+    record = protocol.validate({"events": events(review_answer(case, "same_entity", "useful"), opens=opens)},
+                               case, role, protocol.role_inputs(role)["schema"])
+    assert record["failure"] == "blocked domain used: ['https://www.wikidata.org/wiki/Q1']"
+
+
+def test_insufficient_evidence_may_cite_nothing_only_if_no_page_loaded() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
+    record = protocol.validate({"events": events(unsure)}, case, role, protocol.role_inputs(role)["schema"])
+    assert record["failure"] == "invalid decision: cites nothing although a page it opened loaded"
+
+
+def test_a_stored_call_made_by_other_runner_or_browser_files_is_refused(tmp_path: Path) -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    path = write_attempt(tmp_path, "stage_1_reviewer", case, 1, review_answer(case, "same_entity", "useful"))
+    stored = json.loads(path.read_text())
+    stored["run_bindings"]["browser_tool_sha256"] = "0" * 64
+    path.write_text(json.dumps(stored))
+    with pytest.raises(protocol.ProtocolFailure, match="not made by the current runner and browser tool"):
+        protocol.decided_record(tmp_path, case, role, protocol.role_inputs(role))
+
+
+def test_a_redirect_cannot_carry_a_citation_onto_or_off_the_citable_list() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    onto, off = "https://example.org/short/1", "https://www.metmuseum.org/redirects-away"
+    opens = (opened_page(), opened_page(onto, final_url=OPENED + "0"),
+             opened_page(off, final_url="https://en.wikipedia.org/wiki/Abydos"))
+    for cited in (onto, off):
+        record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+                                                      "citations": [OPENED, cited]}, opens=opens)}, case, role, schema)
+        assert record["failure"] == f"cites a non-citable source: {[cited]}"

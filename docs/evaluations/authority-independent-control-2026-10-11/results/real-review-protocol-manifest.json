@@ -7,30 +7,34 @@
     },
     "browser_tool": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
-      "sha256": "81ffec783f8f739c675007b980f16c931e49c25aeb16940674213b407583c2d0"
+      "sha256": "1cf83e6530142e706329ec3ac86a01e627bf266b6d0b9377c916f92fa6be3115"
+    },
+    "citable_sources": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
+      "sha256": "8c0ad623c3e7ea395e675da022af30fcccaccf20cc32b8cb5729eab384e134da"
     },
     "launcher_system_prompts": {
       "review": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v3.txt",
-        "sha256": "fc56c04d66a7605a330a40725e12d68ae7a13adab291c235f39e79844ff525c3"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v4.txt",
+        "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
       }
     },
     "prompts": {
       "stage_1_reconciler": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v4.txt",
-        "sha256": "52ad6e48acf6b54214d2c3dfd72bb4e8bcd29515ce1363a054cd7859215a58e4"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v5.txt",
+        "sha256": "ddc64e48f04c37c1c8f0173466f037bee055e3fdc4e7437349ed91ffb1f2d181"
       },
       "stage_1_reviewer": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v4.txt",
-        "sha256": "8c6a3d8dd4154203f493d1f9d00beaec23126a33aeeefb1f14b671cfbcbd2c2b"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v5.txt",
+        "sha256": "000f60be5d3e64f739c5833c870a39309b3414125d02c4438a677d6c543cc1f8"
       },
       "stage_2_reconciler": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v4.txt",
-        "sha256": "e6cd8dfb1aa7e4d5d733e239915f19bd5bd726f2c6df26a440fcd6fda9c2ec8d"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v5.txt",
+        "sha256": "7f1edf2b81d5443a03ecf4a9fa77cee579bdcba26d383e523e37388535fee9a8"
       },
       "stage_2_reviewer": {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v4.txt",
-        "sha256": "723a242914ecd6aeaf28d1f25efe74b5858ecff9d54dbc8cc72f2b3c1118b9ab"
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v5.txt",
+        "sha256": "1e560d70a2046856f7b6eae01fb1b2fa784af4fe528f8a7e06f661824c65c198"
       }
     },
     "protocol_version": "hapi-337-reregistration-consensus/1",
@@ -54,7 +58,7 @@
     },
     "runner": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
-      "sha256": "9cabc008c22fdeff64a9c949726806b660bee0d1cbe4806333286c8f2f13bffc"
+      "sha256": "4b8ffaf56c310b8e0ff75dcb8bc7e1821f19fb7967a261b280619e726eeb8459"
     },
     "scorer": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
@@ -62,12 +66,12 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "fff0cd2370d47d48b0a2bde8d09fee253872f92d1635c24d9cd41a95cc423474"
+      "sha256": "24aeff6cc7f4d6a3eb7fefbff8126e0b5c5e7e2711c82b0a93a95410ee93fb91"
     }
   },
   "queue_inputs": {
-    "stage_1_queue_sha256": "220c9b30b6306e4f0637b76c4dd86de7f4c1c6a29d9fce5f1cdb82596ebde17e",
-    "stage_2_custodian_sha256": "79171e3a6ae747a0d0236c2b412a3b59ae7d1f236e5f37d0864c060a6fd01f98"
+    "stage_1_queue_sha256": "817a4e61fb069b17686565a3f8f19645128271b19971e0b23fc7bfafa699a873",
+    "stage_2_custodian_sha256": "4618824900665c6215c0f175738f1cc4aafe99afb4d968df95a515f28702e5bc"
   },
   "required_sequence": [
     "leak_audit_every_prompt_on_composed_requests",

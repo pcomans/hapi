@@ -132,9 +132,9 @@ against the private answer key, in aggregate, after the Stage 1 reviewers and be
 result is read; without the exception route an unloadable record forces
 `insufficient_evidence`, which is class-neutral only if the loaded rate is.
 
-## Audited prompt bytes
+## v4 prompt bytes (the superseded v4 run)
 
-The v4 prompts that run, by SHA-256 (a test checks these against the files).
+The v4 prompts that ran in the superseded v4 run, by SHA-256.
 
 | Prompt | SHA-256 |
 |---|---|
@@ -142,3 +142,41 @@ The v4 prompts that run, by SHA-256 (a test checks these against the files).
 | `stage-1-reconciler-v4.txt` | `52ad6e48acf6b54214d2c3dfd72bb4e8bcd29515ce1363a054cd7859215a58e4` |
 | `stage-2-reviewer-v4.txt` | `723a242914ecd6aeaf28d1f25efe74b5858ecff9d54dbc8cc72f2b3c1118b9ab` |
 | `stage-2-reconciler-v4.txt` | `e6cd8dfb1aa7e4d5d733e239915f19bd5bd726f2c6df26a440fcd6fda9c2ec8d` |
+
+## Rounds 14–15: v5, citable sources only (2026-10-13)
+
+The project owner doubted that generic web pages are a scholarly basis for these judgments,
+so v5 adds a committed allowlist of citable sources (`citable-sources.json`, vetted by the
+egyptologist-reviewer agent), rendered into the composed user content after the role
+prompt; replaces "Prefer official museum, iDAI, ... institutional sources" with the
+allowlist rule; adds a sentence on coarse sources (the Egyptologist found UNESCO properties
+and Pleiades places lump whole areas); and runs the browser headful and reads PDFs (tool
+description changed). Audited on freshly composed requests (Stage 1 units 001 and 002,
+Stage 2 cases 001 and 003, a reconciler request per stage with placeholder v5 reviews), the
+system prompt `review-system-v4.txt` and the rendered tool description. The auditor's reports
+are kept verbatim in `prompt-audit-reports-2026-10-13.md` (rounds 12–15).
+
+| Round | Prompt state | Verdict | Findings acted on |
+|---|---|---|---|
+| 14 | first v5 drafts | allowlist block PASS (constant across cases; roles not rendered); all four prompts **FAIL** (P2) | P2 the coarse-source sentence cautioned only against concluding identity, a one-sided push that weighs on differing-string cases (which depend on alias-bearing gazetteers); the auditor's symmetric replacement applied verbatim. P3 applied: "loaded citable pages"; a source must have its final_url on the list (also enforced in code); "a record page of a listed museum"; system-prompt wording aligned. P3 checked: Stage 2 target `representation` is fixed by entity type and uniform across classes; ruler `source_ids` differ in 2 of 11 cases, one per class. Measured residual, not a prompt effect: rulers have no openable authority, so the page-load gate is stratified by entity type × class (rule committed before the run) and citations are reported by role. |
+| 15 | round-14 fixes | **PASS** all four and the system prompt (no P0/P1/P2) | none |
+
+Post-audit edits (the auditor's own round-15 P3 wording; identical for every case, names no
+outcome): the prompts' citation sentence ends "by the URL you opened or its final_url, both
+of which must belong to a citable source;", and the tool description says "Only a page with
+loaded: true whose final_url belongs to a citable source may be cited."
+
+## Audited prompt bytes
+
+The v5 prompts, system prompt, citable-source list and browser tool (whose description is
+model input) that run, by SHA-256 (a test checks these against the files).
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v5.txt` | `000f60be5d3e64f739c5833c870a39309b3414125d02c4438a677d6c543cc1f8` |
+| `stage-1-reconciler-v5.txt` | `ddc64e48f04c37c1c8f0173466f037bee055e3fdc4e7437349ed91ffb1f2d181` |
+| `stage-2-reviewer-v5.txt` | `1e560d70a2046856f7b6eae01fb1b2fa784af4fe528f8a7e06f661824c65c198` |
+| `stage-2-reconciler-v5.txt` | `7f1edf2b81d5443a03ecf4a9fa77cee579bdcba26d383e523e37388535fee9a8` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `8c0ad623c3e7ea395e675da022af30fcccaccf20cc32b8cb5729eab384e134da` |
+| `open_page_server.py` | `1cf83e6530142e706329ec3ac86a01e627bf266b6d0b9377c916f92fa6be3115` |

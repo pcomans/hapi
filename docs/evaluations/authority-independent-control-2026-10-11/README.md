@@ -102,43 +102,76 @@ the project owner's decision every scored call runs on the Claude Code subscript
 
 - **Call setup.** Claude Sonnet 5.5 (`--model sonnet`, served model checked as
   `claude-sonnet-5-5`), effort `high`, the review system prompt
-  (`launcher-instructions/review-system-v3.txt`), exactly two tools: WebSearch, to find pages,
+  (`launcher-instructions/review-system-v4.txt`), exactly two tools: WebSearch, to find pages,
   and `open_page`, to read them, served by the one MCP server (`scripts/open_page_server.py`),
-  no API key (auth checked as the subscription), each case in a fresh empty directory. The driver refuses any other setup. Two independent reviewers are two separate
-  runs. User-level plugins and a SessionStart hook still load; every stored call is checked to
+  no API key (auth checked as the subscription), each case in a fresh empty directory. The
+  driver refuses any other setup. Two independent reviewers are two separate runs. User-level plugins and a SessionStart hook still load; every stored call is checked to
   have had no hook output.
 - **The record** of each call is its full stream-json event log, with the exact command,
-  system prompt and user content. Per Constitutional Rule 13 (revised 2026-10-11) an LLM call
+  system prompt and user content, and the SHA-256 of the runner and the browser server that
+  made it (`run_bindings`; a stored call made by other files is refused). Per Constitutional
+  Rule 13 (revised 2026-10-11) an LLM call
   cannot be re-executed to reproduce a decision; the record is what is re-read, and every
   validation is re-derived from the stored events.
-- **Runtime.** The v4 run executed the runner and the browser server from `pipeline/.venv`
-  synced from `runtime/uv.lock`: the pipeline's dependencies plus `mcp` 2.3.0, the MCP SDK
-  (with `playwright` 1.58.0 and `jsonschema` 4.26.0). That lock is kept here, not in
+- **Runtime.** The runner and the browser server run from `runtime/.venv`, synced from
+  `runtime/uv.lock`: the pipeline's dependencies plus `mcp` 2.3.0, the MCP SDK (with
+  `playwright` 1.58.0, `pypdf` 6.10.2 and `jsonschema` 4.26.0). That lock is kept here, not in
   `pipeline/`, because the site-graph-v0 pre-registration pins `pipeline/uv.lock` byte for
-  byte. To run again: `uv sync --locked --all-groups --project runtime`, `runtime/.venv/bin/python
-  -m playwright install chromium`, then run `scripts/run_harness_review.py` with
-  `runtime/.venv/bin/python` (the browser server starts with the same interpreter).
-- **Pages are read in a real browser** (protocol v4, 2026-10-13). `open_page` loads a URL in
-  headless Chromium and returns the HTTP status of the final document, the final URL, the
-  title, whether it loaded (status 200 and not a bot checkpoint) and the visible text (up to
-  40,000 characters), all stored in the call's event log. It paces opens to one every 2
-  seconds per host and refuses blocked domains. Claude Code's WebFetch, used in the v3 run,
+  byte. The browser runs headful on a virtual display, so the system needs `xvfb-run`
+  (Debian package `xvfb`) and Chromium's libraries. To run again: `uv sync --locked
+  --all-groups --project runtime`, `runtime/.venv/bin/python -m playwright install chromium`,
+  then run `scripts/run_harness_review.py` with `runtime/.venv/bin/python` (the browser server
+  starts with the same interpreter under `xvfb-run`). The superseded v4 run used
+  `pipeline/.venv` synced from the same lock.
+- **Pages are read in a real browser** (protocol v4, 2026-10-13; headful from v5).
+  `open_page` loads a URL in Chromium, headful on a virtual display, and returns the HTTP
+  status of the final document, the final URL, the title, whether it loaded and the visible
+  text (up to 40,000 characters); a PDF is read with pypdf. All of it is stored in the call's
+  event log. It paces opens to one every 2 seconds per host, also across parallel calls, and
+  refuses blocked domains, before and after redirects. The validator re-derives `loaded` from
+  the stored status, title and text: status 200, text to read, and no wall title (Vercel and
+  Cloudflare checkpoints, Anubis's "Oh noes!", a captcha page). Claude Code's WebFetch, used in the v3 run,
   is a plain HTTP request: the Met and Brooklyn collection sites put a JavaScript "Security
   Checkpoint" (Vercel) in front of every page, which answered 69% of Met and 96% of Brooklyn
-  fetches with HTTP 429, whatever the user agent; a real browser passes it.
-- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v4.txt`,
-  `stage-1-reconciler-v4.txt`, `stage-2-reviewer-v4.txt`, `stage-2-reconciler-v4.txt`;
+  fetches with HTTP 429, whatever the user agent; a real browser passes it. A headless one is
+  still refused by the Anubis and Cloudflare walls in front of Pleiades, UNESCO, the Theban
+  Mapping Project and others (3 of 58 walled pages of the v4 run loaded headless, 36 headful).
+  Still walled even headful: UCL's Digital Egypt and Trismegistos (Cloudflare), Heidelberg's
+  Propylaeum (Anubis). They stay citable, but a reviewer usually cannot open them; the
+  browser does not disguise itself to get past a wall a site puts up against automated
+  readers.
+- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v5.txt`,
+  `stage-1-reconciler-v5.txt`, `stage-2-reviewer-v5.txt`, `stage-2-reconciler-v5.txt`;
   `raw-response-contracts/*-case-v2.schema.json`. All leak-audited before use (Rule 14;
-  `prompt-audit-2026-10-11.md`, rounds 12–13, whose audited SHA-256s are checked by a test).
+  `prompt-audit-2026-10-11.md`, rounds 14–15, whose audited SHA-256s of the prompts, the
+  system prompt, the citable-source list and the browser tool are checked by a test).
+- **Only scholarly sources are citable** (protocol v5, 2026-10-13). On the project owner's
+  doubt that generic web pages are a scholarly basis, a citation must be a page of a source
+  in `citable-sources.json`: museum collections, scholarly gazetteers, Egyptological research
+  projects, scholarly publications, institutional open archives (for published work) and
+  heritage authorities, matched by host and, for a source inside a broad host (UCL's Digital
+  Egypt, the UCLA Encyclopedia of Egyptology), by path. The list states its criteria, names
+  each institution, and lists excluded examples with reasons (Wikipedia, Britannica, GeoNames,
+  pharaoh.se, private sites, self-upload sites, library authority files). It was drawn up after
+  the v4 run, informed by the hosts its reviewers opened, vetted by the egyptologist-reviewer
+  agent and committed before any model ran on it; the composed model input lists it. Any
+  other page may help a reviewer find sources but is never a citation. Each source has a role
+  for reporting: `case_input` (the case's own museums, which show what the evidence says),
+  `target_record` (iDAI, the source of the Stage 2 site targets, which shows what the target
+  is) or `independent`; `results/real-page-load-gate.json` counts citations by role. The
+  standard print references for ruler identity (Beckerath, Leprohon, Hornung et al.) have no
+  openable page, so ruler judgments rest on museum records and open sources only.
 - **A citation is a page the call opened and that loaded.** Nothing else is a source: not a
   search result, not a URL the case shows, not a page a review cites, not general knowledge
   (project owner, 2026-10-13: "a citation that can't access the data is not a citation").
-  The validator matches every citation (host without `www.`, path; query ignored) against the
-  call's own loaded `open_page` results, under the requested or final URL, and a call citing
-  anything else fails and is retried. Whether the two sides' strings match or differ is never
+  The validator matches every citation (host without `www.`, path and query; scheme and a
+  trailing slash ignored) against the call's own loaded `open_page` results, under the
+  requested or final URL (a redirect's requested URL reaches the page the call read), and both
+  the cited URL and the final URL must belong to a citable source. A call citing anything
+  else fails and is retried. Whether the two sides' strings match or differ is never
   by itself a basis for a judgment, and the case's field text is never a basis on its own.
   Every outcome other than `insufficient_evidence` needs at least one citation;
-  `insufficient_evidence` may cite nothing when no page loaded. No citation may point at a
+  `insufficient_evidence` may cite nothing only when no citable page loaded. No citation may point at a
   blocked domain.
 - **Each side shows up to 5 of its records** (`shown_records`): the museum's public record
   URL, taken from the frozen corpus's canonical `source_url`, and the full text of each field
@@ -150,7 +183,8 @@ the project owner's decision every scored call runs on the Claude Code subscript
 - **Fail loud.** Billed auth, another tool or MCP server, hook output, or another served
   model stops the run, and such a case is not resumed automatically. An answer rejected for
   its format (not JSON, schema-invalid, miscopied case ID or hash, a reconciler resolving
-  other than the disputed questions), an answer citing a page the call did not open, or a
+  other than the disputed questions), an answer citing a page the call did not open or a
+  non-citable source, or a
   call whose search results, opened pages or citations touched Wikidata or GitHub (Claude
   Code's search cannot exclude them), is retried, up to 3 such calls per case.
 - **One call is one review.** Every deciding reviewer call must be its own Claude Code

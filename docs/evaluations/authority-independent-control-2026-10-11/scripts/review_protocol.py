@@ -30,12 +30,12 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 import jsonschema
 
 EVALUATION_ROOT = Path(__file__).resolve().parents[1]
-SYSTEM_PROMPT_PATH = EVALUATION_ROOT / "launcher-instructions" / "review-system-v3.txt"
+SYSTEM_PROMPT_PATH = EVALUATION_ROOT / "launcher-instructions" / "review-system-v4.txt"
 SERVED_MODEL = "claude-sonnet-5-5"
 # The agents read pages only through `open_page` (open_page_server.py, a headless Chromium):
 # Claude Code's WebFetch cannot pass the JavaScript checkpoint in front of the Met and
@@ -44,8 +44,16 @@ OPEN_PAGE_SERVER = "museum-browser"
 OPEN_PAGE_SERVER_PATH = EVALUATION_ROOT / "scripts" / "open_page_server.py"
 OPEN_PAGE_TOOL = f"mcp__{OPEN_PAGE_SERVER}__open_page"
 TOOLS = ("WebSearch", OPEN_PAGE_TOOL)
-# Titles of the bot-challenge interstitials (Vercel, Cloudflare): such a page never loaded.
-CHECKPOINT_TITLES = ("Security Checkpoint", "Just a moment")
+# The sources a citation may come from (`citable-sources.json`, committed before the run that
+# uses it): museum collections, scholarly gazetteers, research institutions and heritage
+# authorities. Any other page may help a reviewer find sources but is never a citation.
+CITABLE_SOURCES_PATH = EVALUATION_ROOT / "citable-sources.json"
+# Titles of the bot-challenge interstitials `open_page` waits out (Vercel, Cloudflare, Anubis).
+CHECKPOINT_TITLES = ("Security Checkpoint", "Just a moment", "Making sure you're not a bot")
+# Titles of pages that are not the page's own content: those interstitials, and the walls
+# seen in the v4 run that `open_page` does not wait out (an Anubis "Oh noes!" page, a captcha
+# page). The validator re-derives `loaded` from the stored status and title with this list.
+NOT_LOADED_TITLES = (*CHECKPOINT_TITLES, "Oh noes!", "Captcha Verification Needed")
 # Wikidata is never a source (role prompts), and this public repository lives on GitHub.
 BLOCKED_DOMAINS = ("wikidata.org", "github.com", "raw.githubusercontent.com")
 SESSION_LIMIT_TEXT = "hit your session limit"
@@ -71,16 +79,16 @@ STAGE_FIELDS = {"1": ("same_entity", "useful_granularity"), "2": ("canonical_ide
 ROLES = {
     role.name: role
     for role in (
-        Role("stage_1_reviewer", EVALUATION_ROOT / "prompts/stage-1-reviewer-v4.txt",
+        Role("stage_1_reviewer", EVALUATION_ROOT / "prompts/stage-1-reviewer-v5.txt",
              EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v2.schema.json",
              STAGE_FIELDS["1"], False),
-        Role("stage_1_reconciler", EVALUATION_ROOT / "prompts/stage-1-reconciler-v4.txt",
+        Role("stage_1_reconciler", EVALUATION_ROOT / "prompts/stage-1-reconciler-v5.txt",
              EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-case-v2.schema.json",
              STAGE_FIELDS["1"], True),
-        Role("stage_2_reviewer", EVALUATION_ROOT / "prompts/stage-2-reviewer-v4.txt",
+        Role("stage_2_reviewer", EVALUATION_ROOT / "prompts/stage-2-reviewer-v5.txt",
              EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-case-v2.schema.json",
              STAGE_FIELDS["2"], False),
-        Role("stage_2_reconciler", EVALUATION_ROOT / "prompts/stage-2-reconciler-v4.txt",
+        Role("stage_2_reconciler", EVALUATION_ROOT / "prompts/stage-2-reconciler-v5.txt",
              EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-case-v2.schema.json",
              STAGE_FIELDS["2"], True),
     )
@@ -121,11 +129,49 @@ def write_new(path: Path, value: dict) -> None:
     write_atomic(path, value)
 
 
+def citable_sources() -> list[dict]:
+    return read_json(CITABLE_SOURCES_PATH)["sources"]
+
+
+def citable_source_of(url: str) -> dict | None:
+    """The citable source a URL belongs to: its host is the source's host or a subdomain of
+    it and, where the source names a path prefix, its path starts with it."""
+    parsed = urlparse(url)
+    host, path = (parsed.hostname or "").lower(), parsed.path
+    matches = [
+        source for source in citable_sources()
+        if (host == source["domain"] or host.endswith("." + source["domain"]))
+        and path.startswith(source.get("path_prefix", ""))
+    ]
+    if len(matches) > 1:
+        raise ProtocolFailure(f"{url} matches more than one citable source: {matches}")
+    return matches[0] if matches else None
+
+
+def citable_sources_text() -> str:
+    """The citable sources as the model reads them: one line per host (and path) and institution."""
+    return "\n".join(
+        f"- {source['domain']}{source.get('path_prefix', '')}: {source['institution']}"
+        for source in citable_sources()
+    )
+
+
 def role_inputs(role: Role) -> dict:
     return {
         "prompt": role.prompt.read_text("utf-8"),
         "schema": read_json(role.schema),
         "system_prompt": SYSTEM_PROMPT_PATH.read_text("utf-8"),
+        "citable_sources": citable_sources_text(),
+    }
+
+
+def run_bindings() -> dict:
+    """The files that make a call besides its composed input: the runner (command, tools,
+    model) and the browser server (what `open_page` does, and its description, which the
+    model reads). Each stored call records them; a call made by other files is not accepted."""
+    return {
+        "runner_sha256": sha256_path(EVALUATION_ROOT / "scripts" / "run_harness_review.py"),
+        "browser_tool_sha256": sha256_path(OPEN_PAGE_SERVER_PATH),
     }
 
 
@@ -134,6 +180,7 @@ def role_bindings(role: Role) -> dict:
         "prompt": {"path": role.prompt.name, "sha256": sha256_path(role.prompt)},
         "schema": {"path": role.schema.name, "sha256": sha256_path(role.schema)},
         "system_prompt": {"path": SYSTEM_PROMPT_PATH.name, "sha256": sha256_path(SYSTEM_PROMPT_PATH)},
+        "citable_sources": {"path": CITABLE_SOURCES_PATH.name, "sha256": sha256_path(CITABLE_SOURCES_PATH)},
     }
 
 
@@ -150,15 +197,30 @@ def forbidden_keys(value, path: str = "$") -> list[str]:
     return found
 
 
-def compose_user_content(case: dict, role_prompt: str, schema: dict) -> str:
+def compose_user_content(case: dict, role_prompt: str, schema: dict, citable_sources: str) -> str:
     leaks = forbidden_keys(case)
     if leaks:
         raise ProtocolFailure(f"model input carries private keys: {leaks}")
     return "\n\n".join([
         role_prompt.strip(),
+        "Citable sources (a page on one of these hosts or its subdomains, under the path where one is given):\n"
+        + citable_sources,
         "Response schema:\n" + json.dumps(schema, indent=1, sort_keys=True),
         "Case:\n" + json.dumps(case, indent=1, sort_keys=True, ensure_ascii=False),
     ])
+
+
+def page_loaded(status: int | None, title: str | None, text: str | None) -> bool:
+    """A page loaded when its final document has status 200, it is not a wall, and it has
+    text to read (a challenge page or an empty viewer has none)."""
+    return (
+        status == 200 and bool((text or "").strip())
+        and not any(marker.casefold() in (title or "").casefold() for marker in NOT_LOADED_TITLES)
+    )
+
+
+def _citable(url: str) -> bool:
+    return citable_source_of(url) is not None
 
 
 def _blocked(url: str | None) -> bool:
@@ -166,16 +228,24 @@ def _blocked(url: str | None) -> bool:
     return any(host == domain or host.endswith("." + domain) for domain in BLOCKED_DOMAINS)
 
 
-def _page(url: str | None) -> tuple[str, str]:
-    """A URL's page identity: host without `www.` and path without trailing slash. The query
-    is dropped, since a fetch of `.../object/292258?position=0` reads the cited object page."""
+def _page(url: str | None) -> tuple[str, str, str]:
+    """A URL's page identity: host without `www.`, path without trailing slash, and the query
+    (its parameters sorted), since a query can name the page (`?q=<id>`, `?p=<post>`). The
+    scheme and fragment are not part of it."""
     parsed = urlparse((url or "").strip())
-    return (parsed.hostname or "").lower().removeprefix("www."), parsed.path.rstrip("/")
+    return (
+        (parsed.hostname or "").lower().removeprefix("www."),
+        parsed.path.rstrip("/"),
+        urlencode(sorted(parse_qsl(parsed.query, keep_blank_values=True))),
+    )
 
 
-def opened_pages(record: dict) -> set[tuple[str, str]]:
+def opened_pages(record: dict) -> set[tuple[str, str, str]]:
     """The pages a validated record shows the call read: every `open_page` result that loaded,
-    under both its requested and its final (post-redirect) URL."""
+    under the URL it requested and the URL it ended on. A citation of the requested URL of a
+    redirect is checkable: following it reaches the page the call read (in the v4 run,
+    pharaoh.se's old king paths and Brooklyn's `/opencollection/objects/<id>` redirect to the
+    same record under a new path)."""
     return {
         _page(url) for opened in record["page_opens"] if opened["loaded"]
         for url in (opened["requested_url"], opened["final_url"])
@@ -252,12 +322,17 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
             )
         elif name == OPEN_PAGE_TOOL:
             opened = _open_page_result(b)
-            record["page_opens"].append({
-                "url": calls[b["tool_use_id"]]["input"].get("url"),
-                **({"loaded": False, "error": opened["error"]} if "error" in opened else {
-                    key: opened[key] for key in ("requested_url", "final_url", "status", "title", "loaded")
-                }),
-            })
+            url = calls[b["tool_use_id"]]["input"].get("url")
+            if "error" in opened:
+                record["page_opens"].append({"url": url, "loaded": False, "error": opened["error"]})
+            else:
+                # `loaded` is re-derived here from the stored status and title, not taken
+                # from the server's own flag (`reported_loaded`), so a rule change reaches
+                # every stored call when it is re-checked.
+                record["page_opens"].append({
+                    "url": url, **{key: opened[key] for key in ("requested_url", "final_url", "status", "title")},
+                    "reported_loaded": opened["loaded"], "loaded": page_loaded(opened["status"], opened["title"], opened["text"]),
+                })
     final = next((e for e in reversed(events) if e.get("type") == "result"), None)
     record["usage"] = final.get("usage") if final else None
     record["notional_cost_usd"] = final.get("total_cost_usd") if final else None
@@ -303,7 +378,10 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     cited = decision.get("citations", []) + [
         url for resolution in decision.get("resolutions", {}).values() for url in resolution["citations"]
     ]
-    touched = [r["url"] for r in record["web_search_results"]] + [o["url"] for o in record["page_opens"]] + cited
+    touched = (
+        [r["url"] for r in record["web_search_results"]] + [o["url"] for o in record["page_opens"]]
+        + [o["final_url"] for o in record["page_opens"] if "final_url" in o] + cited
+    )
     if any(_blocked(url) for url in touched):
         record["failure"] = f"blocked domain used: {[u for u in touched if _blocked(u)]}"
         return record
@@ -314,6 +392,27 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     unopened = sorted({url for url in cited if _page(url) not in opened})
     if unopened:
         record["failure"] = f"cites a page it did not open: {unopened}"
+        return record
+    # Both the cited URL and the page the browser ended on must belong to a citable source,
+    # so a redirect cannot carry a citation onto, or off, the list.
+    final_urls = collections.defaultdict(set)
+    for o in record["page_opens"]:
+        if o["loaded"]:
+            for url in (o["requested_url"], o["final_url"]):
+                final_urls[_page(url)].add(o["final_url"])
+    uncitable = sorted({
+        url for url in cited
+        if not _citable(url) or not any(_citable(final) for final in final_urls[_page(url)])
+    })
+    if uncitable:
+        record["failure"] = f"cites a non-citable source: {uncitable}"
+        return record
+    # insufficient_evidence may cite nothing only when no page the call opened loaded.
+    citation_lists = (
+        [r["citations"] for r in decision["resolutions"].values()] if role.reconciler else [decision["citations"]]
+    )
+    if any(not citations for citations in citation_lists) and opened:
+        record["failure"] = "invalid decision: cites nothing although a page it opened loaded"
         return record
     record["decision"] = decision
     return record
@@ -346,7 +445,7 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
     paths = sorted(directory.glob(f"{case['case_id']}.attempt-*.json"), key=attempt_number)
     if not paths:
         raise ProtocolFailure(f"no record for {case['case_id']} in {directory}")
-    user_content = compose_user_content(case, inputs["prompt"], inputs["schema"])
+    user_content = compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"])
     latest, valid_calls = {}, set()
     for path in paths:
         if ATTEMPT_RE.match(path.name)["case"] != case["case_id"]:
@@ -354,6 +453,8 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
         stored = read_json(path)
         if stored["user_content"] != user_content or stored["system_prompt"] != inputs["system_prompt"]:
             raise ProtocolFailure(f"{path}: not composed from the current prompt, schema and case")
+        if stored.get("run_bindings") != run_bindings():
+            raise ProtocolFailure(f"{path}: not made by the current runner and browser tool")
         if "events" not in stored:
             if "decision" in stored:
                 raise ProtocolFailure(f"{path}: a decision without its event stream")
