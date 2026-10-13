@@ -176,14 +176,17 @@ def consulted_pages(record: dict) -> set[tuple[str, str]]:
 
 
 def reviewer_research(stage_records: Path, item: dict, role: Role) -> set[tuple[str, str]]:
-    """The pages the two reviews a reconciler is shown consulted, from their decided records
-    (`stage_records` holds reviewer-A/, reviewer-B/ and reconciler/)."""
+    """The pages a reconciler is shown as consulted: each of the two reviews' citations that
+    the review's own decided record shows it consulted (`stage_records` holds reviewer-A/,
+    reviewer-B/ and reconciler/). A page only in a reviewer's search results, uncited, was
+    never shown to the reconciler and does not count."""
     reviewer = ROLES[role.name.replace("reconciler", "reviewer")]
     inputs = role_inputs(reviewer)
-    return set().union(*(
-        consulted_pages(decided_record(stage_records / f"reviewer-{label}", item["case"], reviewer, inputs)[1])
-        for label in REVIEWERS
-    ))
+    shown = set()
+    for label in REVIEWERS:
+        record = decided_record(stage_records / f"reviewer-{label}", item["case"], reviewer, inputs)[1]
+        shown |= consulted_pages(record) & {_page(url) for url in record["decision"]["citations"]}
+    return shown
 
 
 def validate(

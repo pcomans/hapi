@@ -412,7 +412,7 @@
   "evaluation_date": "2026-10-11",
   "input_hashes": {
     "private_answer_key": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "review_population_digest": "f0c4764482fd80912171e3b0920de5c8496c26f9e9095292c06439f11b29dc29",
+    "review_population_digest": "7f6256de42d455f412dae9adb1cb9c503877bcb01a94c6b30558bb2bff0a400c",
     "stage_1_consensus": "26a7342e3fcff287b78a9ea3325c16d7efabf1226cf787fc32a8dd689b64fef4",
     "stage_1_queue": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
     "stage_2_consensus": "14f815ecd703d6f17c0f655c90d941e5434d1327e303542e415cc08e6c5fa50e",
@@ -427,7 +427,7 @@
     "e_literal_only_false_or_not_useful_removal": 14,
     "f_transition_uncertainty": 2
   },
-  "private_join_sha256": "94c048dcfceb36a8482294671efb8e2351f8d3ce642ec4d3a7a04b484b58c4df",
+  "private_join_sha256": "5a53a3e3f9cba17d7ba6e2266782cd0c5fd3ae7e948f5dc2ef43c29522a1ffd6",
   "review_status": "COMPLETE_TRACEABLE",
   "schema_version": "hapi-authority-control-adjudicated-score/3",
   "scorer_sha256": "6fa0e7a497ea6f809eac38982db0e62bea211a7ea1b7693168a986f8723b620e"

@@ -446,12 +446,17 @@ def test_committed_citation_support_matches_the_scored_queues() -> None:
     assert [s["deciding_calls"] for s in support["stages"]] == [219, 132]
     assert [s["judgments_by_support"] for s in support["stages"]] == [
         {"research": 219, "case_evidence_only": 1}, {"research": 132, "case_evidence_only": 0}]
-    listed = [(s["stage"], u["case_id"], u["role"]) for s in support["stages"] for u in s["unconsulted_citations"]]
+    listed = [(s["stage"], u["case_id"], u["role"], u["url"]) for s in support["stages"] for u in s["unconsulted_citations"]]
     assert listed == [
-        ("1", "review-unit-050", "reviewer-B"), ("1", "review-unit-055", "reviewer-A"),
-        ("1", "review-unit-077", "reviewer-A"), ("1", "review-unit-080", "reviewer-A"),
-        ("1", "review-unit-104", "reviewer-B"), ("2", "case-065", "reviewer-B"), ("2", "case-071", "reviewer-A"),
+        ("1", "review-unit-050", "reviewer-B", "https://www.metmuseum.org/departments/egyptian-art/research"),
+        ("1", "review-unit-055", "reviewer-A", "https://www.metmuseum.org/perspectives/from-the-vaults-fayum-funerary-portraits"),
+        ("1", "review-unit-077", "reviewer-A", "https://whc.unesco.org/en/list/295/"),
+        ("1", "review-unit-080", "reviewer-A", "https://www.metmuseum.org/art/collection/search/549625"),
+        ("1", "review-unit-104", "reviewer-B", "https://whc.unesco.org/en/list/87"),
+        ("2", "case-065", "reviewer-B", "https://www.metmuseum.org/art/collection/search/549625"),
+        ("2", "case-071", "reviewer-A", "https://www.metmuseum.org/perspectives/malqata-excavation"),
     ]
+    assert all(len(u["record_sha256"]) == 64 for s in support["stages"] for u in s["unconsulted_citations"])
 
 
 def test_committed_digest_binds_every_current_protocol_file() -> None:

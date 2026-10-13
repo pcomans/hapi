@@ -149,7 +149,7 @@ per-case pattern.
    at least one consulted source; its other citations are listed, not counted, and never
    reach the consensus. A reconciler's resolution is copied into the consensus as the
    override's sources, so every citation must be consulted, by the reconciler or by a review
-   it was shown (as that review's record shows). Requiring every reviewer citation to be
+   it was shown (a page that review cites and its record shows it consulted). Requiring every reviewer citation to be
    consulted would void stored decisions whose judgments rest on consulted sources, and
    redrawing them after the verdict is known would let the outcome shape the data, so it is
    not done. All stored decisions pass both rules and both consensus files re-freeze
