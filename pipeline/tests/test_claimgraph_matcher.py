@@ -22,6 +22,7 @@ docstrings (Constitutional Rule 3 — a rule that lives only in prose is a sugge
 from __future__ import annotations
 
 import json
+from dataclasses import asdict, replace
 
 import pytest
 
@@ -30,6 +31,9 @@ from pipeline.authority.claimgraph.matcher import (
     _HOMONYM_KEYS,
     _is_homonym_key,
     generate_candidates,
+    king_name_route_corroborated,
+    lacks_titulary,
+    regnal_number_of,
     uniqueness_clashes,
 )
 from pipeline.authority.claimgraph.normalize import (
@@ -60,6 +64,7 @@ from pipeline.authority.claimgraph.reviewer import (
 from pipeline.authority.claimgraph.matcher import _HOMONYM_SPELLINGS
 from pipeline.authority.claimgraph.sources import SOURCE_AUTHORITY, RulerRecord
 from pipeline.authority.claimgraph import verdicts as verdicts_mod
+
 
 
 # --- normalize.py ----------------------------------------------------------
@@ -225,16 +230,17 @@ def test_reused_prenomen_flags_homonym_trap():
     assert cands[0].homonym_trap is not None  # must escalate, not merge
 
 
-def test_dynasty_zero_qualifies_for_early_horus_basis():
+def test_dynasty_zero_qualifies_as_early_dynastic_horus():
     """Regression: `dynasty or 99` used to map Dynasty 0 to 'missing', excluding Narmer &
-    co. from the exact Horus-name basis that exists for the earliest dynasties."""
+    co. from the earliest dynasties, where the deterministic policy accepts a Horus name."""
     recs = [
         _rec("leprohon", "leprohon-3", "Narmer", dynasty=0, horus_names=["Narmer"]),
         _rec("pharaoh_se", "pharaoh_se-3", "Narmer", dynasty=0, horus_names=["Narmer"]),
     ]
     cands = generate_candidates(recs)
     assert len(cands) == 1
-    assert cands[0].basis == "horus_early"
+    assert cands[0].basis == "horus"
+    assert cands[0].early_dynastic is True
 
 
 def test_name_only_basis_when_only_names_match():
@@ -628,7 +634,7 @@ def test_homonym_trap_forces_escalation_even_if_llm_approves(monkeypatch):
         _rec("leprohon", "leprohon-9", "Pepi II", prenomina=["Neferkare"]),
         _rec("kitchen", "kitchen-9", "Neferkare Peftjauawybast", prenomina=["Neferkare"]),
     ]
-    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None)
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None, uncertain_readings=frozenset())
     assert res.approved_edges == []
     assert len(res.escalations) == 1
     assert "homonym" in res.escalations[0].reason.lower()
@@ -647,9 +653,60 @@ def test_clean_prenomen_approval_survives_finalize(monkeypatch):
         _rec("leprohon", "leprohon-10", "Amasis", prenomina=["Khnemibre"]),
         _rec("beckerath", "beckerath-10", "Amasis", prenomina=["Chnem-ib-rê"]),
     ]
-    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None)
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None, uncertain_readings=frozenset())
     assert len(res.approved_edges) == 1
     assert res.escalations == []
+
+
+def _always_reject(client, c, a, b, model):
+    return Verdict(candidate_id=c.id, outcome=VERDICT_REJECTED, reason="different birth names", reviewer="llm")
+
+
+def _senakhtenre_pair():
+    return [
+        _rec("leprohon", "leprohon-17.26", "Senakhtenre Ahmose", dynasty=17,
+             prenomina=["Senakhtenre"], nomina=["Ahmose"]),
+        _rec("ryholt", "ryholt-17.7", "Siamun (?)", dynasty=17,
+             prenomina=["Senakhtenre"], nomina=["Siamun (?)"]),
+    ]
+
+
+def test_rejection_on_an_uncertain_reading_is_escalated(monkeypatch):
+    """ADR-020 amendment 2026-10-12 item 5: a reading the source marks uncertain cannot
+    ground a 'different king' verdict; the pair is escalated, never dropped."""
+    monkeypatch.setattr(verdicts_mod, "review_with_llm", _always_reject)
+    res = verdicts_mod.resolve_matches(
+        _senakhtenre_pair(), mode="llm", client=object(), model="m", cache_path=None,
+        uncertain_readings=frozenset({"ryholt-17.7"}),
+    )
+    assert res.approved_edges == []
+    assert [(e.candidate_id, e.reason) for e in res.escalations] == [(
+        "cand-leprohon-17.26|ryholt-17.7",
+        "different birth names [overridden to escalate: a record carries a name its source "
+        "marks as an uncertain reading]",
+    )]
+    assert [v.outcome for v in res.verdicts] == [VERDICT_ESCALATED]
+
+
+def test_rejection_without_an_uncertain_reading_stands(monkeypatch):
+    monkeypatch.setattr(verdicts_mod, "review_with_llm", _always_reject)
+    res = verdicts_mod.resolve_matches(
+        _senakhtenre_pair(), mode="llm", client=object(), model="m", cache_path=None,
+        uncertain_readings=frozenset({"ryholt-13.17"}),
+    )
+    assert res.approved_edges == []
+    assert res.escalations == []
+    assert [v.outcome for v in res.verdicts] == [VERDICT_REJECTED]
+
+
+def test_uncertain_readings_are_the_ryholt_rows_the_source_flags():
+    from pipeline.authority.claimgraph.build_graph import AUTHORITY_ROOT
+    from pipeline.authority.claimgraph.sources import load_all_sources
+
+    assert load_all_sources(AUTHORITY_ROOT).uncertain_readings == frozenset({
+        "ryholt-13.17", "ryholt-13.53", "ryholt-14.32", "ryholt-14.g",
+        "ryholt-16.5", "ryholt-17.7", "ryholt-Abyd.15",
+    })
 
 
 def test_api_error_fails_loud():
@@ -926,7 +983,7 @@ def test_terminal_failure_writes_its_interactions_to_disk_before_the_run_dies(tm
     with pytest.raises(verdicts_mod.ReviewerRunAbortedGroup) as excinfo:
         verdicts_mod.resolve_matches(
             [a, b], mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
-            retries_per_candidate=1, cache_path=cache_path,
+            retries_per_candidate=1, cache_path=cache_path, uncertain_readings=frozenset()
         )
 
     # the same evidence is on the raised error, not only on disk
@@ -975,7 +1032,7 @@ def test_abort_without_a_cache_path_carries_its_evidence_on_the_raised_error():
     with pytest.raises(verdicts_mod.ReviewerRunAbortedGroup) as excinfo:
         verdicts_mod.resolve_matches(
             [a, b], mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
-            retries_per_candidate=1,
+            retries_per_candidate=1, uncertain_readings=frozenset()
         )
 
     err = excinfo.value
@@ -1016,7 +1073,7 @@ def test_multiple_aborts_are_all_recoverable_from_the_raised_error():
     with pytest.raises(verdicts_mod.ReviewerRunAbortedGroup) as excinfo:
         verdicts_mod.resolve_matches(
             recs, mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
-            retries_per_candidate=1,
+            retries_per_candidate=1, uncertain_readings=frozenset()
         )
 
     err = excinfo.value
@@ -1078,7 +1135,7 @@ def test_name_only_is_escalated_without_calling_the_reviewer(monkeypatch):
         _rec("beckerath", "beckerath-11", "Usaphais", nomina=["Usaphais"]),
         _rec("pharaoh_se", "pharaoh_se-11", "Den", nomina=["Den"], alt_names=["Usaphais"]),
     ]
-    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None)
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None, uncertain_readings=frozenset())
     assert res.approved_edges == []
     assert len(res.escalations) == 1
     assert res.escalations[0].reviewer == "deterministic"
@@ -1088,7 +1145,7 @@ def test_name_only_is_escalated_without_calling_the_reviewer(monkeypatch):
 def test_openrouter_mode_requires_api_key():
     recs = [_rec("leprohon", "leprohon-12", "X", prenomina=["Khnemibre"])]
     with pytest.raises(RuntimeError, match="without an api_key"):
-        verdicts_mod.resolve_matches(recs, mode="llm", provider="openrouter", api_key=None)
+        verdicts_mod.resolve_matches(recs, mode="llm", provider="openrouter", api_key=None, uncertain_readings=frozenset())
 
 
 # --- verdicts.py: the resumable cache is request-pinned --------------------
@@ -1119,7 +1176,7 @@ def _cached_run(tmp_path, *, model, cache_name="cache.jsonl"):
 
     cache_path = str(tmp_path / cache_name)
     res = verdicts_mod.resolve_matches(
-        [a, b], mode="llm", reviewer_fn=reviewer_fn, model=model, cache_path=cache_path
+        [a, b], mode="llm", reviewer_fn=reviewer_fn, model=model, cache_path=cache_path, uncertain_readings=frozenset()
     )
     return res, cache_path, calls
 
@@ -1176,3 +1233,269 @@ def test_cache_round_trip_preserves_every_interaction(tmp_path):
     assert i.parameters == dict(ANTHROPIC_PARAMETERS)
     assert i.system_prompt == SYSTEM_PROMPT
     assert i.raw_response == {"content": [{"type": "text", "text": "garbled"}]}
+
+
+# --- escalation-queue rules (ADR-020 amendment 2026-10-12) ------------------
+
+
+def _one(recs):
+    cands = generate_candidates(recs)
+    assert len(cands) == 1
+    return cands[0]
+
+
+def test_same_name_same_dynasty_without_titulary_goes_to_the_reviewer():
+    """Kitchen's Psusennes I carries no throne name: before, name_only and never reviewed."""
+    c = _one([
+        _rec("kitchen", "kitchen-21.03", "Psusennes I", dynasty=21),
+        _rec("pharaoh_se", "pharaoh_se-Psusennes-I", "Psusennes I", dynasty=21,
+             prenomina=["Aa kheper Ra, setep en Amun"]),
+    ])
+    assert c.basis == "name_dynasty"
+    assert c.shared_name_keys == ["psusennesi"]
+
+
+@pytest.mark.parametrize(
+    ("a", "b", "basis"),
+    [
+        # Different regnal numbers: different kings, stays name_only.
+        (("Amenhotep I", 18), ("Amenhotep II", 18), "name_only"),
+        # Different dynasty, or none known.
+        (("Teti", 1), ("Teti", 6), "name_only"),
+        (("Apries", None), ("Apries", 26), "name_only"),
+        # Ryholt renumbered the Dyn 13 Sobekhoteps against Beckerath.
+        (("Sobekhotep II", 13), ("Sobekhotep II", 13), "name_only"),
+        # One number missing is not a conflict.
+        (("Apries", 26), ("Apries II", 26), "name_dynasty"),
+    ],
+)
+def test_name_dynasty_needs_one_dynasty_outside_13_17_and_no_conflicting_number(a, b, basis):
+    c = _one([
+        _rec("kitchen", "kitchen-x", a[0], dynasty=a[1], nomina=[a[0].split()[0]]),
+        _rec("pharaoh_se", "pharaoh_se-x", b[0], dynasty=b[1], nomina=[b[0].split()[0]]),
+    ])
+    assert c.basis == basis
+
+
+def test_a_later_horus_name_corroborates_only_with_a_shared_king_name():
+    same_king = _one([
+        _rec("leprohon", "leprohon-20.02", "Ramesses III", dynasty=20,
+             horus_names=["ka nakht aa nesyt"], prenomina=["weser maat ra"]),
+        _rec("pharaoh_se", "pharaoh_se-R3", "Ramesses III", dynasty=20,
+             horus_names=["Ka nakht aa nesyt"], prenomina=["User Maat Ra, mery Amun"]),
+    ])
+    assert (same_king.basis, same_king.early_dynastic) == ("horus", False)
+    # Kanakht-meryre is borne by Thutmose III, Sety I, Ramesses II and Sety II.
+    reused = _one([
+        _rec("leprohon", "leprohon-19.02", "Sety I", dynasty=19, horus_names=["ka nakht mery ra"]),
+        _rec("pharaoh_se", "pharaoh_se-T3", "Thutmose III", dynasty=18, horus_names=["Ka nakht mery Ra"]),
+    ])
+    assert reused.basis == "name_only"
+
+
+def test_a_listed_skeleton_collision_does_not_trap_a_pair_sharing_its_full_throne_name():
+    """Thutmose IV's Menkheperure skeletons to Thutmose III's listed Menkheperre."""
+    c = _one([
+        _rec("leprohon", "leprohon-18.08", "Thutmose IV", dynasty=18, prenomina=["men kheperu ra"]),
+        _rec("pharaoh_se", "pharaoh_se-T4", "Thutmose IV", dynasty=18, prenomina=["Men kheperu Ra"]),
+    ])
+    assert c.basis == "prenomen"
+    assert "mnkhprr" in c.shared_prenomen_keys
+    assert c.homonym_trap is None
+    # Sharing only the listed name itself, as spelled, stays trapped.
+    trapped = _one([
+        _rec("leprohon", "leprohon-x", "Necho I", dynasty=26, prenomina=["men kheper ra"]),
+        _rec("pharaoh_se", "pharaoh_se-x", "Menkheperre", dynasty=21, prenomina=["Men kheper Ra"]),
+    ])
+    assert trapped.homonym_trap is not None
+
+
+def test_a_clash_resolves_to_the_target_matched_through_both_primary_throne_names():
+    """pharaoh.se's Amenhotep II lists the variant Aakheperuenre, whose skeleton is Thutmose
+    II's Aakheperenre: Beckerath's Amenophis II matches his primary name, Tuthmosis II only
+    the variant."""
+    recs = [
+        _rec("beckerath", "beckerath-18.04", "Tuthmosis II.", dynasty=18, prenomina=["A-cheper-en-rê"]),
+        _rec("beckerath", "beckerath-18.07", "Amenophis II.", dynasty=18, prenomina=["A-chepru-rê"]),
+        _rec("pharaoh_se", "pharaoh_se-A2", "Amenhotep II", dynasty=18,
+             prenomina=["Aa kheperu Ra", "Aa kheperu en Ra"]),
+        _rec("pharaoh_se", "pharaoh_se-T2", "Thutmose II", dynasty=18, prenomina=["Aa kheper en Ra"]),
+    ]
+    cands = {c.id: c for c in generate_candidates(recs)}
+    assert sorted(cands) == [
+        "cand-beckerath-18.04|pharaoh_se-A2",
+        "cand-beckerath-18.04|pharaoh_se-T2",
+        "cand-beckerath-18.07|pharaoh_se-A2",
+    ]
+    assert {cid: c.primary_prenomen_match for cid, c in cands.items()} == {
+        "cand-beckerath-18.04|pharaoh_se-A2": False,
+        "cand-beckerath-18.04|pharaoh_se-T2": True,
+        "cand-beckerath-18.07|pharaoh_se-A2": True,
+    }
+    assert uniqueness_clashes(list(cands.values())) == {"cand-beckerath-18.04|pharaoh_se-A2"}
+
+
+def test_a_clash_with_a_rival_of_unknown_dynasty_stays_escalated():
+    recs = [
+        _rec("beckerath", "beckerath-18.04", "Tuthmosis II.", dynasty=None, prenomina=["A-cheper-en-rê"]),
+        _rec("beckerath", "beckerath-18.07", "Amenophis II.", dynasty=18, prenomina=["A-chepru-rê"]),
+        _rec("pharaoh_se", "pharaoh_se-A2", "Amenhotep II", dynasty=18,
+             prenomina=["Aa kheperu Ra", "Aa kheperu en Ra"]),
+    ]
+    cands = generate_candidates(recs)
+    assert uniqueness_clashes(cands) == {
+        "cand-beckerath-18.04|pharaoh_se-A2", "cand-beckerath-18.07|pharaoh_se-A2",
+    }
+
+
+def test_a_listed_name_shared_in_full_stays_trapped_beside_an_unlisted_compound():
+    """Shabaka's Neferkare is a listed reused name; sharing Neferkare-meryamun as well
+    does not make it a skeleton collision (code review P1-2)."""
+    c = _one([
+        _rec("leprohon", "leprohon-25.04", "Shabaka", dynasty=25,
+             prenomina=["nefer ka ra", "nefer ka ra mery amun"]),
+        _rec("pharaoh_se", "pharaoh_se-Shabaka", "Shabaka", dynasty=25,
+             prenomina=["Nefer ka Ra", "Nefer ka Ra mery Amun"]),
+    ])
+    assert c.basis == "prenomen"
+    assert c.homonym_trap is not None
+
+
+def test_a_later_horus_name_with_conflicting_regnal_numbers_is_name_only():
+    c = _one([
+        _rec("leprohon", "leprohon-19.02", "Sety I", dynasty=19, horus_names=["ka nakht mery ra"]),
+        _rec("pharaoh_se", "pharaoh_se-S2", "Sety II", dynasty=19, horus_names=["Ka nakht mery Ra"]),
+    ])
+    assert c.basis == "name_only"
+
+
+@pytest.mark.parametrize(("name", "number"), [
+    ("Ramesses III", "III"), ("Amenophis II.", "II"), ("Userkare (I)", "I"),
+    ("Thutmose III (a)", "III"), ("Mentuhotep II (b)", "II"), ("Khety (VI)", "VI"),
+    ("Sheshonq IIa", None), ("Ity", None), ("Djedkare Isesi", None),
+])
+def test_regnal_number_reads_plain_parenthesised_and_stage_suffixed_numerals(name, number):
+    assert regnal_number_of(name) == number
+
+
+def _window(rec, start, end):
+    return replace(rec, reign_start_bce=start, reign_end_bce=end)
+
+
+@pytest.mark.parametrize(("a", "b", "ok"), [
+    ((-589, -570), (-589, -570), True),
+    ((-1047, -1001), (-1039, -991), True),     # 39 of the shorter 47 years
+    ((-2461, -2456), (-2441, -2436), False),   # no overlap
+    ((-2446, -2433), (-2440, -2439), True),    # all of the shorter window
+    ((-2446, -2433), (-2434, -2420), False),   # 2 of 14 years
+    ((-2446, -2433), (None, None), False),     # a window unknown
+])
+def test_king_name_route_needs_both_windows_overlapping_by_half(a, b, ok):
+    x = _window(_rec("kitchen", "kitchen-1", "Apries", dynasty=26), *a)
+    y = _window(_rec("beckerath", "beckerath-1", "Apries", dynasty=26), *b)
+    assert king_name_route_corroborated(x, y) is ok
+
+
+def test_a_fragmentary_throne_name_is_not_titulary():
+    assert lacks_titulary(_rec("ryholt", "ryholt-13.x", "Djed /// Re", prenomina=["Djed /// Re"]))
+    assert not lacks_titulary(_rec("ryholt", "ryholt-13.y", "Djedneferre", prenomina=["Djedneferre"]))
+
+
+def test_king_name_route_needs_the_same_regnal_number():
+    x = _window(_rec("kitchen", "kitchen-1", "Psusennes I", dynasty=21), -1047, -1001)
+    assert king_name_route_corroborated(x, _window(_rec("beckerath", "b-1", "Psusennes I", dynasty=21), -1047, -1001))
+    assert not king_name_route_corroborated(x, _window(_rec("beckerath", "b-1", "Psusennes", dynasty=21), -1047, -1001))
+
+
+def test_a_blocked_king_name_pair_is_not_a_rival_in_a_uniqueness_clash():
+    # Beckerath's Amasis matches one Kitchen record through a secondary throne-name variant
+    # (so the primary-name rule cannot settle a clash) and another, without titulary and with
+    # no reign window, by name and dynasty. finalize can never approve the second, so it
+    # must not escalate the first as a clash (Codex review of #357).
+    becke = _window(_rec("beckerath", "beckerath-26.05", "Amasis", dynasty=26, prenomina=["Khnemibre"]), -570, -526)
+    by_throne = _window(_rec("kitchen", "kitchen-26.5", "Ahmose II", dynasty=26, prenomina=["Wahkare", "Khnemibre"]), -570, -526)
+    by_name = _rec("kitchen", "kitchen-26.x", "Amasis", dynasty=26)
+    cands = {(c.a_id, c.b_id): c for c in generate_candidates([becke, by_throne, by_name])}
+    throne = cands[("beckerath-26.05", "kitchen-26.5")]
+    name = cands[("beckerath-26.05", "kitchen-26.x")]
+    assert (throne.basis, throne.king_name_route_blocked, throne.primary_prenomen_match) == ("prenomen", False, False)
+    assert (name.basis, name.king_name_route_blocked) == ("name_dynasty", True)
+    assert uniqueness_clashes([throne, name]) == set()
+    # With a window the name pair is approvable, and the two targets clash.
+    windowed = replace(name, king_name_route_blocked=False)
+    assert uniqueness_clashes([throne, windowed]) == {throne.id, windowed.id}
+
+
+def _always_approve(client, c, a, b, model):
+    return Verdict(candidate_id=c.id, outcome=VERDICT_APPROVED, reason="same king", reviewer="llm")
+
+
+def test_an_approved_king_name_pair_without_corroborating_windows_is_escalated(monkeypatch):
+    monkeypatch.setattr(verdicts_mod, "review_with_llm", _always_approve)
+    recs = [
+        _window(_rec("beckerath", "beckerath-04.07", "Schepses-kaf", dynasty=4, nomina=["Shepseskaf"]),
+                -2461, -2456),
+        _window(_rec("pharaoh_se", "pharaoh_se-Shepseskaf", "Shepseskaf", dynasty=4,
+                     prenomina=["Shepses ka f"], nomina=["Shepseskaf"]), -2441, -2436),
+    ]
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None,
+                                       uncertain_readings=frozenset())
+    assert res.approved_edges == []
+    assert [e.basis for e in res.escalations] == ["name_dynasty"]
+    assert res.escalations[0].reason.endswith(
+        "[overridden to escalate: king-name route needs both reign windows, overlapping by at "
+        "least half the shorter, and the same regnal number]"
+    )
+    # Both records carrying titulary: the reviewer weighed throne names; the guard is silent.
+    recs[0] = replace(recs[0], prenomina=[NameForm(surface="Nebka")])
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None,
+                                       uncertain_readings=frozenset())
+    assert [e.basis for e in res.approved_edges] == ["name_dynasty"]
+
+
+def test_an_era_rejected_pair_on_an_uncertain_reading_stays_rejected(monkeypatch):
+    monkeypatch.setattr(verdicts_mod, "review_with_llm", _always_approve)
+    recs = [
+        _window(_rec("leprohon", "leprohon-4.01", "Senakhtenre", dynasty=4, prenomina=["Senakhtenre"]),
+                -2600, -2590),
+        _window(_rec("ryholt", "ryholt-17.7", "Siamun (?)", dynasty=17, prenomina=["Senakhtenre"]),
+                -1559, -1558),
+    ]
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m", cache_path=None,
+                                       uncertain_readings=frozenset({"ryholt-17.7"}))
+    assert res.verdicts[0].outcome == VERDICT_REJECTED
+    assert res.escalations == []
+
+
+def test_a_cached_verdict_never_outranks_a_name_only_basis(tmp_path):
+    """A pair the current matcher calls name-only is escalated deterministically even when
+    the cache holds a reviewer verdict from a matcher that gave it a basis."""
+    recs = [
+        _rec("kitchen", "kitchen-21.03", "Psusennes I", dynasty=21),
+        _rec("pharaoh_se", "pharaoh_se-P1", "Psusennes I", dynasty=22),
+    ]
+    (c,) = generate_candidates(recs)
+    assert c.basis == "name_only"
+    digest = request_digest(c, recs[0], recs[1], provider=PROVIDER_ANTHROPIC, model="m",
+                            parameters=dict(ANTHROPIC_PARAMETERS))
+    cache = tmp_path / "cache.jsonl"
+    cache.write_text(json.dumps(asdict(Verdict(
+        candidate_id=c.id, outcome=VERDICT_APPROVED, reason="same king", reviewer="llm",
+        request_digest=digest, interactions=[_interaction(requested_model="m")],
+    ))) + "\n")
+    res = verdicts_mod.resolve_matches(recs, mode="llm", client=object(), model="m",
+                                       cache_path=str(cache), uncertain_readings=frozenset())
+    assert res.approved_edges == []
+    assert [(v.outcome, v.reviewer) for v in res.verdicts] == [(VERDICT_ESCALATED, "deterministic")]
+
+
+def test_reviewer_policy_is_the_leak_audited_text():
+    """The hash the last PASS round of the leak audit records (Rule 14)."""
+    import hashlib
+    import re
+    from pathlib import Path
+
+    audit = (Path(__file__).resolve().parents[2]
+             / "docs/evaluations/ruler-escalation-queue/prompt-audit-2026-10-12.md").read_text()
+    (audited,) = re.findall(r"Audited `SYSTEM_PROMPT` SHA-256 \(UTF-8\): `([0-9a-f]{64})`", audit)
+    assert hashlib.sha256(SYSTEM_PROMPT.encode("utf-8")).hexdigest() == audited

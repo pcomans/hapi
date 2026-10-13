@@ -6,8 +6,12 @@ to issue #306 to replace):
 * Corroboration is SET-VALUED prenomen/throne-name intersection over the STRUCTURED
   titulary fields, on a deterministically normalized form — never scalar display names,
   never surface-string similarity (ADR-009/020).
-* Name agreement ALONE never accepts; it produces a ``name_only`` candidate whose default
-  disposition is escalation.
+* Name agreement ALONE never accepts. A shared name with nothing else produces a
+  ``name_only`` candidate, escalated without review. A shared name in the same dynasty
+  with no conflicting regnal number produces a ``name_dynasty`` candidate that goes to the
+  reviewer, never straight to approval: 302 of the 1,159 records carry no throne or Horus
+  name at all (Kitchen's Psusennes I), and others spell their titulary so differently that
+  no key is shared (Leprohon's Userkaf "ir maat", pharaoh.se's "Iri Maat").
 * There is NO transitive closure / connected-components clustering at match time. Every
   ``same_entity_as`` is an independent pairwise candidate, so an A~B, B~C pair never
   silently manufactures A~C (the Pinudjem I ↔ Menkheperre false merge, ADR-020 finding 1).
@@ -16,7 +20,7 @@ to issue #306 to replace):
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .normalize import NameForm, key_set, keys_for_form
 from .sources import RulerRecord
@@ -106,6 +110,18 @@ CONTESTED_DYNASTY_BANDS: tuple[tuple[int, int], ...] = ((6, 10), (13, 17), (21, 
 SHARED_DYNASTY_UNRELIABLE_BANDS: tuple[tuple[int, int], ...] = ((8, 10), (13, 17), (21, 26))
 
 
+# Where a matching regnal number on a shared name can point to DIFFERENT kings, so the
+# `name_dynasty` basis does not apply (ADR-020 §6): Ryholt renumbered the Dyn 13
+# Sobekhoteps against Beckerath, and Dyn 13–17 numbering differs across the sources.
+# Elsewhere a disagreeing dynasty number only withholds the basis (a missed match, never a
+# false one).
+NAME_DYNASTY_EXCLUDED_BANDS: tuple[tuple[int, int], ...] = ((13, 17),)
+
+
+def _in_bands(dynasty: int | None, bands: tuple[tuple[int, int], ...]) -> bool:
+    return dynasty is not None and any(lo <= dynasty <= hi for lo, hi in bands)
+
+
 def chronology_tolerance(a_bce: int, b_bce: int) -> int:
     """Years two absolute dates for one reign may differ across chronological frameworks;
     grows with antiquity (ADR-020 §6)."""
@@ -158,7 +174,7 @@ class Candidate:
     b_source: str
     a_name: str
     b_name: str
-    basis: str  # "prenomen" | "horus_early" | "name_only"
+    basis: str  # "prenomen" | "horus" | "name_dynasty" | "name_only"
     shared_prenomen_keys: list[str]
     shared_name_keys: list[str]
     dynasty_match: bool | None
@@ -168,6 +184,16 @@ class Candidate:
     # Both records carry the same dynasty number, outside SHARED_DYNASTY_UNRELIABLE_BANDS —
     # the only setting in which a shared dynasty is evidence.
     same_uncontested_dynasty: bool = False
+    shared_horus_keys: list[str] = field(default_factory=list)
+    # Both records in Dyn 0–3, where the Horus name is the king's primary name.
+    early_dynastic: bool = False
+    # The two records' PRIMARY throne names (each source's first-listed form, with its
+    # added epithets) share a key — not only a secondary variant (see uniqueness_clashes).
+    primary_prenomen_match: bool = False
+    # A `name_dynasty` pair one of whose records has no throne and no Horus name, failing
+    # king_name_route_corroborated: no approval of it can stand (verdicts.finalize), so it
+    # is not an approvable rival in a uniqueness clash either.
+    king_name_route_blocked: bool = False
 
 
 def _join(a: str | None, b: str | None) -> str | None:
@@ -233,6 +259,23 @@ def _prenomen_keys(rec: RulerRecord) -> set[str]:
     return key_set(_corroborating(rec.prenomina, compound=True), skeleton=True)
 
 
+def _full_prenomen_keys(rec: RulerRecord) -> set[str]:
+    # Without the vowel-less skeleton: the throne name as the source spells it.
+    return key_set(_corroborating(rec.prenomina, compound=True), skeleton=False)
+
+
+def _primary_prenomen_keys(rec: RulerRecord) -> set[str]:
+    """Keys of the source's primary throne name (its first-listed form) and that form
+    compounded with the slot's added epithets. A source that also lists a variant (pharaoh.se
+    gives Amenhotep II both Aakheperure and Aakheperuenre) matches through the variant too,
+    but the primary form is the one the source leads with."""
+    names = [f for f in rec.prenomina if not f.is_added_epithet]
+    if not names:
+        return set()
+    epithets = [f for f in rec.prenomina if f.is_added_epithet]
+    return key_set(_corroborating([names[0], *epithets], compound=True), skeleton=True)
+
+
 def _horus_keys(rec: RulerRecord) -> set[str]:
     return key_set(_corroborating(rec.horus_names), skeleton=True)
 
@@ -271,18 +314,59 @@ def _reign_far_apart(a: RulerRecord, b: RulerRecord) -> bool:
     return abs(as_ - bs) > chronology_tolerance(as_, bs)
 
 
+# A regnal number printed after the name: "Ramesses III", "Amenophis II.", "Psusennes I",
+# Leprohon's parenthesised "Userkare (I)" and stage-suffixed "Thutmose III (a)".
+_ORDINAL = re.compile(r"(?:^|[\s(])([IVX]+)\)?\.?(?:\s*\([a-z]\))?$")
+
+
+def regnal_number_of(name: str) -> str | None:
+    match = _ORDINAL.search(name.strip())
+    return match.group(1) if match else None
+
+
+def regnal_number(rec: RulerRecord) -> str | None:
+    return regnal_number_of(rec.display_name)
+
+
+def lacks_titulary(rec: RulerRecord) -> bool:
+    """No throne name and no Horus name that could corroborate (an epithet added to a name
+    is not a name, and a fragmentary name never corroborates): the record can only be
+    matched by its king name (ADR-020 amendment 2026-10-12)."""
+    return not _corroborating(rec.prenomina, compound=True) and not _corroborating(rec.horus_names)
+
+
+def king_name_route_corroborated(a: RulerRecord, b: RulerRecord) -> bool:
+    """What a `name_dynasty` approval needs when a record has no throne and no Horus name
+    (ADR-020 amendment 2026-10-12): both reign windows known and overlapping by at least
+    half the shorter one (whole years, inclusive), and the same regnal number or none on
+    both. The reviewer's policy says the same; this is its enforcement (Rule 3)."""
+    windows = []
+    for rec in (a, b):
+        if rec.reign_start_bce is None or rec.reign_end_bce is None:
+            return False
+        lo, hi = sorted((rec.reign_start_bce, rec.reign_end_bce))
+        windows.append((lo, hi))
+    (alo, ahi), (blo, bhi) = windows
+    overlap = min(ahi, bhi) - max(alo, blo) + 1
+    shorter = min(ahi - alo, bhi - blo) + 1
+    return 2 * overlap >= shorter and regnal_number(a) == regnal_number(b)
+
+
 @dataclass
 class _Indexed:
     rec: RulerRecord
     pren: set[str]
     horus: set[str]
     name: set[str]
+    pren_full: set[str]
+    pren_primary: set[str]
 
 
 def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
     person_of = same_person_groups(records)
     idx = [
-        _Indexed(rec, _prenomen_keys(rec), _horus_keys(rec), _name_keys(rec))
+        _Indexed(rec, _prenomen_keys(rec), _horus_keys(rec), _name_keys(rec),
+                 _full_prenomen_keys(rec), _primary_prenomen_keys(rec))
         for rec in records
     ]
 
@@ -323,17 +407,25 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
                     if (x.rec.dynasty is not None and y.rec.dynasty is not None)
                     else None
                 )
+                numbers = {regnal_number(x.rec), regnal_number(y.rec)} - {None}
                 # NB: `is not None`, not `or 99` — Dynasty 0 (Narmer et al.) is exactly the
-                # earliest-dynasty case the Horus-name basis exists to serve; truthiness
-                # would misclassify it as "missing dynasty".
-                xd = x.rec.dynasty if x.rec.dynasty is not None else 99
-                yd = y.rec.dynasty if y.rec.dynasty is not None else 99
-                early = xd <= _EARLY_DYNASTY_MAX and yd <= _EARLY_DYNASTY_MAX
-
+                # earliest-dynasty case the Horus-name basis exists to serve.
+                early = (
+                    x.rec.dynasty is not None and y.rec.dynasty is not None
+                    and max(x.rec.dynasty, y.rec.dynasty) <= _EARLY_DYNASTY_MAX
+                )
                 if shared_pren:
                     basis = "prenomen"
-                elif early and shared_horus:
-                    basis = "horus_early"
+                elif shared_horus and (early or (shared_name and len(numbers) <= 1)):
+                    # In Dyn 0–3 the Horus name is the king's primary name. Later, Horus
+                    # names are reused widely (Kanakht-meryre: Thutmose III, Sety I,
+                    # Ramesses II, Sety II), so one corroborates only together with a
+                    # shared king name and no conflicting regnal number (Ramesses III's
+                    # Kanakht-aanesyt; never Sety I against Sety II).
+                    basis = "horus"
+                elif (shared_name and dynasty_match and len(numbers) <= 1
+                      and not _in_bands(x.rec.dynasty, NAME_DYNASTY_EXCLUDED_BANDS)):
+                    basis = "name_dynasty"
                 else:
                     basis = "name_only"
 
@@ -354,7 +446,16 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
                         for k in reused
                         if not _sole_bearers_in_dynasty(x, y, k, by_pren, person_of)
                     ]
-                    if reused and len(ambiguous) == len(reused):
+                    # Cleared only when every listed key is a skeleton collision (not
+                    # shared as spelled) and the two also share a throne name as spelled
+                    # that is not listed (Thutmose IV's Menkheperure folds to Thutmose
+                    # III's Menkheperre). A listed name shared in full stays trapped even
+                    # beside an unlisted compound of it (Shabaka's Neferkare and
+                    # Neferkare-meryamun).
+                    full = _shared(x.pren_full, y.pren_full)
+                    skeleton_only = not any(k in full for k in reused)
+                    distinct = any(not _is_homonym_key(k) for k in full)
+                    if reused and len(ambiguous) == len(reused) and not (skeleton_only and distinct):
                         homonym_trap = ambiguous[0]
 
                 candidates.append(
@@ -375,6 +476,12 @@ def generate_candidates(records: list[RulerRecord]) -> list[Candidate]:
                         era_conflict=era_conflict(x.rec, y.rec),
                         same_uncontested_dynasty=bool(dynasty_match)
                         and _shared_dynasty_reliable(x.rec.dynasty),
+                        shared_horus_keys=shared_horus,
+                        early_dynastic=early,
+                        primary_prenomen_match=bool(x.pren_primary & y.pren_primary),
+                        king_name_route_blocked=basis == "name_dynasty"
+                        and (lacks_titulary(x.rec) or lacks_titulary(y.rec))
+                        and not king_name_route_corroborated(x.rec, y.rec),
                     )
                 )
 
@@ -436,6 +543,27 @@ def same_person_groups(records: list[RulerRecord]) -> dict[str, str]:
     return rep
 
 
+def clash_groups(
+    candidates: list[Candidate], person_of: dict[str, str]
+) -> dict[str, list[Candidate]]:
+    """Approvable candidates (not name-only, trapped, era-gated or king-name-route
+    blocked) grouped by one side's
+    person and the other side's source: a group with more than one distinct pair of persons
+    is a uniqueness clash. Grouped by PERSON too: two stage rows of one king matching two
+    distinct records of the other source is still that one king matching two people."""
+
+    def person(local_id: str) -> str:
+        return person_of.get(local_id, local_id)
+
+    groups: dict[str, list[Candidate]] = {}
+    for c in candidates:
+        if c.basis == "name_only" or c.homonym_trap or c.era_conflict or c.king_name_route_blocked:
+            continue
+        groups.setdefault(f"{person(c.a_id)}|{c.b_source}", []).append(c)
+        groups.setdefault(f"{person(c.b_id)}|{c.a_source}", []).append(c)
+    return groups
+
+
 def uniqueness_clashes(
     candidates: list[Candidate], person_of: dict[str, str] | None = None
 ) -> set[str]:
@@ -448,30 +576,28 @@ def uniqueness_clashes(
     matching Leprohon's Amenhotep IV and Akhenaten stage rows is not a clash (ADR-020:
     stage-suffix phase siblings are one person).
 
-    One clash is resolved by rule rather than escalated whole: when exactly one of the
-    competing targets shares the record's dynasty outside SHARED_DYNASTY_UNRELIABLE_BANDS,
-    and every other target is in a different dynasty, only the others escalate. pharaoh.se's
-    Ramesses II (Dyn 19) shares a full throne name with Leprohon's Ramesses II (Dyn 19)
-    AND Ramesses IV (Dyn 20); outside those bands a shared dynasty number is reliable
-    (the premise of the era gate), so the Dyn 20 king is the homonym. The surviving pair
-    is still judged by the reviewer — the rule only stops escalating it unseen."""
+    Two clashes are resolved by rule rather than escalated whole; in both only the other
+    targets escalate, and the surviving pair is still judged by the reviewer — the rules
+    only stop escalating it unseen.
+
+    * Dynasty: exactly one of the competing targets shares the record's dynasty outside
+      SHARED_DYNASTY_UNRELIABLE_BANDS, and every other target is in a different dynasty.
+      pharaoh.se's Ramesses II (Dyn 19) shares a full throne name with Leprohon's Ramesses
+      II (Dyn 19) AND Ramesses IV (Dyn 20); outside those bands a shared dynasty number is
+      reliable (the premise of the era gate), so the Dyn 20 king is the homonym.
+    * Primary name: exactly one target matches through both records' primary throne names,
+      every other matches only through a secondary variant or through no throne name (a
+      Horus or king name), and no rival is of unknown dynasty.
+      pharaoh.se's Amenhotep II lists Aakheperure and the variant Aakheperuenre, whose
+      skeleton is Thutmose II's Aakheperenre; Beckerath's Amenophis II matches the primary
+      form, Beckerath's Tuthmosis II only the variant."""
     person_of = person_of or {}
-    approvable = [
-        c
-        for c in candidates
-        if c.basis != "name_only" and not c.homonym_trap and not c.era_conflict
-    ]
+
     def person(local_id: str) -> str:
         return person_of.get(local_id, local_id)
 
     forced: set[str] = set()
-    groups: dict[str, list[Candidate]] = {}
-    for c in approvable:
-        # Grouped by PERSON too: two stage rows of one king matching two distinct records
-        # of the other source is still that one king matching two people — a clash.
-        groups.setdefault(f"{person(c.a_id)}|{c.b_source}", []).append(c)
-        groups.setdefault(f"{person(c.b_id)}|{c.a_source}", []).append(c)
-    for g in groups.values():
+    for g in clash_groups(candidates, person_of).values():
         distinct_targets = {frozenset((person(c.a_id), person(c.b_id))) for c in g}
         if len(distinct_targets) <= 1:
             continue
@@ -480,11 +606,17 @@ def uniqueness_clashes(
         }
         # An alternative whose dynasty is unknown (dynasty_match None) is not evidence of a
         # different king, so its presence keeps the whole clash escalated.
-        resolvable = len(same_dynasty) == 1 and all(
+        by_dynasty = len(same_dynasty) == 1 and all(
             c.same_uncontested_dynasty or c.dynasty_match is False for c in g
         )
+        leading = {frozenset((person(c.a_id), person(c.b_id))) for c in g if c.primary_prenomen_match}
+        # Every rival matched through a secondary throne-name variant or through no throne
+        # name at all (a Horus or king name: weaker evidence than both primary throne names).
+        # A rival of unknown dynasty still keeps the whole clash escalated, as above.
+        by_primary = len(leading) == 1 and all(c.dynasty_match is not None for c in g)
+        keep = same_dynasty if by_dynasty else leading if by_primary else set()
         for c in g:
-            if resolvable and frozenset((person(c.a_id), person(c.b_id))) in same_dynasty:
+            if frozenset((person(c.a_id), person(c.b_id))) in keep:
                 continue
             forced.add(c.id)
     return forced

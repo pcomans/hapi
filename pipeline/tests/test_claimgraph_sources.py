@@ -141,7 +141,7 @@ _MINIMAL = {
     "beckerath": {"beckerath_id": "01.01", "name": "Narmer"},
     "kitchen": {"kitchen_id": "21.01", "name": "Smendes"},
     "pharaoh_se": {"slug": "narmer", "display": "Narmer"},
-    "ryholt": {"ryholt_id": "13.01", "nomen": "Sobekhotep"},
+    "ryholt": {"ryholt_id": "13.01", "nomen": "Sobekhotep", "is_uncertain_attribution": False},
 }
 _ID_FIELD = {
     "leprohon": "leprohon_id",
@@ -193,8 +193,18 @@ def test_missing_display_name_raises(tmp_path, source):
 def test_ryholt_falls_back_to_the_prenomen_for_a_display_name(tmp_path):
     """Ryholt has no display field: the nomen is preferred, the prenomen is the documented
     fallback, and a row with neither raises rather than being dropped."""
-    load = _load(tmp_path, "ryholt", [{"ryholt_id": "13.02", "prenomen": "Sekhemre"}])
+    load = _load(tmp_path, "ryholt", [{"ryholt_id": "13.02", "prenomen": "Sekhemre", "is_uncertain_attribution": False}])
     assert [r.display_name for r in load.records] == ["Sekhemre"]
+
+
+def test_ryholt_reports_uncertain_readings_and_requires_the_flag(tmp_path):
+    load = _load(tmp_path, "ryholt", [
+        {"ryholt_id": "17.7", "nomen": "Siamun (?)", "is_uncertain_attribution": True},
+        {"ryholt_id": "17.8", "nomen": "Tao", "is_uncertain_attribution": False},
+    ])
+    assert load.uncertain_readings == frozenset({"ryholt-17.7"})
+    with pytest.raises(SourceRowError, match="is_uncertain_attribution"):
+        _load(tmp_path, "ryholt", [{"ryholt_id": "17.9", "nomen": "Kamose"}])
 
 
 # --- schema drift raises, absence does not ----------------------------------

@@ -1,0 +1,998 @@
+{
+ "after": {
+  "artifacts_by_status": {
+   "abstained": 2232,
+   "ambiguous": 372,
+   "resolved": 8533,
+   "unmatched": 330
+  },
+  "mentions_by_status": {
+   "abstained": 2241,
+   "ambiguous": 374,
+   "resolved": 8594,
+   "unmatched": 346
+  }
+ },
+ "approved_links_gained_by_basis": {
+  "horus": 14,
+  "name_dynasty": 31,
+  "prenomen": 10
+ },
+ "approved_links_lost": [
+  {
+   "a": "leprohon-leprohon-17.26 (Senakhtenre Ahmose (I))",
+   "b": "ryholt-17.7 (Siamun (?))",
+   "now": {
+    "escalated": "Shared throne name Senakhtenre but different birth names (Ahmose vs Siamun) indicate distinct kings; no approval route applies. [overridden to escalate: a record carries a name its source marks as an uncertain reading]"
+   }
+  },
+  {
+   "a": "leprohon-leprohon-17.27 (Seqenenre Tao)",
+   "b": "ryholt-17.8 (Tao)",
+   "now": {
+    "escalated": "Shared throne name Seqenenre and nomen match, but A's Horus name Khaemwaset differs from B's Khaemta wy, a distinct name; titulary conflict requires review."
+   }
+  },
+  {
+   "a": "pharaoh_se-Senakhtenra (Senakhtenra)",
+   "b": "ryholt-17.7 (Siamun (?))",
+   "now": {
+    "escalated": "Shared throne name Senakhtenre and identical reign window, but the nomina conflict (Ahmose vs. Ryholt's tentative 'Siamun (?)'); identity uncertain, manual review needed."
+   }
+  },
+  {
+   "a": "pharaoh_se-Seqenenra (Seqenenra)",
+   "b": "ryholt-17.8 (Tao)",
+   "now": {
+    "escalated": "Throne name Seqenenre, nomen Tao, dynasty, and reign window match, but Horus names conflict (Khaemwaset vs Khaemtaui), so identity needs review."
+   }
+  }
+ ],
+ "before": {
+  "artifacts_by_status": {
+   "abstained": 2232,
+   "ambiguous": 683,
+   "resolved": 8222,
+   "unmatched": 330
+  },
+  "mentions_by_status": {
+   "abstained": 2241,
+   "ambiguous": 689,
+   "resolved": 8279,
+   "unmatched": 346
+  }
+ },
+ "graph_stats": {
+  "after": {
+   "approvedLinks": 405,
+   "candidates": 2208,
+   "claims": 5913,
+   "clusters": 182,
+   "escalations": 927,
+   "intraSourceIdentities": 16,
+   "multiSourceClusters": 181,
+   "rulers": 1159
+  },
+  "before": {
+   "approvedLinks": 354,
+   "candidates": 2208,
+   "claims": 5913,
+   "clusters": 160,
+   "escalations": 974,
+   "intraSourceIdentities": 16,
+   "multiSourceClusters": 159,
+   "rulers": 1159
+  }
+ },
+ "inputs": {
+  "after_graph_sha256": "738161e36fd7ef357a4bf7b6a9c336f67621a98380bf78c3911d9d62ad704248",
+  "before_graph_sha256": "b00ca2de74bca4fb5ce48ecf1982389a5331cfe0c3f96e191e8efd2f7a28cb7e",
+  "control_sha256": "aaec22bc9ce04cd7d566c12a1eabd55ade185c868907af5968f77c4592268c69",
+  "measure_342_sha256": "bd3425ffc58d912e7a90f8c56231fb68aa96720fabaa278eaefcd17a7ba26f1b",
+  "mention_ledger": {
+   "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
+   "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+   "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+   "rows": 148871
+  },
+  "resolver_sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
+  "script_sha256": "61de49f6eaf26d1994e38137d51146c223584f1c98d9b384542af842e4482ee9"
+ },
+ "merged_clusters": [
+  {
+   "before_units": [
+    "cluster-beckerath-12.08",
+    "pharaoh_se-Neferusobek"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-12.08",
+     "b": "pharaoh_se-Neferusobek",
+     "basis": "horus",
+     "reason": "Same Dynasty 12 queen: throne name Sobekkare (ka sobek ra / Sobek ka Ra) and Horus Meryt-Ra match, birth-name variants Sobekneferu are the same, and no field indicates a different ruler."
+    }
+   ],
+   "label": "(Queen) Sobekneferu",
+   "members": [
+    "beckerath-12.08 (Kgin.Nefru-sobek)",
+    "leprohon-leprohon-12.08 ((Queen) Sobekneferu)",
+    "pharaoh_se-Neferusobek (Neferusobek)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-18.07",
+    "pharaoh_se-Amenhotep-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-18.07",
+     "b": "pharaoh_se-Amenhotep-II",
+     "basis": "prenomen",
+     "reason": "Both records give Dynasty 18 Amenhotep/Amenophis II with the same throne name Aa-kheperu-Re (spelling variant) and overlapping reigns, with no field indicating a different king."
+    },
+    {
+     "a": "leprohon-leprohon-18.07",
+     "b": "pharaoh_se-Amenhotep-II",
+     "basis": "prenomen",
+     "reason": "Same Dynasty 18 king: identical throne name Aa kheperu Ra, matching Horus names and Amenhotep nomen with shared epithets; no field points to a different king."
+    }
+   ],
+   "label": "Amenhotep II",
+   "members": [
+    "beckerath-18.07 (Amenophis II.)",
+    "leprohon-leprohon-18.07 (Amenhotep II)",
+    "pharaoh_se-Amenhotep-II (Amenhotep II)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-19.05",
+    "leprohon-leprohon-19.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-19.06",
+     "b": "pharaoh_se-Amenmesse",
+     "basis": "horus",
+     "reason": "Both records share the same dynasty, throne name Men-mi-Ra setep-en-Ra, Horus name Ka-nakht-mery-Maat-semen-tawy, and nomen Amenmesse heqa Waset, indicating the same Nineteenth Dynasty king."
+    }
+   ],
+   "label": "Amenmesse",
+   "members": [
+    "beckerath-19.05 (Amen-mes-su)",
+    "leprohon-leprohon-19.06 (Amenmesse)",
+    "pharaoh_se-Amenmesse (Amenmesse)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.04",
+    "kitchen-26.04"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-26.04",
+     "b": "kitchen-26.04",
+     "basis": "name_dynasty",
+     "reason": "Same nomen Apries in dynasty 26 with identical reign windows (-589..-570); only record A adds the throne name Haaibre, consistent with Apries, and no field conflicts."
+    },
+    {
+     "a": "kitchen-26.04",
+     "b": "pharaoh_se-Apries",
+     "basis": "name_dynasty",
+     "reason": "Route (3): Record A gives no throne or Horus name; Apries is the Greek rendering of B's nomen Wahibre, same 26th-Dynasty king with identical reign windows and no conflicting field."
+    }
+   ],
+   "label": "Apries",
+   "members": [
+    "beckerath-26.04 (Apries)",
+    "kitchen-26.04 (Apries)",
+    "leprohon-leprohon-26.04 (Wahibre)",
+    "pharaoh_se-Apries (Apries)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-31.02",
+    "pharaoh_se-Arses"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-31.02",
+     "b": "pharaoh_se-Arses",
+     "basis": "name_dynasty",
+     "reason": "Same king name Arses in dynasty 31 with identical reign windows; both lack throne/Horus names, and Artaxerxes IV is an alias for Arses, not a conflicting king."
+    }
+   ],
+   "label": "Arses",
+   "members": [
+    "beckerath-31.02 (Arses)",
+    "pharaoh_se-Arses (Arses)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-27.04",
+    "pharaoh_se-Artaxerxes-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-27.04",
+     "b": "pharaoh_se-Artaxerxes-I",
+     "basis": "name_dynasty",
+     "reason": "Both records denote Artaxerxes I of Dynasty 27 with no throne or Horus names; nomina differ only as transliterations and reign windows (-464/-465..-424) overlap almost entirely with matching numeral."
+    }
+   ],
+   "label": "Artaxerxes I",
+   "members": [
+    "beckerath-27.04 (Artaxerxes I.)",
+    "pharaoh_se-Artaxerxes-I (Artaxerxes I)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-31.03",
+    "pharaoh_se-Darius-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-31.03",
+     "b": "pharaoh_se-Darius-III",
+     "basis": "name_dynasty",
+     "reason": "Same king name (Dareios/Darius III), same dynasty, and overlapping reigns; the only differences are transliteration conventions."
+    }
+   ],
+   "label": "Dareios III.",
+   "members": [
+    "beckerath-31.03 (Dareios III.)",
+    "pharaoh_se-Darius-III (Darius III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.08",
+    "cluster-leprohon-leprohon-5.08"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.08",
+     "b": "pharaoh_se-Djedkara-Isesi",
+     "basis": "name_dynasty",
+     "reason": "Both records denote 5th-dynasty king Isesi (Horus Djedkhau); reign windows overlap for most of the shorter span, and no field indicates a different king."
+    }
+   ],
+   "label": "Djed-ka-re Isesi",
+   "members": [
+    "beckerath-05.08 (Djed-ka-re Isesi)",
+    "leprohon-leprohon-5.08 (Djedkare)",
+    "pharaoh_se-Djedkara-Isesi (Djedkara Isesi)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-1.03",
+    "pharaoh_se-Djet"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-1.03",
+     "b": "pharaoh_se-Djet",
+     "basis": "name_dynasty",
+     "reason": "Both records share the same early Dynasty 1 Horus name Djet/Wadj (Wadjet); the extra throne name Ita/Ity in one source is a variant, with no field indicating a different king."
+    }
+   ],
+   "label": "Djet",
+   "members": [
+    "leprohon-leprohon-1.03 (Djet/Wadjet)",
+    "pharaoh_se-Djet (Djet)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.02",
+    "pharaoh_se-Intef-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.02",
+     "b": "pharaoh_se-Intef-I",
+     "basis": "horus",
+     "reason": "Both records share the Horus name Sehertawy and the same king name Intef in Dynasty 11, with no field pointing to a different king."
+    }
+   ],
+   "label": "Intef I",
+   "members": [
+    "leprohon-leprohon-11a.02 (Intef I)",
+    "pharaoh_se-Intef-I (Intef I)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.03",
+    "pharaoh_se-Intef-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.03",
+     "b": "pharaoh_se-Intef-II",
+     "basis": "horus",
+     "reason": "Both records share Horus name Wahankh and nomen Intef aa in Dynasty 11; Record B's 'throne name' is the Sa-Ra nomen title, and no field points to a different king."
+    }
+   ],
+   "label": "Intef II",
+   "members": [
+    "leprohon-leprohon-11a.03 (Intef II)",
+    "pharaoh_se-Intef-II (Intef II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.04",
+    "pharaoh_se-Intef-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.04",
+     "b": "pharaoh_se-Intef-III",
+     "basis": "horus",
+     "reason": "Shared Horus name Nakht neb tep-nefer plus matching nomen Intef (Sa Ra Intef) in the same Dynasty 11, with no field pointing to a different king."
+    }
+   ],
+   "label": "Intef III",
+   "members": [
+    "leprohon-leprohon-11a.04 (Intef III)",
+    "pharaoh_se-Intef-III (Intef III)"
+   ]
+  },
+  {
+   "before_units": [
+    "kitchen-25.02",
+    "leprohon-leprohon-25.02"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-25.02",
+     "b": "leprohon-leprohon-25.02",
+     "basis": "name_dynasty",
+     "reason": "Same nomen Kashta and same dynasty 25; Maatre and Ni-Maat-Ra render the same throne name Maat-Ra, with no field pointing to a different king and an unknown window permitted."
+    }
+   ],
+   "label": "Kashta",
+   "members": [
+    "kitchen-25.02 (Kashta)",
+    "leprohon-leprohon-25.02 (Kashta)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-11a.01",
+    "pharaoh_se-Mentuhotep-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-11a.01",
+     "b": "pharaoh_se-Mentuhotep-I",
+     "basis": "horus",
+     "reason": "Both records denote the same Eleventh Dynasty king: shared Horus name (Tepy a/Tepia), matching Mentuhotep-aa birth name, and no field indicates a different king."
+    }
+   ],
+   "label": "Mentuhotep I",
+   "members": [
+    "leprohon-leprohon-11a.01 (Mentuhotep I)",
+    "pharaoh_se-Mentuhotep-I (Mentuhotep I)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-19.04",
+    "cluster-leprohon-leprohon-19.04"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-19.04",
+     "b": "leprohon-leprohon-19.04",
+     "basis": "name_dynasty",
+     "reason": "Both records denote Merenptah of Dynasty 19: their throne names (Bi-en-rê mer-amun / Ba-en-Ra mery-Amun) and birth names (Mer-en-ptah / Mery-en-Ptah) match, with no conflicting field."
+    },
+    {
+     "a": "beckerath-19.04",
+     "b": "pharaoh_se-Merenptah",
+     "basis": "name_dynasty",
+     "reason": "Same king: identical nomen Mer-en-ptah, both 19th dynasty with matching reign window -1213..-1203; throne names are transliteration variants of Ba-en-Re, and no field indicates a different king."
+    }
+   ],
+   "label": "Mer-en-ptah",
+   "members": [
+    "beckerath-19.04 (Mer-en-ptah)",
+    "leprohon-leprohon-19.04 (Merenptah/Merneptah)",
+    "pharaoh_se-Merenptah (Merenptah)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-leprohon-leprohon-26.02",
+    "kitchen-26.02"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.02",
+     "b": "pharaoh_se-Necho-II",
+     "basis": "name_dynasty",
+     "reason": "Kitchen's Necho II (no throne/Horus names) matches pharaoh_se's Necho II via same nomen (Necho = Ni kau), same dynasty 26, identical reign windows, matching numeral II."
+    }
+   ],
+   "label": "Necho II",
+   "members": [
+    "kitchen-26.02 (Necho II)",
+    "leprohon-leprohon-26.02 (Nekau II)",
+    "pharaoh_se-Necho-II (Necho II)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-29.01",
+    "cluster-leprohon-leprohon-29.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-29.01",
+     "b": "leprohon-leprohon-29.01",
+     "basis": "name_dynasty",
+     "reason": "Shared throne name Bi-en-Rê/ba-en-ra in Dynasty 29 and matching Nepherites birth-name variants (Nef-aw-rud/nay.ef aau rudju); differences are transliteration only, with no conflicting king field."
+    },
+    {
+     "a": "beckerath-29.01",
+     "b": "pharaoh_se-Neferites-I",
+     "basis": "name_dynasty",
+     "reason": "Same 29th-dynasty king: throne name Ba-en-Re/Bi-en-rê matches, nomen Nepherites/Nef-aw-rud is a rendering of the same name, and reign windows are identical."
+    }
+   ],
+   "label": "Nefaarudu I",
+   "members": [
+    "beckerath-29.01 (Nepherites I.)",
+    "leprohon-leprohon-29.01 (Nefaarudu I)",
+    "pharaoh_se-Neferites-I (Neferites I)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-8.15",
+    "pharaoh_se-Neferkaura"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-8.15",
+     "b": "pharaoh_se-Neferkaura",
+     "basis": "prenomen",
+     "reason": "Both records give the same Dynasty 8 throne name Nefer-kau-Ra, differing only in transliteration; B has no Horus or birth name field conflicting with A's extra Horus name."
+    }
+   ],
+   "label": "Neferkaura",
+   "members": [
+    "leprohon-leprohon-8.15 (Neferkaure)",
+    "pharaoh_se-Neferkaura (Neferkaura)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.06",
+    "cluster-leprohon-leprohon-5.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.06",
+     "b": "pharaoh_se-Niuserra-Ini",
+     "basis": "name_dynasty",
+     "reason": "Both are Fifth Dynasty Nyuserre Ini; Record A lacks throne/Horus names but its name and heavily overlapping reign match Record B's Ini and Ni-user-Ra, with no conflicting field."
+    }
+   ],
+   "label": "Ni-user-rê Ini",
+   "members": [
+    "beckerath-05.06 (Ni-user-rê Ini)",
+    "leprohon-leprohon-5.06 (Niuserre)",
+    "pharaoh_se-Niuserra-Ini (Niuserra Ini)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-06.03",
+    "cluster-leprohon-leprohon-6.03"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-06.03",
+     "b": "pharaoh_se-Pepi-I",
+     "basis": "name_dynasty",
+     "reason": "Same dynasty-6 king: shared throne name Meryre (Meri-rê) with matching nomen Pepi and Horus name Merytawy; overlapping reign windows differ only by chronology offset."
+    }
+   ],
+   "label": "Pepi I",
+   "members": [
+    "beckerath-06.03 (Pepi I.)",
+    "leprohon-leprohon-6.03 (Pepy I)",
+    "pharaoh_se-Pepi-I (Pepi I)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.01",
+    "kitchen-26.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.01",
+     "b": "pharaoh_se-Psamtik-I",
+     "basis": "name_dynasty",
+     "reason": "Record A lacks throne and Horus names; its nomina Psammetichus I matches Record B's Psamtik I (same name, Greek vs Egyptian) in dynasty 26, with identical reign windows and numerals, and Record B's Wahibre/Aaib confirm the same king."
+    }
+   ],
+   "label": "Psametik I.",
+   "members": [
+    "beckerath-26.01 (Psametik I.)",
+    "kitchen-26.01 (Psammetichus I)",
+    "leprohon-leprohon-26.01 (Psamtek I)",
+    "pharaoh_se-Psamtik-I (Psamtik I)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.03",
+    "kitchen-26.03"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.03",
+     "b": "pharaoh_se-Psamtik-II",
+     "basis": "name_dynasty",
+     "reason": "Kitchen's Psammetichus II (no throne/Horus name) matches pharaoh_se's Psamtik II: same dynasty-26 nomen transliteration, identical reign window, matching numeral II, and Neferibre/Menekhib are that king's own names."
+    }
+   ],
+   "label": "Psametik II.",
+   "members": [
+    "beckerath-26.03 (Psametik II.)",
+    "kitchen-26.03 (Psammetichus II)",
+    "leprohon-leprohon-26.03 (Psamtek II)",
+    "pharaoh_se-Psamtik-II (Psamtik II)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-26.06",
+    "kitchen-26.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-26.06",
+     "b": "pharaoh_se-Psamtik-III",
+     "basis": "name_dynasty",
+     "reason": "Both are dynasty 26 Psamtik/Psammetichus III (numerals match, identical -526..-525 reign window); Record A lacks any throne name, so the shared king name suffices under route 3."
+    }
+   ],
+   "label": "Psametik III.",
+   "members": [
+    "beckerath-26.06 (Psametik III.)",
+    "kitchen-26.06 (Psammetichus III)",
+    "leprohon-leprohon-26.06 (Psamtek III)",
+    "pharaoh_se-Psamtik-III (Psamtik III)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-33.02",
+    "pharaoh_se-Ptolemy-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-33.02",
+     "b": "pharaoh_se-Ptolemy-II",
+     "basis": "horus",
+     "reason": "Shared Ptolemaic throne name Userkara-meryamun, same Horus name Hunu qeni, and same nomen Ptolemys in the same dynasty; no field indicates a different king."
+    }
+   ],
+   "label": "Ptolemy II",
+   "members": [
+    "leprohon-leprohon-33.02 (Ptolemy II Philadelphus)",
+    "pharaoh_se-Ptolemy-II (Ptolemy II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-33.05",
+    "pharaoh_se-Ptolemy-V"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-33.05",
+     "b": "pharaoh_se-Ptolemy-V",
+     "basis": "horus",
+     "reason": "Same Ptolemy V Epiphanes: shared throne name Iwa en netjerwy, matching Horus name, and Ptolemys with ankh djet mery Ptah; no field indicates a different king."
+    }
+   ],
+   "label": "Ptolemy V",
+   "members": [
+    "leprohon-leprohon-33.05 (Ptolemy V Epiphanes)",
+    "pharaoh_se-Ptolemy-V (Ptolemy V)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-33.17",
+    "pharaoh_se-Ptolemy-XV"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-33.17",
+     "b": "pharaoh_se-Ptolemy-XV",
+     "basis": "horus",
+     "reason": "Both records share the same Ptolemaic throne name (Iwa pa netjer nety nehem...), Horus name, and Ptolemy/Kiseres nomen, identifying Ptolemy XV Caesarion; no field points to a different king."
+    }
+   ],
+   "label": "Ptolemy XV",
+   "members": [
+    "leprohon-leprohon-33.17 (Ptolemy XV Caesarion)",
+    "pharaoh_se-Ptolemy-XV (Ptolemy XV)"
+   ]
+  },
+  {
+   "before_units": [
+    "pharaoh_se-Qemau-Siharnedjheritef",
+    "ryholt-13.6"
+   ],
+   "joining_edges": [
+    {
+     "a": "pharaoh_se-Qemau-Siharnedjheritef",
+     "b": "ryholt-13.6",
+     "basis": "prenomen",
+     "reason": "Both records share the same 13th-dynasty king: throne name Hotepibre, nomen Siharnedjheritef, and identical reign window; the extra alt-name is only a numbering-convention variant."
+    }
+   ],
+   "label": "Qemau Siharnedjheritef",
+   "members": [
+    "pharaoh_se-Qemau-Siharnedjheritef (Qemau Siharnedjheritef)",
+    "ryholt-13.6 (Siharnedjheritef)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-20.02",
+    "leprohon-leprohon-20.02",
+    "pharaoh_se-Ramesses-III"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-20.02",
+     "b": "pharaoh_se-Ramesses-III",
+     "basis": "name_dynasty",
+     "reason": "Shared throne name User-maat-Rê mer-amun in dynasty 20; both records denote Ramesses III, with reign windows overlapping and differing only by chronological convention."
+    },
+    {
+     "a": "leprohon-leprohon-20.02",
+     "b": "pharaoh_se-Ramesses-III",
+     "basis": "horus",
+     "reason": "Both records share throne name User Maat Ra mery Amun in Dynasty 20, with matching Horus names and nomen Ramessu heqa Iunu; no field indicates a different king."
+    }
+   ],
+   "label": "Ramesses III",
+   "members": [
+    "beckerath-20.02 (Ramses III.)",
+    "leprohon-leprohon-20.02 (Ramesses III)",
+    "pharaoh_se-Ramesses-III (Ramesses III)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-20.06",
+    "leprohon-leprohon-20.06",
+    "pharaoh_se-Ramesses-VII"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-20.06",
+     "b": "pharaoh_se-Ramesses-VII",
+     "basis": "name_dynasty",
+     "reason": "Shared Dynasty 20 throne name User-maat-Rê sotep-en-rê mer-amun and matching Ramses VII nomen identify the same king; the minor reign-window offset is chronological convention only."
+    },
+    {
+     "a": "leprohon-leprohon-20.06",
+     "b": "pharaoh_se-Ramesses-VII",
+     "basis": "horus",
+     "reason": "Same Dynasty 20 king: shared throne name Weser Maat Ra/User Maat Ra with Setep en Ra and Mery Amun, matching Horus name and nomen; no conflicting field."
+    }
+   ],
+   "label": "Ramesses VII",
+   "members": [
+    "beckerath-20.06 (Ramses VII.)",
+    "leprohon-leprohon-20.06 (Ramesses VII)",
+    "pharaoh_se-Ramesses-VII (Ramesses VII)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-20.10",
+    "kitchen-20.01"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-20.01",
+     "b": "pharaoh_se-Ramesses-XI",
+     "basis": "name_dynasty",
+     "reason": "Same king name and numeral in the same dynasty, reign windows overlapping by most of the shorter span, and no conflicting field; Record B's throne and Horus names are Ramesses XI's own."
+    }
+   ],
+   "label": "Ramesses XI",
+   "members": [
+    "beckerath-20.10 (Ramses XI.)",
+    "kitchen-20.01 (Ramesses XI)",
+    "leprohon-leprohon-20.10 (Ramesses XI)",
+    "pharaoh_se-Ramesses-XI (Ramesses XI)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-5.02",
+    "pharaoh_se-Sahura"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-5.02",
+     "b": "pharaoh_se-Sahura",
+     "basis": "horus",
+     "reason": "Both records, in Dynasty 5, share the Horus name Nebkhau and render the same king name Sahure/Sahu Ra, with no field pointing to a different king."
+    }
+   ],
+   "label": "Sahura",
+   "members": [
+    "leprohon-leprohon-5.02 (Sahure)",
+    "pharaoh_se-Sahura (Sahura)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-19.06",
+    "cluster-leprohon-leprohon-19.05"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-19.06",
+     "b": "pharaoh_se-Seti-II",
+     "basis": "name_dynasty",
+     "reason": "Both records give the 19th-dynasty throne name User-kheperu-Ra mery-Amun (Seti II); the birth names Sethos/Seti II agree and reign windows overlap, with no field pointing to a different king."
+    }
+   ],
+   "label": "Sethôs II.",
+   "members": [
+    "beckerath-19.06 (Sethôs II.)",
+    "leprohon-leprohon-19.05 (Sety II)",
+    "pharaoh_se-Seti-II (Seti II)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-25.05",
+    "kitchen-25.06"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-25.06",
+     "b": "leprohon-leprohon-25.06",
+     "basis": "name_dynasty",
+     "reason": "Both records name Taharqa of Dynasty 25; their throne-name variants (Nefertumkhure / Khu-nefertem-Ra) render the same prenomen, and no field points to a different king."
+    },
+    {
+     "a": "kitchen-25.06",
+     "b": "pharaoh_se-Taharqa",
+     "basis": "name_dynasty",
+     "reason": "Both records give the same 25th-dynasty king Taharqa with matching nomen and the same prenomen (Nefertumkhure / Khu nefertem Ra), identical reign window, and no conflicting field."
+    }
+   ],
+   "label": "Taharqa",
+   "members": [
+    "beckerath-25.05 (Taharqo)",
+    "kitchen-25.06 (Taharqa)",
+    "leprohon-leprohon-25.06 (Taharqa)",
+    "pharaoh_se-Taharqa (Taharqa)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-leprohon-leprohon-25.07",
+    "kitchen-25.07"
+   ],
+   "joining_edges": [
+    {
+     "a": "kitchen-25.07",
+     "b": "leprohon-leprohon-25.07",
+     "basis": "name_dynasty",
+     "reason": "Shared throne name Bakare/ba ka ra in dynasty 25 with nomina Tantamani/Tanutamun as transliteration variants of the same king; no field points to a different ruler."
+    },
+    {
+     "a": "kitchen-25.07",
+     "b": "pharaoh_se-Tenutamen",
+     "basis": "name_dynasty",
+     "reason": "Both records share throne name Bakare/Ba ka Ra and birth name Tantamani/Ta net Amun in dynasty 25, with overlapping reign windows (-664..-656 vs -664..-655) and no conflicting fields."
+    }
+   ],
+   "label": "Tantamani",
+   "members": [
+    "kitchen-25.07 (Tantamani)",
+    "leprohon-leprohon-25.07 (Tanutamun)",
+    "pharaoh_se-Tenutamen (Tenutamen)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-06.01",
+    "leprohon-leprohon-6.01",
+    "pharaoh_se-Teti"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-06.01",
+     "b": "pharaoh_se-Teti",
+     "basis": "name_dynasty",
+     "reason": "Both records name Teti in the Sixth Dynasty; A lacks throne and Horus names, windows overlap almost entirely, no conflicting field, and B's Horus Sehotep tawy fits the same king."
+    },
+    {
+     "a": "leprohon-leprohon-6.01",
+     "b": "pharaoh_se-Teti",
+     "basis": "horus",
+     "reason": "Both records give the same king name Teti in Dynasty 6 with matching Horus name Sehetep-tawy (spelling variants); no field points to a different king, so the shared Horus-plus-king-name route applies."
+    }
+   ],
+   "label": "Teti",
+   "members": [
+    "beckerath-06.01 (Teti)",
+    "leprohon-leprohon-6.01 (Teti)",
+    "pharaoh_se-Teti (Teti)"
+   ]
+  },
+  {
+   "before_units": [
+    "cluster-beckerath-18.04",
+    "pharaoh_se-Thutmose-II"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-18.04",
+     "b": "pharaoh_se-Thutmose-II",
+     "basis": "prenomen",
+     "reason": "Shared throne name Aakheperenre and birth name Thutmose II in Dynasty 18; the Horus name and overlapping reign windows are consistent, with no field indicating a different king."
+    },
+    {
+     "a": "leprohon-leprohon-18.04",
+     "b": "pharaoh_se-Thutmose-II",
+     "basis": "prenomen",
+     "reason": "Same dynasty-18 king: shared throne name Aa-kheperenre and Horus Ka-nakht-weser-pehty with matching nomen Djehutimes, differing only by transliteration; no field indicates a different king."
+    }
+   ],
+   "label": "Thutmose II",
+   "members": [
+    "beckerath-18.04 (Tuthmosis II.)",
+    "leprohon-leprohon-18.04 (Thutmose II)",
+    "pharaoh_se-Thutmose-II (Thutmose II)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-18.08",
+    "pharaoh_se-Thutmose-IV"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-18.08",
+     "b": "pharaoh_se-Thutmose-IV",
+     "basis": "prenomen",
+     "reason": "Shared 18th Dynasty throne name Menkheperure and matching Horus/birth names identify both records as Thutmose IV; extra name variants and unknown reign window do not indicate a different king."
+    }
+   ],
+   "label": "Thutmose IV",
+   "members": [
+    "leprohon-leprohon-18.08 (Thutmose IV)",
+    "pharaoh_se-Thutmose-IV (Thutmose IV)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-05.09",
+    "leprohon-leprohon-5.09",
+    "pharaoh_se-Unas"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-05.09",
+     "b": "pharaoh_se-Unas",
+     "basis": "name_dynasty",
+     "reason": "Same Fifth Dynasty king Unas; A gives only the nomen while B adds the consistent Horus Wadj-tawy, and their reign windows overlap substantially with no conflicting field."
+    },
+    {
+     "a": "leprohon-leprohon-5.09",
+     "b": "pharaoh_se-Unas",
+     "basis": "horus",
+     "reason": "Shared Horus name Wadj tawy and matching king name (Unas/Wenis) in Dynasty 5, with no conflicting fields, identify the same king."
+    }
+   ],
+   "label": "Unas",
+   "members": [
+    "beckerath-05.09 (Unas)",
+    "leprohon-leprohon-5.09 (Unas)",
+    "pharaoh_se-Unas (Unas)"
+   ]
+  },
+  {
+   "before_units": [
+    "leprohon-leprohon-5.01",
+    "pharaoh_se-Userkaf"
+   ],
+   "joining_edges": [
+    {
+     "a": "leprohon-leprohon-5.01",
+     "b": "pharaoh_se-Userkaf",
+     "basis": "name_dynasty",
+     "reason": "Both records share the Horus name Iri Maat and king name Userkaf in Dynasty 5; Userkaf's nomen Weserkaf matches, and no field points to a different king."
+    }
+   ],
+   "label": "Userkaf",
+   "members": [
+    "leprohon-leprohon-5.01 (Userkaf)",
+    "pharaoh_se-Userkaf (Userkaf)"
+   ]
+  },
+  {
+   "before_units": [
+    "beckerath-27.03",
+    "pharaoh_se-Xerxes-I"
+   ],
+   "joining_edges": [
+    {
+     "a": "beckerath-27.03",
+     "b": "pharaoh_se-Xerxes-I",
+     "basis": "name_dynasty",
+     "reason": "Both records give only the king name Xerxes I (Kheshyresh is its Egyptian rendering), same 27th Dynasty, no throne or Horus names, and near-identical overlapping reigns; no field indicates a different king."
+    }
+   ],
+   "label": "Xerxes I",
+   "members": [
+    "beckerath-27.03 (Xerxes I.)",
+    "pharaoh_se-Xerxes-I (Xerxes I)"
+   ]
+  }
+ ],
+ "newly_resolved_by_target": {
+  "Amenhotep II / Amenophis II.": 129,
+  "Apries / Wahibre": 41,
+  "Intef II": 1,
+  "Intef III": 1,
+  "Kashta": 3,
+  "Necho II / Nekau II": 5,
+  "Ramesses III / Ramses III.": 40,
+  "Thutmose II / Tuthmosis II.": 29,
+  "Thutmose IV": 62,
+  "Userkaf": 4
+ },
+ "resolved_mentions_moved_to_a_different_king": 0,
+ "ruler_mentions": 11555,
+ "schema_version": "hapi-ruler-escalation-queue-rebuild/1",
+ "status_transitions": {
+  "abstained->abstained": 2241,
+  "ambiguous->ambiguous": 374,
+  "ambiguous->resolved": 315,
+  "resolved->resolved": 8279,
+  "unmatched->unmatched": 346
+ },
+ "still_ambiguous_by_targets": {
+  "Aha | Djet / Djet/Wadjet | Iti | Ity": 1,
+  "Amenhotep I / Amenophis I. | Amenhotep II / Amenophis II. | Amenhotep III / Amenophis III.": 2,
+  "Djoser | Djoser / Netjerikhet/Djoser": 48,
+  "Iuput II | Iuput II": 1,
+  "Menkheperre | Necho I | Menkheperre": 1,
+  "Osorkon II | Osorkon II | Osorkon II": 2,
+  "Psusennes I | Psusennes I": 309,
+  "Rudamun | Rudamun | Rudamun": 1,
+  "Shabaka | Shabaka": 2,
+  "Smendes I | Smendes I": 1,
+  "Sobekhotep III | Sobekhotep III": 1,
+  "Teti | Aha | Sekhemkhet": 4,
+  "Xerxes I / Xerxes I. | Xerxes I": 1
+ }
+}

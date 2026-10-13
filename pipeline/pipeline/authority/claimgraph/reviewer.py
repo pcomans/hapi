@@ -191,13 +191,22 @@ def review_deterministic(candidate: Candidate, forced_escalate: bool) -> Verdict
                 "order-dependent incumbent."
             ),
         )
-    if candidate.basis == "name_only":
+    if candidate.basis in ("name_only", "name_dynasty"):
         return Verdict(
             **base,
             outcome=VERDICT_ESCALATED,
             reason=(
                 "Name agreement alone is not sufficient to accept (ADR-020 §6); no "
                 "prenomen/throne-name corroboration. Escalated."
+            ),
+        )
+    if candidate.basis == "horus" and not candidate.early_dynastic:
+        return Verdict(
+            **base,
+            outcome=VERDICT_ESCALATED,
+            reason=(
+                "Horus-name corroboration after the earliest dynasties is weighed only by "
+                "the live reviewer; escalated."
             ),
         )
     if candidate.homonym_trap:
@@ -269,18 +278,40 @@ SYSTEM_PROMPT = (
     "Policy (non-negotiable, precision-first):\n"
     "- A false merge (conflating two distinct kings) is far worse than a missed merge. "
     "When in doubt, ESCALATE.\n"
-    "- Name (display-name) agreement ALONE is never sufficient to APPROVE. Require throne-"
-    "name (prenomen) corroboration, or for the earliest dynasties a Horus-name match.\n"
+    "- Name (display-name) agreement ALONE is never sufficient to APPROVE. Approve only by "
+    "one of these routes:\n"
+    "  (1) Throne name: a shared throne name (prenomen) in the same dynasty, or one that a "
+    "different dynastic convention places adjacent, where no field points to a different "
+    "king. A birth name or Horus name that is a different name (not a transliteration, "
+    "spelling, or Greek versus Egyptian rendering of the same one) points to a different "
+    "king; an extra throne-name variant or epithet in one record does not. The sources "
+    "follow different chronologies and numbering schemes, so a reign-window offset of up to "
+    "a few decades, an unknown window, or numerals that differ only by numbering scheme are "
+    "not by themselves a reason to escalate. Windows separated by more than a chronology "
+    "offset, or numerals that distinguish two kings sharing the throne name, are.\n"
+    "  (2) Horus name: for the earliest dynasties, a shared Horus name; later, a shared Horus "
+    "name together with the same king name; in either case in a consistent dynasty, with no "
+    "field pointing to a different king.\n"
+    "  (3) King name only, where at least one record gives NO throne name and NO Horus name "
+    "at all (a missing field, not a differently transliterated one): the same king name in "
+    "the same dynasty, reign windows overlapping by most of the shorter window (allowing a "
+    "few decades' offset between chronologies), the regnal numeral or its absence matching, "
+    "and no field in either record pointing to a different king. On this route differing "
+    "numerals mean REJECT or ESCALATE; a numeral in one record only, windows that overlap "
+    "only slightly or not at all, or an unknown window mean ESCALATE, never APPROVE.\n"
+    "- Differences of transliteration or spelling between two throne or Horus names are not "
+    "a reason to set them aside; judge whether they render the same name.\n"
     # Rule 14: state the phenomenon generically. Do NOT name the specific reused throne
     # names here — those are the committed homonym answer-key (matcher._HOMONYM_SPELLINGS),
     # and naming them would hand the model the escalate verdict for exactly the cases the
     # eval exists to test. The model must recognise reuse from the record content itself.
     "- Prenomen (throne-name) reuse across distinct, unrelated kings is common in Egyptian "
     "history, not a rare edge case — a shared throne name alone is not proof of identity. "
-    "Weigh the full record context (dynasty, reign window, other titulary) rather than "
-    "treating a shared prenomen as decisive; when in doubt, ESCALATE.\n"
-    "- Regnal numerals and dynasty labels are convention-relative and weak; never let them "
-    "alone carry a merge.\n"
+    "Weigh the full record context (birth name, Horus name, dynasty, and any reign-window gap "
+    "larger than a chronology offset) rather than treating a shared prenomen as decisive; "
+    "when in doubt, ESCALATE.\n"
+    "- Regnal numerals and dynasty labels are convention-relative and weak as sole evidence; "
+    "never let them alone carry a merge; routes (1) and (3) say when each is checked.\n"
     'Respond with ONLY a single JSON object and nothing else, outcome FIRST: '
     '{"outcome":"approved"|"rejected"|"escalated","reason":"<one concise sentence, under 40 words>"}.'
 )
@@ -293,7 +324,10 @@ def _build_user_prompt(candidate: Candidate, a: RulerRecord, b: RulerRecord) -> 
     # proxy for the stage-1 verdict (name_only/homonym ⇒ escalate; prenomen ⇒ likely
     # approve) and would bias the model toward the pre-filter's own conclusion. The shared
     # throne name is present in both records below; the model must notice and weigh it
-    # (including recognising a reused prenomen) unaided.
+    # (including recognising a reused prenomen) unaided. The SYSTEM_PROMPT policy is
+    # deliberately route-shaped (which corroboration permits approval): a model can tell
+    # the route from which fields a record carries, which is record content, not the
+    # basis. Do not "fix" that by sending the basis.
     return "\n".join(
         [
             "Two ruler records from DIFFERENT scholarly sources, surfaced by a name "

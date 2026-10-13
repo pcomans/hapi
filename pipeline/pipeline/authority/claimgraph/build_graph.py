@@ -168,6 +168,7 @@ def main() -> int:
         focus_records=focus,
         cache_path=cache_path if mode == "llm" else None,
         on_progress=on_progress,
+        uncertain_readings=load.uncertain_readings,
     )
     print(
         f"[build-graph] matcher: {len(resolved.candidates)} candidates → "

@@ -121,7 +121,7 @@ def test_a_clean_run_writes_no_failed_attempts_file(tmp_path):
     ]
     cache = tmp_path / "graph.json.verdict-cache.jsonl"
     verdicts_mod.resolve_matches(
-        recs, mode="llm", reviewer_fn=reviewer_fn, model="m", cache_path=str(cache)
+        recs, mode="llm", reviewer_fn=reviewer_fn, model="m", cache_path=str(cache), uncertain_readings=frozenset()
     )
     assert cache.exists()
     assert not (tmp_path / "graph.json.verdict-cache.jsonl.failed-attempts.jsonl").exists()
@@ -226,7 +226,7 @@ def test_era_conflict_never_reaches_the_live_reviewer():
              prenomina=["User Maat Ra, setep en Ra"], reign_start_bce=-872),
     ]
     res = verdicts_mod.resolve_matches(
-        recs, mode="llm", reviewer_fn=must_not_be_called, model="m", cache_path=None
+        recs, mode="llm", reviewer_fn=must_not_be_called, model="m", cache_path=None, uncertain_readings=frozenset()
     )
     assert res.approved_edges == []
     assert res.escalations == []
@@ -664,7 +664,7 @@ def test_focus_records_reviews_only_touching_candidates_with_full_set_clashes():
     ]
     res = verdicts_mod.resolve_matches(
         recs, mode="llm", reviewer_fn=reviewer_fn, model="m",
-        focus_records={"beckerath-1"}, cache_path=None,
+        focus_records={"beckerath-1"}, cache_path=None, uncertain_readings=frozenset()
     )
     assert calls == ["cand-beckerath-1|leprohon-1"]
     # leprohon-1 also matches beckerath-2 in the full set: the focused slice still escalates.
@@ -676,7 +676,7 @@ def test_focus_records_naming_an_unloaded_record_raises():
     recs = [_rec("leprohon", "leprohon-1", "Amasis", prenomina=["Khnemibre"])]
     with pytest.raises(ValueError, match=r"unloaded record\(s\): \['nope'\]"):
         verdicts_mod.resolve_matches(
-            recs, mode="deterministic", focus_records={"nope"}, cache_path=None
+            recs, mode="deterministic", focus_records={"nope"}, cache_path=None, uncertain_readings=frozenset()
         )
 
 
@@ -803,7 +803,7 @@ def test_reviewer_prompt_lists_added_epithets_apart_from_names():
 def test_vercel_mode_requires_api_key():
     recs = [_rec("leprohon", "leprohon-12", "X", prenomina=["Khnemibre"])]
     with pytest.raises(RuntimeError, match="'llm'/vercel mode without an api_key"):
-        verdicts_mod.resolve_matches(recs, mode="llm", provider="vercel", api_key=None)
+        verdicts_mod.resolve_matches(recs, mode="llm", provider="vercel", api_key=None, uncertain_readings=frozenset())
 
 
 # --- added-epithet convention: drift guard over the committed Leprohon rows -----------

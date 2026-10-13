@@ -47,6 +47,7 @@ RUN = WEB_DATA_DIR / "claim-graph.reviewer-run.jsonl"
 MANIFEST = REPO_ROOT / "pipeline" / "pipeline" / "authority" / "hapi_extension.rdf"
 EVAL = REPO_ROOT / "docs" / "evaluations" / "ruler-cluster-reconciliation-342"
 RDF_ABOUT = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about"
+GRAPH_342_COMMIT = "43bf6f108dffd5e71d93b32718ec9325bdbf14e4"
 
 
 def _sha256(path: Path) -> str:
@@ -113,10 +114,11 @@ def test_committed_decisions_follow_from_the_run_and_the_current_matcher(graph, 
         )
         return Verdict(candidate_id=candidate.id, outcome=outcome, reason=reason, reviewer="llm")
 
-    records = load_all_sources(AUTHORITY_ROOT).records
+    load = load_all_sources(AUTHORITY_ROOT)
+    records = load.records
     replayed = resolve_matches(
         records, mode="llm", provider="vercel", model=graph["meta"]["model"],
-        reviewer_fn=replay, max_workers=1, cache_path=None,
+        reviewer_fn=replay, max_workers=1, cache_path=None, uncertain_readings=load.uncertain_readings
     )
     assert graph["meta"]["partial"] is False
     assert sorted(v.candidate_id for v in replayed.verdicts) == sorted(by_candidate)
@@ -197,7 +199,13 @@ def test_every_llm_interaction_was_served_by_the_pinned_build_with_reasoning(gra
 
 def test_ruler_ambiguity_results_are_pinned_to_the_committed_graph_and_script():
     results = json.loads((EVAL / "results" / "ruler-ambiguity.json").read_text("utf-8"))
-    assert results["inputs"]["after_graph_sha256"] == _sha256(GRAPH)
+    # The #342 rebuild's graph, as committed with these results (43bf6f1, #347); later
+    # rebuilds are measured by their own evaluations.
+    graph_342 = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "show", f"{GRAPH_342_COMMIT}:web-claimgraph/data/claim-graph.json"],
+        check=True, capture_output=True,
+    ).stdout
+    assert results["inputs"]["after_graph_sha256"] == hashlib.sha256(graph_342).hexdigest()
     assert results["inputs"]["script_sha256"] == _sha256(
         EVAL / "scripts" / "measure_ruler_ambiguity.py"
     )

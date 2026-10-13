@@ -11,12 +11,18 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, replace
 from typing import Callable
 
-from .matcher import Candidate, generate_candidates, same_person_groups, uniqueness_clashes
+from .matcher import (
+    Candidate,
+    generate_candidates,
+    same_person_groups,
+    uniqueness_clashes,
+)
 from .reviewer import (
     PROVIDER_PARAMETERS,
     SYSTEM_PROMPT,
     VERDICT_APPROVED,
     VERDICT_ESCALATED,
+    VERDICT_REJECTED,
     ReviewerCallError,
     ReviewerInteraction,
     ReviewerParseError,
@@ -313,6 +319,7 @@ def resolve_matches(
     focus_records: set[str] | None = None,
     cache_path: str | None = None,
     on_progress: Callable[[int, int], None] | None = None,
+    uncertain_readings: frozenset[str],
 ) -> ResolveResult:
     """``mode`` is "llm" (live reviewer decides every CORROBORATED candidate; fails loud on
     repeated error — no silent fallback) or "deterministic" (the committed corroborate-or-
@@ -323,12 +330,14 @@ def resolve_matches(
     them (used by tests). Era-gated candidates are rejected deterministically and, like
     name-only candidates, never reach the reviewer. In
     "llm" mode, name-only candidates are escalated deterministically and NEVER sent to the
-    reviewer — only prenomen/Horus-corroborated candidates cost a call. Reviews run
+    reviewer — only prenomen, Horus or name-and-dynasty candidates cost a call. Reviews run
     concurrently (``max_workers`` threads); any candidate still failing after retries fails
     the whole run loudly. ``limit`` caps the candidates for a thin-slice validation;
     ``focus_records`` keeps only candidates touching those record ids (a targeted pilot).
     Uniqueness clashes are computed over the FULL candidate set before either cut, so a
     slice never sees a pair as clean that the full run would escalate.
+    ``uncertain_readings`` (``LoadResult.uncertain_readings``) names the records whose
+    source marks a reading uncertain; a rejection touching one is escalated instead.
     """
     candidates = generate_candidates(records)
     forced = uniqueness_clashes(candidates, same_person_groups(records))
@@ -362,10 +371,23 @@ def resolve_matches(
 
     def finalize(c: Candidate, verdict: Verdict) -> Verdict:
         # Deterministic hard guards applied OVER the model verdict (Rule 3: the committed
-        # policy is enforced in code, never delegated to the LLM). Both only ever downgrade
-        # an APPROVE to an ESCALATE — never the reverse. Crucially, the reviewer is NOT told
-        # either guard applies (Rule 14: no answer leak), so it judges the pair blind and
-        # the guard is enforced here regardless of what it decided.
+        # policy is enforced in code, never delegated to the LLM). They only ever downgrade
+        # an APPROVE or a REJECT to an ESCALATE — never the reverse. Crucially, the reviewer
+        # is NOT told any guard applies (Rule 14: no answer leak), so it judges the pair
+        # blind and the guard is enforced here regardless of what it decided.
+        if (
+            verdict.outcome == VERDICT_REJECTED
+            and not c.era_conflict
+            and {c.a_id, c.b_id} & uncertain_readings
+        ):
+            # A reading the source itself marks as uncertain ("Siamun (?)") cannot ground
+            # a "different king" verdict: the pair goes to the queue, not out of the graph.
+            verdict.outcome = VERDICT_ESCALATED
+            verdict.reason = (
+                f"{verdict.reason} [overridden to escalate: a record carries a name its "
+                f"source marks as an uncertain reading]"
+            )
+            return verdict
         if verdict.outcome != VERDICT_APPROVED:
             return verdict
         if c.id in forced:
@@ -373,6 +395,12 @@ def resolve_matches(
             # source — never resolved by an order-dependent incumbent.
             verdict.outcome = VERDICT_ESCALATED
             verdict.reason = f"{verdict.reason} [overridden to escalate: uniqueness clash]"
+        elif c.king_name_route_blocked:
+            verdict.outcome = VERDICT_ESCALATED
+            verdict.reason = (
+                f"{verdict.reason} [overridden to escalate: king-name route needs both reign "
+                f"windows, overlapping by at least half the shorter, and the same regnal number]"
+            )
         elif c.homonym_trap:
             # The shared throne name is on the committed homonym exception list — a reused
             # prenomen borne by DISTINCT kings. This is the hard guard against false merges
@@ -405,6 +433,16 @@ def resolve_matches(
                 # Settled by the committed era gate before any reviewer is consulted — and
                 # ahead of the cache, so no earlier verdict can resurrect the pair.
                 verdicts_by_id[c.id] = review_deterministic(c, c.id in forced)
+            elif c.basis == "name_only":
+                # Never reaches the paid reviewer — deterministic escalate (see module note).
+                # Ahead of the cache too: a pair the current matcher calls name-only must
+                # not keep a verdict reviewed when an earlier matcher gave it a basis.
+                verdicts_by_id[c.id] = Verdict(
+                    candidate_id=c.id,
+                    outcome=VERDICT_ESCALATED,
+                    reason=_NAME_ONLY_ESCALATION_REASON,
+                    reviewer="deterministic",
+                )
             elif c.id in cached:
                 # A cached verdict may ONLY be reused if the request that produced it is
                 # byte-for-byte the request we would send now — same records, same prompts,
@@ -426,14 +464,6 @@ def resolve_matches(
                         f"reusing a verdict that does not describe this configuration."
                     )
                 verdicts_by_id[c.id] = cached[c.id]
-            elif c.basis == "name_only":
-                # Never reaches the paid reviewer — deterministic escalate (see module note).
-                verdicts_by_id[c.id] = Verdict(
-                    candidate_id=c.id,
-                    outcome=VERDICT_ESCALATED,
-                    reason=_NAME_ONLY_ESCALATION_REASON,
-                    reviewer="deterministic",
-                )
         todo = [c for c in candidates if c.id not in verdicts_by_id]
         done = len(candidates) - len(todo)
         if on_progress and done:
