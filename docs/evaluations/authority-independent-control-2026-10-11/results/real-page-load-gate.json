@@ -1,0 +1,41 @@
+{
+ "calls_without_a_loaded_page": 0,
+ "deciding_calls": 216,
+ "inputs": {
+  "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
+  "stage_1_queue_sha256": "220c9b30b6306e4f0637b76c4dd86de7f4c1c6a29d9fce5f1cdb82596ebde17e"
+ },
+ "museum_record_opens_by_transition_class": {
+  "authority_only_transition": {
+   "loaded": 94,
+   "opened": 95
+  },
+  "literal_only_transition": {
+   "loaded": 228,
+   "opened": 228
+  },
+  "retained_control": {
+   "loaded": 425,
+   "opened": 426
+  }
+ },
+ "open_page_by_museum": {
+  "brooklyn": {
+   "loaded": 363,
+   "opened": 364
+  },
+  "harvard": {
+   "loaded": 47,
+   "opened": 47
+  },
+  "met": {
+   "loaded": 337,
+   "opened": 338
+  },
+  "other": {
+   "loaded": 30,
+   "opened": 53
+  }
+ },
+ "schema_version": "hapi-337-v4-page-load-gate/1"
+}

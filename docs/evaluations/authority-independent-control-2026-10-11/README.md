@@ -31,13 +31,13 @@ Deterministic headline (before review): shared records on any two-museum shared 
 literal arm Met 27,330 / Brooklyn 2,894 / Harvard 534; authority arm Met 14,502 /
 Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 
-## Result (2026-10-12): CONTINUE, sites only, Met–Brooklyn and Met–Harvard
+## Result (2026-10-13, protocol v4): CONTINUE, sites only, Met–Brooklyn and Met–Harvard
 
 `results/real-adjudicated-score.json`, from `decision-rule.md` applied in code:
 
 | Step | Numbers | Outcome |
 |---|---|---|
-| Calibration | 3 of 50 retained controls uncertain or wrong (6%, limit 20%) | passed |
+| Calibration | 2 of 50 retained controls uncertain or wrong (4%, limit 20%) | passed |
 | Safety | b = 0 of 13 authority gains labelled a/b/c | passed |
 | Utility | scopes below | 2 qualify |
 
@@ -49,16 +49,23 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 | ruler, Met–Brooklyn | 2 | 0 | 0 | 5 | 1 | 1 | no (3 < 5) |
 
 Reading it:
+- **Every judgment rests on pages the reviewer actually read.** This is the v4 run (see
+  "Review protocol"): the agents opened pages in a real browser, and only a page the call
+  itself opened and that loaded counts as a citation. Museum record pages loaded 99.7% of the
+  time at the Met and Brooklyn and 47 of 47 at Harvard, at the same rate in every case class
+  (`results/real-page-load-gate.json`, the Rule 14 gate, measured before any result was
+  read). All 216 deciding Stage 1 calls loaded at least one page.
 - **One false merge is scored as uncertain.** Case-067 (ruler, Met–Brooklyn, an authority
-  gain): both Stage 1 reviewers found the two sides are different rulers (Hatshepsut on the
-  Met side; a Dynasty 21 shabti of Maatkare on the Brooklyn side), and Stage 2 found the
-  target is not their identity. Granularity has nothing to judge for two different entities,
-  so it was settled as `insufficient_evidence`, and the frozen classifier (`classify_case`,
-  which `decision-rule.md` names) checks uncertainty first and requires `useful` for b: the
-  case is labelled f, not b. The label is left as frozen. **Counted as b, the verdict is
-  unchanged:** b = 1 is under 2 and is 1 of 14 gains (7%, limit 10%); it makes the ruler
-  Met–Brooklyn scope unsafe, which did not qualify anyway. The other f (case-011, a site
-  gain) is uncertain because the Brooklyn records could not be opened.
+  gain): both Stage 1 reviewers found the two sides are different rulers, and Stage 2 found
+  the target is not their identity. Granularity has nothing to judge for two different
+  entities, so it was settled as `insufficient_evidence`, and the frozen classifier
+  (`classify_case`, which `decision-rule.md` names) checks uncertainty first and requires
+  `useful` for b: the case is labelled f, not b. The label is left as frozen. **Counted as
+  b, the verdict is unchanged:** b = 1 is under 2 and is 1 of 14 gains (7%, limit 10%); it
+  makes the ruler Met–Brooklyn scope unsafe, which did not qualify anyway. The other f
+  (case-011, a site gain) is a real ambiguity: both reviewers opened every record; the
+  Brooklyn records give only a hedged "Qurnah", the Met records "Sheikh Abd el-Qurna" (a
+  specific hill), and no page they opened settles whether the two are the same place.
 - **The authority arm still loses correct matches.** 19 literal-only losses were correct,
   useful connections plain text makes (d), against 14 that were wrong or not useful (e).
   For sites in Met–Brooklyn and Met–Harvard, the gains plus the bad links it removes outweigh
@@ -66,10 +73,25 @@ Reading it:
 - **Met–Harvard qualifies narrowly** (5 changed cases, 3 vs 2), so treat it as weak.
 - The counts are a finite census of the selected review population, not a sample estimate.
 
-Review: Stage 1, 108 units, two reviewers agreeing on both questions in 105 (3 reconciled
-with cited overrides); Stage 2, 65 proposed targets, agreeing in 63 (2 reconciled). All calls
-ran through Claude Code (Claude Sonnet 5.5) on the subscription; the records are private
-(`dropbox/hapi-337-review-2026-10-11/`), bound by the hashes in the score.
+Review: Stage 1, 108 units, two reviewers agreeing on both questions in 107 (1 reconciled
+with a cited override); Stage 2, 65 proposed targets, agreeing in 63 (2 reconciled). Every
+Stage 1 reviewer call was valid on its first attempt; in Stage 2, three calls were retried
+because a search result touched Wikidata (cases 013 and 035), and no call cited a page it
+had not opened. No call hit a session limit. All
+calls ran through Claude Code (Claude Sonnet 5.5) on the subscription; the records are
+private (`dropbox/hapi-337-review-v4-2026-10-13/`), bound by the hashes in the score.
+
+**The superseded v3 run (2026-10-12).** The first run of this registration read pages with
+Claude Code's WebFetch, which the Met and Brooklyn sites refuse (see "Review protocol"), so
+most of its judgments about those records rested on search summaries or on the case's own
+field text. On the project owner's ruling that a citation the agent could not access is not
+a citation, the whole review was re-run under protocol v4 from the same frozen population
+(the 108 Stage 1 units and the private answer key are byte-identical; the queue files differ
+only in their prompt and schema hashes). The v3 result was the same verdict and the same
+primary counts (a 13, b 0, c 0, d 19, e 14, f 2); one retained control (case-088) moved from
+"useful but wrong identity" to "same, useful, exact target", and calibration went from 3 to
+2 of 50. The v3 records stay private and unchanged (`dropbox/hapi-337-review-2026-10-11/`);
+its score is in the Git history of `results/real-adjudicated-score.json`.
 
 ## Review protocol
 
@@ -80,24 +102,44 @@ the project owner's decision every scored call runs on the Claude Code subscript
 
 - **Call setup.** Claude Sonnet 5.5 (`--model sonnet`, served model checked as
   `claude-sonnet-5-5`), effort `high`, the review system prompt
-  (`launcher-instructions/review-system-v2.txt`), only the WebSearch and WebFetch tools, no MCP
-  servers, no API key (auth checked as the subscription), each case in a fresh empty
-  directory. The driver refuses any other setup. Two independent reviewers are two separate
+  (`launcher-instructions/review-system-v3.txt`), exactly two tools: WebSearch, to find pages,
+  and `open_page`, to read them, served by the one MCP server (`scripts/open_page_server.py`),
+  no API key (auth checked as the subscription), each case in a fresh empty directory. The driver refuses any other setup. Two independent reviewers are two separate
   runs. User-level plugins and a SessionStart hook still load; every stored call is checked to
   have had no hook output.
 - **The record** of each call is its full stream-json event log, with the exact command,
   system prompt and user content. Per Constitutional Rule 13 (revised 2026-10-11) an LLM call
   cannot be re-executed to reproduce a decision; the record is what is re-read, and every
   validation is re-derived from the stored events.
-- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v3.txt`,
-  `stage-1-reconciler-v3.txt`, `stage-2-reviewer-v3.txt`, `stage-2-reconciler-v3.txt`;
-  `raw-response-contracts/*-case-v1.schema.json`. All leak-audited before use (Rule 14;
-  `prompt-audit-2026-10-11.md`, whose audited SHA-256s are checked by a test).
-- **Every judgment rests on a cited source.** Whether the two sides' strings match or differ
-  is never by itself a basis for a judgment, and general knowledge is not a source; what the
-  case evidence records about the records counts only through a named artifact-evidence
-  exception. The schema requires at least one `http(s)` citation on every decision, including
-  `insufficient_evidence`, and no citation may point at a blocked domain.
+- **Runtime.** The v4 run executed the runner and the browser server from `pipeline/.venv`
+  synced from `runtime/uv.lock`: the pipeline's dependencies plus `mcp` 2.3.0, the MCP SDK
+  (with `playwright` 1.58.0 and `jsonschema` 4.26.0). That lock is kept here, not in
+  `pipeline/`, because the site-graph-v0 pre-registration pins `pipeline/uv.lock` byte for
+  byte. To run again: `uv sync --locked --all-groups --project runtime`, `runtime/.venv/bin/python
+  -m playwright install chromium`, then run `scripts/run_harness_review.py` with
+  `runtime/.venv/bin/python` (the browser server starts with the same interpreter).
+- **Pages are read in a real browser** (protocol v4, 2026-10-13). `open_page` loads a URL in
+  headless Chromium and returns the HTTP status of the final document, the final URL, the
+  title, whether it loaded (status 200 and not a bot checkpoint) and the visible text (up to
+  40,000 characters), all stored in the call's event log. It paces opens to one every 2
+  seconds per host and refuses blocked domains. Claude Code's WebFetch, used in the v3 run,
+  is a plain HTTP request: the Met and Brooklyn collection sites put a JavaScript "Security
+  Checkpoint" (Vercel) in front of every page, which answered 69% of Met and 96% of Brooklyn
+  fetches with HTTP 429, whatever the user agent; a real browser passes it.
+- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v4.txt`,
+  `stage-1-reconciler-v4.txt`, `stage-2-reviewer-v4.txt`, `stage-2-reconciler-v4.txt`;
+  `raw-response-contracts/*-case-v2.schema.json`. All leak-audited before use (Rule 14;
+  `prompt-audit-2026-10-11.md`, rounds 12–13, whose audited SHA-256s are checked by a test).
+- **A citation is a page the call opened and that loaded.** Nothing else is a source: not a
+  search result, not a URL the case shows, not a page a review cites, not general knowledge
+  (project owner, 2026-10-13: "a citation that can't access the data is not a citation").
+  The validator matches every citation (host without `www.`, path; query ignored) against the
+  call's own loaded `open_page` results, under the requested or final URL, and a call citing
+  anything else fails and is retried. Whether the two sides' strings match or differ is never
+  by itself a basis for a judgment, and the case's field text is never a basis on its own.
+  Every outcome other than `insufficient_evidence` needs at least one citation;
+  `insufficient_evidence` may cite nothing when no page loaded. No citation may point at a
+  blocked domain.
 - **Each side shows up to 5 of its records** (`shown_records`): the museum's public record
   URL, taken from the frozen corpus's canonical `source_url`, and the full text of each field
   that holds a mention, chosen in an opaque seeded order over record IDs. The original
@@ -105,12 +147,15 @@ the project owner's decision every scored call runs on the Claude Code subscript
   title-field "Horemheb" for "Stela of Lady Horemheb" (a private woman). The ledger record is
   "Fragment of a Statue of King Horemheb", so one reviewer answered `different_entity` on a
   real match. Adding the records changes no case membership, case ID or other evidence field.
-- **Fail loud.** Billed auth, another tool, an MCP server, hook output, another served model,
-  or a case decided without a search result or a successful fetch stops the run, and such a
-  case is not resumed automatically. An answer rejected for its format (not JSON,
-  schema-invalid, miscopied case ID or hash, a reconciler resolving other than the disputed
-  questions), or a call whose search results, fetches or citations touched Wikidata or GitHub
-  (Claude Code's search cannot exclude them), is retried, up to 3 such calls per case.
+- **Fail loud.** Billed auth, another tool or MCP server, hook output, or another served
+  model stops the run, and such a case is not resumed automatically. An answer rejected for
+  its format (not JSON, schema-invalid, miscopied case ID or hash, a reconciler resolving
+  other than the disputed questions), an answer citing a page the call did not open, or a
+  call whose search results, opened pages or citations touched Wikidata or GitHub (Claude
+  Code's search cannot exclude them), is retried, up to 3 such calls per case.
+- **One call is one review.** Every deciding reviewer call must be its own Claude Code
+  session (its init event's `session_id`); a stored call copied under both labels, or under
+  two cases, fails loud rather than counting as agreement.
 - **Attempts.** Every call is kept as `<case>.attempt-<n>.json` and never overwritten. The
   answer is the JSON object that ends the final message; a note on its own line before it is
   kept, not parsed. When a later rule changes a stored call's verdict, the call is re-checked
@@ -120,9 +165,8 @@ the project owner's decision every scored call runs on the Claude Code subscript
 - **Session limits.** A Claude Code session limit stops the run, which resumes after the
   reset. A call in which the session limit refused any tool call is a session-limit stop too,
   not a decision, because its research was cut short for a reason unrelated to the case
-  (added 2026-10-12, applied to every stored call by re-checking its events: it voided
-  reviewer A's call on unit 072, whose redo gave the same answer, and the first reconciler
-  call on unit 090).
+  (added 2026-10-12 during the superseded v3 run, where it voided two calls; no v4 run hit a
+  session limit).
 
 Pilot runtimes, not used for any scored call (removed; see the Git history of this
 directory): the Anthropic API reviewer (`run_claude_review.py`, web search and web fetch with
@@ -143,20 +187,10 @@ per-case pattern.
    protocol rebuilds from the stored records: every attempt is re-checked from its saved
    events, each case must have exactly one valid call per role, and each record must have
    been composed from the current prompt, schema and case.
-   Citations (added after scoring, on Codex review of #351): a citation counts as consulted
-   when the record shows it, as a search result, a successful fetch or a URL of the case
-   evidence shown (host without `www.`, path; query ignored). A reviewer's judgment must cite
-   at least one consulted source; its other citations are listed, not counted, and never
-   reach the consensus. A reconciler's resolution is copied into the consensus as the
-   override's sources, so every citation must be consulted, by the reconciler or by a review
-   it was shown (a page that review cites and its record shows it consulted). Requiring every reviewer citation to be
-   consulted would void stored decisions whose judgments rest on consulted sources, and
-   redrawing them after the verdict is known would let the outcome shape the data, so it is
-   not done. All stored decisions pass both rules and both consensus files re-freeze
-   byte-identical. `results/real-citation-support.json` lists the 7 unconsulted reviewer
-   citations (e.g. a Met essay page, a UNESCO listing) by case, role and record hash, and
-   counts the judgments by support: 351 of 352 rest on research the record shows; one
-   (review-unit-032, reviewer A) rests only on the museum record URLs of its case evidence.
+   The override must cite at least one page the reconciler itself opened; a reconciler that
+   answers `insufficient_evidence` because no page loaded may cite nothing, and that
+   resolution is labelled `reconciler_insufficient_evidence_without_source`, not a cited
+   override.
 2. **Stage 2 release.** `build_review_queue.py release-stage-2` releases the 65 proposed-target
    cases only after verifying the frozen Stage 1 consensus, and binds its hash. The scorer
    rebuilds the release from the digest-bound custodian and requires the reviewed queue to be
@@ -175,15 +209,19 @@ so it stays.
 
 ## Known limitations (disclosed)
 
-- **The thinking is not in the records.** Claude Code returns the thinking blocks of a call
-  with empty text unless it is started with `--thinking-display summarized`, which was found
-  only after the review was scored. Every scored record therefore has the model's stated text,
-  its JSON reasoning and its tool calls, but no thinking summary. **Accepted by the project
-  owner on 2026-10-12**, who chose to keep these results rather than re-run the review; the
-  runner now passes the flag for any later call.
-- **Fetched pages are recorded as Claude Code's summary.** WebFetch returns the model a
-  summary of the page, recorded with the URL, HTTP status and page size, not the page itself.
-  Search results are recorded as titles and URLs.
+- **Thinking summaries.** Calls run with `--thinking-display summarized`, so a call's
+  thinking is stored as Claude Code's summary of it. 318 of the 349 deciding records carry
+  one; the other 31 have no thinking block at all (the model answered without thinking). The
+  superseded v3 run had no thinking text, because the flag was found only after it was scored.
+- **Pages are recorded as the text the model read.** `open_page` returns the page's visible
+  text (capped at 40,000 characters), stored verbatim in the event log; it is the live page
+  on the day of the call, not the frozen corpus snapshot. Search results are recorded as
+  titles and URLs.
+- **`loaded` recognises only the Vercel and Cloudflare checkpoints.** Other bot walls (a
+  "Captcha Verification Needed" or "Oh noes!" page) come back with status 200 and count as
+  loaded. The prompts forbid citing an error or checkpoint page, and a scan of all 1,313
+  citations of the deciding calls found none citing such a page (the only untitled pages
+  cited are iDAI gazetteer JSON records and one Fitzwilliam text export).
 - **Surface text correlates with case type.** An authority-only gain has no common literal
   string by construction, so a case whose two sides show the same string can only be a retained
   control or a literal-only loss. The reviewer can infer that partition from the evidence it is
@@ -192,11 +230,11 @@ so it stays.
   institutional source for a variant spelling is harder to find than one for an identical
   string, so differing-string cases may draw more `insufficient_evidence`. Read the f counts
   with this in mind.
-- **Brooklyn record pages mostly cannot be fetched.** brooklynmuseum.org usually answers
-  fetches with HTTP 429, so Brooklyn records are read through search results or used only
-  through the "could not be opened" exception, while Met and Harvard pages are read directly.
-  This depends on the museum, not on the case type: a Brooklyn side appears in 14 of 15
-  authority-only gains, 29 of 33 literal-only losses and 47 of 50 retained controls.
+- **A record that will not load forces `insufficient_evidence`.** There is no fallback to the
+  case's field text. This is class-neutral only if the loaded rate is, so the `open_page`
+  loaded rate per museum and per case class is measured against the private answer key, in
+  aggregate, after the Stage 1 reviewers and before any result is read (Rule 14 gate, audit
+  round 12).
 - **Field text helps some cases more than others.** A shown record's field text can carry
   context the bare mention lacks (both the "Hurbeit" and "Horbeit" records read
   "(Pharbaethos)"); this is the museums' own text and the reason the records are shown, but it

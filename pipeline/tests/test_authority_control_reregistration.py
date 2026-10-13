@@ -528,8 +528,8 @@ def test_committed_score_verdict_follows_from_its_own_counts() -> None:
         "f_transition_uncertainty": 2,
     }
     assert score["calibration_control_counts"] == {
-        "calibration_control_same_useful_exact_target": 47,
-        "calibration_control_useful_but_wrong_or_nonidentity": 1,
+        "calibration_control_same_useful_exact_target": 48,
+        "calibration_control_useful_but_wrong_or_nonidentity": 0,
         "calibration_control_false_or_not_useful": 1,
         "calibration_control_uncertainty": 1,
     }
@@ -833,3 +833,32 @@ def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(t
     assert disputed["useful_granularity"] == "insufficient_evidence"
     assert disputed["field_resolutions"]["useful_granularity"]["method"] == "reconciler_insufficient_evidence_without_source"
     assert disputed["field_resolutions"]["useful_granularity"]["citations"] == []
+
+
+def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() -> None:
+    results = EVALUATION / "results"
+    gate = json.loads((results / "real-page-load-gate.json").read_text())
+    score = json.loads((results / "real-adjudicated-score.json").read_text())
+    assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
+    assert (gate["deciding_calls"], gate["calls_without_a_loaded_page"]) == (216, 0)
+    assert gate["open_page_by_museum"] == {
+        "brooklyn": {"loaded": 363, "opened": 364}, "harvard": {"loaded": 47, "opened": 47},
+        "met": {"loaded": 337, "opened": 338}, "other": {"loaded": 30, "opened": 53},
+    }
+    assert gate["museum_record_opens_by_transition_class"] == {
+        "authority_only_transition": {"loaded": 94, "opened": 95},
+        "literal_only_transition": {"loaded": 228, "opened": 228},
+        "retained_control": {"loaded": 425, "opened": 426},
+    }
+
+
+def test_recorded_runtime_is_the_pipeline_environment_plus_the_mcp_sdk() -> None:
+    runtime = EVALUATION / "runtime"
+    pipeline = (ROOT / "pipeline" / "pyproject.toml").read_text().splitlines()
+    recorded = (runtime / "pyproject.toml").read_text().splitlines()
+    assert [line for line in recorded if line not in pipeline] == ['    "mcp>=1.20",']
+    assert [line for line in pipeline if line not in recorded] == []
+    lock = (runtime / "uv.lock").read_text()
+    assert protocol.sha256_path(runtime / "uv.lock") == "a79d7b77103eb3de232e323474213842218c3f19c8a3efb1b4f2df0cc19df5b1"
+    assert '[[package]]\nname = "mcp"\nversion = "2.3.0"' in lock
+    assert '[[package]]\nname = "playwright"\nversion = "1.58.0"' in lock

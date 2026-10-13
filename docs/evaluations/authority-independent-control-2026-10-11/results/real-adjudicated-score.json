@@ -7,9 +7,9 @@
         "net_treatment_minus_baseline": -3
       },
       "site": {
-        "authority_treatment": 50,
+        "authority_treatment": 51,
         "literal_baseline": 55,
-        "net_treatment_minus_baseline": -5
+        "net_treatment_minus_baseline": -4
       }
     },
     "by_museum_pair": {
@@ -120,51 +120,51 @@
           "site": {
             "museum_side_record_sets": {
               "brooklyn": {
-                "authority_only": 196,
-                "authority_treatment": 1103,
-                "both": 907,
+                "authority_only": 202,
+                "authority_treatment": 1113,
+                "both": 911,
                 "literal_baseline": 942,
-                "literal_only": 35,
-                "net_treatment_minus_baseline": 161
+                "literal_only": 31,
+                "net_treatment_minus_baseline": 171
               },
               "met": {
                 "authority_only": 1035,
-                "authority_treatment": 14317,
-                "both": 13282,
+                "authority_treatment": 14340,
+                "both": 13305,
                 "literal_baseline": 13401,
-                "literal_only": 119,
-                "net_treatment_minus_baseline": 916
+                "literal_only": 96,
+                "net_treatment_minus_baseline": 939
               }
             },
             "useful_nodes_by_arm": {
-              "authority_treatment": 43,
+              "authority_treatment": 44,
               "literal_baseline": 46,
-              "net_treatment_minus_baseline": -3
+              "net_treatment_minus_baseline": -2
             }
           }
         },
         "museum_side_record_sets": {
           "brooklyn": {
-            "authority_only": 192,
-            "authority_treatment": 1107,
-            "both": 915,
+            "authority_only": 198,
+            "authority_treatment": 1117,
+            "both": 919,
             "literal_baseline": 953,
-            "literal_only": 38,
-            "net_treatment_minus_baseline": 154
+            "literal_only": 34,
+            "net_treatment_minus_baseline": 164
           },
           "met": {
             "authority_only": 186,
-            "authority_treatment": 14424,
-            "both": 14238,
+            "authority_treatment": 14447,
+            "both": 14261,
             "literal_baseline": 14376,
-            "literal_only": 138,
-            "net_treatment_minus_baseline": 48
+            "literal_only": 115,
+            "net_treatment_minus_baseline": 71
           }
         },
         "useful_nodes_by_arm": {
-          "authority_treatment": 51,
+          "authority_treatment": 52,
           "literal_baseline": 57,
-          "net_treatment_minus_baseline": -6
+          "net_treatment_minus_baseline": -5
         }
       },
       "met__harvard": {
@@ -247,9 +247,9 @@
     },
     "per_museum_any_other_museum_record_union": {
       "brooklyn": {
-        "authority_only": 192,
-        "authority_treatment": 1108,
-        "both": 916,
+        "authority_only": 198,
+        "authority_treatment": 1118,
+        "both": 920,
         "by_entity_type": {
           "ruler": {
             "authority_only": 2,
@@ -260,17 +260,17 @@
             "net_treatment_minus_baseline": -4
           },
           "site": {
-            "authority_only": 196,
-            "authority_treatment": 1104,
-            "both": 908,
+            "authority_only": 202,
+            "authority_treatment": 1114,
+            "both": 912,
             "literal_baseline": 951,
-            "literal_only": 43,
-            "net_treatment_minus_baseline": 153
+            "literal_only": 39,
+            "net_treatment_minus_baseline": 163
           }
         },
         "literal_baseline": 962,
-        "literal_only": 46,
-        "net_treatment_minus_baseline": 146
+        "literal_only": 42,
+        "net_treatment_minus_baseline": 156
       },
       "harvard": {
         "authority_only": 1,
@@ -300,8 +300,8 @@
       },
       "met": {
         "authority_only": 186,
-        "authority_treatment": 14424,
-        "both": 14238,
+        "authority_treatment": 14447,
+        "both": 14261,
         "by_entity_type": {
           "ruler": {
             "authority_only": 33,
@@ -313,35 +313,35 @@
           },
           "site": {
             "authority_only": 1035,
-            "authority_treatment": 14317,
-            "both": 13282,
+            "authority_treatment": 14340,
+            "both": 13305,
             "literal_baseline": 13562,
-            "literal_only": 280,
-            "net_treatment_minus_baseline": 755
+            "literal_only": 257,
+            "net_treatment_minus_baseline": 778
           }
         },
         "literal_baseline": 14537,
-        "literal_only": 299,
-        "net_treatment_minus_baseline": -113
+        "literal_only": 276,
+        "net_treatment_minus_baseline": -90
       }
     },
     "useful_nodes_by_arm": {
-      "authority_treatment": 60,
+      "authority_treatment": 61,
       "literal_baseline": 68,
-      "net_treatment_minus_baseline": -8
+      "net_treatment_minus_baseline": -7
     }
   },
   "calibration_control_counts": {
     "calibration_control_false_or_not_useful": 1,
-    "calibration_control_same_useful_exact_target": 47,
+    "calibration_control_same_useful_exact_target": 48,
     "calibration_control_uncertainty": 1,
-    "calibration_control_useful_but_wrong_or_nonidentity": 1
+    "calibration_control_useful_but_wrong_or_nonidentity": 0
   },
   "decision_rule": {
     "calibration": {
       "passed": true,
       "retained_controls": 50,
-      "uncertain_or_wrong": 3
+      "uncertain_or_wrong": 2
     },
     "qualifying_scopes": [
       "site__met__brooklyn",
@@ -412,12 +412,12 @@
   "evaluation_date": "2026-10-11",
   "input_hashes": {
     "private_answer_key": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "review_population_digest": "658adcfa842c5ae186972364b2ccf245c73298158e3e79b368dcdcf41e10b31f",
-    "stage_1_consensus": "26a7342e3fcff287b78a9ea3325c16d7efabf1226cf787fc32a8dd689b64fef4",
-    "stage_1_queue": "23a079ab34a56b69c718c85abafd92974631242bfefb32022632e0db3f78fc2a",
-    "stage_2_consensus": "14f815ecd703d6f17c0f655c90d941e5434d1327e303542e415cc08e6c5fa50e",
-    "stage_2_custodian": "a97ac5487784e225302051d80bcbb5fb89fc306c25e04271b9a6ab5565143b1a",
-    "stage_2_queue": "92baab7f8fd79639398eb17b76240762eb91d675a8a0430108c70bef7cd3d89c"
+    "review_population_digest": "2e1010fb56cf52baea1c9916a2d27d5464e4209406bcf780f4629d937ec30680",
+    "stage_1_consensus": "a0616b1c24288c7f25b956fbad207907dec9e274f354849d1d093ca8f9b6cacd",
+    "stage_1_queue": "220c9b30b6306e4f0637b76c4dd86de7f4c1c6a29d9fce5f1cdb82596ebde17e",
+    "stage_2_consensus": "9a2b632b9d21b60534ab4e0d7bab4e2d1f810565376c3764001738205832e2b5",
+    "stage_2_custodian": "79171e3a6ae747a0d0236c2b412a3b59ae7d1f236e5f37d0864c060a6fd01f98",
+    "stage_2_queue": "410be70a0edd770867092265f0c3c799ea3f633ffa14b598e01fcc8140252c96"
   },
   "primary_decision_counts": {
     "a_authority_only_same_useful_exact_target": 13,
@@ -427,7 +427,7 @@
     "e_literal_only_false_or_not_useful_removal": 14,
     "f_transition_uncertainty": 2
   },
-  "private_join_sha256": "3d6dd3d57d3e143aa1caa4355647c703816e6469d05856923fc456d258b055e6",
+  "private_join_sha256": "ddf930f4b37c7534f21923a9a202dceba68bf6c6f59769290a08adb25f54f12d",
   "review_status": "COMPLETE_TRACEABLE",
   "schema_version": "hapi-authority-control-adjudicated-score/3",
   "scorer_sha256": "6fa0e7a497ea6f809eac38982db0e62bea211a7ea1b7693168a986f8723b620e"
