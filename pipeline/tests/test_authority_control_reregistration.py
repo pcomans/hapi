@@ -140,7 +140,7 @@ def test_reconciler_must_resolve_exactly_the_disputed_questions() -> None:
             "disputed_questions": ["useful_granularity"], "reviews": []}
     role = protocol.ROLES["stage_1_reconciler"]
     schema = protocol.role_inputs(role)["schema"]
-    resolution = {"outcome": "too_broad", "rationale": "r", "citations": ["https://example.org/a"]}
+    resolution = {"outcome": "too_broad", "rationale": "r", "citations": ["https://www.metmuseum.org/art/collection/search/1"]}
     wrong = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "artifact_exceptions": [],
              "resolutions": {"same_entity": {**resolution, "outcome": "same_entity"},
                              "useful_granularity": resolution}}
@@ -189,7 +189,7 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
         protocol.build_consensus("1", queue_path, records)
 
     resolution = {"outcome": "too_broad", "rationale": "Region, not a site.",
-                  "citations": ["https://gazetteer.dainst.org/place/1"]}
+                  "citations": ["https://www.metmuseum.org/art/collection/search/1"]}
     override = write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, {
         "case_id": "review-unit-002", "evidence_sha256": HASH_2, "artifact_exceptions": [],
         "resolutions": {"useful_granularity": resolution},
@@ -222,7 +222,7 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
             key=lambda s: s["review_sha256"]),
         "reconciler_record_sha256": protocol.sha256_path(override),
         "rationale": "Region, not a site.",
-        "citations": ["https://gazetteer.dainst.org/place/1"],
+        "citations": ["https://www.metmuseum.org/art/collection/search/1"],
     }
 
     frozen = tmp_path / "consensus.json"
@@ -354,6 +354,56 @@ def test_released_stage_2_case_carries_evidence_target_and_no_private_binding() 
         "allowed_outcomes": ["exact_identity", "different_identity", "insufficient_evidence"],
     }
     assert protocol.forbidden_keys(released) == []
+
+
+def test_scorer_requires_the_reviewed_stage_2_queue_to_be_the_release_of_the_custodian() -> None:
+    stage_1 = {**stage_1_case("review-unit-007", HASH_1), "questions": {"same_entity": {}}}
+    custodian = {
+        "review_protocol": {"protocol_version": "x"},
+        "cases": [{
+            "case_id": "case-004", "stage_1_review_unit_id": "review-unit-007", "evidence_sha256": HASH_1,
+            "proposed_target": {"target_id": "cluster-x", "target_label": "Senusret III", "target_metadata": {
+                "entity_type": "ruler", "member_ids": ["beckerath-12.05"], "source_ids": ["beckerath"]}},
+            "question": "Exact?", "allowed_outcomes": ["exact_identity", "different_identity", "insufficient_evidence"],
+        }],
+    }
+    hashes = {"stage_1_queue_sha256": HASH_1, "consensus_sha256": HASH_2, "custodian_sha256": "3" * 64}
+    released = queue_builder.released_stage_2_queue({"cases": [stage_1]}, custodian, **hashes)
+    scorer.verify_stage_2_release(ROOT, released, {"cases": [stage_1]}, custodian, **hashes)
+    for edit in (
+        lambda q: q["cases"][0]["proposed_target"].update(target_label="Senusret II"),
+        lambda q: q["cases"][0]["proposed_target"]["target_metadata"]["member_ids"].append("kitchen-12.04"),
+        lambda q: q.update(frozen_stage_1_consensus_sha256="4" * 64),
+    ):
+        edited = copy.deepcopy(released)
+        edit(edited)
+        with pytest.raises(ValueError, match="Stage 2 queue is not the release of the bound custodian"):
+            scorer.verify_stage_2_release(ROOT, edited, {"cases": [stage_1]}, custodian, **hashes)
+
+
+def test_every_judgment_must_cite_a_source_the_record_shows_was_consulted() -> None:
+    case = {**stage_1_case("review-unit-001", HASH_1), "sides": {
+        "met": [{"source_url": "https://www.metmuseum.org/art/collection/search/7"}],
+        "brooklyn": [{"representative_exact_mention": "Abydos"}]}}
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    base = review_answer(case, "same_entity", "useful")
+    unseen = "https://www.metmuseum.org/toah/works-of-art/14.6.179"
+
+    only_unseen = protocol.validate({"events": events({**base, "citations": [unseen]})}, case, role, schema)
+    assert "decision" not in only_unseen
+    assert only_unseen["failure"] == "judgment cites no consulted source: ['decision']"
+    assert only_unseen["unconsulted_citations"] == [unseen]
+
+    # A search result (query and www. ignored) or a URL of the shown case evidence is consulted;
+    # an extra unconsulted citation is recorded but does not void the judgment.
+    for citations in (
+        ["https://metmuseum.org/art/collection/search/1/?position=0", unseen],
+        ["https://www.metmuseum.org/art/collection/search/7"],
+    ):
+        record = protocol.validate({"events": events({**base, "citations": citations})}, case, role, schema)
+        assert record["decision"]["citations"] == citations
+        assert record["unconsulted_citations"] == sorted({unseen} & set(citations))
 
 
 def test_committed_digest_binds_every_current_protocol_file() -> None:

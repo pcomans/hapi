@@ -1084,6 +1084,31 @@ def released_stage_2_case(custodian_case: dict, stage_1_case: dict) -> dict:
     }
 
 
+def released_stage_2_queue(
+    stage_1: dict, custodian: dict, *, stage_1_queue_sha256: str, consensus_sha256: str,
+    custodian_sha256: str,
+) -> dict:
+    """The released Stage 2 queue, derived from the Stage 1 queue and the custodian alone, so
+    the scorer can rebuild it and require the reviewed queue to be exactly this."""
+    expected = {case["case_id"]: case for case in stage_1["cases"]}
+    released = {
+        "schema_version": "hapi-authority-independent-control-stage-2-review/7",
+        "stage_1_queue_sha256": stage_1_queue_sha256,
+        "frozen_stage_1_consensus_sha256": consensus_sha256,
+        "stage_2_custodian_sha256": custodian_sha256,
+        "review_protocol": custodian["review_protocol"],
+        "task": "Judge whether each proposed canonical target is the exact identity represented by the included museum-side evidence, not merely a containing, adjacent, diachronically associated, or broader place.",
+        "cases": [
+            released_stage_2_case(custodian_case, expected[custodian_case["stage_1_review_unit_id"]])
+            for custodian_case in custodian["cases"]
+        ],
+    }
+    forbidden = recursive_forbidden_keys(released, forbidden_keys=STAGE_2_FORBIDDEN_KEYS)
+    if forbidden:
+        raise ValueError(f"Stage 2 release contains forbidden private/class fields: {forbidden}")
+    return released
+
+
 def release_stage_2(
     repo_root: Path,
     stage_1_path: Path,
@@ -1103,23 +1128,12 @@ def release_stage_2(
     readiness = stage_2_release_readiness(stage_1, custodian)
     if not readiness["passed"]:
         raise ValueError(f"Stage 2 release evidence contract failed: {readiness}")
-    expected = {case["case_id"]: case for case in stage_1["cases"]}
-    released_cases = [
-        released_stage_2_case(custodian_case, expected[custodian_case["stage_1_review_unit_id"]])
-        for custodian_case in custodian["cases"]
-    ]
-    released = {
-        "schema_version": "hapi-authority-independent-control-stage-2-review/7",
-        "stage_1_queue_sha256": sha256_path(stage_1_path),
-        "frozen_stage_1_consensus_sha256": sha256_path(consensus_path),
-        "stage_2_custodian_sha256": sha256_path(custodian_path),
-        "review_protocol": custodian["review_protocol"],
-        "task": "Judge whether each proposed canonical target is the exact identity represented by the included museum-side evidence, not merely a containing, adjacent, diachronically associated, or broader place.",
-        "cases": released_cases,
-    }
-    forbidden = recursive_forbidden_keys(released, forbidden_keys=STAGE_2_FORBIDDEN_KEYS)
-    if forbidden:
-        raise ValueError(f"Stage 2 release contains forbidden private/class fields: {forbidden}")
+    released = released_stage_2_queue(
+        stage_1, custodian,
+        stage_1_queue_sha256=sha256_path(stage_1_path),
+        consensus_sha256=sha256_path(consensus_path),
+        custodian_sha256=sha256_path(custodian_path),
+    )
     if out_path.exists():
         raise ValueError(f"{out_path} already exists; the released queue is never overwritten")
     write_json(out_path, released)

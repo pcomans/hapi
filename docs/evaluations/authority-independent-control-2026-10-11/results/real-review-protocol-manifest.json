@@ -54,11 +54,11 @@
     },
     "scorer": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-      "sha256": "c8577970c0633a34685346c19f15681d40a6bc8531987cb8fb463b5f16b1d202"
+      "sha256": "6fa0e7a497ea6f809eac38982db0e62bea211a7ea1b7693168a986f8723b620e"
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "3ce52c793caea8ee6d3cbd56905ddc1b72352d4f7a4942894213181ccf2f419a"
+      "sha256": "426011ac982bcfa75abdeb8e90e357c86342d8530e743990d0fa838710d80d17"
     }
   },
   "queue_inputs": {

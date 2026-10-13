@@ -156,6 +156,16 @@ def _blocked(url: str | None) -> bool:
     return any(host == domain or host.endswith("." + domain) for domain in BLOCKED_DOMAINS)
 
 
+URL_RE = re.compile(r"https?://[^\s\"'<>)\]]+")
+
+
+def _page(url: str | None) -> tuple[str, str]:
+    """A URL's page identity: host without `www.` and path without trailing slash. The query
+    is dropped, since a fetch of `.../object/292258?position=0` reads the cited object page."""
+    parsed = urlparse((url or "").strip())
+    return (parsed.hostname or "").lower().removeprefix("www."), parsed.path.rstrip("/")
+
+
 def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     """Derive the record's fields from its stored event stream and validate the answer.
 
@@ -265,6 +275,27 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     touched = [r["url"] for r in record["web_search_results"]] + [f["url"] for f in record["web_fetches"]] + cited
     if any(_blocked(url) for url in touched):
         record["failure"] = f"blocked domain used: {[u for u in touched if _blocked(u)]}"
+        return record
+    # A citation is consulted when the record shows it: a search result, a successful fetch,
+    # or a URL of the case evidence the reviewer was shown (for a reconciler, the case itself,
+    # not the reviews' citations). Every judgment must rest on at least one; citations the
+    # record does not show are kept on the record, not counted.
+    evidence = case["case"] if role.reconciler else case
+    consulted = (
+        {_page(r["url"]) for r in record["web_search_results"]}
+        | {_page(f["url"]) for f in record["web_fetches"] if f["status_code"] == 200}
+        | {_page(url) for url in URL_RE.findall(json.dumps(evidence, ensure_ascii=False))}
+    )
+    judgments = {"decision": decision.get("citations", [])} | {
+        question: resolution["citations"] for question, resolution in decision.get("resolutions", {}).items()
+    }
+    unsupported = sorted(
+        question for question, urls in judgments.items()
+        if (urls or question != "decision") and not any(_page(url) in consulted for url in urls)
+    )
+    record["unconsulted_citations"] = sorted({url for url in cited if _page(url) not in consulted})
+    if unsupported:
+        record["failure"] = f"judgment cites no consulted source: {unsupported}"
         return record
     record["decision"] = decision
     return record

@@ -142,9 +142,18 @@ per-case pattern.
    consensus (`freeze-consensus`) is written once and accepted only if it is exactly what the
    protocol rebuilds from the stored records: every attempt is re-checked from its saved
    events, each case must have exactly one valid call per role, and each record must have
-   been composed from the current prompt, schema and case.
+   been composed from the current prompt, schema and case. Each judgment (a reviewer's
+   decision, each reconciler resolution) must cite at least one source the record shows was
+   consulted: a search result, a successful fetch, or a URL of the case evidence shown
+   (added after scoring on Codex review of #351; host without `www.`, path, query ignored).
+   Every stored decision passes it, so both consensus files are unchanged; 9 of the 353
+   stored attempts with a decision also cite a page the record does not show was opened
+   (e.g. a Met Heilbrunn essay), which the re-check lists as `unconsulted_citations` and
+   does not count as support.
 2. **Stage 2 release.** `build_review_queue.py release-stage-2` releases the 65 proposed-target
-   cases only after verifying the frozen Stage 1 consensus, and binds its hash.
+   cases only after verifying the frozen Stage 1 consensus, and binds its hash. The scorer
+   rebuilds the release from the digest-bound custodian and requires the reviewed queue to be
+   exactly it, so no target label or metadata can change after release.
 3. **Stage 2** runs the same way: two independent reviewers, then the reconciler on
    disagreements, then a frozen consensus.
 4. **Scoring.** `score_review.py` verifies both consensus files against the records, checks

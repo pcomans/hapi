@@ -59,11 +59,11 @@ def write_json(path: Path, value) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def load_protocol(repo_root: Path):
-    path = repo_root / "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py"
-    spec = importlib.util.spec_from_file_location("_authority_control_review_protocol_for_score", path)
+def load_protocol(repo_root: Path, name: str = "review_protocol"):
+    path = repo_root / f"docs/evaluations/authority-independent-control-2026-10-11/scripts/{name}.py"
+    spec = importlib.util.spec_from_file_location(f"_authority_control_{name}_for_score", path)
     if spec is None or spec.loader is None:
-        raise RuntimeError("cannot load traceable review protocol")
+        raise RuntimeError(f"cannot load traceable {name}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
@@ -425,10 +425,24 @@ def decision_rule(joined: list[dict]) -> dict:
     }
 
 
+def verify_stage_2_release(
+    repo_root: Path, stage_2_queue: dict, stage_1_queue: dict, custodian: dict, *,
+    stage_1_queue_sha256: str, consensus_sha256: str, custodian_sha256: str,
+) -> None:
+    """The reviewed Stage 2 queue must be exactly the release of the bound custodian: every
+    target's label and metadata, not only its id, so an edit after release cannot pass."""
+    released = load_protocol(repo_root, "build_review_queue").released_stage_2_queue(
+        stage_1_queue, custodian, stage_1_queue_sha256=stage_1_queue_sha256,
+        consensus_sha256=consensus_sha256, custodian_sha256=custodian_sha256,
+    )
+    if stage_2_queue != released:
+        raise ValueError("Stage 2 queue is not the release of the bound custodian")
+
+
 def score(
     *, repo_root: Path, stage_1_queue_path: Path, stage_1_records: Path,
-    stage_1_consensus_path: Path, stage_2_queue_path: Path, stage_2_records: Path,
-    stage_2_consensus_path: Path, answer_key_path: Path, population_digest_path: Path,
+    stage_1_consensus_path: Path, stage_2_queue_path: Path, stage_2_custodian_path: Path,
+    stage_2_records: Path, stage_2_consensus_path: Path, answer_key_path: Path, population_digest_path: Path,
     private_out: Path, public_out: Path,
 ) -> dict:
     protocol = load_protocol(repo_root)
@@ -442,6 +456,9 @@ def score(
     for binding in bound:
         if binding["sha256"] != sha256_path(repo_root / binding["path"]):
             raise ValueError(f"population digest review-protocol binding changed: {binding['path']}")
+    builder = repo_root / "docs/evaluations/authority-independent-control-2026-10-11/scripts/build_review_queue.py"
+    if digest["input_hashes"]["review_population_builder_sha256"] != sha256_path(builder):
+        raise ValueError("population digest review-population builder binding changed")
     if digest["output_hashes"]["stage_1_queue_sha256"] != sha256_path(stage_1_queue_path):
         raise ValueError("population digest does not bind Stage 1 queue")
     if digest["output_hashes"]["private_answer_key_sha256"] != sha256_path(answer_key_path):
@@ -453,6 +470,14 @@ def score(
         raise ValueError("Stage 2 queue does not bind the population custodian")
     if stage_2_queue["frozen_stage_1_consensus_sha256"] != sha256_path(stage_1_consensus_path):
         raise ValueError("Stage 2 queue does not bind Stage 1 consensus")
+    if sha256_path(stage_2_custodian_path) != digest["output_hashes"]["stage_2_custodian_sha256"]:
+        raise ValueError("population digest does not bind the Stage 2 custodian")
+    verify_stage_2_release(
+        repo_root, stage_2_queue, read_json(stage_1_queue_path), read_json(stage_2_custodian_path),
+        stage_1_queue_sha256=sha256_path(stage_1_queue_path),
+        consensus_sha256=sha256_path(stage_1_consensus_path),
+        custodian_sha256=sha256_path(stage_2_custodian_path),
+    )
     consensus_1 = protocol.verify_consensus("1", stage_1_consensus_path, stage_1_queue_path, stage_1_records)
     consensus_2 = protocol.verify_consensus("2", stage_2_consensus_path, stage_2_queue_path, stage_2_records)
     answer = read_json(answer_key_path)
@@ -463,6 +488,7 @@ def score(
         "stage_1_queue": stage_1_queue_path,
         "stage_1_consensus": stage_1_consensus_path,
         "stage_2_queue": stage_2_queue_path,
+        "stage_2_custodian": stage_2_custodian_path,
         "stage_2_consensus": stage_2_consensus_path,
         "private_answer_key": answer_key_path,
         "review_population_digest": population_digest_path,
@@ -508,6 +534,7 @@ def main() -> None:
     parser.add_argument("--stage-1-records", type=Path, required=True)
     parser.add_argument("--stage-1-consensus", type=Path, required=True)
     parser.add_argument("--stage-2-queue", type=Path, required=True)
+    parser.add_argument("--stage-2-custodian", type=Path, required=True)
     parser.add_argument("--stage-2-records", type=Path, required=True)
     parser.add_argument("--stage-2-consensus", type=Path, required=True)
     parser.add_argument("--private-answer-key", type=Path, required=True)
@@ -518,7 +545,8 @@ def main() -> None:
     public = score(
         repo_root=args.repo_root.resolve(), stage_1_queue_path=args.stage_1_queue,
         stage_1_records=args.stage_1_records, stage_1_consensus_path=args.stage_1_consensus,
-        stage_2_queue_path=args.stage_2_queue, stage_2_records=args.stage_2_records,
+        stage_2_queue_path=args.stage_2_queue, stage_2_custodian_path=args.stage_2_custodian,
+        stage_2_records=args.stage_2_records,
         stage_2_consensus_path=args.stage_2_consensus, answer_key_path=args.private_answer_key,
         population_digest_path=args.review_population_digest,
         private_out=args.private_out, public_out=args.public_out,
