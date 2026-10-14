@@ -307,7 +307,7 @@ changed after that (#357, the ruler escalation queue), so on a later `main` the 
 refuses to run ("current resolver input changed"). To rebuild, restore just those inputs in
 the current tree, keeping the current #337 scripts (whose hashes the run manifest and the
 digest bind): `git checkout 1d35337 -- <the six CURRENT_INPUTS paths>`. The
-`frozen_inputs_root` test fixture builds exactly that tree and checks the frozen bytes. The
+`frozen_inputs_root` test fixture builds the equivalent tree and checks the frozen bytes. The
 committed digest, rerun proof and score stay valid: they bind the population that was built.
 
 ## Reconciliation, Stage 2 and scoring (2026-10-12)

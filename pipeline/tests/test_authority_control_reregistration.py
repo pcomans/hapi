@@ -847,6 +847,18 @@ def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(
         queue_builder.validate_run(frozen_inputs_root, run)
 
 
+def test_review_population_refuses_a_tree_whose_resolver_inputs_are_not_the_frozen_ones(
+        tmp_path: Path, frozen_inputs_root) -> None:
+    # The live claim graph, changed by #357 after #337 froze its inputs.
+    tampered = tmp_path / "tree"
+    shutil.copytree(frozen_inputs_root, tampered)
+    shutil.copyfile(ROOT / "web-claimgraph/data/claim-graph.json", tampered / "web-claimgraph/data/claim-graph.json")
+    run = tmp_path / "run"
+    _frozen_run(run)
+    with pytest.raises(ValueError, match="current resolver input changed: web-claimgraph/data/claim-graph.json"):
+        queue_builder.validate_run(tampered, run)
+
+
 def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(
         tmp_path: Path, frozen_inputs_root) -> None:
     run = tmp_path / "run"
