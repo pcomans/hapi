@@ -1366,3 +1366,13 @@ def test_the_scorer_accepts_only_the_committed_records(tmp_path: Path) -> None:
     (tmp_path / "stage-2").mkdir()
     with pytest.raises(ValueError, match="stage 1 records differ from the committed"):
         scorer.require_committed_records(ROOT, {"1": tmp_path / "stage-1", "2": tmp_path / "stage-2"})
+
+
+def test_the_rerun_proof_needs_two_distinct_runs(tmp_path: Path) -> None:
+    rerun = _load("_reregistration_verify_rerun", "verify_rerun.py")
+    run = tmp_path / "run"
+    run.mkdir()
+    (tmp_path / "alias").symlink_to(run)
+    for second in (run, tmp_path / "alias"):
+        with pytest.raises(ValueError, match="the two runs are one directory"):
+            rerun.verify(run, second)

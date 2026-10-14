@@ -37,6 +37,9 @@ def sha256_path(path: Path) -> str:
 
 
 def verify(first: Path, second: Path) -> dict:
+    # Two runs means two directories: the same one twice (or an alias of it) proves nothing.
+    if first.resolve() == second.resolve() or first.samefile(second):
+        raise ValueError(f"the two runs are one directory: {first} and {second}")
     first_hashes = {name: sha256_path(first / name) for name in FILES}
     second_hashes = {name: sha256_path(second / name) for name in FILES}
     mismatches = [name for name in FILES if first_hashes[name] != second_hashes[name]]
