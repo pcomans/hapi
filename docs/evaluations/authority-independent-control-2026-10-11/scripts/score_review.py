@@ -439,14 +439,9 @@ def verify_stage_2_release(
         raise ValueError("Stage 2 queue is not the release of the bound custodian")
 
 
-def score(
-    *, repo_root: Path, stage_1_queue_path: Path, stage_1_records: Path,
-    stage_1_consensus_path: Path, stage_2_queue_path: Path, stage_2_custodian_path: Path,
-    stage_2_records: Path, stage_2_consensus_path: Path, answer_key_path: Path, population_digest_path: Path,
-    private_out: Path, public_out: Path,
-) -> dict:
-    protocol = load_protocol(repo_root)
-    digest = read_json(population_digest_path)
+def verify_protocol_bindings(repo_root: Path, digest: dict) -> None:
+    """Every file the review ran on, and the scorer and gate, must be the one the population
+    digest binds."""
     bindings = digest["input_hashes"]["review_protocol"]
     bound = [
         bindings["validator"], bindings["runner"], bindings["scorer"], bindings["artifact_schema"],
@@ -457,6 +452,25 @@ def score(
     for binding in bound:
         if binding["sha256"] != sha256_path(repo_root / binding["path"]):
             raise ValueError(f"population digest review-protocol binding changed: {binding['path']}")
+
+
+def require_page_load_gate(page_load: dict) -> None:
+    """A run whose citable pages loaded unequally across classes is not scored."""
+    if not page_load["passed"]:
+        raise ValueError("the page-load gate failed on these records: "
+                         + json.dumps({s: v["citable_opens_class_deviation_percentage_points"]
+                                       for s, v in page_load["stages"].items()}))
+
+
+def score(
+    *, repo_root: Path, stage_1_queue_path: Path, stage_1_records: Path,
+    stage_1_consensus_path: Path, stage_2_queue_path: Path, stage_2_custodian_path: Path,
+    stage_2_records: Path, stage_2_consensus_path: Path, answer_key_path: Path, population_digest_path: Path,
+    private_out: Path, public_out: Path,
+) -> dict:
+    protocol = load_protocol(repo_root)
+    digest = read_json(population_digest_path)
+    verify_protocol_bindings(repo_root, digest)
     builder = repo_root / "docs/evaluations/authority-independent-control-2026-10-11/scripts/build_review_queue.py"
     if digest["input_hashes"]["review_population_builder_sha256"] != sha256_path(builder):
         raise ValueError("population digest review-population builder binding changed")
@@ -485,10 +499,7 @@ def score(
     # citable pages loaded unequally across classes is not scored.
     page_load = load_protocol(repo_root, "page_load_gate").gate(
         (stage_1_queue_path, stage_1_records), (stage_2_queue_path, stage_2_records), answer_key_path)
-    if not page_load["passed"]:
-        raise ValueError("the page-load gate failed on these records: "
-                         + json.dumps({s: v["citable_opens_class_deviation_percentage_points"]
-                                       for s, v in page_load["stages"].items()}))
+    require_page_load_gate(page_load)
     answer = read_json(answer_key_path)
     joined = validate_and_join(
         read_json(stage_1_queue_path), consensus_1, stage_2_queue, consensus_2, answer

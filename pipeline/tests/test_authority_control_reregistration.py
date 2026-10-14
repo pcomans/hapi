@@ -1056,3 +1056,24 @@ def test_the_model_never_sees_or_echoes_the_evidence_hash() -> None:
         content = protocol.compose_user_content(value, inputs["prompt"], inputs["schema"], inputs["citable_sources"])
         assert HASH_1 not in content and "evidence_sha256" not in content
         assert '"case_id": "review-unit-001"' in content
+
+
+def test_the_scorer_refuses_a_digest_that_binds_another_browser_tool_or_source_list() -> None:
+    digest = json.loads((EVALUATION / "results" / "real-review-population-digest.json").read_text())
+    scorer.verify_protocol_bindings(ROOT, digest)
+    for name in ("browser_tool", "citable_sources", "page_load_gate"):
+        changed = json.loads(json.dumps(digest))
+        changed["input_hashes"]["review_protocol"][name]["sha256"] = "0" * 64
+        path = changed["input_hashes"]["review_protocol"][name]["path"]
+        with pytest.raises(ValueError, match=f"population digest review-protocol binding changed: {path}"):
+            scorer.verify_protocol_bindings(ROOT, changed)
+
+
+def test_the_scorer_refuses_a_run_that_failed_the_page_load_gate() -> None:
+    gate = json.loads((EVALUATION / "results" / "real-page-load-gate.json").read_text())
+    scorer.require_page_load_gate(gate)
+    failed = json.loads(json.dumps(gate))
+    failed["stages"]["1"]["citable_opens_class_deviation_percentage_points"]["site/authority_only_transition"] = -7.3
+    failed["stages"]["1"]["passed"] = failed["passed"] = False
+    with pytest.raises(ValueError, match=r'the page-load gate failed on these records: .*"site/authority_only_transition": -7\.3'):
+        scorer.require_page_load_gate(failed)

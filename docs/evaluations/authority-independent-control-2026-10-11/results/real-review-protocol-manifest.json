@@ -66,7 +66,7 @@
     },
     "scorer": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-      "sha256": "b7d6254d05f1ff91d3d3ad015e6cd7f697bfba34290ecb841e171246f754b905"
+      "sha256": "2f51c33f0a20c2ff6bf6e445a9424b31d509e317322fcad5120456fce1a4b929"
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
