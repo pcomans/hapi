@@ -31,67 +31,92 @@ Deterministic headline (before review): shared records on any two-museum shared 
 literal arm Met 27,330 / Brooklyn 2,894 / Harvard 534; authority arm Met 14,502 /
 Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 
-## Result (2026-10-13, protocol v4): CONTINUE, sites only, Met–Brooklyn and Met–Harvard
+## Result (2026-10-14, protocol v10): CONTINUE, sites only, all three museum pairs
 
 `results/real-adjudicated-score.json`, from `decision-rule.md` applied in code:
 
 | Step | Numbers | Outcome |
 |---|---|---|
-| Calibration | 2 of 50 retained controls uncertain or wrong (4%, limit 20%) | passed |
+| Calibration | 3 of 50 retained controls uncertain or wrong (6%, limit 20%) | passed |
 | Safety | b = 0 of 13 authority gains labelled a/b/c | passed |
-| Utility | scopes below | 2 qualify |
+| Utility | scopes below | 3 qualify |
 
 | Scope | a | b | c | d | e | f | Qualifies |
 |---|---|---|---|---|---|---|---|
 | site, Met–Brooklyn | 9 | 0 | 0 | 10 | 10 | 1 | yes (a + e = 19 > d = 10) |
-| site, Met–Harvard | 1 | 0 | 0 | 2 | 2 | 0 | yes (3 > 2) |
-| site, Brooklyn–Harvard | 1 | 0 | 0 | 2 | 1 | 0 | no (a + e = d) |
+| site, Met–Harvard | 1 | 0 | 0 | 1 | 3 | 0 | yes (4 > 1) |
+| site, Brooklyn–Harvard | 1 | 0 | 0 | 1 | 2 | 0 | yes (3 > 1) |
 | ruler, Met–Brooklyn | 2 | 0 | 0 | 5 | 1 | 1 | no (3 < 5) |
 
 Reading it:
-- **Every judgment rests on pages the reviewer actually read.** This is the v4 run (see
-  "Review protocol"): the agents opened pages in a real browser, and only a page the call
-  itself opened and that loaded counts as a citation. Museum record pages loaded 99.7% of the
-  time at the Met and Brooklyn and 47 of 47 at Harvard, at the same rate in every case class
-  (`results/real-page-load-gate.json`, the Rule 14 gate, measured before any result was
-  read). All 216 deciding Stage 1 calls loaded at least one page.
+- **Every judgment rests on pages the reviewer actually read.** The agents opened pages in a
+  real browser, and only a page the call itself opened, that loaded, and that belongs to a
+  citable source counts as a citation. Museum record pages loaded 802 of 802 times in Stage 1
+  and 397 of 398 in Stage 2; the iDAI gazetteer records the Stage 2 site cases ask about
+  loaded 112 of 112 times. Every class's loaded rate for citable pages is within 5 points of
+  its entity type's rate in both stages (largest gap: ruler authority gains in Stage 2, 4.7
+  points below; `results/real-page-load-gate.json`, the Rule 14 gate, measured before any
+  result was read). All 346 deciding reviewer calls loaded at least one page.
+- **What the Stage 2 citations rest on:** 385 cite the case's own museum records, 105 the
+  target's iDAI gazetteer record, 65 an independent source (Pleiades 37, the Griffith
+  Institute 12, UCL's Digital Egypt 4, and others).
 - **One false merge is scored as uncertain.** Case-067 (ruler, Met–Brooklyn, an authority
   gain): both Stage 1 reviewers found the two sides are different rulers, and Stage 2 found
   the target is not their identity. Granularity has nothing to judge for two different
   entities, so it was settled as `insufficient_evidence`, and the frozen classifier
   (`classify_case`, which `decision-rule.md` names) checks uncertainty first and requires
   `useful` for b: the case is labelled f, not b. The label is left as frozen. **Counted as
-  b, the verdict is unchanged:** b = 1 is under 2 and is 1 of 14 gains (7%, limit 10%); it
-  makes the ruler Met–Brooklyn scope unsafe, which did not qualify anyway. The other f
-  (case-011, a site gain) is a real ambiguity: both reviewers opened every record; the
-  Brooklyn records give only a hedged "Qurnah", the Met records "Sheikh Abd el-Qurna" (a
-  specific hill), and no page they opened settles whether the two are the same place.
-- **The authority arm still loses correct matches.** 19 literal-only losses were correct,
-  useful connections plain text makes (d), against 14 that were wrong or not useful (e).
-  For sites in Met–Brooklyn and Met–Harvard, the gains plus the bad links it removes outweigh
-  the good links it loses; for rulers they do not (5 lost against 3).
-- **Met–Harvard qualifies narrowly** (5 changed cases, 3 vs 2), so treat it as weak.
+  b, the verdict is unchanged:** b = 1 is under 2 and is 1 of 13 gains (8%, limit 10%); it
+  makes the ruler Met–Brooklyn scope unsafe, which does not qualify anyway. The other f
+  (case-011, a site gain) is a real ambiguity: the Brooklyn records give only a hedged
+  "Qurnah", the Met records "Sheikh Abd el-Qurna" (a specific hill), and Polz's encyclopedia
+  entry, which both reviewers opened, shows "Qurna" has named the hill, the necropolis area
+  around the Sety I temple and the modern village.
+- **The authority arm still loses correct matches.** 17 literal-only losses were correct,
+  useful connections plain text makes (d), against 16 that were wrong or not useful (e).
+  For sites in all three museum pairs, the gains plus the bad links it removes outweigh the
+  good links it loses; for rulers they do not (5 lost against 3).
+- **The Harvard pairs qualify narrowly** (Met–Harvard 5 changed cases, Brooklyn–Harvard 4),
+  so treat them as weak. Both moved from v4 on one judgment each: the plain-text "Fayum" link
+  (case-094, Met–Harvard; case-012, Brooklyn–Harvard), which both reviewers now judged the
+  same place but too broad to be useful, citing Pleiades' entry for the Fayum as a whole
+  region of many sites (in v4 they had judged it useful). That makes those two losses e, not
+  d, and is what lets Brooklyn–Harvard qualify.
+- **One control is unstable across runs.** Case-088 (a site control, Met–Brooklyn) was
+  "useful but wrong identity" in v3, "same, useful, exact target" in v4, and is now
+  uncertain: the two Stage 2 reviewers disagreed, and the reconciler found that Brooklyn's
+  "Leontopolis" records mix two Delta sites (one reads "Leontopolis (Tell el Muqdam)", others
+  Tell el-Yahudiya, the target), so the museum-side evidence does not denote exactly the
+  target. This is a mixed-evidence case, not a reviewer error.
 - The counts are a finite census of the selected review population, not a sample estimate.
 
 Review: Stage 1, 108 units, two reviewers agreeing on both questions in 107 (1 reconciled
-with a cited override); Stage 2, 65 proposed targets, agreeing in 63 (2 reconciled). Every
-Stage 1 reviewer call was valid on its first attempt; in Stage 2, three calls were retried
-because a search result touched Wikidata (cases 013 and 035), and no call cited a page it
-had not opened. No call hit a session limit. All
-calls ran through Claude Code (Claude Sonnet 5.5) on the subscription; the records are
-private (`dropbox/hapi-337-review-v4-2026-10-13/`), bound by the hashes in the score.
+with a cited override); Stage 2, 65 proposed targets, agreeing in 62 (3 reconciled). Every
+reviewer and reconciler call was valid on its first attempt; no call hit a session limit.
+Browserbase served 13 Stage 1 and 7 Stage 2 page opens (15 loaded). All calls ran through
+Claude Code (Claude Sonnet 5.5) on the subscription; the records are private
+(`dropbox/hapi-337-review-v10-2026-10-14/`), bound by the hashes in the score.
 
-**The superseded v3 run (2026-10-12).** The first run of this registration read pages with
-Claude Code's WebFetch, which the Met and Brooklyn sites refuse (see "Review protocol"), so
-most of its judgments about those records rested on search summaries or on the case's own
-field text. On the project owner's ruling that a citation the agent could not access is not
-a citation, the whole review was re-run under protocol v4 from the same frozen population
-(the 108 Stage 1 units and the private answer key are byte-identical; the queue files differ
-only in their prompt and schema hashes). The v3 result was the same verdict and the same
-primary counts (a 13, b 0, c 0, d 19, e 14, f 2); one retained control (case-088) moved from
-"useful but wrong identity" to "same, useful, exact target", and calibration went from 3 to
-2 of 50. The v3 records stay private and unchanged (`dropbox/hapi-337-review-2026-10-11/`);
-its score is in the Git history of `results/real-adjudicated-score.json`.
+**Superseded runs** (all on the same frozen population: the 108 Stage 1 units and the private
+answer key are byte-identical in every run). Each was stopped or superseded for a defect in
+how pages were read or which sources counted, never for its result; the records of v5 to v9
+were never read beyond the page-load counts.
+- **v3** (2026-10-12): pages read with Claude Code's WebFetch, which the Met and Brooklyn sites
+  refuse, so most judgments rested on search summaries or the case's own field text. Same
+  verdict and primary counts as v4; private (`dropbox/hapi-337-review-2026-10-11/`).
+- **v4** (2026-10-13): pages read in a headless browser, any loaded page citable. CONTINUE,
+  site Met–Brooklyn and Met–Harvard; a 13, b 0, c 0, d 19, e 14, f 2; calibration 2 of 50. Its
+  score is in the Git history of `results/real-adjudicated-score.json`.
+- **v5**: only listed scholarly sources citable, headful browser. Stage 1 failed the page-load
+  gate (Trismegistos and UCL's Digital Egypt walled).
+- **v6**: Browserbase for Digital Egypt and PCMA, Trismegistos excluded. Stopped when a
+  reviewer miscopied the evidence hash three times on one unit.
+- **v7**: the hash left out of the model input. Passed the gate, but `open_page` timed out on
+  every iDAI gazetteer place page, the record each Stage 2 case asks about.
+- **v8**: that fixed. Stopped when a reviewer cited a UCLA Encyclopedia of Egyptology article
+  in three attempts, which the allowlist's path did not cover.
+- **v9**: all of eScholarship citable. Stage 1 failed the page-load gate (site authority gains
+  7.3 points below the site rate), mostly from `open_page` errors on Heidelberg pages.
 
 ## Review protocol
 
@@ -137,9 +162,22 @@ the project owner's decision every scored call runs on the Claude Code subscript
   fetches with HTTP 429, whatever the user agent; a real browser passes it. A headless one is
   still refused by the Anubis and Cloudflare walls in front of Pleiades, UNESCO, the Theban
   Mapping Project and others (3 of 58 walled pages of the v4 run loaded headless, 36 headful).
-  Still walled even headful: UCL's Digital Egypt and Trismegistos (Cloudflare), Heidelberg's
-  Propylaeum (Anubis). The browser does not disguise itself to get past a wall a site puts
-  up against automated readers.
+  Still walled even headful: UCL's Digital Egypt and Trismegistos (Cloudflare). The browser
+  does not disguise itself to get past a wall a site puts up against automated readers.
+- **Pages that never finish loading** (protocol v8, 2026-10-14). `open_page` waits for the
+  HTML to be parsed, then up to 15 seconds for the `load` event, and records whether it fired
+  (`load_event`). Until v7 it waited for `load` itself, which the iDAI gazetteer's place pages
+  never reach (an analytics script, piwik.dainst.org, never arrives, although the record has
+  rendered within seconds): in the v7 run all 337 opens of those pages, the record each
+  Stage 2 case asks about, timed out. v7 passed its page-load gate, because the failure hit
+  every class alike; it was superseded before any result was read (records private and unread,
+  `dropbox/hapi-337-review-v7-2026-10-14/`), and the gate now also reports opens by citation
+  role, where a target record that will not load shows.
+- **Pages that navigate on** (protocol v10, 2026-10-14). Heidelberg's Propylaeum pages move on
+  right after their HTML is parsed (an Anubis challenge passing, a redirect to the PDF), and
+  reading the title at that moment raised, so every such open failed with a tool error; these
+  were counted as a wall until v9. Title reads now survive such a navigation, and a PDF
+  reached that way is read as a PDF. Parallel first opens no longer each launch a browser.
 - **Browserbase for the sources that need it** (protocol v6, 2026-10-13). The v5 run's
   Stage 1 failed its pre-registered page-load gate before any result was read: in site
   authority-gain units, opens of citable sources loaded 9.7 points below the site rate,
@@ -148,23 +186,29 @@ the project owner's decision every scored call runs on the Claude Code subscript
   page our browser could not; it did not help with Heidelberg's Propylaeum (Anubis) or IFAO
   (HTTP 503 on every page). On the project owner's choice, Browserbase is used only for the
   sources that need it: those marked `"browser": "browserbase"` in `citable-sources.json`
-  (Digital Egypt, PCMA), fixed before the run so no page is tried twice. Each such page is
-  read in its own session, released when read; its ID is in the page record, for the
-  session's replay on Browserbase. Trismegistos sells full access by institutional
+  (Digital Egypt, PCMA) go there directly, and from v10 any other page that does not load in
+  the local browser (an error, a wall, an empty page; not a 404 or 410) is read again there,
+  the page record keeping why the local read failed (`local_failure`). Each such page is read
+  in its own session, one at a time per call, released when read; its ID is in the page
+  record, for the session's replay on Browserbase. Trismegistos sells full access by institutional
   subscription and blocked this project's IP after the v5 run's attempts, so it was moved to
   the excluded sources before the v6 run, until access is agreed with KU Leuven. The v5
   records stay private and unread (`dropbox/hapi-337-review-v5-2026-10-13/`).
 - **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v6.txt`,
   `stage-1-reconciler-v6.txt`, `stage-2-reviewer-v6.txt`, `stage-2-reconciler-v6.txt`;
   `raw-response-contracts/*-case-v3.schema.json`. All leak-audited before use (Rule 14;
-  `prompt-audit-2026-10-11.md`, rounds 14–17, whose audited SHA-256s of the prompts, the
+  `prompt-audit-2026-10-11.md`, rounds 14–20, whose audited SHA-256s of the prompts, the
   system prompt, the citable-source list and the browser tool are checked by a test).
 - **Only scholarly sources are citable** (protocol v5, 2026-10-13). On the project owner's
   doubt that generic web pages are a scholarly basis, a citation must be a page of a source
   in `citable-sources.json`: museum collections, scholarly gazetteers, Egyptological research
   projects, scholarly publications, institutional open archives (for published work) and
   heritage authorities, matched by host and, for a source inside a broad host (UCL's Digital
-  Egypt, the UCLA Encyclopedia of Egyptology), by path. The list states its criteria, names
+  Egypt), by path. Until v8 the UCLA Encyclopedia of Egyptology was matched by the path
+  `escholarship.org/uc/nelc_uee`, which is only its table of contents (its articles live at
+  `/uc/item/<id>` and `/content/qt<id>/`); in the v8 run a reviewer cited a UEE article in
+  three attempts on one unit, which stops the run, and from v9, on the project owner's
+  decision, all of eScholarship (UC's open archive) is citable, as HAL is. The list states its criteria, names
   each institution, and lists excluded examples with reasons (Wikipedia, Britannica, GeoNames,
   pharaoh.se, private sites, self-upload sites, library authority files, and, from v6,
   Trismegistos). It was drawn up after
@@ -202,6 +246,11 @@ the project owner's decision every scored call runs on the Claude Code subscript
   written as "d"), which the retry cap turns into a stop; on the project owner's decision the
   v6 run was stopped there (its Stage 1 records stay private and unread,
   `dropbox/hapi-337-review-v6-2026-10-14/`) and the whole review re-run under v7.
+- **Pages are checked before a run** (from v10). Every citable page that failed to load in the
+  v5 to v9 records, and up to 3 that loaded per host, was opened with the v10 tool, no model
+  involved, before the v10 run (private: `dropbox/hapi-337-review-v10-2026-10-14/preflight-page-check.json`). All
+  loaded except PCMA (a CAPTCHA, in Browserbase too), IFAO (HTTP 503 to every browser), one
+  Dumbarton Oaks page (timeout) and pages that do not exist (HTTP 404).
 - **Fail loud.** Billed auth, another tool or MCP server, hook output, or another served
   model stops the run, and such a case is not resumed automatically. An answer rejected for
   its format (not JSON, schema-invalid, miscopied case ID, a reconciler resolving
@@ -221,7 +270,7 @@ the project owner's decision every scored call runs on the Claude Code subscript
 - **Session limits.** A Claude Code session limit stops the run, which resumes after the
   reset. A call in which the session limit refused any tool call is a session-limit stop too,
   not a decision, because its research was cut short for a reason unrelated to the case
-  (added 2026-10-12 during the superseded v3 run, where it voided two calls; no v4 run hit a
+  (added 2026-10-12 during the superseded v3 run, where it voided two calls; no run since hit a
   session limit).
 
 Pilot runtimes, not used for any scored call (removed; see the Git history of this
@@ -266,18 +315,19 @@ so it stays.
 ## Known limitations (disclosed)
 
 - **Thinking summaries.** Calls run with `--thinking-display summarized`, so a call's
-  thinking is stored as Claude Code's summary of it. 318 of the 349 deciding records carry
-  one; the other 31 have no thinking block at all (the model answered without thinking). The
-  superseded v3 run had no thinking text, because the flag was found only after it was scored.
+  thinking is stored as Claude Code's summary of it. 348 of the 350 deciding records of the v10
+  run carry one; the other 2 have no thinking block at all (the model answered without
+  thinking). The superseded v3 run had no thinking text, because the flag was found only after
+  it was scored.
 - **Pages are recorded as the text the model read.** `open_page` returns the page's visible
   text (capped at 40,000 characters), stored verbatim in the event log; it is the live page
   on the day of the call, not the frozen corpus snapshot. Search results are recorded as
   titles and URLs.
-- **`loaded` recognises only the Vercel and Cloudflare checkpoints.** Other bot walls (a
-  "Captcha Verification Needed" or "Oh noes!" page) come back with status 200 and count as
-  loaded. The prompts forbid citing an error or checkpoint page, and a scan of all 1,313
-  citations of the deciding calls found none citing such a page (the only untitled pages
-  cited are iDAI gazetteer JSON records and one Fitzwilliam text export).
+- **`loaded` recognises the walls it has met by their titles** (Vercel's "Security
+  Checkpoint", Cloudflare's "Just a moment", Anubis's "Making sure you're not a bot" and "Oh
+  noes!", "Captcha Verification Needed"). A wall with another title and status 200 would count
+  as loaded. A scan of all 1,468 citations of the v10 deciding calls found every one matched to
+  a loaded page with a title, none of them a wall, error or checkpoint page.
 - **Surface text correlates with case type.** An authority-only gain has no common literal
   string by construction, so a case whose two sides show the same string can only be a retained
   control or a literal-only loss. The reviewer can infer that partition from the evidence it is
@@ -295,6 +345,13 @@ so it stays.
   loaded rate per museum and per case class is measured against the private answer key, in
   aggregate, after the Stage 1 reviewers and before any result is read (Rule 14 gate, audit
   round 12).
+- **Some listed sources stay unreadable, and one is broader than its purpose.** PCMA (Polish
+  Centre of Mediterranean Archaeology) shows a CAPTCHA to the local browser and to Browserbase
+  alike, and IFAO answers HTTP 503 to every browser; the browser does not solve CAPTCHAs or
+  disguise itself. In v10 they account for 3 and 1 failed opens. All of eScholarship is
+  citable (from v9) so that UEE articles are, which also admits UC working papers and theses
+  that the `open_repository` criterion excludes; the gate result lists every cited source,
+  and v10 cites eScholarship twice.
 - **Field text helps some cases more than others.** A shown record's field text can carry
   context the bare mention lacks (both the "Hurbeit" and "Horbeit" records read
   "(Pharbaethos)"); this is the museums' own text and the reason the records are shown, but it

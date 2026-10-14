@@ -531,20 +531,20 @@ def test_committed_score_verdict_follows_from_its_own_counts() -> None:
             joined += [joined_case(transition, category, entity, pair)] * row[letter]
     assert scorer.decision_rule(joined) == rule
     assert rule["verdict"] == "CONTINUE"
-    assert rule["qualifying_scopes"] == ["site__met__brooklyn", "site__met__harvard"]
+    assert rule["qualifying_scopes"] == ["site__brooklyn__harvard", "site__met__brooklyn", "site__met__harvard"]
     assert score["primary_decision_counts"] == {
         "a_authority_only_same_useful_exact_target": 13,
         "b_authority_only_useful_but_wrong_or_nonidentity": 0,
         "c_authority_only_false_or_not_useful_gain": 0,
-        "d_literal_only_same_useful_connection_lost": 19,
-        "e_literal_only_false_or_not_useful_removal": 14,
+        "d_literal_only_same_useful_connection_lost": 17,
+        "e_literal_only_false_or_not_useful_removal": 16,
         "f_transition_uncertainty": 2,
     }
     assert score["calibration_control_counts"] == {
-        "calibration_control_same_useful_exact_target": 48,
+        "calibration_control_same_useful_exact_target": 47,
         "calibration_control_useful_but_wrong_or_nonidentity": 0,
         "calibration_control_false_or_not_useful": 1,
-        "calibration_control_uncertainty": 1,
+        "calibration_control_uncertainty": 2,
     }
     assert score["scorer_sha256"] == protocol.sha256_path(SCRIPTS / "score_review.py")
     assert score["review_status"] == "COMPLETE_TRACEABLE"
@@ -857,17 +857,32 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
+    assert gate["schema_version"] == "hapi-337-page-load-gate/5"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
-    assert (gate["deciding_calls"], gate["calls_without_a_loaded_page"]) == (216, 0)
-    assert gate["open_page_by_museum"] == {
-        "brooklyn": {"loaded": 363, "opened": 364}, "harvard": {"loaded": 47, "opened": 47},
-        "met": {"loaded": 337, "opened": 338}, "other": {"loaded": 30, "opened": 53},
+    assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
+    assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
+    assert gate["max_class_deviation_percentage_points"] == 5
+    stages = gate["stages"]
+    assert [(stages[s]["deciding_reviewer_calls"], stages[s]["calls_without_a_loaded_page"]) for s in "12"] == [
+        (216, 0), (130, 0)]
+    assert stages["1"]["citable_opens_class_deviation_percentage_points"] == {
+        "ruler/authority_only_transition": -3.14, "ruler/literal_only_transition": 0.86,
+        "ruler/retained_control": 0.86, "site/authority_only_transition": -1.56,
+        "site/literal_only_transition": 0.37, "site/retained_control": 0.18,
     }
-    assert gate["museum_record_opens_by_transition_class"] == {
-        "authority_only_transition": {"loaded": 94, "opened": 95},
-        "literal_only_transition": {"loaded": 228, "opened": 228},
-        "retained_control": {"loaded": 425, "opened": 426},
+    assert stages["2"]["citable_opens_class_deviation_percentage_points"] == {
+        "ruler/authority_only_transition": -4.74, "ruler/retained_control": 2.22,
+        "site/authority_only_transition": 0.38, "site/retained_control": -0.11,
     }
+    # The v7 failure: the target records Stage 2 judges must load.
+    assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 112, "opened": 112}
+    assert [stages[s]["opens_by_browser"] for s in "12"] == [
+        {"browserbase": {"loaded": 10, "opened": 13}, "local": {"loaded": 899, "opened": 908}},
+        {"browserbase": {"loaded": 5, "opened": 7}, "local": {"loaded": 579, "opened": 582}},
+    ]
+    assert all(abs(d) <= gate["max_class_deviation_percentage_points"]
+               for s in "12" for d in stages[s]["citable_opens_class_deviation_percentage_points"].values())
+    assert [stages[s]["passed"] for s in "12"] == [True, True] and gate["passed"] is True
 
 
 def test_recorded_runtime_is_pinned_and_carries_the_mcp_sdk_and_pdf_reader() -> None:
