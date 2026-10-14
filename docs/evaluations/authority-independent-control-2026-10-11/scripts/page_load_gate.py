@@ -8,7 +8,8 @@ stages (re-validated from their stored events, so `loaded` is the validator's re
 flag), counts `open_page` results that loaded: by museum host, by transition class (all
 opens, and opens of citable sources), and the hosts whose pages did not load; and counts the
 deciding calls' citations by role (`citable-sources.json`: the case's own museums, the
-target's own record, or an independent source) and class. A Stage 1
+target's own record, or an independent source) and by source, per class; and opens by the
+browser that served them (local, or Browserbase for the sources routed to it). A Stage 1
 review unit counts toward the class of every scored case it belongs to, a Stage 2 case
 toward its own (from the private answer key). Writes aggregate counts only.
 
@@ -69,6 +70,8 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
     counter = lambda: collections.defaultdict(lambda: {"loaded": 0, "opened": 0})  # noqa: E731
     by_museum, all_by_class, citable_by_class = counter(), counter(), counter()
     citations_by_class = collections.defaultdict(collections.Counter)
+    citation_domains_by_class = collections.defaultdict(collections.Counter)
+    by_browser = counter()
     not_loaded_by_host = collections.Counter()
     calls = calls_without_a_loaded_page = 0
     for case in read_json(queue_path)["cases"]:
@@ -85,9 +88,14 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
             for url in decision.get("citations", []) + [
                 u for resolution in decision.get("resolutions", {}).values() for u in resolution["citations"]
             ]:
+                source = citable_source_of(url)
                 for transition_class in classes:
-                    citations_by_class[transition_class][citable_source_of(url)["role"]] += 1
+                    citations_by_class[transition_class][source["role"]] += 1
+                    citation_domains_by_class[transition_class][source["domain"] + source.get("path_prefix", "")] += 1
             for opened in record["page_opens"]:
+                if "browser" in opened:
+                    by_browser[opened["browser"]]["opened"] += 1
+                    by_browser[opened["browser"]]["loaded"] += opened["loaded"]
                 museum = museum_of(opened["url"])
                 citable = citable_source_of(opened["url"]) is not None
                 for bucket in [by_museum[museum]] + [all_by_class[c] for c in classes] + (
@@ -117,6 +125,11 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         "citable_opens_by_transition_class": dict(sorted(citable_by_class.items())),
         "citable_opens_class_deviation_percentage_points": gated,
         "not_loaded_opens_by_host": dict(sorted(not_loaded_by_host.items(), key=lambda kv: (-kv[1], kv[0]))),
+        "opens_by_browser": dict(sorted(by_browser.items())),
+        "citations_by_transition_class_and_source": {
+            c: dict(sorted(domains.items(), key=lambda kv: (-kv[1], kv[0])))
+            for c, domains in sorted(citation_domains_by_class.items())
+        },
         "citations_by_transition_class_and_role": {
             c: dict(sorted(roles.items())) for c, roles in sorted(citations_by_class.items())
         },
@@ -136,7 +149,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/3",
+        "schema_version": "hapi-337-page-load-gate/4",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

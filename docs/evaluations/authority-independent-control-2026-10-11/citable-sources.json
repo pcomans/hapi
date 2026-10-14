@@ -1,5 +1,5 @@
 {
- "schema_version": "hapi-337-citable-sources/2",
+ "schema_version": "hapi-337-citable-sources/3",
  "rule": "A review citation counts only if it is a page the call opened, that loaded, and that matches one of `sources`: its host is the source's host or a subdomain of it, and, where the source names a `path_prefix`, its path starts with it. Any other page may help a reviewer find sources but is never a citation.",
  "criteria": {
   "museum_collection": "A museum's own online collection, archive or publications: the institution's record of an object it holds or held, or its published scholarship.",
@@ -15,81 +15,402 @@
   "independent": "Every other citable source."
  },
  "sources": [
-  {"domain": "metmuseum.org", "category": "museum_collection", "role": "case_input", "institution": "The Metropolitan Museum of Art, New York (collection and MetPublications)"},
-  {"domain": "brooklynmuseum.org", "category": "museum_collection", "role": "case_input", "institution": "Brooklyn Museum"},
-  {"domain": "harvardartmuseums.org", "category": "museum_collection", "role": "case_input", "institution": "Harvard Art Museums"},
-  {"domain": "hvrd.art", "category": "museum_collection", "role": "case_input", "institution": "Harvard Art Museums (short links to object records)"},
-  {"domain": "britishmuseum.org", "category": "museum_collection", "role": "independent", "institution": "British Museum"},
-  {"domain": "louvre.fr", "category": "museum_collection", "role": "independent", "institution": "Musée du Louvre"},
-  {"domain": "museoegizio.it", "category": "museum_collection", "role": "independent", "institution": "Museo Egizio, Turin"},
-  {"domain": "smb.museum", "category": "museum_collection", "role": "independent", "institution": "Staatliche Museen zu Berlin (Ägyptisches Museum)"},
-  {"domain": "khm.at", "category": "museum_collection", "role": "independent", "institution": "Kunsthistorisches Museum Wien"},
-  {"domain": "rmo.nl", "category": "museum_collection", "role": "independent", "institution": "Rijksmuseum van Oudheden, Leiden"},
-  {"domain": "glyptoteket.com", "category": "museum_collection", "role": "independent", "institution": "Ny Carlsberg Glyptotek, Copenhagen"},
-  {"domain": "artandhistory.museum", "category": "museum_collection", "role": "independent", "institution": "Royal Museums of Art and History, Brussels"},
-  {"domain": "ashmolean.org", "category": "museum_collection", "role": "independent", "institution": "Ashmolean Museum, University of Oxford"},
-  {"domain": "fitzmuseum.cam.ac.uk", "category": "museum_collection", "role": "independent", "institution": "Fitzwilliam Museum, University of Cambridge"},
-  {"domain": "mfa.org", "category": "museum_collection", "role": "independent", "institution": "Museum of Fine Arts, Boston"},
-  {"domain": "penn.museum", "category": "museum_collection", "role": "independent", "institution": "Penn Museum, University of Pennsylvania"},
-  {"domain": "isac.uchicago.edu", "category": "museum_collection", "role": "independent", "institution": "Institute for the Study of Ancient Cultures (Oriental Institute), University of Chicago"},
-  {"domain": "clevelandart.org", "category": "museum_collection", "role": "independent", "institution": "Cleveland Museum of Art"},
-  {"domain": "art.thewalters.org", "category": "museum_collection", "role": "independent", "institution": "Walters Art Museum"},
-  {"domain": "collections.ucl.ac.uk", "category": "museum_collection", "role": "independent", "institution": "Petrie Museum of Egyptian Archaeology, UCL (catalogue)"},
-  {"domain": "globalegyptianmuseum.org", "category": "museum_collection", "role": "independent", "institution": "Global Egyptian Museum (CIPEG, ICOM)"},
-  {"domain": "nmec.gov.eg", "category": "museum_collection", "role": "independent", "institution": "National Museum of Egyptian Civilization, Cairo"},
-  {"domain": "museopapirologico.eu", "category": "museum_collection", "role": "independent", "institution": "Museo Papirologico, Università del Salento"},
-  {"domain": "dainst.org", "category": "scholarly_gazetteer", "role": "target_record", "institution": "Deutsches Archäologisches Institut (iDAI.gazetteer, Zenon)"},
-  {"domain": "pleiades.stoa.org", "category": "scholarly_gazetteer", "role": "independent", "institution": "Pleiades (Institute for the Study of the Ancient World, NYU)"},
-  {"domain": "trismegistos.org", "category": "scholarly_gazetteer", "role": "independent", "institution": "Trismegistos (KU Leuven)"},
-  {"domain": "thesaurus-linguae-aegyptiae.de", "category": "scholarly_gazetteer", "role": "independent", "institution": "Thesaurus Linguae Aegyptiae (Berlin-Brandenburg and Saxon Academies)"},
-  {"domain": "dmd.wepwawet.nl", "category": "scholarly_gazetteer", "role": "independent", "institution": "Deir el-Medina Database (Leiden University)"},
-  {"domain": "griffith.ox.ac.uk", "category": "research_project", "role": "independent", "institution": "Griffith Institute, University of Oxford (Porter & Moss Topographical Bibliography, Artefacts of Excavation)"},
-  {"domain": "thebanmappingproject.com", "category": "research_project", "role": "independent", "institution": "Theban Mapping Project (American University in Cairo)"},
-  {"domain": "ucl.ac.uk", "path_prefix": "/museums-static/digitalegypt", "category": "research_project", "role": "independent", "institution": "Digital Egypt for Universities (UCL)"},
-  {"domain": "giza.fas.harvard.edu", "category": "research_project", "role": "independent", "institution": "Digital Giza (Harvard University)"},
-  {"domain": "amarnaproject.com", "category": "research_project", "role": "independent", "institution": "Amarna Project (Amarna Trust, University of Cambridge)"},
-  {"domain": "hierakonpolis-online.org", "category": "research_project", "role": "independent", "institution": "Hierakonpolis Expedition"},
-  {"domain": "gurob.org.uk", "category": "research_project", "role": "independent", "institution": "Gurob Harem Palace Project (University of Liverpool)"},
-  {"domain": "sais.webspace.durham.ac.uk", "category": "research_project", "role": "independent", "institution": "Sais excavation (Durham University)"},
-  {"domain": "lhtt.philhist.unibas.ch", "category": "research_project", "role": "independent", "institution": "Life Histories of Theban Tombs (University of Basel)"},
-  {"domain": "ifao.egnet.net", "category": "research_project", "role": "independent", "institution": "Institut français d'archéologie orientale, Cairo"},
-  {"domain": "cfeetk.cnrs.fr", "category": "research_project", "role": "independent", "institution": "Centre franco-égyptien d'étude des temples de Karnak (CNRS)"},
-  {"domain": "pcma.uw.edu.pl", "category": "research_project", "role": "independent", "institution": "Polish Centre of Mediterranean Archaeology, University of Warsaw"},
-  {"domain": "arce.org", "category": "research_project", "role": "independent", "institution": "American Research Center in Egypt"},
-  {"domain": "doaks.org", "category": "research_project", "role": "independent", "institution": "Dumbarton Oaks, Harvard University"},
-  {"domain": "escholarship.org", "path_prefix": "/uc/nelc_uee", "category": "scholarly_publication", "role": "independent", "institution": "UCLA Encyclopedia of Egyptology"},
-  {"domain": "persee.fr", "category": "scholarly_publication", "role": "independent", "institution": "Persée (French scholarly journals)"},
-  {"domain": "digi.ub.uni-heidelberg.de", "category": "scholarly_publication", "role": "independent", "institution": "Heidelberg University Library, digitised books"},
-  {"domain": "archiv.ub.uni-heidelberg.de", "category": "scholarly_publication", "role": "independent", "institution": "Heidelberg University Library, Propylaeum-DOK"},
-  {"domain": "books.ub.uni-heidelberg.de", "category": "scholarly_publication", "role": "independent", "institution": "Heidelberg University Publishing (Propylaeum eBooks)"},
-  {"domain": "hal.science", "category": "open_repository", "role": "independent", "institution": "HAL open archive (CNRS)"},
-  {"domain": "archives-ouvertes.fr", "category": "open_repository", "role": "independent", "institution": "HAL open archive (CNRS), institutional portals"},
-  {"domain": "egymonuments.gov.eg", "category": "heritage_authority", "role": "independent", "institution": "Egyptian Ministry of Tourism and Antiquities"},
-  {"domain": "whc.unesco.org", "category": "heritage_authority", "role": "independent", "institution": "UNESCO World Heritage Centre"}
+  {
+   "domain": "metmuseum.org",
+   "category": "museum_collection",
+   "role": "case_input",
+   "institution": "The Metropolitan Museum of Art, New York (collection and MetPublications)"
+  },
+  {
+   "domain": "brooklynmuseum.org",
+   "category": "museum_collection",
+   "role": "case_input",
+   "institution": "Brooklyn Museum"
+  },
+  {
+   "domain": "harvardartmuseums.org",
+   "category": "museum_collection",
+   "role": "case_input",
+   "institution": "Harvard Art Museums"
+  },
+  {
+   "domain": "hvrd.art",
+   "category": "museum_collection",
+   "role": "case_input",
+   "institution": "Harvard Art Museums (short links to object records)"
+  },
+  {
+   "domain": "britishmuseum.org",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "British Museum"
+  },
+  {
+   "domain": "louvre.fr",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Musée du Louvre"
+  },
+  {
+   "domain": "museoegizio.it",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Museo Egizio, Turin"
+  },
+  {
+   "domain": "smb.museum",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Staatliche Museen zu Berlin (Ägyptisches Museum)"
+  },
+  {
+   "domain": "khm.at",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Kunsthistorisches Museum Wien"
+  },
+  {
+   "domain": "rmo.nl",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Rijksmuseum van Oudheden, Leiden"
+  },
+  {
+   "domain": "glyptoteket.com",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Ny Carlsberg Glyptotek, Copenhagen"
+  },
+  {
+   "domain": "artandhistory.museum",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Royal Museums of Art and History, Brussels"
+  },
+  {
+   "domain": "ashmolean.org",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Ashmolean Museum, University of Oxford"
+  },
+  {
+   "domain": "fitzmuseum.cam.ac.uk",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Fitzwilliam Museum, University of Cambridge"
+  },
+  {
+   "domain": "mfa.org",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Museum of Fine Arts, Boston"
+  },
+  {
+   "domain": "penn.museum",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Penn Museum, University of Pennsylvania"
+  },
+  {
+   "domain": "isac.uchicago.edu",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Institute for the Study of Ancient Cultures (Oriental Institute), University of Chicago"
+  },
+  {
+   "domain": "clevelandart.org",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Cleveland Museum of Art"
+  },
+  {
+   "domain": "art.thewalters.org",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Walters Art Museum"
+  },
+  {
+   "domain": "collections.ucl.ac.uk",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Petrie Museum of Egyptian Archaeology, UCL (catalogue)"
+  },
+  {
+   "domain": "globalegyptianmuseum.org",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Global Egyptian Museum (CIPEG, ICOM)"
+  },
+  {
+   "domain": "nmec.gov.eg",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "National Museum of Egyptian Civilization, Cairo"
+  },
+  {
+   "domain": "museopapirologico.eu",
+   "category": "museum_collection",
+   "role": "independent",
+   "institution": "Museo Papirologico, Università del Salento"
+  },
+  {
+   "domain": "dainst.org",
+   "category": "scholarly_gazetteer",
+   "role": "target_record",
+   "institution": "Deutsches Archäologisches Institut (iDAI.gazetteer, Zenon)"
+  },
+  {
+   "domain": "pleiades.stoa.org",
+   "category": "scholarly_gazetteer",
+   "role": "independent",
+   "institution": "Pleiades (Institute for the Study of the Ancient World, NYU)"
+  },
+  {
+   "domain": "thesaurus-linguae-aegyptiae.de",
+   "category": "scholarly_gazetteer",
+   "role": "independent",
+   "institution": "Thesaurus Linguae Aegyptiae (Berlin-Brandenburg and Saxon Academies)"
+  },
+  {
+   "domain": "dmd.wepwawet.nl",
+   "category": "scholarly_gazetteer",
+   "role": "independent",
+   "institution": "Deir el-Medina Database (Leiden University)"
+  },
+  {
+   "domain": "griffith.ox.ac.uk",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Griffith Institute, University of Oxford (Porter & Moss Topographical Bibliography, Artefacts of Excavation)"
+  },
+  {
+   "domain": "thebanmappingproject.com",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Theban Mapping Project (American University in Cairo)"
+  },
+  {
+   "domain": "ucl.ac.uk",
+   "path_prefix": "/museums-static/digitalegypt",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Digital Egypt for Universities (UCL)",
+   "browser": "browserbase"
+  },
+  {
+   "domain": "giza.fas.harvard.edu",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Digital Giza (Harvard University)"
+  },
+  {
+   "domain": "amarnaproject.com",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Amarna Project (Amarna Trust, University of Cambridge)"
+  },
+  {
+   "domain": "hierakonpolis-online.org",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Hierakonpolis Expedition"
+  },
+  {
+   "domain": "gurob.org.uk",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Gurob Harem Palace Project (University of Liverpool)"
+  },
+  {
+   "domain": "sais.webspace.durham.ac.uk",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Sais excavation (Durham University)"
+  },
+  {
+   "domain": "lhtt.philhist.unibas.ch",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Life Histories of Theban Tombs (University of Basel)"
+  },
+  {
+   "domain": "ifao.egnet.net",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Institut français d'archéologie orientale, Cairo"
+  },
+  {
+   "domain": "cfeetk.cnrs.fr",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Centre franco-égyptien d'étude des temples de Karnak (CNRS)"
+  },
+  {
+   "domain": "pcma.uw.edu.pl",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Polish Centre of Mediterranean Archaeology, University of Warsaw",
+   "browser": "browserbase"
+  },
+  {
+   "domain": "arce.org",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "American Research Center in Egypt"
+  },
+  {
+   "domain": "doaks.org",
+   "category": "research_project",
+   "role": "independent",
+   "institution": "Dumbarton Oaks, Harvard University"
+  },
+  {
+   "domain": "escholarship.org",
+   "path_prefix": "/uc/nelc_uee",
+   "category": "scholarly_publication",
+   "role": "independent",
+   "institution": "UCLA Encyclopedia of Egyptology"
+  },
+  {
+   "domain": "persee.fr",
+   "category": "scholarly_publication",
+   "role": "independent",
+   "institution": "Persée (French scholarly journals)"
+  },
+  {
+   "domain": "digi.ub.uni-heidelberg.de",
+   "category": "scholarly_publication",
+   "role": "independent",
+   "institution": "Heidelberg University Library, digitised books"
+  },
+  {
+   "domain": "archiv.ub.uni-heidelberg.de",
+   "category": "scholarly_publication",
+   "role": "independent",
+   "institution": "Heidelberg University Library, Propylaeum-DOK"
+  },
+  {
+   "domain": "books.ub.uni-heidelberg.de",
+   "category": "scholarly_publication",
+   "role": "independent",
+   "institution": "Heidelberg University Publishing (Propylaeum eBooks)"
+  },
+  {
+   "domain": "hal.science",
+   "category": "open_repository",
+   "role": "independent",
+   "institution": "HAL open archive (CNRS)"
+  },
+  {
+   "domain": "archives-ouvertes.fr",
+   "category": "open_repository",
+   "role": "independent",
+   "institution": "HAL open archive (CNRS), institutional portals"
+  },
+  {
+   "domain": "egymonuments.gov.eg",
+   "category": "heritage_authority",
+   "role": "independent",
+   "institution": "Egyptian Ministry of Tourism and Antiquities"
+  },
+  {
+   "domain": "whc.unesco.org",
+   "category": "heritage_authority",
+   "role": "independent",
+   "institution": "UNESCO World Heritage Centre"
+  }
  ],
  "excluded_examples": [
-  {"domain": "wikipedia.org", "reason": "Encyclopedia, openly edited; no editorial control by a research institution."},
-  {"domain": "britannica.com", "reason": "General encyclopedia; tertiary summary, not a source for a specific record or place."},
-  {"domain": "d-nb.info", "reason": "Library authority file (GND), the same kind of source as Wikidata; its ruler entries derive from encyclopedias."},
-  {"domain": "geonames.org", "reason": "Crowd-sourced modern gazetteer; not an Egyptological authority."},
-  {"domain": "vici.org", "reason": "Crowd-sourced archaeological atlas."},
-  {"domain": "topostext.org", "reason": "One person's index built around Classical texts, not a research institution's publication."},
-  {"domain": "pharaoh.se", "reason": "Private website. It cites Beckerath and Leprohon for each name, so it helps to find sources, but the books are the sources."},
-  {"domain": "osirisnet.net", "reason": "Private website, detailed on tombs but not an institution's publication."},
-  {"domain": "ancientegyptonline.co.uk", "reason": "Private website."},
-  {"domain": "madainproject.com", "reason": "Private website."},
-  {"domain": "mk-tomb-models.net", "reason": "Private website."},
-  {"domain": "die-erde.org", "reason": "Private website."},
-  {"domain": "ponda.org", "reason": "Private website."},
-  {"domain": "worldheritagesite.org", "reason": "Private website about UNESCO sites; UNESCO's own pages are citable."},
-  {"domain": "archive.org", "reason": "Anyone can upload; a scan's provenance cannot be checked."},
-  {"domain": "academia.edu", "reason": "Self-uploaded papers; the version cannot be checked."},
-  {"domain": "researchgate.net", "reason": "Self-uploaded papers; the version cannot be checked."},
-  {"domain": "4care-skos.mf.no", "reason": "A general museum-documentation thesaurus, not an Egyptological source."},
-  {"domain": "english.ahram.org.eg", "reason": "News outlet."},
-  {"domain": "wikidata.org", "reason": "Never used (role prompts); blocked."},
-  {"domain": "github.com", "reason": "This evaluation's repository lives there; blocked."}
+  {
+   "domain": "trismegistos.org",
+   "reason": "Requires an institutional subscription for full access and blocks automated readers (it refused this project's IP after the v5 run's attempts); excluded until access is agreed with KU Leuven."
+  },
+  {
+   "domain": "wikipedia.org",
+   "reason": "Encyclopedia, openly edited; no editorial control by a research institution."
+  },
+  {
+   "domain": "britannica.com",
+   "reason": "General encyclopedia; tertiary summary, not a source for a specific record or place."
+  },
+  {
+   "domain": "d-nb.info",
+   "reason": "Library authority file (GND), the same kind of source as Wikidata; its ruler entries derive from encyclopedias."
+  },
+  {
+   "domain": "geonames.org",
+   "reason": "Crowd-sourced modern gazetteer; not an Egyptological authority."
+  },
+  {
+   "domain": "vici.org",
+   "reason": "Crowd-sourced archaeological atlas."
+  },
+  {
+   "domain": "topostext.org",
+   "reason": "One person's index built around Classical texts, not a research institution's publication."
+  },
+  {
+   "domain": "pharaoh.se",
+   "reason": "Private website. It cites Beckerath and Leprohon for each name, so it helps to find sources, but the books are the sources."
+  },
+  {
+   "domain": "osirisnet.net",
+   "reason": "Private website, detailed on tombs but not an institution's publication."
+  },
+  {
+   "domain": "ancientegyptonline.co.uk",
+   "reason": "Private website."
+  },
+  {
+   "domain": "madainproject.com",
+   "reason": "Private website."
+  },
+  {
+   "domain": "mk-tomb-models.net",
+   "reason": "Private website."
+  },
+  {
+   "domain": "die-erde.org",
+   "reason": "Private website."
+  },
+  {
+   "domain": "ponda.org",
+   "reason": "Private website."
+  },
+  {
+   "domain": "worldheritagesite.org",
+   "reason": "Private website about UNESCO sites; UNESCO's own pages are citable."
+  },
+  {
+   "domain": "archive.org",
+   "reason": "Anyone can upload; a scan's provenance cannot be checked."
+  },
+  {
+   "domain": "academia.edu",
+   "reason": "Self-uploaded papers; the version cannot be checked."
+  },
+  {
+   "domain": "researchgate.net",
+   "reason": "Self-uploaded papers; the version cannot be checked."
+  },
+  {
+   "domain": "4care-skos.mf.no",
+   "reason": "A general museum-documentation thesaurus, not an Egyptological source."
+  },
+  {
+   "domain": "english.ahram.org.eg",
+   "reason": "News outlet."
+  },
+  {
+   "domain": "wikidata.org",
+   "reason": "Never used (role prompts); blocked."
+  },
+  {
+   "domain": "github.com",
+   "reason": "This evaluation's repository lives there; blocked."
+  }
  ],
  "not_citable_but_standard": "The standard print references for place and ruler identity (Porter & Moss, beyond its free Griffith PDFs; Beckerath, Handbuch der ägyptischen Königsnamen; Leprohon, The Great Name; Hornung, Krauss and Warburton, Ancient Egyptian Chronology) have no openable page, so a reviewer cannot cite them. Ruler identity therefore rests on museum records and the open sources above.",
- "review": "Vetted by the egyptologist-reviewer agent on 2026-10-13 before any model ran on it (README, protocol v5)."
+ "review": "Vetted by the egyptologist-reviewer agent on 2026-10-13 before any model ran on it (README, protocol v5). Trismegistos excluded and Browserbase routing added on 2026-10-13, before the v6 run.",
+ "browser": "`open_page` reads every source in its own browser (headful Chromium) except those marked `\"browser\": \"browserbase\"`, which it reads in a Browserbase cloud browser session: sources whose pages a local browser cannot open but a Browserbase session can, measured on 13 October 2026 (UCL Digital Egypt 5 of 5 pages; PCMA). The list is fixed before a run, so no page is tried twice. The project owner chose to use Browserbase only for sources that need it."
 }

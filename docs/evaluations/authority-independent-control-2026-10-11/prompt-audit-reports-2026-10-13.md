@@ -1,4 +1,4 @@
-# Prompt-auditor reports, rounds 12–15 (2026-10-13), verbatim
+# Prompt-auditor reports, rounds 12–16 (2026-10-13), verbatim
 
 The final reports of the `prompt-auditor` agent (a Claude Code subagent of the working
 session) for the audit rounds summarised in `prompt-audit-2026-10-11.md`, copied exactly as
@@ -185,3 +185,27 @@ I read the four v5 prompts, review-system-v4 and the rendered tool description, 
 - The tool description says "belongs to a citable source", which matches the prompts. You could say "its final_url belongs to a citable source" there too, for exact agreement. Cosmetic.
 
 **Your aggregate checks** (`representation` fixed by entity type, `source_ids` differing in 2 of 11 cases, one per class) closes the metadata P3. A single ruler-class difference per class is symmetric. The stratified entity-type × class page-load gate (within 5 pp, rule committed before the run) and the role report cover item 4. As I said in round 14, that effect is a measured residual of the allowlist, not something the prompt causes.
+
+## Round 16 (v6: Trismegistos excluded, Browserbase routing)
+
+Round 16 (v6) verdict: PASS. There are no P0, P1 or P2 findings, so the four v5 prompts and review-system-v4 stand (they are byte-identical to round 15, as stated). I read the rendered 50-line citable block, the tool description, and the Trismegistos and browser entries in `citable-sources.json`. I did not diff the composed requests against round 15.
+
+**1. Trismegistos removal: a measured residual, not a prompt leak or bias**
+- The prompts name no source. The block is the same for every case, class and stage, and `trismegistos.org` is now gone from it. The change is also stated in `excluded_examples` with a non-class reason (subscription, IP block).
+- It is class-neutral by construction. It was made before the v6 run, with no v5 results read, and applies to every case.
+- Effect I expect:
+  - Sites: Trismegistos was an alias-bearing source for variant Graeco-Roman and Pharaonic place names. Differing-string site cases, where the authority arm would link variant spellings, lose it, so they have fewer routes to a citable equivalence. The remaining alias sources are Pleiades, iDAI (dainst.org), TLA and the museum pages.
+  - Rulers: little effect. Trismegistos was not a main source for Pharaonic ruler identity, and the ruler weakness from round 14 is unchanged.
+- The stratified entity-type × class gate (each class within 5 pp of its type's citable-open loaded rate) is the correct control. Two additions I recommend:
+  - Report the citation share per source domain for site cases by class, so a fall in alias-bearing citations shows up.
+  - Record the removal in the README/decision-rule as a known limitation. It is a pre-registered source-scope choice, not a result.
+
+**2. New tool-result fields: no leak**
+- `browser` ("local" or "browserbase") and the opaque `browserbase_session_id` are determined by the committed per-source routing field, not by the case, arm or class. They carry no case, answer or selection information.
+- A reviewer seeing `browserbase` learns only that a page from one of two named sources needed the cloud browser. The routing is identical for every case.
+- The session ID is an opaque UUID. It is noise at replay, and it is already persisted with the response under rule 13.
+- Two P3 notes:
+  - Only two sources route to Browserbase (UCL Digital Egypt by path, pcma.uw.edu.pl). Their load success will differ from the local browser's. Include `browser` as a stratum or covariate in the page-load report, so a difference between browsers is not read as an entity-type or class effect. Digital Egypt and the Polish Centre cover particular sites, so the effect could be site-linked.
+  - Tell the model nothing about `browser` in the prompts. They already do not mention it.
+
+**3. Tool description:** the new wording ("whose final_url belongs to a citable source may be cited") agrees with the prompt text and the code gate.

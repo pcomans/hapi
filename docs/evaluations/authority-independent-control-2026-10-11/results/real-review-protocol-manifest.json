@@ -7,11 +7,11 @@
     },
     "browser_tool": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
-      "sha256": "1cf83e6530142e706329ec3ac86a01e627bf266b6d0b9377c916f92fa6be3115"
+      "sha256": "7bb3c9c888375d694d581bf95220e8f9369eda9d2e140d9fb70504cd06fd7643"
     },
     "citable_sources": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
-      "sha256": "8c0ad623c3e7ea395e675da022af30fcccaccf20cc32b8cb5729eab384e134da"
+      "sha256": "62e59f2b1f5574bf6f1c88aeda117f7719044cf2686e359f5aa64ca97c8fd0cd"
     },
     "launcher_system_prompts": {
       "review": {
@@ -66,7 +66,7 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "24aeff6cc7f4d6a3eb7fefbff8126e0b5c5e7e2711c82b0a93a95410ee93fb91"
+      "sha256": "df4a94d4900a1a3117c36240cad969536fe13be904e4124654c7684cb4b67811"
     }
   },
   "queue_inputs": {

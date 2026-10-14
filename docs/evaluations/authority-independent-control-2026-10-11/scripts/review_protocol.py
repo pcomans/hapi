@@ -148,6 +148,13 @@ def citable_source_of(url: str) -> dict | None:
     return matches[0] if matches else None
 
 
+def browser_for(url: str) -> str:
+    """Which browser `open_page` reads a URL in: `browserbase` for a citable source marked so in
+    `citable-sources.json` (its pages need a cloud browser), `local` for everything else."""
+    source = citable_source_of(url)
+    return source.get("browser", "local") if source else "local"
+
+
 def citable_sources_text() -> str:
     """The citable sources as the model reads them: one line per host (and path) and institution."""
     return "\n".join(
@@ -330,7 +337,7 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
                 # from the server's own flag (`reported_loaded`), so a rule change reaches
                 # every stored call when it is re-checked.
                 record["page_opens"].append({
-                    "url": url, **{key: opened[key] for key in ("requested_url", "final_url", "status", "title")},
+                    "url": url, **{key: opened[key] for key in ("requested_url", "final_url", "status", "title", "browser")},
                     "reported_loaded": opened["loaded"], "loaded": page_loaded(opened["status"], opened["title"], opened["text"]),
                 })
     final = next((e for e in reversed(events) if e.get("type") == "result"), None)

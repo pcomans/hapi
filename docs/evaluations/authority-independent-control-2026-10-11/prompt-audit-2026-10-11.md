@@ -166,10 +166,9 @@ outcome): the prompts' citation sentence ends "by the URL you opened or its fina
 of which must belong to a citable source;", and the tool description says "Only a page with
 loaded: true whose final_url belongs to a citable source may be cited."
 
-## Audited prompt bytes
+## v5 audited bytes (the superseded v5 run)
 
-The v5 prompts, system prompt, citable-source list and browser tool (whose description is
-model input) that run, by SHA-256 (a test checks these against the files).
+The files of the v5 run, which stopped at its Stage 1 page-load gate, by SHA-256.
 
 | File | SHA-256 |
 |---|---|
@@ -180,3 +179,32 @@ model input) that run, by SHA-256 (a test checks these against the files).
 | `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
 | `citable-sources.json` | `8c0ad623c3e7ea395e675da022af30fcccaccf20cc32b8cb5729eab384e134da` |
 | `open_page_server.py` | `1cf83e6530142e706329ec3ac86a01e627bf266b6d0b9377c916f92fa6be3115` |
+
+## Round 16: v6, Trismegistos excluded, Browserbase routing (2026-10-13)
+
+The v5 run's Stage 1 failed its page-load gate before any result was read (README). For v6,
+Trismegistos was moved to the excluded sources (subscription; it blocked this project's IP),
+and two sources a local browser cannot open (UCL Digital Egypt, PCMA) are read in a
+Browserbase cloud browser. Model-visible changes: the citable block lost the Trismegistos
+line; the tool description carries the round-15 wording; tool results gain `browser` and,
+for Browserbase, an opaque session ID. Prompts and system prompt are byte-identical to
+round 15.
+
+| Round | State | Verdict | Findings acted on |
+|---|---|---|---|
+| 16 | v6 | **PASS** (no P0/P1/P2) | Trismegistos removal is a measured residual, not a prompt bias (fewer citable alias sources for differing-string site cases): the gate now reports citations by source per class. P3: opens are reported by browser, so a Browserbase effect is not read as a class effect. |
+
+## Audited prompt bytes
+
+The v6 prompts, system prompt, citable-source list and browser tool (whose description is
+model input) that run, by SHA-256 (a test checks these against the files).
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v5.txt` | `000f60be5d3e64f739c5833c870a39309b3414125d02c4438a677d6c543cc1f8` |
+| `stage-1-reconciler-v5.txt` | `ddc64e48f04c37c1c8f0173466f037bee055e3fdc4e7437349ed91ffb1f2d181` |
+| `stage-2-reviewer-v5.txt` | `1e560d70a2046856f7b6eae01fb1b2fa784af4fe528f8a7e06f661824c65c198` |
+| `stage-2-reconciler-v5.txt` | `7f1edf2b81d5443a03ecf4a9fa77cee579bdcba26d383e523e37388535fee9a8` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `62e59f2b1f5574bf6f1c88aeda117f7719044cf2686e359f5aa64ca97c8fd0cd` |
+| `open_page_server.py` | `7bb3c9c888375d694d581bf95220e8f9369eda9d2e140d9fb70504cd06fd7643` |

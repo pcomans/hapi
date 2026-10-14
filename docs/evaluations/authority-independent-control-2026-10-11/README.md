@@ -121,8 +121,9 @@ the project owner's decision every scored call runs on the Claude Code subscript
   (Debian package `xvfb`) and Chromium's libraries. To run again: `uv sync --locked
   --all-groups --project runtime`, `runtime/.venv/bin/python -m playwright install chromium`,
   then run `scripts/run_harness_review.py` with `runtime/.venv/bin/python` (the browser server
-  starts with the same interpreter under `xvfb-run`). The superseded v4 run used
-  `pipeline/.venv` synced from the same lock.
+  starts with the same interpreter under `xvfb-run`), with `BROWSERBASE_API_KEY` in the
+  environment (the browser server reads it there; it is never on the recorded command). The
+  superseded v4 run used `pipeline/.venv` synced from the same lock.
 - **Pages are read in a real browser** (protocol v4, 2026-10-13; headful from v5).
   `open_page` loads a URL in Chromium, headful on a virtual display, and returns the HTTP
   status of the final document, the final URL, the title, whether it loaded and the visible
@@ -137,13 +138,26 @@ the project owner's decision every scored call runs on the Claude Code subscript
   still refused by the Anubis and Cloudflare walls in front of Pleiades, UNESCO, the Theban
   Mapping Project and others (3 of 58 walled pages of the v4 run loaded headless, 36 headful).
   Still walled even headful: UCL's Digital Egypt and Trismegistos (Cloudflare), Heidelberg's
-  Propylaeum (Anubis). They stay citable, but a reviewer usually cannot open them; the
-  browser does not disguise itself to get past a wall a site puts up against automated
-  readers.
+  Propylaeum (Anubis). The browser does not disguise itself to get past a wall a site puts
+  up against automated readers.
+- **Browserbase for the sources that need it** (protocol v6, 2026-10-13). The v5 run's
+  Stage 1 failed its pre-registered page-load gate before any result was read: in site
+  authority-gain units, opens of citable sources loaded 9.7 points below the site rate,
+  because Trismegistos (34 failed opens) and UCL's Digital Egypt (14) refused the agents'
+  browser. A Browserbase cloud browser session read 5 of 5 Digital Egypt pages and the PCMA
+  page our browser could not; it did not help with Heidelberg's Propylaeum (Anubis) or IFAO
+  (HTTP 503 on every page). On the project owner's choice, Browserbase is used only for the
+  sources that need it: those marked `"browser": "browserbase"` in `citable-sources.json`
+  (Digital Egypt, PCMA), fixed before the run so no page is tried twice. Each such page is
+  read in its own session, released when read; its ID is in the page record, for the
+  session's replay on Browserbase. Trismegistos sells full access by institutional
+  subscription and blocked this project's IP after the v5 run's attempts, so it was moved to
+  the excluded sources before the v6 run, until access is agreed with KU Leuven. The v5
+  records stay private and unread (`dropbox/hapi-337-review-v5-2026-10-13/`).
 - **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v5.txt`,
   `stage-1-reconciler-v5.txt`, `stage-2-reviewer-v5.txt`, `stage-2-reconciler-v5.txt`;
   `raw-response-contracts/*-case-v2.schema.json`. All leak-audited before use (Rule 14;
-  `prompt-audit-2026-10-11.md`, rounds 14–15, whose audited SHA-256s of the prompts, the
+  `prompt-audit-2026-10-11.md`, rounds 14–16, whose audited SHA-256s of the prompts, the
   system prompt, the citable-source list and the browser tool are checked by a test).
 - **Only scholarly sources are citable** (protocol v5, 2026-10-13). On the project owner's
   doubt that generic web pages are a scholarly basis, a citation must be a page of a source
@@ -152,7 +166,8 @@ the project owner's decision every scored call runs on the Claude Code subscript
   heritage authorities, matched by host and, for a source inside a broad host (UCL's Digital
   Egypt, the UCLA Encyclopedia of Egyptology), by path. The list states its criteria, names
   each institution, and lists excluded examples with reasons (Wikipedia, Britannica, GeoNames,
-  pharaoh.se, private sites, self-upload sites, library authority files). It was drawn up after
+  pharaoh.se, private sites, self-upload sites, library authority files, and, from v6,
+  Trismegistos). It was drawn up after
   the v4 run, informed by the hosts its reviewers opened, vetted by the egyptologist-reviewer
   agent and committed before any model ran on it; the composed model input lists it. Any
   other page may help a reviewer find sources but is never a citation. Each source has a role
@@ -264,6 +279,10 @@ so it stays.
   institutional source for a variant spelling is harder to find than one for an identical
   string, so differing-string cases may draw more `insufficient_evidence`. Read the f counts
   with this in mind.
+- **Trismegistos is not citable** (from v6). It requires a subscription and blocked this
+  project's IP, so differing-string site cases have one alias-bearing source fewer (Pleiades,
+  iDAI and the Thesaurus Linguae Aegyptiae remain). The gate result reports citations by
+  source per class, so a shortfall shows. An access request to KU Leuven is pending.
 - **A record that will not load forces `insufficient_evidence`.** There is no fallback to the
   case's field text. This is class-neutral only if the loaded rate is, so the `open_page`
   loaded rate per museum and per case class is measured against the private answer key, in

@@ -55,7 +55,7 @@ def opened_page(url: str = OPENED, *, loaded: bool = True, final_url: str | None
     """What `open_page` returns (open_page_server.py) for one page."""
     return {"requested_url": url, "final_url": final_url or url, "status": status or (200 if loaded else 429),
             "title": title or ("Object" if loaded else "Vercel Security Checkpoint"), "loaded": loaded,
-            "text": "Object record" if loaded else "", "text_truncated": False}
+            "text": "Object record" if loaded else "", "text_truncated": False, "browser": "local"}
 
 
 def events(answer: dict | str, *, search_url: str = SEARCHED, opens: tuple = (opened_page(),),
@@ -135,7 +135,8 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
     assert record["web_searches"] == ["Abydos"]
     assert record["web_search_results"] == [{"title": "Abydos", "url": SEARCHED}]
     assert record["page_opens"] == [{"url": OPENED, "requested_url": OPENED, "final_url": OPENED,
-                                     "status": 200, "title": "Object", "reported_loaded": True, "loaded": True}]
+                                     "status": 200, "title": "Object", "browser": "local",
+                                     "reported_loaded": True, "loaded": True}]
     assert record["usage"] == {"output_tokens": 10}
     assert record["notional_cost_usd"] == 0.5
     assert "failure" not in record
@@ -972,3 +973,16 @@ def test_a_redirect_cannot_carry_a_citation_onto_or_off_the_citable_list() -> No
         record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
                                                       "citations": [OPENED, cited]}, opens=opens)}, case, role, schema)
         assert record["failure"] == f"cites a non-citable source: {[cited]}"
+
+
+def test_only_marked_sources_are_read_in_browserbase_and_trismegistos_is_excluded() -> None:
+    sources = json.loads(protocol.CITABLE_SOURCES_PATH.read_text())
+    marked = {(s["domain"], s.get("path_prefix")) for s in sources["sources"] if "browser" in s}
+    assert marked == {("ucl.ac.uk", "/museums-static/digitalegypt"), ("pcma.uw.edu.pl", None)}
+    assert {s["browser"] for s in sources["sources"] if "browser" in s} == {"browserbase"}
+    assert protocol.browser_for("https://www.ucl.ac.uk/museums-static/digitalegypt/elkab/index.html") == "browserbase"
+    assert protocol.browser_for("https://www.ucl.ac.uk/news/x") == "local"
+    assert protocol.browser_for(OPENED) == "local"
+    assert protocol.browser_for("https://en.wikipedia.org/wiki/Abydos") == "local"
+    assert protocol.citable_source_of("https://www.trismegistos.org/place/761") is None
+    assert "trismegistos.org" in {e["domain"] for e in sources["excluded_examples"]}
