@@ -755,6 +755,33 @@ def _write_run(run: Path, manifest: dict, extraction: dict) -> None:
     (run / "run-manifest.json").write_text(json.dumps(manifest))
 
 
+@pytest.fixture
+def frozen_resolver_inputs_in_place(monkeypatch):
+    """`validate_run` also checks that the live repository still holds the frozen resolver
+    inputs, which stopped being true when the claim graph moved on (#357). These tests are
+    about the run's own manifests, so that one live check is replaced by a record of the
+    call; `test_the_frozen_resolver_inputs_are_no_longer_the_live_ones` pins the live state."""
+    calls = []
+    real = queue_builder.load_comparison_module
+
+    def load(repo_root):
+        module = real(repo_root)
+        module.verify_current_inputs = lambda root: calls.append(root)
+        return module
+
+    monkeypatch.setattr(queue_builder, "load_comparison_module", load)
+    return calls
+
+
+def test_the_frozen_resolver_inputs_are_no_longer_the_live_ones() -> None:
+    # #337 froze its resolver inputs at 1d35337; #357 then changed the claim graph. The
+    # registration's population can be rebuilt only from those frozen inputs, not on main.
+    comparison = queue_builder.load_comparison_module(ROOT)
+    assert comparison.BASE_COMMIT == "1d35337ff5b5185f1c620d04d58ede939b27f5af"
+    with pytest.raises(ValueError, match="current resolver input changed: web-claimgraph/data/claim-graph.json"):
+        comparison.verify_current_inputs(ROOT)
+
+
 def _frozen_run(run: Path) -> tuple[dict, dict]:
     """A minimal run directory whose manifests carry the frozen provenance."""
     import gzip
@@ -812,10 +839,12 @@ def _frozen_run(run: Path) -> tuple[dict, dict]:
     (lambda m, e: m["inputs"]["mention_ledger"].update(rows=2), "run manifest ledger is not the extraction manifest's ledger"),
     (lambda m, e: m["outputs_sha256"].pop("current-authority-links.ndjson.gz"), "run manifest binds outputs"),
 ])
-def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(tmp_path: Path, mutate, failure) -> None:
+def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(
+        tmp_path: Path, mutate, failure, frozen_resolver_inputs_in_place) -> None:
     run = tmp_path / "run"
     manifest, extraction = _frozen_run(run)
     accepted, report = queue_builder.validate_run(ROOT, run)
+    assert frozen_resolver_inputs_in_place == [ROOT]
     assert (accepted["base_commit"], report) == (manifest["base_commit"], {})
     mutate(manifest, extraction)
     _write_run(run, manifest, extraction)
@@ -823,7 +852,8 @@ def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(tmp_pa
         queue_builder.validate_run(ROOT, run)
 
 
-def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(tmp_path: Path) -> None:
+def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(
+        tmp_path: Path, frozen_resolver_inputs_in_place) -> None:
     run = tmp_path / "run"
     _frozen_run(run)
     (run / "extraction-manifest.json").write_text("{}")

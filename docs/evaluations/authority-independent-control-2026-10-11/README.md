@@ -300,6 +300,13 @@ directory): the Anthropic API reviewer (`run_claude_review.py`, web search and w
 through the Vercel AI Gateway (`run_gateway_review.py`), rejected because 4 of 5 calls ended
 with the model's tool call emitted as text.
 
+**Rebuilding the population.** The review population is built from the resolver inputs
+frozen at commit 1d35337 (`compare_arms.CURRENT_INPUTS`: the claim graph, the gazetteer and
+Porter & Moss sources, the name normalizer and the resolver). The claim graph changed after
+that (#357, the ruler escalation queue), so on a later `main` the builder refuses to run
+("current resolver input changed"); rebuild from a checkout of those inputs. The committed
+digest, rerun proof and score stay valid: they bind the population that was built.
+
 ## Reconciliation, Stage 2 and scoring (2026-10-12)
 
 The whole-queue reconciler and Stage 2 of the original design were replaced by the same
