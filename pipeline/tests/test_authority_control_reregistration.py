@@ -857,7 +857,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
-    assert gate["schema_version"] == "hapi-337-page-load-gate/5"
+    assert gate["schema_version"] == "hapi-337-page-load-gate/6"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
     assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
     assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
@@ -879,6 +879,10 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     assert [stages[s]["opens_by_browser"] for s in "12"] == [
         {"browserbase": {"loaded": 10, "opened": 13}, "local": {"loaded": 899, "opened": 908}},
         {"browserbase": {"loaded": 5, "opened": 7}, "local": {"loaded": 579, "opened": 582}},
+    ]
+    assert [stages[s]["retried_after_local_failure_by_host"] for s in "12"] == [
+        {"harvardartmuseums.org": 2, "brooklynmuseum.org": 1, "ifao.egnet.net": 1, "mfaboston6.emuseum.com": 1},
+        {"brooklynmuseum.org": 1},
     ]
     assert all(abs(d) <= gate["max_class_deviation_percentage_points"]
                for s in "12" for d in stages[s]["citable_opens_class_deviation_percentage_points"].values())
@@ -966,7 +970,9 @@ def test_a_page_read_before_its_load_event_counts_and_says_so() -> None:
     assert record["decision"]["citations"] == [OPENED, place]
 
 
-def test_a_page_browserbase_read_after_the_local_browser_failed_keeps_the_local_failure() -> None:
+def test_the_validator_keeps_a_page_opens_local_failure() -> None:
+    # What open_page returns after a Browserbase re-read; the server itself needs a browser,
+    # which CI does not have.
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
     walled = "https://pleiades.stoa.org/places/786036"

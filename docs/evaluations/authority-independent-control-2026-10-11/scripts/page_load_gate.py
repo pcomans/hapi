@@ -11,8 +11,9 @@ deciding calls' citations by role (`citable-sources.json`: the case's own museum
 target's own record, or an independent source) and by source, per class; and opens by the
 browser that served them (local, or Browserbase for the sources routed to it); opens by
 citation role (protocol v8: the v7 run's Stage 2 reviewers could almost never open the target
-record they were judging, which the class comparison cannot show); and, by host, the loaded
-pages read before their `load` event fired (`open_page_server.py`). A Stage 1
+record they were judging, which the class comparison cannot show); by host, the loaded
+pages read before their `load` event fired (`open_page_server.py`); and (protocol v10) the
+pages read again in Browserbase after the local browser failed, by class and by host. A Stage 1
 review unit counts toward the class of every scored case it belongs to, a Stage 2 case
 toward its own (from the private answer key). Writes aggregate counts only.
 
@@ -76,6 +77,7 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
     citation_domains_by_class = collections.defaultdict(collections.Counter)
     by_browser, by_role = counter(), counter()
     loaded_without_load_event_by_host = collections.Counter()
+    retried_by_class, retried_by_host = counter(), collections.Counter()
     not_loaded_by_host = collections.Counter()
     calls = calls_without_a_loaded_page = 0
     for case in read_json(queue_path)["cases"]:
@@ -108,6 +110,11 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
                 role_counts["loaded"] += opened["loaded"]
                 if opened["loaded"] and not opened["load_event"]:
                     loaded_without_load_event_by_host[_host(opened["url"])] += 1
+                if "local_failure" in opened:
+                    retried_by_host[_host(opened["url"])] += 1
+                    for c in classes:
+                        retried_by_class[c]["opened"] += 1
+                        retried_by_class[c]["loaded"] += opened["loaded"]
                 for bucket in [by_museum[museum]] + [all_by_class[c] for c in classes] + (
                     [citable_by_class[c] for c in classes] if citable else []
                 ):
@@ -139,6 +146,8 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         "opens_by_citation_role": dict(sorted(by_role.items())),
         "loaded_without_load_event_by_host": dict(sorted(
             loaded_without_load_event_by_host.items(), key=lambda kv: (-kv[1], kv[0]))),
+        "retried_after_local_failure_by_transition_class": dict(sorted(retried_by_class.items())),
+        "retried_after_local_failure_by_host": dict(sorted(retried_by_host.items(), key=lambda kv: (-kv[1], kv[0]))),
         "citations_by_transition_class_and_source": {
             c: dict(sorted(domains.items(), key=lambda kv: (-kv[1], kv[0])))
             for c, domains in sorted(citation_domains_by_class.items())
@@ -162,7 +171,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/5",
+        "schema_version": "hapi-337-page-load-gate/6",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

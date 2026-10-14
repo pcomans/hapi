@@ -52,7 +52,8 @@ Reading it:
 - **Every judgment rests on pages the reviewer actually read.** The agents opened pages in a
   real browser, and only a page the call itself opened, that loaded, and that belongs to a
   citable source counts as a citation. Museum record pages loaded 802 of 802 times in Stage 1
-  and 397 of 398 in Stage 2; the iDAI gazetteer records the Stage 2 site cases ask about
+  and 397 of 398 in Stage 2 (3 and 1 of them only when read again in Browserbase after the
+  local browser timed out); the iDAI gazetteer records the Stage 2 site cases ask about
   loaded 112 of 112 times. Every class's loaded rate for citable pages is within 5 points of
   its entity type's rate in both stages (largest gap: ruler authority gains in Stage 2, 4.7
   points below; `results/real-page-load-gate.json`, the Rule 14 gate, measured before any
@@ -92,8 +93,11 @@ Reading it:
 
 Review: Stage 1, 108 units, two reviewers agreeing on both questions in 107 (1 reconciled
 with a cited override); Stage 2, 65 proposed targets, agreeing in 62 (3 reconciled). Every
-reviewer and reconciler call was valid on its first attempt; no call hit a session limit.
-Browserbase served 13 Stage 1 and 7 Stage 2 page opens (15 loaded). All calls ran through
+reviewer and reconciler call was valid on its first attempt; no call hit a session limit, and
+no `open_page` call failed. In the deciding reviewer calls, Browserbase served 13 Stage 1 and
+7 Stage 2 page opens (15 loaded): 14 for the sources routed there, 6 read again after the local
+browser failed (4 museum record pages that timed out locally, all loaded; an IFAO page and an
+MFA Boston page that failed in both). The gate result counts these retries by class and host. All calls ran through
 Claude Code (Claude Sonnet 5.5) on the subscription; the records are private
 (`dropbox/hapi-337-review-v10-2026-10-14/`), bound by the hashes in the score.
 
@@ -153,7 +157,8 @@ the project owner's decision every scored call runs on the Claude Code subscript
   `open_page` loads a URL in Chromium, headful on a virtual display, and returns the HTTP
   status of the final document, the final URL, the title, whether it loaded and the visible
   text (up to 40,000 characters); a PDF is read with pypdf. All of it is stored in the call's
-  event log. It paces opens to one every 2 seconds per host, also across parallel calls, and
+  event log. It paces opens to one every 2 seconds per host, also across parallel calls (a
+  Browserbase re-read of a page that failed locally follows at once), and
   refuses blocked domains, before and after redirects. The validator re-derives `loaded` from
   the stored status, title and text: status 200, text to read, and no wall title (Vercel and
   Cloudflare checkpoints, Anubis's "Oh noes!", a captcha page). Claude Code's WebFetch, used in the v3 run,
@@ -176,8 +181,10 @@ the project owner's decision every scored call runs on the Claude Code subscript
 - **Pages that navigate on** (protocol v10, 2026-10-14). Heidelberg's Propylaeum pages move on
   right after their HTML is parsed (an Anubis challenge passing, a redirect to the PDF), and
   reading the title at that moment raised, so every such open failed with a tool error; these
-  were counted as a wall until v9. Title reads now survive such a navigation, and a PDF
-  reached that way is read as a PDF. Parallel first opens no longer each launch a browser.
+  were counted as a wall until v9. A title read now survives one such navigation, and a PDF
+  reached that way is read as a PDF; the page text is still read without that guard, and a
+  page that navigates again after it raises. Parallel first opens no longer each launch a
+  browser.
 - **Browserbase for the sources that need it** (protocol v6, 2026-10-13). The v5 run's
   Stage 1 failed its pre-registered page-load gate before any result was read: in site
   authority-gain units, opens of citable sources loaded 9.7 points below the site rate,
@@ -188,7 +195,8 @@ the project owner's decision every scored call runs on the Claude Code subscript
   sources that need it: those marked `"browser": "browserbase"` in `citable-sources.json`
   (Digital Egypt, PCMA) go there directly, and from v10 any other page that does not load in
   the local browser (an error, a wall, an empty page; not a 404 or 410) is read again there,
-  the page record keeping why the local read failed (`local_failure`). Each such page is read
+  the page record keeping why the local read failed (`local_failure`; lost if the re-read
+  itself raises, see the limitations). Each such page is read
   in its own session, one at a time per call, released when read; its ID is in the page
   record, for the session's replay on Browserbase. Trismegistos sells full access by institutional
   subscription and blocked this project's IP after the v5 run's attempts, so it was moved to
@@ -246,11 +254,18 @@ the project owner's decision every scored call runs on the Claude Code subscript
   written as "d"), which the retry cap turns into a stop; on the project owner's decision the
   v6 run was stopped there (its Stage 1 records stay private and unread,
   `dropbox/hapi-337-review-v6-2026-10-14/`) and the whole review re-run under v7.
-- **Pages are checked before a run** (from v10). Every citable page that failed to load in the
-  v5 to v9 records, and up to 3 that loaded per host, was opened with the v10 tool, no model
-  involved, before the v10 run (private: `dropbox/hapi-337-review-v10-2026-10-14/preflight-page-check.json`). All
-  loaded except PCMA (a CAPTCHA, in Browserbase too), IFAO (HTTP 503 to every browser), one
-  Dumbarton Oaks page (timeout) and pages that do not exist (HTTP 404).
+- **Pages are checked before a run** (from v10). `scripts/preflight_page_check.py` opens,
+  with the current `open_page` and no model, every citable page that failed to load in earlier
+  runs' records and up to 3 per host that loaded (the iDAI gazetteer's 183 failed place pages
+  sampled to 20). Run over the v5 to v9 records, with the v10 tool, on 2026-10-14
+  (`results/preflight-page-check.json`; it was first run before the v10 run, when Browserbase
+  refused sessions for lack of credit, and re-run in full after the v10 run): of 184 pages, 132
+  loaded (11 UCL Digital Egypt pages in Browserbase, 3 UNESCO pages only on the Browserbase
+  re-read), 34 do not exist (HTTP 404), and 18 did not load: PCMA 7 (a CAPTCHA, in Browserbase
+  too), IFAO 3 (HTTP 503), the iDAI gazetteer's search and `http://` pages 2 ("Application
+  Blocked"), 2 Griffith Institute PDFs (whole Topographical Bibliography volumes, not fetched
+  within 45 seconds) and a Heidelberg PDF link with a `#page=` fragment (timeout), an eScholarship item page (HTTP 202 with no text; its PDF loads), and 2 pages on
+  a retired iDAI host name.
 - **Fail loud.** Billed auth, another tool or MCP server, hook output, or another served
   model stops the run, and such a case is not resumed automatically. An answer rejected for
   its format (not JSON, schema-invalid, miscopied case ID, a reconciler resolving
@@ -326,8 +341,8 @@ so it stays.
 - **`loaded` recognises the walls it has met by their titles** (Vercel's "Security
   Checkpoint", Cloudflare's "Just a moment", Anubis's "Making sure you're not a bot" and "Oh
   noes!", "Captcha Verification Needed"). A wall with another title and status 200 would count
-  as loaded. A scan of all 1,468 citations of the v10 deciding calls found every one matched to
-  a loaded page with a title, none of them a wall, error or checkpoint page.
+  as loaded, and could then be cited; the validator admits a citation only of a page so
+  loaded.
 - **Surface text correlates with case type.** An authority-only gain has no common literal
   string by construction, so a case whose two sides show the same string can only be a retained
   control or a literal-only loss. The reviewer can infer that partition from the evidence it is
@@ -347,8 +362,8 @@ so it stays.
   round 12).
 - **Some listed sources stay unreadable, and one is broader than its purpose.** PCMA (Polish
   Centre of Mediterranean Archaeology) shows a CAPTCHA to the local browser and to Browserbase
-  alike, and IFAO answers HTTP 503 to every browser; the browser does not solve CAPTCHAs or
-  disguise itself. In v10 they account for 3 and 1 failed opens. All of eScholarship is
+  alike, and IFAO's archaeology pages answer HTTP 503 to every browser (its BEO database
+  pages load); the browser does not solve CAPTCHAs or disguise itself. In v10 they account for 3 and 1 failed opens. All of eScholarship is
   citable (from v9) so that UEE articles are, which also admits UC working papers and theses
   that the `open_repository` criterion excludes; the gate result lists every cited source,
   and v10 cites eScholarship twice.
@@ -363,6 +378,14 @@ so it stays.
 - **Released ruler targets omit builder internals.** Claim-statement IDs and a label count
   are dropped from a target's metadata at release (`UNRELEASED_TARGET_METADATA`); they are no
   evidence a reviewer can check.
+- **`open_page` defects found after the v10 run**, fixed only in the next registration (the
+  stored calls are bound to the browser tool's hash, so changing it voids them). None changed
+  a v10 call: no v10 `open_page` call failed, and every Browserbase re-read that failed
+  returned a page record. (1) When the Browserbase re-read itself raises, the error drops the
+  local failure reason. (2) The page text is read without the navigation guard the title has
+  (above). (3) A page whose `load` never fires waits 15 seconds twice. (4) A PDF records
+  `load_event` true although none was measured. (5) A Browserbase session is not released if
+  connecting to it fails. (6) The Browserbase re-read is not paced.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration.
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline

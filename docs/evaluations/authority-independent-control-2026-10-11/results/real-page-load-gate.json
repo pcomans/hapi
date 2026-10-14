@@ -6,7 +6,7 @@
  },
  "max_class_deviation_percentage_points": 5,
  "passed": true,
- "schema_version": "hapi-337-page-load-gate/5",
+ "schema_version": "hapi-337-page-load-gate/6",
  "stages": {
   "1": {
    "all_opens": {
@@ -220,7 +220,35 @@
      "opened": 119
     }
    },
-   "passed": true
+   "passed": true,
+   "retried_after_local_failure_by_host": {
+    "brooklynmuseum.org": 1,
+    "harvardartmuseums.org": 2,
+    "ifao.egnet.net": 1,
+    "mfaboston6.emuseum.com": 1
+   },
+   "retried_after_local_failure_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 0,
+     "opened": 1
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 1,
+     "opened": 1
+    },
+    "ruler/retained_control": {
+     "loaded": 1,
+     "opened": 1
+    },
+    "site/authority_only_transition": {
+     "loaded": 0,
+     "opened": 1
+    },
+    "site/literal_only_transition": {
+     "loaded": 1,
+     "opened": 1
+    }
+   }
   },
   "2": {
    "all_opens": {
@@ -387,7 +415,16 @@
      "opened": 191
     }
    },
-   "passed": true
+   "passed": true,
+   "retried_after_local_failure_by_host": {
+    "brooklynmuseum.org": 1
+   },
+   "retried_after_local_failure_by_transition_class": {
+    "site/retained_control": {
+     "loaded": 1,
+     "opened": 1
+    }
+   }
   }
  }
 }
