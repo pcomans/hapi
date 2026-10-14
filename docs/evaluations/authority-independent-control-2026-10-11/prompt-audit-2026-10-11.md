@@ -276,10 +276,11 @@ run. On the project owner's decision the entry is now all of escholarship.org, c
 |---|---|---|---|
 | 19 | v9 | **PASS** (no P0/P1/P2) | none (P3: non-UEE eScholarship working papers are now citable by domain) |
 
-## Audited prompt bytes
+## v9 audited bytes (the v9 run, stopped at its Stage 1 gate)
 
-The v9 prompts (`*-v6.txt`), system prompt, citable-source list and browser tool (whose
-description is model input) that run, by SHA-256 (a test checks these against the files).
+The files of the v9 run, which failed its Stage 1 page-load gate (site authority-only units
+7.3 points below the site rate; most failures were `open_page` errors on Heidelberg pages), by
+SHA-256.
 
 | File | SHA-256 |
 |---|---|
@@ -290,3 +291,34 @@ description is model input) that run, by SHA-256 (a test checks these against th
 | `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
 | `citable-sources.json` | `0fb13c7940a91b62aa50b8734682d921e222618dd43979aa582354f56552e3a7` |
 | `open_page_server.py` | `c6665190c0ea78de7f755d37d5f8d33354c0880ee30aa3b4579a921f09c9d6ff` |
+
+## Round 20: v10, local failures retried in Browserbase (2026-10-14)
+
+The v9 run failed its Stage 1 page-load gate. Most failed opens were `open_page` errors, not
+walls: Heidelberg's pages navigate on right after their HTML is parsed (a challenge passing, a
+redirect to the PDF), and reading the title at that moment raised. Title reads now survive such
+a navigation; browser start-up is locked (parallel first calls each launched a browser); and,
+per the project owner's rule that Browserbase serves the sites that need it, any page that does
+not load locally (not a 404 or 410) is read again in Browserbase, the result keeping
+`local_failure`. Before the run, every citable page that failed in the v5 to v9 records (and up
+to 3 that loaded, per host) was opened with this tool, with no model involved. The tool
+description is unchanged; the prompts, system prompt and citable-source list are unchanged.
+
+| Round | State | Verdict | Findings acted on |
+|---|---|---|---|
+| 20 | v10 | **PASS** (no P0/P1/P2) | none (P3: `local_failure` may carry a driver error's environment detail) |
+
+## Audited prompt bytes
+
+The v10 prompts (`*-v6.txt`), system prompt, citable-source list and browser tool (whose
+description is model input) that run, by SHA-256 (a test checks these against the files).
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v6.txt` | `e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f` |
+| `stage-1-reconciler-v6.txt` | `8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e` |
+| `stage-2-reviewer-v6.txt` | `98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4` |
+| `stage-2-reconciler-v6.txt` | `d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `0fb13c7940a91b62aa50b8734682d921e222618dd43979aa582354f56552e3a7` |
+| `open_page_server.py` | `a4d044055706c92f16e45c9bef9531118d9c71f60982e16b7475befac7571c84` |

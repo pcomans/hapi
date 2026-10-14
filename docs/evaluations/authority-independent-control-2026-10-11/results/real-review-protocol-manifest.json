@@ -7,7 +7,7 @@
     },
     "browser_tool": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
-      "sha256": "c6665190c0ea78de7f755d37d5f8d33354c0880ee30aa3b4579a921f09c9d6ff"
+      "sha256": "a4d044055706c92f16e45c9bef9531118d9c71f60982e16b7475befac7571c84"
     },
     "citable_sources": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
@@ -66,7 +66,7 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "177d3a74c122eca2167a57508b2d67d77ed23352b5e5abacf43a1bd55e1993ee"
+      "sha256": "592904f2dfbd5a2e32d81b09ab58c11920ea2a5eb31a91e96c963b8f51d33be1"
     }
   },
   "queue_inputs": {

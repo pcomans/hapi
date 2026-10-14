@@ -951,6 +951,20 @@ def test_a_page_read_before_its_load_event_counts_and_says_so() -> None:
     assert record["decision"]["citations"] == [OPENED, place]
 
 
+def test_a_page_browserbase_read_after_the_local_browser_failed_keeps_the_local_failure() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    walled = "https://pleiades.stoa.org/places/786036"
+    opens = (opened_page(), {**opened_page(walled), "browser": "browserbase", "browserbase_session_id": "s-1",
+                             "local_failure": "status 200, title 'Oh noes!'"})
+    record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+                                                  "citations": [OPENED, walled]}, opens=opens)},
+                               case, role, protocol.role_inputs(role)["schema"])
+    assert [(o["browser"], o.get("local_failure"), o["loaded"]) for o in record["page_opens"]] == [
+        ("local", None, True), ("browserbase", "status 200, title 'Oh noes!'", True)]
+    assert record["decision"]["citations"] == [OPENED, walled]
+
+
 def test_a_redirect_to_a_blocked_domain_fails_the_call() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]

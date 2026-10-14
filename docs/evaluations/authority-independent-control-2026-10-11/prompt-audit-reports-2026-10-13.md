@@ -261,3 +261,19 @@ P3 notes (no action required):
 1. The `open_repository` criterion ("citable only for a deposit of published, peer-reviewed work, not for a working paper") is the same text HAL uses.
 2. Moving UEE from `scholarly_publication` to `open_repository` puts its articles under that caveat; neutral, since UEE is peer-reviewed.
 3. Without the prefix, non-UEE eScholarship working papers are citable by domain; the category text is the only guard. This is citation hygiene, not leakage.
+
+## Round 20 (v10: local failures retried in Browserbase; navigation fixes)
+
+Round 20 (v10) verdict: PASS. There are no P0, P1 or P2 findings. Read-only audit of `scripts/open_page_server.py`.
+
+- **Tool description:** unchanged. It names requested_url, final_url, status, title, loaded, load_event, text and text_truncated; it does not mention `browser`, `browserbase_session_id` or `local_failure`, and has no case-class, target, Hapi or evaluation wording.
+- **Result keys:** `browser` ("local" or "browserbase"), the opaque `browserbase_session_id`, and `local_failure` (present only after a local failure) encode no case class or target. The same fallback applies to every non-404/410 failure, whatever the site or record, so the key carries no per-record signal.
+- **`local_failure` contents:** either `status N, title '<title>'` (from the site's response, which the model already sees) or the first line of a Playwright error (generic, carrying the URL the model asked for). Not model-authored and not tied to evaluation labels.
+
+P3 (optional, none acted on):
+1. A launch or driver error's first line can carry environment detail (an executable path). Not an answer leak.
+2. A redirect to a blocked host that then fails locally could name that host in `local_failure`; the existing block error already names such URLs.
+3. A Browserbase API error can now reach any source's open (its text names the API URL and a status code). Infrastructure detail only.
+4. `local_failure` is not described in the tool description; an extra key does not steer.
+
+The prompts, system prompt and `citable-sources.json` are unchanged since round 19 and were not re-audited.

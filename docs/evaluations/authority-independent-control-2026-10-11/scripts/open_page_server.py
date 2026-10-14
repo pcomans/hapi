@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""#337 review protocol v8: the review agents' one way to read a web page.
+"""#337 review protocol v10: the review agents' one way to read a web page.
 
 An MCP server (stdio) with a single tool, `open_page`, that loads a URL in Chromium (headful,
 on the virtual X display `xvfb-run` gives it) and returns what the page or PDF says. The Met and Brooklyn collection sites sit behind Vercel's
@@ -16,7 +16,9 @@ it loaded; only a loaded page of a citable source counts. Opens are paced per ho
 across parallel calls. A PDF is read with pypdf. Sources marked `"browser": "browserbase"` in
 `citable-sources.json` are read in a Browserbase cloud browser instead, one session per page
 (its ID is in the result, for the session replay); the API key comes from the environment
-(`BROWSERBASE_API_KEY`). A navigation error is not caught: the tool
+(`BROWSERBASE_API_KEY`). Any other page that does not load in the local browser (an error, a
+wall, an empty page; not a 404 or 410) is read again in Browserbase, and the result keeps the
+local failure (`local_failure`). A navigation error in Browserbase is not caught: the tool
 call fails and the agent sees the error.
 
 Navigation waits for the HTML to be parsed (`domcontentloaded`), then up to
@@ -57,6 +59,8 @@ MAX_TEXT_CHARS = 40_000
 # Chromium answers a navigation to a file it downloads (a PDF) with this error; the file is
 # then fetched through the same browser context (its cookies, so a passed wall stays passed).
 DOWNLOAD_STARTING = "Download is starting"
+# Playwright's error for a page read while it navigates on.
+CONTEXT_DESTROYED = "Execution context was destroyed"
 
 BROWSERBASE_API = "https://api.browserbase.com/v1/sessions"
 
@@ -65,21 +69,27 @@ _browser: Browser | None = None
 _playwright = None
 _next_open: dict[str, float] = {}
 _pacing = asyncio.Lock()
+_starting, _launching = asyncio.Lock(), asyncio.Lock()
+# One Browserbase session at a time per review call: the account allows 3 at once, and the two
+# reviewers run side by side.
+_browserbase_slot = asyncio.Lock()
 
 
 async def _playwright_driver():
     global _playwright
-    if _playwright is None:
-        _playwright = await async_playwright().start()
+    async with _starting:
+        if _playwright is None:
+            _playwright = await async_playwright().start()
     return _playwright
 
 
 async def _page() -> Page:
     global _browser
-    if _browser is None:
-        # Headful (on the X display `xvfb-run` provides): bot walls (Anubis, Cloudflare's
-        # interstitial) refuse a browser that announces itself as HeadlessChrome.
-        _browser = await (await _playwright_driver()).chromium.launch(headless=False)
+    async with _launching:  # parallel first calls would each launch a browser
+        if _browser is None:
+            # Headful (on the X display `xvfb-run` provides): bot walls (Anubis, Cloudflare's
+            # interstitial) refuse a browser that announces itself as HeadlessChrome.
+            _browser = await (await _playwright_driver()).chromium.launch(headless=False)
     return await _browser.new_page()
 
 
@@ -96,6 +106,11 @@ def _browserbase(method: str, path: str, body: dict) -> dict:
 
 async def _open_in_browserbase(url: str) -> dict:
     """Read one page in its own Browserbase cloud session, released as soon as it is read."""
+    async with _browserbase_slot:
+        return await _browserbase_read(url)
+
+
+async def _browserbase_read(url: str) -> dict:
     session = await asyncio.to_thread(_browserbase, "POST", "", {})
     remote = await (await _playwright_driver()).chromium.connect_over_cdp(session["connectUrl"])
     page = await remote.contexts[0].new_page()
@@ -151,24 +166,57 @@ async def _html(page: Page, url: str) -> dict:
     page.on("response", lambda r: documents.append(r) if (
         r.request.is_navigation_request() and r.frame == page.main_frame) else None)
     await page.goto(url, wait_until="domcontentloaded", timeout=NAVIGATION_TIMEOUT_MS)
-    if documents[-1].headers.get("content-type", "").startswith("application/pdf"):
-        # A headful browser shows a PDF in its viewer, which has no page text: read the file,
-        # fetched in full through the same browser context.
-        return await _pdf_download(page, page.url)
-    title = await page.title()
+    load_event = await _load_event(page)
+    title = await _title(page)
     deadline = time.monotonic() + CHECKPOINT_WAIT_SECONDS
     while any(marker in title for marker in CHECKPOINT_TITLES) and time.monotonic() < deadline:
         await page.wait_for_timeout(1000)
-        title = await page.title()
+        title = await _title(page)
+    load_event = await _load_event(page)
+    if documents[-1].headers.get("content-type", "").startswith("application/pdf"):
+        # A headful browser shows a PDF in its viewer, which has no page text: read the file,
+        # fetched in full through the same browser context.
+        return await _pdf_download(page, documents[-1].url)
+    return {"final_url": page.url, "status": documents[-1].status, "title": await _title(page),
+            "text": await page.inner_text("body"), "load_event": load_event}
+
+
+async def _load_event(page: Page) -> bool:
+    """Whether the page's `load` event fires within LOAD_EVENT_WAIT_SECONDS. Not a failure to
+    read if it does not: the page is read as it stands and the result says so."""
     try:
         await page.wait_for_load_state("load", timeout=LOAD_EVENT_WAIT_SECONDS * 1000)
-        load_event = True
     except PlaywrightTimeoutError:
-        # Not a failure to read: the page is read as it stands and the result says `load`
-        # never fired, so a page read this way can be counted.
-        load_event = False
-    return {"final_url": page.url, "status": documents[-1].status, "title": await page.title(),
-            "text": await page.inner_text("body"), "load_event": load_event}
+        return False
+    return True
+
+
+async def _title(page: Page) -> str:
+    """The page title; if the page is navigating on (a wall's challenge passing, a redirect by
+    script), the title of the page it arrives at."""
+    try:
+        return await page.title()
+    except PlaywrightError as err:
+        if CONTEXT_DESTROYED not in str(err):
+            raise
+        await page.wait_for_load_state("domcontentloaded")
+        return await page.title()
+
+
+async def _open_locally(url: str) -> dict:
+    """Read the page in the local browser. If it does not load there (an error, a wall, an
+    empty page), the result says why in `local_failure`, and the caller reads it in Browserbase
+    instead; a 404 or 410 is the site's answer, not a failure of the browser, and is returned."""
+    page = await _page()
+    try:
+        opened = {**await _read(page, url), "browser": "local"}
+    except PlaywrightError as err:
+        return {"local_failure": str(err).splitlines()[0]}
+    finally:
+        await page.close()
+    if opened["status"] in (404, 410) or page_loaded(opened["status"], opened["title"], opened["text"]):
+        return opened
+    return {"local_failure": f"status {opened['status']}, title {opened['title']!r}"}
 
 
 @server.tool(structured_output=False, description=(
@@ -189,9 +237,9 @@ async def open_page(url: str) -> str:
     if browser_for(url) == "browserbase":
         opened = await _open_in_browserbase(url)
     else:
-        page = await _page()
-        opened = {**await _read(page, url), "browser": "local"}
-        await page.close()
+        opened = await _open_locally(url)
+        if "local_failure" in opened:
+            opened = {**await _open_in_browserbase(url), "local_failure": opened["local_failure"]}
     if _blocked(opened["final_url"]):
         raise ValueError(f"{url} redirected to {opened['final_url']}, which may not be opened in this review")
     return json.dumps({
@@ -205,6 +253,7 @@ async def open_page(url: str) -> str:
         "load_event": opened["load_event"],
         "browser": opened["browser"],
         **({"browserbase_session_id": opened["browserbase_session_id"]} if "browserbase_session_id" in opened else {}),
+        **({"local_failure": opened["local_failure"]} if "local_failure" in opened else {}),
     }, ensure_ascii=False)
 
 
