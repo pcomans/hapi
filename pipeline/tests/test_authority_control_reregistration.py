@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import io
 import json
+import shutil
+import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 import pytest
@@ -755,31 +759,23 @@ def _write_run(run: Path, manifest: dict, extraction: dict) -> None:
     (run / "run-manifest.json").write_text(json.dumps(manifest))
 
 
-@pytest.fixture
-def frozen_resolver_inputs_in_place(monkeypatch):
-    """`validate_run` also checks that the live repository still holds the frozen resolver
-    inputs, which stopped being true when the claim graph moved on (#357). These tests are
-    about the run's own manifests, so that one live check is replaced by a record of the
-    call; `test_the_frozen_resolver_inputs_are_no_longer_the_live_ones` pins the live state."""
-    calls = []
-    real = queue_builder.load_comparison_module
-
-    def load(repo_root):
-        module = real(repo_root)
-        module.verify_current_inputs = lambda root: calls.append(root)
-        return module
-
-    monkeypatch.setattr(queue_builder, "load_comparison_module", load)
-    return calls
-
-
-def test_the_frozen_resolver_inputs_are_no_longer_the_live_ones() -> None:
-    # #337 froze its resolver inputs at 1d35337; #357 then changed the claim graph. The
-    # registration's population can be rebuilt only from those frozen inputs, not on main.
+@pytest.fixture(scope="module")
+def frozen_inputs_root(tmp_path_factory) -> Path:
+    """The tree #337's population is built in: the resolver inputs as frozen at
+    `compare_arms.BASE_COMMIT` (`CURRENT_INPUTS`, which a later main has changed: the claim
+    graph, by #357) and the current #337 scripts, whose hashes the run manifest and the
+    population digest bind. This is how the README says to rebuild the population."""
     comparison = queue_builder.load_comparison_module(ROOT)
-    assert comparison.BASE_COMMIT == "1d35337ff5b5185f1c620d04d58ede939b27f5af"
-    with pytest.raises(ValueError, match="current resolver input changed: web-claimgraph/data/claim-graph.json"):
-        comparison.verify_current_inputs(ROOT)
+    dest = tmp_path_factory.mktemp("frozen-inputs")
+    archive = subprocess.run(
+        ["git", "-C", str(ROOT), "archive", comparison.BASE_COMMIT, *sorted(comparison.CURRENT_INPUTS)],
+        check=True, capture_output=True,
+    ).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+        tar.extractall(dest, filter="data")
+    shutil.copytree(SCRIPTS, dest / SCRIPTS.relative_to(ROOT))
+    comparison.verify_current_inputs(dest)  # the frozen bytes, checked for real
+    return dest
 
 
 def _frozen_run(run: Path) -> tuple[dict, dict]:
@@ -840,25 +836,24 @@ def _frozen_run(run: Path) -> tuple[dict, dict]:
     (lambda m, e: m["outputs_sha256"].pop("current-authority-links.ndjson.gz"), "run manifest binds outputs"),
 ])
 def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(
-        tmp_path: Path, mutate, failure, frozen_resolver_inputs_in_place) -> None:
+        tmp_path: Path, mutate, failure, frozen_inputs_root) -> None:
     run = tmp_path / "run"
     manifest, extraction = _frozen_run(run)
-    accepted, report = queue_builder.validate_run(ROOT, run)
-    assert frozen_resolver_inputs_in_place == [ROOT]
+    accepted, report = queue_builder.validate_run(frozen_inputs_root, run)
     assert (accepted["base_commit"], report) == (manifest["base_commit"], {})
     mutate(manifest, extraction)
     _write_run(run, manifest, extraction)
     with pytest.raises(ValueError, match=failure):
-        queue_builder.validate_run(ROOT, run)
+        queue_builder.validate_run(frozen_inputs_root, run)
 
 
 def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(
-        tmp_path: Path, frozen_resolver_inputs_in_place) -> None:
+        tmp_path: Path, frozen_inputs_root) -> None:
     run = tmp_path / "run"
     _frozen_run(run)
     (run / "extraction-manifest.json").write_text("{}")
     with pytest.raises(ValueError, match="extraction manifest does not match the run manifest"):
-        queue_builder.validate_run(ROOT, run)
+        queue_builder.validate_run(frozen_inputs_root, run)
 
 
 def test_only_insufficient_evidence_may_cite_nothing() -> None:
