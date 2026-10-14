@@ -386,8 +386,8 @@ so it stays.
 - **Released ruler targets omit builder internals.** Claim-statement IDs and a label count
   are dropped from a target's metadata at release (`UNRELEASED_TARGET_METADATA`); they are no
   evidence a reviewer can check.
-- **`open_page` defects found after the v10 run**, fixed only in the next registration (the
-  stored calls are bound to the browser tool's hash, so changing it voids them). None changed
+- **`open_page` defects found after the v10 run**, fixed only in the next registration (#358;
+  the stored calls are bound to the browser tool's hash, so changing it voids them). None changed
   a v10 call: no v10 `open_page` call failed, and every Browserbase re-read that failed
   returned a page record. (1) When the Browserbase re-read itself raises, the error drops the
   local failure reason. (2) The page text is read without the navigation guard the title has
@@ -395,6 +395,6 @@ so it stays.
   `load_event` true although none was measured. (5) A Browserbase session is not released if
   connecting to it fails. (6) The Browserbase re-read is not paced.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
-  to the next registration.
+  to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
   behaviour (#338).
