@@ -1,0 +1,17 @@
+{
+ "schema_version": "hapi-female-rulers/1",
+ "rule": "Women the king lists hold as rulers. A queen-cued museum mention may resolve to one of them, by any name the king authority gives her (a leading 'Queen'/'(Queen)' dropped); king_name must resolve to exactly one king. Where D&H also has her (dh_id), the D&H woman is the same individual (README, 'Cross-source duplicates with pharaoh.se'), and a mention that lands on that entry resolves to the king. Neferneferuaten is left out: whether that king was Nefertiti or Meryetaten is disputed.",
+ "entries": [
+  {"king_name": "Hatshepsut", "dh_id": "Hatshepsut D"},
+  {"king_name": "Neferusobek", "dh_id": "Sobkneferu"},
+  {"king_name": "Tausret", "dh_id": "Tawosret"},
+  {"king_name": "Queen Neith-Iqeret", "dh_id": null},
+  {"king_name": "Arsinoe II", "dh_id": null},
+  {"king_name": "Berenike II", "dh_id": null},
+  {"king_name": "Cleopatra I", "dh_id": null},
+  {"king_name": "Cleopatra II", "dh_id": null},
+  {"king_name": "Berenike", "dh_id": null},
+  {"king_name": "Cleopatra VII Philopator", "dh_id": null},
+  {"king_name": "Cleopatra VII", "dh_id": null}
+ ]
+}

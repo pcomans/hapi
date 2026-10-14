@@ -1,9 +1,0 @@
-{
- "schema_version": "hapi-dodson-hilton-female-kings/1",
- "rule": "D&H Brief Lives entries for women who later reigned as kings are the same individuals as the king-list rulers (README, 'Cross-source duplicates with pharaoh.se'). pipeline.authority.royal_women resolves a mention that lands on one of these entries to the king, through king_name, which must resolve to exactly one king in the claim graph; king_name is also a name of the entry, so either spelling reaches her.",
- "entries": [
-  {"dh_id": "Hatshepsut D", "king_name": "Hatshepsut"},
-  {"dh_id": "Sobkneferu", "king_name": "Neferusobek"},
-  {"dh_id": "Tawosret", "king_name": "Tausret"}
- ]
-}
