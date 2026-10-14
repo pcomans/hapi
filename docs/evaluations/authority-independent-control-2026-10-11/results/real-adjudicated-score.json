@@ -1,0 +1,439 @@
+{
+  "adjudicated_arm_outcomes": {
+    "by_entity_type": {
+      "ruler": {
+        "authority_treatment": 10,
+        "literal_baseline": 13,
+        "net_treatment_minus_baseline": -3
+      },
+      "site": {
+        "authority_treatment": 50,
+        "literal_baseline": 53,
+        "net_treatment_minus_baseline": -3
+      }
+    },
+    "by_museum_pair": {
+      "brooklyn__harvard": {
+        "by_entity_type": {
+          "ruler": {
+            "museum_side_record_sets": {
+              "brooklyn": {
+                "authority_only": 0,
+                "authority_treatment": 5,
+                "both": 5,
+                "literal_baseline": 5,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 0
+              },
+              "harvard": {
+                "authority_only": 0,
+                "authority_treatment": 1,
+                "both": 1,
+                "literal_baseline": 1,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 0
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 1,
+              "literal_baseline": 1,
+              "net_treatment_minus_baseline": 0
+            }
+          },
+          "site": {
+            "museum_side_record_sets": {
+              "brooklyn": {
+                "authority_only": 7,
+                "authority_treatment": 332,
+                "both": 325,
+                "literal_baseline": 333,
+                "literal_only": 8,
+                "net_treatment_minus_baseline": -1
+              },
+              "harvard": {
+                "authority_only": 1,
+                "authority_treatment": 7,
+                "both": 6,
+                "literal_baseline": 8,
+                "literal_only": 2,
+                "net_treatment_minus_baseline": -1
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 4,
+              "literal_baseline": 4,
+              "net_treatment_minus_baseline": 0
+            }
+          }
+        },
+        "museum_side_record_sets": {
+          "brooklyn": {
+            "authority_only": 7,
+            "authority_treatment": 337,
+            "both": 330,
+            "literal_baseline": 338,
+            "literal_only": 8,
+            "net_treatment_minus_baseline": -1
+          },
+          "harvard": {
+            "authority_only": 1,
+            "authority_treatment": 8,
+            "both": 7,
+            "literal_baseline": 9,
+            "literal_only": 2,
+            "net_treatment_minus_baseline": -1
+          }
+        },
+        "useful_nodes_by_arm": {
+          "authority_treatment": 5,
+          "literal_baseline": 5,
+          "net_treatment_minus_baseline": 0
+        }
+      },
+      "met__brooklyn": {
+        "by_entity_type": {
+          "ruler": {
+            "museum_side_record_sets": {
+              "brooklyn": {
+                "authority_only": 2,
+                "authority_treatment": 13,
+                "both": 11,
+                "literal_baseline": 17,
+                "literal_only": 6,
+                "net_treatment_minus_baseline": -4
+              },
+              "met": {
+                "authority_only": 33,
+                "authority_treatment": 1895,
+                "both": 1862,
+                "literal_baseline": 1946,
+                "literal_only": 84,
+                "net_treatment_minus_baseline": -51
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 8,
+              "literal_baseline": 11,
+              "net_treatment_minus_baseline": -3
+            }
+          },
+          "site": {
+            "museum_side_record_sets": {
+              "brooklyn": {
+                "authority_only": 196,
+                "authority_treatment": 1103,
+                "both": 907,
+                "literal_baseline": 942,
+                "literal_only": 35,
+                "net_treatment_minus_baseline": 161
+              },
+              "met": {
+                "authority_only": 1035,
+                "authority_treatment": 14317,
+                "both": 13282,
+                "literal_baseline": 13401,
+                "literal_only": 119,
+                "net_treatment_minus_baseline": 916
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 43,
+              "literal_baseline": 46,
+              "net_treatment_minus_baseline": -3
+            }
+          }
+        },
+        "museum_side_record_sets": {
+          "brooklyn": {
+            "authority_only": 192,
+            "authority_treatment": 1107,
+            "both": 915,
+            "literal_baseline": 953,
+            "literal_only": 38,
+            "net_treatment_minus_baseline": 154
+          },
+          "met": {
+            "authority_only": 186,
+            "authority_treatment": 14424,
+            "both": 14238,
+            "literal_baseline": 14376,
+            "literal_only": 138,
+            "net_treatment_minus_baseline": 48
+          }
+        },
+        "useful_nodes_by_arm": {
+          "authority_treatment": 51,
+          "literal_baseline": 57,
+          "net_treatment_minus_baseline": -6
+        }
+      },
+      "met__harvard": {
+        "by_entity_type": {
+          "ruler": {
+            "museum_side_record_sets": {
+              "harvard": {
+                "authority_only": 0,
+                "authority_treatment": 1,
+                "both": 1,
+                "literal_baseline": 1,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 0
+              },
+              "met": {
+                "authority_only": 0,
+                "authority_treatment": 917,
+                "both": 917,
+                "literal_baseline": 917,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 0
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 1,
+              "literal_baseline": 1,
+              "net_treatment_minus_baseline": 0
+            }
+          },
+          "site": {
+            "museum_side_record_sets": {
+              "harvard": {
+                "authority_only": 1,
+                "authority_treatment": 6,
+                "both": 5,
+                "literal_baseline": 7,
+                "literal_only": 2,
+                "net_treatment_minus_baseline": -1
+              },
+              "met": {
+                "authority_only": 1,
+                "authority_treatment": 506,
+                "both": 505,
+                "literal_baseline": 513,
+                "literal_only": 8,
+                "net_treatment_minus_baseline": -7
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 3,
+              "literal_baseline": 3,
+              "net_treatment_minus_baseline": 0
+            }
+          }
+        },
+        "museum_side_record_sets": {
+          "harvard": {
+            "authority_only": 1,
+            "authority_treatment": 7,
+            "both": 6,
+            "literal_baseline": 8,
+            "literal_only": 2,
+            "net_treatment_minus_baseline": -1
+          },
+          "met": {
+            "authority_only": 1,
+            "authority_treatment": 1423,
+            "both": 1422,
+            "literal_baseline": 1430,
+            "literal_only": 8,
+            "net_treatment_minus_baseline": -7
+          }
+        },
+        "useful_nodes_by_arm": {
+          "authority_treatment": 4,
+          "literal_baseline": 4,
+          "net_treatment_minus_baseline": 0
+        }
+      }
+    },
+    "per_museum_any_other_museum_record_union": {
+      "brooklyn": {
+        "authority_only": 192,
+        "authority_treatment": 1108,
+        "both": 916,
+        "by_entity_type": {
+          "ruler": {
+            "authority_only": 2,
+            "authority_treatment": 13,
+            "both": 11,
+            "literal_baseline": 17,
+            "literal_only": 6,
+            "net_treatment_minus_baseline": -4
+          },
+          "site": {
+            "authority_only": 196,
+            "authority_treatment": 1104,
+            "both": 908,
+            "literal_baseline": 943,
+            "literal_only": 35,
+            "net_treatment_minus_baseline": 161
+          }
+        },
+        "literal_baseline": 954,
+        "literal_only": 38,
+        "net_treatment_minus_baseline": 154
+      },
+      "harvard": {
+        "authority_only": 1,
+        "authority_treatment": 8,
+        "both": 7,
+        "by_entity_type": {
+          "ruler": {
+            "authority_only": 0,
+            "authority_treatment": 1,
+            "both": 1,
+            "literal_baseline": 1,
+            "literal_only": 0,
+            "net_treatment_minus_baseline": 0
+          },
+          "site": {
+            "authority_only": 1,
+            "authority_treatment": 7,
+            "both": 6,
+            "literal_baseline": 8,
+            "literal_only": 2,
+            "net_treatment_minus_baseline": -1
+          }
+        },
+        "literal_baseline": 9,
+        "literal_only": 2,
+        "net_treatment_minus_baseline": -1
+      },
+      "met": {
+        "authority_only": 186,
+        "authority_treatment": 14424,
+        "both": 14238,
+        "by_entity_type": {
+          "ruler": {
+            "authority_only": 33,
+            "authority_treatment": 1895,
+            "both": 1862,
+            "literal_baseline": 1946,
+            "literal_only": 84,
+            "net_treatment_minus_baseline": -51
+          },
+          "site": {
+            "authority_only": 1035,
+            "authority_treatment": 14317,
+            "both": 13282,
+            "literal_baseline": 13401,
+            "literal_only": 119,
+            "net_treatment_minus_baseline": 916
+          }
+        },
+        "literal_baseline": 14376,
+        "literal_only": 138,
+        "net_treatment_minus_baseline": 48
+      }
+    },
+    "useful_nodes_by_arm": {
+      "authority_treatment": 60,
+      "literal_baseline": 66,
+      "net_treatment_minus_baseline": -6
+    }
+  },
+  "calibration_control_counts": {
+    "calibration_control_false_or_not_useful": 1,
+    "calibration_control_same_useful_exact_target": 47,
+    "calibration_control_uncertainty": 2,
+    "calibration_control_useful_but_wrong_or_nonidentity": 0
+  },
+  "decision_rule": {
+    "calibration": {
+      "passed": true,
+      "retained_controls": 50,
+      "uncertain_or_wrong": 3
+    },
+    "qualifying_scopes": [
+      "site__brooklyn__harvard",
+      "site__met__brooklyn",
+      "site__met__harvard"
+    ],
+    "safety": {
+      "authority_gains": 13,
+      "b": 0,
+      "passed": true,
+      "unsafe_scopes": []
+    },
+    "scopes": {
+      "ruler__met__brooklyn": {
+        "a": 2,
+        "b": 0,
+        "c": 0,
+        "changed": 9,
+        "d": 5,
+        "decided": 8,
+        "e": 1,
+        "f": 1,
+        "qualifies": false
+      },
+      "site__brooklyn__harvard": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "changed": 4,
+        "d": 1,
+        "decided": 4,
+        "e": 2,
+        "f": 0,
+        "qualifies": true
+      },
+      "site__met__brooklyn": {
+        "a": 9,
+        "b": 0,
+        "c": 0,
+        "changed": 30,
+        "d": 10,
+        "decided": 29,
+        "e": 10,
+        "f": 1,
+        "qualifies": true
+      },
+      "site__met__harvard": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "changed": 5,
+        "d": 1,
+        "decided": 5,
+        "e": 3,
+        "f": 0,
+        "qualifies": true
+      }
+    },
+    "totals": {
+      "a": 13,
+      "b": 0,
+      "c": 0,
+      "d": 17,
+      "e": 16,
+      "f": 2
+    },
+    "verdict": "CONTINUE"
+  },
+  "evaluation_date": "2026-10-11",
+  "input_hashes": {
+    "private_answer_key": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
+    "review_population_digest": "0f2404f24d4e12d475b6872f89d9cd8ecc55c976fecc34c31d4b80bd4dfbc7b2",
+    "stage_1_consensus": "368cee1906a4250bf73c1909a2a4886ff62136b09c410f44ce9b4d3715e87c42",
+    "stage_1_queue": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
+    "stage_2_consensus": "e96ae0032a7e68d943b3f22e84662df61d1039882e57a284c8547a1645dddd24",
+    "stage_2_custodian": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda",
+    "stage_2_queue": "fe450d4d2edb1e6027624bd548b521848bbe8b32272260a1e2987121c289c898"
+  },
+  "page_load_gate": {
+    "passed": true,
+    "sha256": "363e908f228c730396a67d43593f2f8008f319b00943fa8dabe4b070a9ef6169"
+  },
+  "primary_decision_counts": {
+    "a_authority_only_same_useful_exact_target": 13,
+    "b_authority_only_useful_but_wrong_or_nonidentity": 0,
+    "c_authority_only_false_or_not_useful_gain": 0,
+    "d_literal_only_same_useful_connection_lost": 17,
+    "e_literal_only_false_or_not_useful_removal": 16,
+    "f_transition_uncertainty": 2
+  },
+  "private_join_sha256": "3231ecd6815582e1f84275d1dc44ebe1e9d16d30f8e6db3050c9fa15ba169a97",
+  "review_status": "COMPLETE_TRACEABLE",
+  "schema_version": "hapi-authority-control-adjudicated-score/3",
+  "scorer_sha256": "c2194c53b303ec35f53cdcb4dad958e6af4a716bac71fcd0996553aca0dddaaa"
+}

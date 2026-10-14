@@ -1,0 +1,442 @@
+{
+ "inputs": {
+  "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
+  "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
+  "stage_2_queue_sha256": "fe450d4d2edb1e6027624bd548b521848bbe8b32272260a1e2987121c289c898"
+ },
+ "max_class_deviation_percentage_points": 5,
+ "passed": true,
+ "schema_version": "hapi-337-page-load-gate/11",
+ "stages": {
+  "1": {
+   "all_opens": {
+    "loaded": 913,
+    "opened": 925
+   },
+   "all_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 24,
+     "opened": 26
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 44,
+     "opened": 44
+    },
+    "ruler/retained_control": {
+     "loaded": 47,
+     "opened": 47
+    },
+    "site/authority_only_transition": {
+     "loaded": 104,
+     "opened": 107
+    },
+    "site/literal_only_transition": {
+     "loaded": 230,
+     "opened": 232
+    },
+    "site/retained_control": {
+     "loaded": 464,
+     "opened": 469
+    }
+   },
+   "all_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": -5.98,
+    "ruler/literal_only_transition": 1.71,
+    "ruler/retained_control": 1.71,
+    "site/authority_only_transition": -1.57,
+    "site/literal_only_transition": 0.38,
+    "site/retained_control": 0.17
+   },
+   "calls_without_a_loaded_page": 0,
+   "citable_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 24,
+     "opened": 25
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 44,
+     "opened": 44
+    },
+    "ruler/retained_control": {
+     "loaded": 47,
+     "opened": 47
+    },
+    "site/authority_only_transition": {
+     "loaded": 104,
+     "opened": 107
+    },
+    "site/literal_only_transition": {
+     "loaded": 230,
+     "opened": 232
+    },
+    "site/retained_control": {
+     "loaded": 464,
+     "opened": 469
+    }
+   },
+   "citable_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": -3.14,
+    "ruler/literal_only_transition": 0.86,
+    "ruler/retained_control": 0.86,
+    "site/authority_only_transition": -1.57,
+    "site/literal_only_transition": 0.38,
+    "site/retained_control": 0.17
+   },
+   "citations_by_transition_class_and_role": {
+    "ruler/authority_only_transition": {
+     "case_input": 21,
+     "independent": 3
+    },
+    "ruler/literal_only_transition": {
+     "case_input": 43
+    },
+    "ruler/retained_control": {
+     "case_input": 47
+    },
+    "site/authority_only_transition": {
+     "case_input": 79,
+     "independent": 20
+    },
+    "site/literal_only_transition": {
+     "case_input": 199,
+     "independent": 25
+    },
+    "site/retained_control": {
+     "case_input": 410,
+     "independent": 44,
+     "target_record": 2
+    }
+   },
+   "citations_by_transition_class_and_source": {
+    "ruler/authority_only_transition": {
+     "brooklynmuseum.org": 6,
+     "harvardartmuseums.org": 1,
+     "metmuseum.org": 14,
+     "thebanmappingproject.com": 1,
+     "ucl.ac.uk/museums-static/digitalegypt": 2
+    },
+    "ruler/literal_only_transition": {
+     "brooklynmuseum.org": 14,
+     "metmuseum.org": 29
+    },
+    "ruler/retained_control": {
+     "brooklynmuseum.org": 17,
+     "harvardartmuseums.org": 4,
+     "metmuseum.org": 26
+    },
+    "site/authority_only_transition": {
+     "amarnaproject.com": 2,
+     "archiv.ub.uni-heidelberg.de": 2,
+     "brooklynmuseum.org": 36,
+     "egymonuments.gov.eg": 1,
+     "griffith.ox.ac.uk": 3,
+     "gurob.org.uk": 2,
+     "harvardartmuseums.org": 4,
+     "hierakonpolis-online.org": 1,
+     "metmuseum.org": 39,
+     "pleiades.stoa.org": 8,
+     "ucl.ac.uk/museums-static/digitalegypt": 1
+    },
+    "site/literal_only_transition": {
+     "brooklynmuseum.org": 88,
+     "escholarship.org": 2,
+     "griffith.ox.ac.uk": 1,
+     "harvardartmuseums.org": 26,
+     "ifao.egnet.net": 1,
+     "metmuseum.org": 85,
+     "pleiades.stoa.org": 15,
+     "whc.unesco.org": 6
+    },
+    "site/retained_control": {
+     "archiv.ub.uni-heidelberg.de": 3,
+     "brooklynmuseum.org": 224,
+     "dainst.org": 2,
+     "egymonuments.gov.eg": 2,
+     "globalegyptianmuseum.org": 1,
+     "griffith.ox.ac.uk": 10,
+     "harvardartmuseums.org": 15,
+     "metmuseum.org": 171,
+     "pleiades.stoa.org": 21,
+     "sais.webspace.durham.ac.uk": 1,
+     "thebanmappingproject.com": 1,
+     "ucl.ac.uk/museums-static/digitalegypt": 4,
+     "whc.unesco.org": 1
+    }
+   },
+   "classes_without_citable_opens": [],
+   "deciding_reconciler_calls": 1,
+   "deciding_reviewer_calls": 216,
+   "loaded_without_load_event_by_host": {
+    "metmuseum.org": 4
+   },
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 1850
+   },
+   "not_loaded_opens_by_host": {
+    "egyptartefacts.griffith.ox.ac.uk": 8,
+    "ifao.egnet.net": 1,
+    "mfaboston6.emuseum.com": 1,
+    "pcma.uw.edu.pl": 1,
+    "thebanmappingproject.com": 1
+   },
+   "opens_by_browser": {
+    "browserbase": {
+     "loaded": 10,
+     "opened": 13
+    },
+    "local": {
+     "loaded": 903,
+     "opened": 912
+    }
+   },
+   "opens_by_citation_role": {
+    "case_input": {
+     "loaded": 805,
+     "opened": 805
+    },
+    "independent": {
+     "loaded": 106,
+     "opened": 117
+    },
+    "not_citable": {
+     "loaded": 0,
+     "opened": 1
+    },
+    "target_record": {
+     "loaded": 2,
+     "opened": 2
+    }
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 387,
+     "opened": 387
+    },
+    "harvard": {
+     "loaded": 50,
+     "opened": 50
+    },
+    "met": {
+     "loaded": 368,
+     "opened": 368
+    },
+    "other": {
+     "loaded": 108,
+     "opened": 120
+    }
+   },
+   "passed": true,
+   "retried_after_local_failure_by_host": {
+    "brooklynmuseum.org": 1,
+    "harvardartmuseums.org": 2,
+    "ifao.egnet.net": 1,
+    "mfaboston6.emuseum.com": 1
+   },
+   "retried_after_local_failure_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 0,
+     "opened": 1
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 1,
+     "opened": 1
+    },
+    "ruler/retained_control": {
+     "loaded": 1,
+     "opened": 1
+    },
+    "site/authority_only_transition": {
+     "loaded": 0,
+     "opened": 1
+    },
+    "site/literal_only_transition": {
+     "loaded": 1,
+     "opened": 1
+    }
+   }
+  },
+  "2": {
+   "all_opens": {
+    "loaded": 604,
+    "opened": 609
+   },
+   "all_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 20,
+     "opened": 22
+    },
+    "ruler/retained_control": {
+     "loaded": 46,
+     "opened": 47
+    },
+    "site/authority_only_transition": {
+     "loaded": 119,
+     "opened": 119
+    },
+    "site/retained_control": {
+     "loaded": 419,
+     "opened": 421
+    }
+   },
+   "all_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": -4.74,
+    "ruler/retained_control": 2.22,
+    "site/authority_only_transition": 0.37,
+    "site/retained_control": -0.1
+   },
+   "calls_without_a_loaded_page": 0,
+   "citable_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 20,
+     "opened": 22
+    },
+    "ruler/retained_control": {
+     "loaded": 46,
+     "opened": 47
+    },
+    "site/authority_only_transition": {
+     "loaded": 118,
+     "opened": 119
+    },
+    "site/retained_control": {
+     "loaded": 419,
+     "opened": 421
+    }
+   },
+   "citable_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": -4.74,
+    "ruler/retained_control": 2.22,
+    "site/authority_only_transition": -0.28,
+    "site/retained_control": 0.08
+   },
+   "citations_by_transition_class_and_role": {
+    "ruler/authority_only_transition": {
+     "case_input": 16,
+     "independent": 4
+    },
+    "ruler/retained_control": {
+     "case_input": 43,
+     "independent": 1
+    },
+    "site/authority_only_transition": {
+     "case_input": 69,
+     "independent": 17,
+     "target_record": 25
+    },
+    "site/retained_control": {
+     "case_input": 272,
+     "independent": 45,
+     "target_record": 83
+    }
+   },
+   "citations_by_transition_class_and_source": {
+    "ruler/authority_only_transition": {
+     "brooklynmuseum.org": 6,
+     "metmuseum.org": 10,
+     "thebanmappingproject.com": 2,
+     "ucl.ac.uk/museums-static/digitalegypt": 2
+    },
+    "ruler/retained_control": {
+     "brooklynmuseum.org": 17,
+     "harvardartmuseums.org": 4,
+     "metmuseum.org": 22,
+     "thebanmappingproject.com": 1
+    },
+    "site/authority_only_transition": {
+     "archiv.ub.uni-heidelberg.de": 3,
+     "brooklynmuseum.org": 30,
+     "dainst.org": 25,
+     "griffith.ox.ac.uk": 6,
+     "gurob.org.uk": 1,
+     "harvardartmuseums.org": 4,
+     "metmuseum.org": 35,
+     "pleiades.stoa.org": 6,
+     "ucl.ac.uk/museums-static/digitalegypt": 1
+    },
+    "site/retained_control": {
+     "arce.org": 1,
+     "brooklynmuseum.org": 159,
+     "dainst.org": 83,
+     "egymonuments.gov.eg": 1,
+     "globalegyptianmuseum.org": 1,
+     "griffith.ox.ac.uk": 7,
+     "harvardartmuseums.org": 10,
+     "hierakonpolis-online.org": 2,
+     "metmuseum.org": 103,
+     "pleiades.stoa.org": 31,
+     "sais.webspace.durham.ac.uk": 1,
+     "ucl.ac.uk/museums-static/digitalegypt": 1
+    }
+   },
+   "classes_without_citable_opens": [],
+   "deciding_reconciler_calls": 3,
+   "deciding_reviewer_calls": 130,
+   "loaded_without_load_event_by_host": {
+    "gazetteer.dainst.org": 113,
+    "metmuseum.org": 1
+   },
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 1218
+   },
+   "not_loaded_opens_by_host": {
+    "metmuseum.org": 1,
+    "pcma.uw.edu.pl": 2,
+    "thebanmappingproject.com": 2
+   },
+   "opens_by_browser": {
+    "browserbase": {
+     "loaded": 5,
+     "opened": 7
+    },
+    "local": {
+     "loaded": 599,
+     "opened": 602
+    }
+   },
+   "opens_by_citation_role": {
+    "case_input": {
+     "loaded": 412,
+     "opened": 413
+    },
+    "independent": {
+     "loaded": 76,
+     "opened": 81
+    },
+    "target_record": {
+     "loaded": 115,
+     "opened": 115
+    }
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 222,
+     "opened": 222
+    },
+    "harvard": {
+     "loaded": 18,
+     "opened": 18
+    },
+    "met": {
+     "loaded": 172,
+     "opened": 173
+    },
+    "other": {
+     "loaded": 192,
+     "opened": 196
+    }
+   },
+   "passed": true,
+   "retried_after_local_failure_by_host": {
+    "brooklynmuseum.org": 1
+   },
+   "retried_after_local_failure_by_transition_class": {
+    "site/retained_control": {
+     "loaded": 1,
+     "opened": 1
+    }
+   }
+  }
+ }
+}

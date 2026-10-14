@@ -1,0 +1,60 @@
+{
+ "$id": "hapi-authority-control-raw-response/stage-2-reviewer-case/2",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "else": {
+  "properties": {
+   "citations": {
+    "minItems": 1
+   }
+  }
+ },
+ "if": {
+  "properties": {
+   "canonical_identity": {
+    "const": "insufficient_evidence"
+   }
+  },
+  "required": [
+   "canonical_identity"
+  ]
+ },
+ "properties": {
+  "canonical_identity": {
+   "enum": [
+    "exact_identity",
+    "different_identity",
+    "insufficient_evidence"
+   ]
+  },
+  "case_id": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "citations": {
+   "items": {
+    "pattern": "^https?://",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "evidence_sha256": {
+   "pattern": "^[0-9a-f]{64}$",
+   "type": "string"
+  },
+  "reasoning": {
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "required": [
+  "case_id",
+  "evidence_sha256",
+  "canonical_identity",
+  "reasoning",
+  "citations"
+ ],
+ "title": "Stage 2 reviewer raw response for one case",
+ "type": "object",
+ "x-hapi-role": "stage_2_reviewer"
+}

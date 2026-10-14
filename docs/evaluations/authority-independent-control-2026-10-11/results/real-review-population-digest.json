@@ -1,0 +1,208 @@
+{
+  "arm_native_inventory": {
+    "different_membership_case_binding_set_sha256": "5218d5e2e3f36ab08940a45915e0a25298db7134a2c7b3db69d7c08352c40f11",
+    "distinct_accounting_case_binding_set_sha256": "e69d2f3c86b508cd86839454fc772c36ed6710749b7d608907a470b692ca3656",
+    "literal_nodes_represented_by_retained_controls": 51,
+    "multiple_literal_case_binding_set_sha256": "bcc54f0edc6611501733b709157311d7fe3cd45e3243de106490a7127dc7f1b2",
+    "retained_authority_control_cases": 50,
+    "retained_controls_requiring_distinct_arm_native_accounting": 9,
+    "retained_controls_with_different_arm_native_record_membership": 8,
+    "retained_controls_with_multiple_literal_nodes": 1,
+    "shared_node_cases_by_arm": {
+      "authority": 65,
+      "literal": 84
+    },
+    "shared_node_cases_by_pair_and_arm": {
+      "brooklyn__harvard": {
+        "authority": 5,
+        "literal": 7
+      },
+      "met__brooklyn": {
+        "authority": 56,
+        "literal": 70
+      },
+      "met__harvard": {
+        "authority": 4,
+        "literal": 7
+      }
+    }
+  },
+  "executable_check_counts": {
+    "actual_controls_numerator": 500,
+    "required_controls_numerator": 432,
+    "retained_controls": 50,
+    "stage_1_cross_side_group_token_matches": 0,
+    "stage_1_distinct_visible_structure_signatures": 1,
+    "stage_1_evidence_hash_mismatches": 0,
+    "stage_1_forbidden_key_occurrences": 0,
+    "stage_1_malformed_evidence_block_schemas": 0,
+    "stage_1_non_singleton_side_evidence_blocks": 0,
+    "stage_1_private_identifier_occurrences": 0,
+    "stage_2_custodian_duplicate_case_ids": 0,
+    "stage_2_evidence_hash_mismatches": 0,
+    "stage_2_insufficient_evidence_cases": 0,
+    "stage_2_missing_stage_1_review_units": 0,
+    "stage_2_recomputed_evidence_hash_mismatches": 0,
+    "stage_2_release_candidate_cases": 65,
+    "stage_2_stage_1_duplicate_case_ids": 0,
+    "transition_cases": 48,
+    "transition_expected": {
+      "authority_only_transition": {
+        "brooklyn__harvard": 1,
+        "met__brooklyn": 13,
+        "met__harvard": 1
+      },
+      "literal_only_transition": {
+        "brooklyn__harvard": 3,
+        "met__brooklyn": 26,
+        "met__harvard": 4
+      },
+      "retained_control": {
+        "brooklyn__harvard": 4,
+        "met__brooklyn": 43,
+        "met__harvard": 3
+      }
+    },
+    "transition_observed": {
+      "authority_only_transition": {
+        "brooklyn__harvard": 1,
+        "met__brooklyn": 13,
+        "met__harvard": 1
+      },
+      "literal_only_transition": {
+        "brooklyn__harvard": 3,
+        "met__brooklyn": 26,
+        "met__harvard": 4
+      },
+      "retained_control": {
+        "brooklyn__harvard": 4,
+        "met__brooklyn": 43,
+        "met__harvard": 3
+      }
+    }
+  },
+  "input_hashes": {
+    "authority_arm_sha256": "5a53b9b8d39876e23b4e703420add9daae5ca90576cf7c451da4b22ece23e21f",
+    "authority_links_sha256": "44828b6b6b014b7c2bdc829c3455616d2be9b9d75e190768f3c55bc7ff002cd5",
+    "literal_arm_sha256": "0f2f24c2a9fece2c847707024adcd9a720c20ea318965dcdc42606eeb741b021",
+    "literal_links_sha256": "78f8b221ca3325ad5908bb9b479b374de82345f59ea6357981739b097068b237",
+    "mention_ledger_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+    "report_sha256": "7c1b61c5cb640ce52de1ad87572cfd14dd013482870d1e21d889e9380f3a404a",
+    "review_population_builder_sha256": "c965d1aba9e57d8583d314b32e36e2f44f239ec51016f68e267a9ff2de44c137",
+    "review_protocol": {
+      "artifact_schema": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/review-artifact.schema.json",
+        "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
+      },
+      "browser_tool": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
+        "sha256": "a4d044055706c92f16e45c9bef9531118d9c71f60982e16b7475befac7571c84"
+      },
+      "citable_sources": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
+        "sha256": "0fb13c7940a91b62aa50b8734682d921e222618dd43979aa582354f56552e3a7"
+      },
+      "launcher_system_prompts": {
+        "review": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v4.txt",
+          "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
+        }
+      },
+      "page_load_gate": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
+        "sha256": "fd271648207424dcc4e0c89e3360f2c5f959e0536ae2276497d7a12f4d41cd08"
+      },
+      "prompts": {
+        "stage_1_reconciler": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v6.txt",
+          "sha256": "8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e"
+        },
+        "stage_1_reviewer": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v6.txt",
+          "sha256": "e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f"
+        },
+        "stage_2_reconciler": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v6.txt",
+          "sha256": "d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd"
+        },
+        "stage_2_reviewer": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v6.txt",
+          "sha256": "98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4"
+        }
+      },
+      "protocol_version": "hapi-337-reregistration-consensus/1",
+      "raw_response_contracts": {
+        "stage_1_reconciler": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
+          "sha256": "f780f4b6f61225fae7511ea1374eae758ccfb9e31f522e1ba5c8873b5fd211a7"
+        },
+        "stage_1_reviewer": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v3.schema.json",
+          "sha256": "bcb59a3429ca3d031af242eab3082f25ded4e047f2ad958b42006dbbbd7d4bd4"
+        },
+        "stage_2_reconciler": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
+          "sha256": "dd9535da0b94a9e3770f970dda666b77740f003a9e48c6c22aa6eee362257812"
+        },
+        "stage_2_reviewer": {
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
+          "sha256": "b8fb1c959904bde658ae7a3a00d4a76aa788a90fc5ffe5275f2f9fea30e12ac3"
+        }
+      },
+      "runner": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
+        "sha256": "5b10e3d7ea5eb856eeacf9d696d5dac158d4f7a29594cec99efdbebbaaabe991"
+      },
+      "scorer": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
+        "sha256": "c2194c53b303ec35f53cdcb4dad958e6af4a716bac71fcd0996553aca0dddaaa"
+      },
+      "validator": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
+        "sha256": "4cf9cf28415b3cdd5c5653b7bcdb019e8eeeea1d2e6c4402c3b52aa709039be9"
+      }
+    },
+    "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
+  },
+  "output_hashes": {
+    "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
+    "private_population_manifest_sha256": "92b58a5ad2557eaaaeece7229947f7f7496772bf5dc1e49b95ab6f22a2692ddd",
+    "review_protocol_manifest_sha256": "4a9407fa4a822baf7fa1fe9b34febc3f4bfdd2d08f3af53864912ba567225d11",
+    "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
+    "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
+  },
+  "population_counts": {
+    "by_class": {
+      "authority_only_transition": 15,
+      "literal_only_transition": 33,
+      "retained_control": 50
+    },
+    "by_entity_type": {
+      "ruler": 17,
+      "site": 81
+    },
+    "by_pair_and_class": {
+      "brooklyn__harvard": {
+        "authority_only_transition": 1,
+        "literal_only_transition": 3,
+        "retained_control": 4
+      },
+      "met__brooklyn": {
+        "authority_only_transition": 13,
+        "literal_only_transition": 26,
+        "retained_control": 43
+      },
+      "met__harvard": {
+        "authority_only_transition": 1,
+        "literal_only_transition": 4,
+        "retained_control": 3
+      }
+    },
+    "stage_1_arm_native_review_units": 108,
+    "total": 98
+  },
+  "review": {
+    "protocol_manifest_sha256": "4a9407fa4a822baf7fa1fe9b34febc3f4bfdd2d08f3af53864912ba567225d11"
+  },
+  "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
+}

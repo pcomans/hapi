@@ -1,0 +1,94 @@
+{
+  "evaluation_date": "2026-10-11",
+  "protocol_inputs": {
+    "artifact_schema": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/review-artifact.schema.json",
+      "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
+    },
+    "browser_tool": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
+      "sha256": "a4d044055706c92f16e45c9bef9531118d9c71f60982e16b7475befac7571c84"
+    },
+    "citable_sources": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
+      "sha256": "0fb13c7940a91b62aa50b8734682d921e222618dd43979aa582354f56552e3a7"
+    },
+    "launcher_system_prompts": {
+      "review": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v4.txt",
+        "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
+      }
+    },
+    "page_load_gate": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
+      "sha256": "fd271648207424dcc4e0c89e3360f2c5f959e0536ae2276497d7a12f4d41cd08"
+    },
+    "prompts": {
+      "stage_1_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v6.txt",
+        "sha256": "8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e"
+      },
+      "stage_1_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v6.txt",
+        "sha256": "e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f"
+      },
+      "stage_2_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v6.txt",
+        "sha256": "d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd"
+      },
+      "stage_2_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v6.txt",
+        "sha256": "98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4"
+      }
+    },
+    "protocol_version": "hapi-337-reregistration-consensus/1",
+    "raw_response_contracts": {
+      "stage_1_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
+        "sha256": "f780f4b6f61225fae7511ea1374eae758ccfb9e31f522e1ba5c8873b5fd211a7"
+      },
+      "stage_1_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v3.schema.json",
+        "sha256": "bcb59a3429ca3d031af242eab3082f25ded4e047f2ad958b42006dbbbd7d4bd4"
+      },
+      "stage_2_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
+        "sha256": "dd9535da0b94a9e3770f970dda666b77740f003a9e48c6c22aa6eee362257812"
+      },
+      "stage_2_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
+        "sha256": "b8fb1c959904bde658ae7a3a00d4a76aa788a90fc5ffe5275f2f9fea30e12ac3"
+      }
+    },
+    "runner": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
+      "sha256": "5b10e3d7ea5eb856eeacf9d696d5dac158d4f7a29594cec99efdbebbaaabe991"
+    },
+    "scorer": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
+      "sha256": "c2194c53b303ec35f53cdcb4dad958e6af4a716bac71fcd0996553aca0dddaaa"
+    },
+    "validator": {
+      "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
+      "sha256": "4cf9cf28415b3cdd5c5653b7bcdb019e8eeeea1d2e6c4402c3b52aa709039be9"
+    }
+  },
+  "queue_inputs": {
+    "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
+    "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
+  },
+  "required_sequence": [
+    "leak_audit_every_prompt_on_composed_requests",
+    "run_two_stage_1_reviewers",
+    "prepare_stage_1_reconciliation",
+    "run_stage_1_reconciler_on_disputed_questions",
+    "freeze_stage_1_consensus",
+    "release_stage_2",
+    "run_two_stage_2_reviewers",
+    "prepare_stage_2_reconciliation",
+    "run_stage_2_reconciler_on_disputed_questions",
+    "freeze_stage_2_consensus",
+    "score"
+  ],
+  "schema_version": "hapi-authority-control-review-protocol-manifest/4"
+}

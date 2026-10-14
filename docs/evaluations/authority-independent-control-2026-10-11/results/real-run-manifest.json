@@ -1,0 +1,73 @@
+{
+  "base_commit": "1d35337ff5b5185f1c620d04d58ede939b27f5af",
+  "identical_mentions_proof": {
+    "all_mention_spans_revalidated": true,
+    "arm_ordered_mention_ids_equal": true,
+    "arm_row_counts_equal": true,
+    "current_authority_arm": {
+      "canonical_uncompressed_sha256": "062f5733048eb7cd4e803b8f962ffe5ea19bd68ccfb550c9556557c430a70b52",
+      "gzip_sha256": "5a53b9b8d39876e23b4e703420add9daae5ca90576cf7c451da4b22ece23e21f",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    },
+    "identical_ordered_mentions": true,
+    "mention_ledger": {
+      "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
+      "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    },
+    "typed_literal_arm": {
+      "canonical_uncompressed_sha256": "cae5d411484b870e57ce908ec6269bd360e2a00e501f87e8e313625fc09e1df3",
+      "gzip_sha256": "0f2f24c2a9fece2c847707024adcd9a720c20ea318965dcdc42606eeb741b021",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    }
+  },
+  "inputs": {
+    "compare_arms_sha256": "7af873b9fc5ec8d45d93a9a06574ea49e7cb99b59bbf5e9c4f442b92ed34b294",
+    "corpus_archive": {
+      "canonical_counts": {
+        "brooklyn": 7554,
+        "harvard": 722,
+        "met": 27969
+      },
+      "member_sha256": {
+        "data/artifacts.ndjson.gz": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
+        "data/raw_brooklyn.ndjson.gz": "b68ee05e1f86a664730933ee38b8178c3bcf789a32c017135877f17abf306b31",
+        "data/raw_harvard.ndjson.gz": "1ac4e06ce7b3859fefdd43039c8ddbee42c6e3a80311d916db7751be79b8178f",
+        "data/raw_met.ndjson.gz": "cc81d0f676e63137fbe8575982fbb20b2b997686536d6f2a6a634d924da3394e"
+      },
+      "raw_counts": {
+        "brooklyn": 8832,
+        "harvard": 722,
+        "met": 27969
+      },
+      "sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+      "snapshot_date": "2026-08-27"
+    },
+    "current_resolver_inputs_sha256": {
+      "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0",
+      "pipeline/pipeline/authority/claimgraph/normalize.py": "ca59b734db3f67511c9e58f16eaf8769e998c5e480d18c8be49a575390b16939",
+      "pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl": "607c5d6f865b6afe89efc6d7c474a554caa756b3ad723a66ddbcf7ef3219dcfd",
+      "pipeline/pipeline/authority/sources/porter-moss-memphis/reconciled.jsonl": "fa497703c1d64a6d734f8255fe9a920cb9c61e44ceb811d4f86b2306fc22e343",
+      "pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl": "4414c5b4a3004c3b6d6669e45a4708bf2405e0c952620633cc155a6d4478a2ff",
+      "web-claimgraph/data/claim-graph.json": "b00ca2de74bca4fb5ce48ecf1982389a5331cfe0c3f96e191e8efd2f7a28cb7e"
+    },
+    "extraction_manifest_sha256": "ce0406924d2d0159c58d0a0a7369fecdfb878ca46ca57aae100c6068615fd205",
+    "mention_ledger": {
+      "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
+      "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    }
+  },
+  "outputs_sha256": {
+    "current-authority-arm.ndjson.gz": "5a53b9b8d39876e23b4e703420add9daae5ca90576cf7c451da4b22ece23e21f",
+    "current-authority-links.ndjson.gz": "44828b6b6b014b7c2bdc829c3455616d2be9b9d75e190768f3c55bc7ff002cd5",
+    "report.json": "7c1b61c5cb640ce52de1ad87572cfd14dd013482870d1e21d889e9380f3a404a",
+    "typed-literal-arm.ndjson.gz": "0f2f24c2a9fece2c847707024adcd9a720c20ea318965dcdc42606eeb741b021",
+    "typed-literal-links.ndjson.gz": "78f8b221ca3325ad5908bb9b479b374de82345f59ea6357981739b097068b237"
+  },
+  "schema_version": "hapi-authority-independent-control-run/1"
+}
