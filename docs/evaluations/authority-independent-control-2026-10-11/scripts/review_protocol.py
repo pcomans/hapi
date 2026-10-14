@@ -37,6 +37,8 @@ import jsonschema
 EVALUATION_ROOT = Path(__file__).resolve().parents[1]
 SYSTEM_PROMPT_PATH = EVALUATION_ROOT / "launcher-instructions" / "review-system-v4.txt"
 SERVED_MODEL = "claude-sonnet-5-5"
+# The Claude Code release every scored call ran on, from its init event.
+CLAUDE_CODE_VERSION = "2.1.299"
 # The agents read pages only through `open_page` (open_page_server.py, a headless Chromium):
 # Claude Code's WebFetch cannot pass the JavaScript checkpoint in front of the Met and
 # Brooklyn collection sites. Web search finds pages; it is never a source.
@@ -306,6 +308,9 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
         return record
     if init.get("model") != SERVED_MODEL:
         record["failure"] = f"served model {init.get('model')!r}, not {SERVED_MODEL!r}"
+        return record
+    if init.get("claude_code_version") != CLAUDE_CODE_VERSION:
+        record["failure"] = f"Claude Code {init.get('claude_code_version')!r}, not {CLAUDE_CODE_VERSION!r}"
         return record
     # User-level hooks still run in a `claude -p` session; any output would reach the model.
     hook_output = [

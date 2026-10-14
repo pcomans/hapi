@@ -159,15 +159,15 @@
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "96c697efefde1d00b67bd73a1ccff7284f1a6b5ca202191746bb8dd22317bba1"
+        "sha256": "1e348e9436731a9c9499c1e58913d3226ce01b80b304ef8f923cee42ebd77b08"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "e1842c5c519fc94ac5540406f0148f3a76537d1950a42de48767f4e534b8662f",
-    "review_protocol_manifest_sha256": "f1d6be03f6400ce939503bd6f86ac4098569b99775204fdbb79a4ed0178bc699",
+    "private_population_manifest_sha256": "9c1325b017d77758bb9e2584ab49b79feb72ba6c66927a3bf8ce86aaca0ece4f",
+    "review_protocol_manifest_sha256": "c09fc158bd310c3cbccd441b1f270a6835da88030c3c88796093c9458876eb8d",
     "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
   },
@@ -202,7 +202,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "f1d6be03f6400ce939503bd6f86ac4098569b99775204fdbb79a4ed0178bc699"
+    "protocol_manifest_sha256": "c09fc158bd310c3cbccd441b1f270a6835da88030c3c88796093c9458876eb8d"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }

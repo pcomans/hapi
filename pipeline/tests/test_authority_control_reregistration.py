@@ -62,12 +62,14 @@ def opened_page(url: str = OPENED, *, loaded: bool = True, final_url: str | None
 def events(answer: dict | str, *, search_url: str = SEARCHED, opens: tuple = (opened_page(),),
            api_key_source: str = "none", tools: tuple[str, ...] = protocol.TOOLS,
            mcp_servers: tuple[str, ...] = (protocol.OPEN_PAGE_SERVER,),
-           model: str = "claude-sonnet-5-5", session_id: str = "session-1") -> list[dict]:
+           model: str = "claude-sonnet-5-5", session_id: str = "session-1",
+           claude_code_version: str = "2.1.299") -> list[dict]:
     """A stored call's event stream: one search, then one `open_page` call per entry of
     `opens` (a page record, or an error string for a failed call), then the answer."""
     text = answer if isinstance(answer, str) else json.dumps(answer)
     stream = [
-        {"type": "system", "subtype": "init", "model": model, "apiKeySource": api_key_source,
+        {"type": "system", "subtype": "init", "model": model, "claude_code_version": claude_code_version,
+         "apiKeySource": api_key_source,
          "tools": list(tools), "session_id": session_id,
          "mcp_servers": [{"name": name, "status": "connected"} for name in mcp_servers]},
         {"type": "assistant", "message": {"content": [
@@ -1181,3 +1183,11 @@ def test_the_scorer_accepts_only_the_committed_population_digest(tmp_path: Path)
     made.write_text(json.dumps({**json.loads(committed.read_text()), "made_beside_the_queues": True}))
     with pytest.raises(ValueError, match="population digest is not the committed"):
         scorer.require_committed_digest(ROOT, made)
+
+
+def test_a_call_made_by_another_claude_code_release_is_refused() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    stream = events(review_answer(case, "same_entity", "useful"), claude_code_version="2.1.300")
+    record = protocol.validate({"events": stream}, case, role, protocol.role_inputs(role)["schema"])
+    assert record["failure"] == "Claude Code '2.1.300', not '2.1.299'"

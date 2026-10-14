@@ -407,10 +407,14 @@ so it stays.
   a loopback, link-local, private or internal host (the gate result's
   `local_host_opens_in_any_stored_call`, empty in both stages). Not recorded, and so not
   checked: the requests a loaded page makes itself, and a public name resolving to a private
-  address. (8) A call is bound to the runner's and browser tool's source, not to the runtime
-  that ran them (`runtime/uv.lock`, the Claude Code and Chromium versions). For v10: all 350
-  stored calls record Claude Code 2.1.299 and served model `claude-sonnet-5-5` in their init
-  events, and `runtime/uv.lock` (pinned by a test) last changed on 2026-10-13, before the run.
+  address. (8) A call is bound to the runner's and browser tool's source, not to the
+  dependencies that ran them (`runtime/uv.lock`, the Chromium build). The served model and the
+  Claude Code release are checked per call from its stored init event (`claude-sonnet-5-5`,
+  2.1.299; all 350 v10 calls). No call records the lock: the lock in force at run time is
+  shown by its last change (0196e45, 2026-10-13, before the v10 run) and by the test that pins
+  its hash and the Playwright, MCP and pypdf versions. The local Chromium is the build
+  `playwright install chromium` fetches for Playwright 1.58.0; the browser of a Browserbase
+  session is neither recorded nor pinned.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
