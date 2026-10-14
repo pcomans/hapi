@@ -327,7 +327,11 @@ per-case pattern.
    were corrected at the same time: the gate now fails a class whose calls opened no citable
    page (none in v10), and the validator requires a citation only when a citable page loaded,
    not any page, as the prompts say (no v10 call was rejected under the old rule: every call
-   was valid on its first attempt).
+   was valid on its first attempt). Later in the same review, two more: the gate counts a
+   citable page as loaded only if the page it ended on is citable too (one v10 Stage 2 page
+   redirected off the list; the Stage 2 site gaps moved from 0.38 and −0.11 to −0.29 and 0.08
+   points), and a call whose process exited unsuccessfully, or whose stream does not end in a
+   successful result, decides nothing (all 350 v10 calls exited 0 with a successful result).
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer
 key are byte-identical to the ones the Stage 1 reviewers ran on; the Stage 2 custodian
@@ -393,7 +397,10 @@ so it stays.
   local failure reason. (2) The page text is read without the navigation guard the title has
   (above). (3) A page whose `load` never fires waits 15 seconds twice. (4) A PDF records
   `load_event` true although none was measured. (5) A Browserbase session is not released if
-  connecting to it fails. (6) The Browserbase re-read is not paced.
+  connecting to it fails. (6) The Browserbase re-read is not paced. (7) `open_page` will open
+  a loopback, link-local or private-network URL the model gives it (it blocks only listed
+  domains), so a page or search result could point it at a service on the review host; what
+  was reachable from the container during the runs was not recorded.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline

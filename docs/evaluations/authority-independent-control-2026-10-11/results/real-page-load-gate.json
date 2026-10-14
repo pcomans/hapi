@@ -6,7 +6,7 @@
  },
  "max_class_deviation_percentage_points": 5,
  "passed": true,
- "schema_version": "hapi-337-page-load-gate/7",
+ "schema_version": "hapi-337-page-load-gate/8",
  "stages": {
   "1": {
    "all_opens": {
@@ -291,7 +291,7 @@
      "opened": 47
     },
     "site/authority_only_transition": {
-     "loaded": 115,
+     "loaded": 114,
      "opened": 115
     },
     "site/retained_control": {
@@ -302,8 +302,8 @@
    "citable_opens_class_deviation_percentage_points": {
     "ruler/authority_only_transition": -4.74,
     "ruler/retained_control": 2.22,
-    "site/authority_only_transition": 0.38,
-    "site/retained_control": -0.11
+    "site/authority_only_transition": -0.29,
+    "site/retained_control": 0.08
    },
    "citations_by_transition_class_and_role": {
     "ruler/authority_only_transition": {
@@ -391,7 +391,7 @@
      "opened": 398
     },
     "independent": {
-     "loaded": 75,
+     "loaded": 74,
      "opened": 79
     },
     "target_record": {

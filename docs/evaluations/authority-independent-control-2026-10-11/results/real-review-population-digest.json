@@ -110,7 +110,7 @@
       },
       "page_load_gate": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
-        "sha256": "029cb0718e0cb266f4df04821de2a3e4f775a64d885e5f1c03974d483d162130"
+        "sha256": "38830bd3e19db986ba1c8f0837fa69a8b54e74e6758cc3f46803b89a531589da"
       },
       "prompts": {
         "stage_1_reconciler": {
@@ -159,15 +159,15 @@
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "e16f47326cbd963c90237103658a49729f0b63fd808aa4cdf5f43a5ea136840c"
+        "sha256": "50b551f27fc47cd230e7f1b5a5924199790d5c6186141148c794095f51ce7b9d"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "9d8248577a760f1ddbeab3c0cb8b19dec5a48843a13a690e8f03f9bd08d0608a",
-    "review_protocol_manifest_sha256": "e7799904c6312fcff3a54084100171a1824dfcc995624182938b3436112d4a3a",
+    "private_population_manifest_sha256": "2a60320d3d522df08afba2525adb1120bf2c28778f0eb8a6d44bc5fa7c139afe",
+    "review_protocol_manifest_sha256": "8402669c90383f94d5b00ec0115958094bfce54302bce0abc38d392218eb69fc",
     "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
   },
@@ -202,7 +202,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "e7799904c6312fcff3a54084100171a1824dfcc995624182938b3436112d4a3a"
+    "protocol_manifest_sha256": "8402669c90383f94d5b00ec0115958094bfce54302bce0abc38d392218eb69fc"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }

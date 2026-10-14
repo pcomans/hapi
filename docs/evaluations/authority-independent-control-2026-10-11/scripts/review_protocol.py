@@ -367,6 +367,11 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     if refused:
         record["failure"] = f"Claude Code session limit during research: {len(refused)} tool call(s) refused"
         return record
+    # A call that did not finish (a crash, a session cut off) has no successful result event,
+    # whatever answer its last message may hold.
+    if final is None or final.get("subtype") != "success" or final.get("is_error"):
+        record["failure"] = "the call did not end in a successful result"
+        return record
     if not record["stated_text"]:
         record["failure"] = "no final text"
         return record
@@ -489,6 +494,11 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
             if not source.exists() or read_json(source).get("events") != stored["events"]:
                 raise ProtocolFailure(f"{path}: a re-check whose events are not those of {call}")
         recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
+        # A process that exited unsuccessfully decides nothing, whatever it answered.
+        if stored["exit_code"] != 0:
+            if "decision" in stored:
+                raise ProtocolFailure(f"{path}: a decision from a call that exited {stored['exit_code']}")
+            recheck = {key: value for key, value in recheck.items() if key != "decision"}
         if "decision" in recheck:
             valid_calls.add(call)
         latest[call] = (path, stored, recheck)

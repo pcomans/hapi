@@ -21,7 +21,7 @@
     },
     "page_load_gate": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
-      "sha256": "029cb0718e0cb266f4df04821de2a3e4f775a64d885e5f1c03974d483d162130"
+      "sha256": "38830bd3e19db986ba1c8f0837fa69a8b54e74e6758cc3f46803b89a531589da"
     },
     "prompts": {
       "stage_1_reconciler": {
@@ -70,7 +70,7 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "e16f47326cbd963c90237103658a49729f0b63fd808aa4cdf5f43a5ea136840c"
+      "sha256": "50b551f27fc47cd230e7f1b5a5924199790d5c6186141148c794095f51ce7b9d"
     }
   },
   "queue_inputs": {

@@ -130,9 +130,12 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
                 museum = museum_of(opened["url"])
                 source = citable_source_of(opened["url"])
                 citable = source is not None
+                # A citable page counts as loaded only if the page it ended on is citable too,
+                # as for a citation (a redirect off the list is not an available source).
+                citable_loaded = opened["loaded"] and citable_source_of(opened["final_url"]) is not None
                 role_counts = by_role[source["role"] if citable else "not_citable"]
                 role_counts["opened"] += 1
-                role_counts["loaded"] += opened["loaded"]
+                role_counts["loaded"] += citable_loaded if citable else opened["loaded"]
                 if opened["loaded"] and not opened["load_event"]:
                     loaded_without_load_event_by_host[_host(opened["url"])] += 1
                 if "local_failure" in opened:
@@ -140,11 +143,13 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
                     for c in classes:
                         retried_by_class[c]["opened"] += 1
                         retried_by_class[c]["loaded"] += opened["loaded"]
-                for bucket in [by_museum[museum]] + [all_by_class[c] for c in classes] + (
-                    [citable_by_class[c] for c in classes] if citable else []
-                ):
+                for bucket in [by_museum[museum]] + [all_by_class[c] for c in classes]:
                     bucket["opened"] += 1
                     bucket["loaded"] += opened["loaded"]
+                if citable:
+                    for c in classes:
+                        citable_by_class[c]["opened"] += 1
+                        citable_by_class[c]["loaded"] += citable_loaded
                 if not opened["loaded"]:
                     not_loaded_by_host[_host(opened["url"])] += 1
     overall_all = {k: sum(v[k] for v in by_museum.values()) for k in ("loaded", "opened")}
@@ -189,7 +194,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/7",
+        "schema_version": "hapi-337-page-load-gate/8",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

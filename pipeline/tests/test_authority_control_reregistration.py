@@ -88,7 +88,8 @@ def events(answer: dict | str, *, search_url: str = SEARCHED, opens: tuple = (op
         ]
     return stream + [
         {"type": "assistant", "message": {"content": [{"type": "text", "text": text}]}},
-        {"type": "result", "usage": {"output_tokens": 10}, "total_cost_usd": 0.5},
+        {"type": "result", "subtype": "success", "is_error": False, "usage": {"output_tokens": 10},
+         "total_cost_usd": 0.5},
     ]
 
 
@@ -110,6 +111,7 @@ def write_attempt(directory: Path, role_name: str, case: dict, n: int, answer, o
         "system_prompt": inputs["system_prompt"],
         "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
         "run_bindings": protocol.run_bindings(),
+        "exit_code": 0,
         # One session per stored call; a re-check carries its source call's events.
         "events": events(answer, opens=opens, session_id=directory.name + "/" + extra.get(
             "revalidated_from", f"{case['case_id']}.attempt-{n}.json")),
@@ -515,7 +517,8 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
     protocol.write_atomic(path, {
         "case_id": case["case_id"], "evidence_sha256": HASH_1, "system_prompt": inputs["system_prompt"],
         "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
-        "run_bindings": protocol.run_bindings(), "events": stream, "decision": review_answer(case, "same_entity", "useful"),
+        "run_bindings": protocol.run_bindings(), "exit_code": 0, "events": stream,
+        "decision": review_answer(case, "same_entity", "useful"),
     })
     with pytest.raises(protocol.ProtocolFailure, match="stored outcome differs from its re-check"):
         protocol.decided_record(tmp_path, case, role, inputs)
@@ -600,7 +603,7 @@ class FakeCalls:
         return {"case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"],
                 "system_prompt": inputs["system_prompt"],
                 "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
-                "run_bindings": protocol.run_bindings(),
+                "run_bindings": protocol.run_bindings(), "exit_code": 0,
                 "events": answer if isinstance(answer, list) else events(answer)}
 
 
@@ -659,7 +662,8 @@ def test_runner_writes_a_recheck_when_a_stored_decision_no_longer_stands(monkeyp
     protocol.write_atomic(tmp_path / "review-unit-001.attempt-1.json", {
         "case_id": case["case_id"], "evidence_sha256": HASH_1, "system_prompt": inputs["system_prompt"],
         "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
-        "run_bindings": protocol.run_bindings(), "events": stream, "decision": review_answer(case, "same_entity", "useful"),
+        "run_bindings": protocol.run_bindings(), "exit_code": 0, "events": stream,
+        "decision": review_answer(case, "same_entity", "useful"),
     })
     fake = run_case(monkeypatch, tmp_path, case, [review_answer(case, "different_entity", "too_broad")])
     assert fake.made == 1
@@ -862,7 +866,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
-    assert gate["schema_version"] == "hapi-337-page-load-gate/7"
+    assert gate["schema_version"] == "hapi-337-page-load-gate/8"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
     assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
     assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
@@ -877,7 +881,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     }
     assert stages["2"]["citable_opens_class_deviation_percentage_points"] == {
         "ruler/authority_only_transition": -4.74, "ruler/retained_control": 2.22,
-        "site/authority_only_transition": 0.38, "site/retained_control": -0.11,
+        "site/authority_only_transition": -0.29, "site/retained_control": 0.08,
     }
     assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
     # The v7 failure: the target records Stage 2 judges must load.
@@ -1106,3 +1110,44 @@ def test_the_page_load_gate_fails_a_class_with_no_citable_opens() -> None:
     apart = {"site/authority_only_transition": {"loaded": 8, "opened": 10},
              "site/retained_control": {"loaded": 20, "opened": 20}}
     assert load_gate.class_verdict(expected, apart)["passed"] is False
+
+
+def test_a_call_that_did_not_finish_decides_nothing(tmp_path: Path) -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    answer = review_answer(case, "same_entity", "useful")
+    cut_off = events(answer)[:-1]
+    errored = events(answer)[:-1] + [{"type": "result", "subtype": "error_during_execution", "is_error": True}]
+    for stream in (cut_off, errored):
+        record = protocol.validate({"events": stream}, case, role, schema)
+        assert record["failure"] == "the call did not end in a successful result"
+    # A process that exited unsuccessfully is not a decision, even with a complete stream; a
+    # stored record that claims one fails loud.
+    path = write_attempt(tmp_path, "stage_1_reviewer", case, 1, answer, exit_code=1, failure="exit 1")
+    with pytest.raises(protocol.ProtocolFailure, match=r"valid calls \[\]"):
+        protocol.decided_record(tmp_path, case, role, protocol.role_inputs(role))
+    stored = json.loads(path.read_text())
+    path.write_text(json.dumps({**stored, "decision": answer}))
+    with pytest.raises(protocol.ProtocolFailure, match="a decision from a call that exited 1"):
+        protocol.decided_record(tmp_path, case, role, protocol.role_inputs(role))
+
+
+def test_the_page_load_gate_counts_a_citable_page_that_redirected_off_the_list_as_not_loaded(tmp_path: Path) -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    queue_path = tmp_path / "stage-1-queue.json"
+    queue_path.write_text(json.dumps({"cases": [case]}))
+    records = tmp_path / "stage-1"
+    moved = {**opened_page("https://pleiades.stoa.org/places/786036",
+                           final_url="https://en.wikipedia.org/wiki/Abydos,_Egypt")}
+    for label in "AB":
+        write_attempt(records / f"reviewer-{label}", "stage_1_reviewer", case, 1,
+                      review_answer(case, "same_entity", "useful"), opens=(opened_page(), moved))
+    result = load_gate.stage_gate("1", queue_path, records, {"review-unit-001": {"authority_only_transition"}})
+    # Two calls, each with a loaded museum record and a Pleiades link that ended on Wikipedia.
+    assert result["citable_opens_by_transition_class"] == {
+        "site/authority_only_transition": {"loaded": 2, "opened": 4}}
+    assert result["opens_by_citation_role"] == {
+        "case_input": {"loaded": 2, "opened": 2}, "independent": {"loaded": 0, "opened": 2}}
+    assert result["all_opens_by_transition_class"] == {
+        "site/authority_only_transition": {"loaded": 4, "opened": 4}}
