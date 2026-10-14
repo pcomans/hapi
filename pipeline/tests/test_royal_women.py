@@ -197,7 +197,8 @@ def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:
     assert [rw.royal_woman_cued(text, len(text)) for text in (
         "Relief of Queen ", "Queen Mother ", "King's Wife ", "King’s Great Wife ", "Great Royal Wife ",
         "King's Mother ", "King's Daughter ", "Princess ", "God's Wife ", "God's Wife of Amun ",
-        "Divine Adoratrice of Amun ", "Relief of ", "Statue of King ")] == [True] * 11 + [False, False]
+        "Divine Adoratrice of Amun ", "Queen: ", "Queen - ", "Queen, ", "Relief of ", "Statue of King ",
+        "Queen; ")] == [True] * 14 + [False, False, False]
     assert [rw.single_dynasty(v) for v in ("Dynasty 18", "late Dynasty 18", "Dynasty 12, late", "18th Dynasty",
                                            "Dynasty 19–20", "Dynasty 26, or later", "", None)] == [
         18, 18, 12, 18, None, None, None, None]

@@ -58,7 +58,9 @@ APOSTROPHE = "['’]"
 ROYAL_WOMAN_CUE_BEFORE = re.compile(
     r"\b(?:queen(?:\s+mother)?|princess|great\s+royal\s+wife"
     rf"|king{APOSTROPHE}s\s+(?:great\s+wife|wife|mother|daughter)"
-    rf"|god{APOSTROPHE}s\s+wife(?:\s+of\s+amun)?|divine\s+adoratrice(?:\s+of\s+amun)?)\s*$",
+    rf"|god{APOSTROPHE}s\s+wife(?:\s+of\s+amun)?|divine\s+adoratrice(?:\s+of\s+amun)?)"
+    # the separators the mention extractors skip between a cue and the name
+    r"[\s:,\-]*$",
     re.I,
 )
 PARENTHETICAL = re.compile(r"\(")
