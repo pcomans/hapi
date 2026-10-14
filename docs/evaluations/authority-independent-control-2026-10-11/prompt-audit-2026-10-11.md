@@ -194,10 +194,9 @@ round 15.
 |---|---|---|---|
 | 16 | v6 | **PASS** (no P0/P1/P2) | Trismegistos removal is a measured residual, not a prompt bias (fewer citable alias sources for differing-string site cases): the gate now reports citations by source per class. P3: opens are reported by browser, so a Browserbase effect is not read as a class effect. |
 
-## Audited prompt bytes
+## v6 audited bytes (the stopped v6 run)
 
-The v6 prompts, system prompt, citable-source list and browser tool (whose description is
-model input) that run, by SHA-256 (a test checks these against the files).
+The files of the v6 run, stopped at a hash-copy failure in Stage 1, by SHA-256.
 
 | File | SHA-256 |
 |---|---|
@@ -205,6 +204,34 @@ model input) that run, by SHA-256 (a test checks these against the files).
 | `stage-1-reconciler-v5.txt` | `ddc64e48f04c37c1c8f0173466f037bee055e3fdc4e7437349ed91ffb1f2d181` |
 | `stage-2-reviewer-v5.txt` | `1e560d70a2046856f7b6eae01fb1b2fa784af4fe528f8a7e06f661824c65c198` |
 | `stage-2-reconciler-v5.txt` | `7f1edf2b81d5443a03ecf4a9fa77cee579bdcba26d383e523e37388535fee9a8` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `62e59f2b1f5574bf6f1c88aeda117f7719044cf2686e359f5aa64ca97c8fd0cd` |
+| `open_page_server.py` | `7bb3c9c888375d694d581bf95220e8f9369eda9d2e140d9fb70504cd06fd7643` |
+
+## Round 17: v7, no evidence hash in the model input (2026-10-14)
+
+In the v6 run reviewer A failed one unit three times only by miscopying the 64-character
+evidence hash. The model input no longer contains `evidence_sha256` (`without_hashes`), the
+response schemas (`*-case-v3`) no longer ask for it, and the prompts (`*-v6`) say "Copy the
+case ID exactly." instead of "Copy the case ID and evidence hash exactly." That sentence is
+the only difference from the v5 prompt files (which already carry the round-15 post-audit
+wording on final URLs).
+
+| Round | State | Verdict | Findings acted on |
+|---|---|---|---|
+| 17 | v7 | **PASS** (no P0/P1/P2) | none (P3: noted that the v5 files include the round-15 post-audit wording) |
+
+## Audited prompt bytes
+
+The v7 prompts (`*-v6.txt`), system prompt, citable-source list and browser tool (whose
+description is model input) that run, by SHA-256 (a test checks these against the files).
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v6.txt` | `e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f` |
+| `stage-1-reconciler-v6.txt` | `8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e` |
+| `stage-2-reviewer-v6.txt` | `98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4` |
+| `stage-2-reconciler-v6.txt` | `d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd` |
 | `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
 | `citable-sources.json` | `62e59f2b1f5574bf6f1c88aeda117f7719044cf2686e359f5aa64ca97c8fd0cd` |
 | `open_page_server.py` | `7bb3c9c888375d694d581bf95220e8f9369eda9d2e140d9fb70504cd06fd7643` |

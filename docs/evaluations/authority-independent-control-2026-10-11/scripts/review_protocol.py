@@ -79,17 +79,17 @@ STAGE_FIELDS = {"1": ("same_entity", "useful_granularity"), "2": ("canonical_ide
 ROLES = {
     role.name: role
     for role in (
-        Role("stage_1_reviewer", EVALUATION_ROOT / "prompts/stage-1-reviewer-v5.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v2.schema.json",
+        Role("stage_1_reviewer", EVALUATION_ROOT / "prompts/stage-1-reviewer-v6.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-1-reviewer-case-v3.schema.json",
              STAGE_FIELDS["1"], False),
-        Role("stage_1_reconciler", EVALUATION_ROOT / "prompts/stage-1-reconciler-v5.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-case-v2.schema.json",
+        Role("stage_1_reconciler", EVALUATION_ROOT / "prompts/stage-1-reconciler-v6.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
              STAGE_FIELDS["1"], True),
-        Role("stage_2_reviewer", EVALUATION_ROOT / "prompts/stage-2-reviewer-v5.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-case-v2.schema.json",
+        Role("stage_2_reviewer", EVALUATION_ROOT / "prompts/stage-2-reviewer-v6.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
              STAGE_FIELDS["2"], False),
-        Role("stage_2_reconciler", EVALUATION_ROOT / "prompts/stage-2-reconciler-v5.txt",
-             EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-case-v2.schema.json",
+        Role("stage_2_reconciler", EVALUATION_ROOT / "prompts/stage-2-reconciler-v6.txt",
+             EVALUATION_ROOT / "raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
              STAGE_FIELDS["2"], True),
     )
 }
@@ -204,10 +204,22 @@ def forbidden_keys(value, path: str = "$") -> list[str]:
     return found
 
 
+def without_hashes(value):
+    """The model input without `evidence_sha256`: the hash binds a case to the frozen
+    population in our records; the model has no use for it (and copying a 64-character hex
+    string back is a needless way for an answer to fail)."""
+    if isinstance(value, dict):
+        return {key: without_hashes(child) for key, child in value.items() if key != "evidence_sha256"}
+    if isinstance(value, list):
+        return [without_hashes(child) for child in value]
+    return value
+
+
 def compose_user_content(case: dict, role_prompt: str, schema: dict, citable_sources: str) -> str:
     leaks = forbidden_keys(case)
     if leaks:
         raise ProtocolFailure(f"model input carries private keys: {leaks}")
+    case = without_hashes(case)
     return "\n\n".join([
         role_prompt.strip(),
         "Citable sources (a page on one of these hosts or its subdomains, under the path where one is given):\n"
@@ -373,8 +385,8 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     except (json.JSONDecodeError, jsonschema.ValidationError) as err:
         record["failure"] = f"invalid decision: {type(err).__name__}: {str(err)[:500]}"
         return record
-    if decision["case_id"] != case["case_id"] or decision["evidence_sha256"] != case["evidence_sha256"]:
-        record["failure"] = "decision does not echo the case ID and evidence hash exactly"
+    if decision["case_id"] != case["case_id"]:
+        record["failure"] = "decision does not echo the case ID exactly"
         return record
     if role.reconciler and sorted(decision["resolutions"]) != sorted(case["disputed_questions"]):
         record["failure"] = (

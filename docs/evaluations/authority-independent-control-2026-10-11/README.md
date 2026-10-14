@@ -154,10 +154,10 @@ the project owner's decision every scored call runs on the Claude Code subscript
   subscription and blocked this project's IP after the v5 run's attempts, so it was moved to
   the excluded sources before the v6 run, until access is agreed with KU Leuven. The v5
   records stay private and unread (`dropbox/hapi-337-review-v5-2026-10-13/`).
-- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v5.txt`,
-  `stage-1-reconciler-v5.txt`, `stage-2-reviewer-v5.txt`, `stage-2-reconciler-v5.txt`;
-  `raw-response-contracts/*-case-v2.schema.json`. All leak-audited before use (Rule 14;
-  `prompt-audit-2026-10-11.md`, rounds 14–16, whose audited SHA-256s of the prompts, the
+- **Prompts.** Per-case prompts and schemas: `prompts/stage-1-reviewer-v6.txt`,
+  `stage-1-reconciler-v6.txt`, `stage-2-reviewer-v6.txt`, `stage-2-reconciler-v6.txt`;
+  `raw-response-contracts/*-case-v3.schema.json`. All leak-audited before use (Rule 14;
+  `prompt-audit-2026-10-11.md`, rounds 14–17, whose audited SHA-256s of the prompts, the
   system prompt, the citable-source list and the browser tool are checked by a test).
 - **Only scholarly sources are citable** (protocol v5, 2026-10-13). On the project owner's
   doubt that generic web pages are a scholarly basis, a citation must be a page of a source
@@ -195,9 +195,16 @@ the project owner's decision every scored call runs on the Claude Code subscript
   title-field "Horemheb" for "Stela of Lady Horemheb" (a private woman). The ledger record is
   "Fragment of a Statue of King Horemheb", so one reviewer answered `different_entity` on a
   real match. Adding the records changes no case membership, case ID or other evidence field.
+- **The model never sees the evidence hash** (protocol v7, 2026-10-14). A case's
+  `evidence_sha256` binds it to the frozen population in the records, queues and score; it is
+  left out of the model input, and an answer echoes only the case ID. In the v6 run reviewer
+  A failed one unit three times only by miscopying the 64-character hash (a trailing "dd"
+  written as "d"), which the retry cap turns into a stop; on the project owner's decision the
+  v6 run was stopped there (its Stage 1 records stay private and unread,
+  `dropbox/hapi-337-review-v6-2026-10-14/`) and the whole review re-run under v7.
 - **Fail loud.** Billed auth, another tool or MCP server, hook output, or another served
   model stops the run, and such a case is not resumed automatically. An answer rejected for
-  its format (not JSON, schema-invalid, miscopied case ID or hash, a reconciler resolving
+  its format (not JSON, schema-invalid, miscopied case ID, a reconciler resolving
   other than the disputed questions), an answer citing a page the call did not open or a
   non-citable source, or a
   call whose search results, opened pages or citations touched Wikidata or GitHub (Claude

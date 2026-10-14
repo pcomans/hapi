@@ -93,7 +93,7 @@ def events(answer: dict | str, *, search_url: str = SEARCHED, opens: tuple = (op
 
 def review_answer(case: dict, same: str, useful: str) -> dict:
     return {
-        "case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"],
+        "case_id": case["case_id"],
         "same_entity": same, "useful_granularity": useful, "reasoning": f"{same}/{useful}",
         "citations": [OPENED],
     }
@@ -152,7 +152,7 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
         ({"mcp_servers": ()}, None, "unexpected tools ['WebSearch', 'mcp__museum-browser__open_page'] or MCP servers []"),
         ({"model": "claude-opus-5-5"}, None, "served model 'claude-opus-5-5', not 'claude-sonnet-5-5'"),
         ({"search_url": "https://www.wikidata.org/wiki/Q1"}, None, "blocked domain used: ['https://www.wikidata.org/wiki/Q1']"),
-        ({}, {"case_id": "review-unit-002"}, "decision does not echo the case ID and evidence hash exactly"),
+        ({}, {"case_id": "review-unit-002"}, "decision does not echo the case ID exactly"),
         ({}, {"same_entity": "probably"}, None),
         ({}, {"citations": ["https://github.com/pcomans/hapi"]}, "blocked domain used: ['https://github.com/pcomans/hapi']"),
     ],
@@ -177,7 +177,7 @@ def test_reconciler_must_resolve_exactly_the_disputed_questions() -> None:
     role = protocol.ROLES["stage_1_reconciler"]
     schema = protocol.role_inputs(role)["schema"]
     resolution = {"outcome": "too_broad", "rationale": "r", "citations": [OPENED]}
-    wrong = {"case_id": case["case_id"], "evidence_sha256": HASH_1,
+    wrong = {"case_id": case["case_id"],
              "resolutions": {"same_entity": {**resolution, "outcome": "same_entity"},
                              "useful_granularity": resolution}}
     record = protocol.validate({"events": events(wrong)}, item, role, schema)
@@ -226,7 +226,7 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
 
     resolution = {"outcome": "too_broad", "rationale": "Region, not a site.", "citations": [OPENED]}
     override = write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, {
-        "case_id": "review-unit-002", "evidence_sha256": HASH_2,
+        "case_id": "review-unit-002",
         "resolutions": {"useful_granularity": resolution},
     })
     consensus = protocol.build_consensus("1", queue_path, records)
@@ -234,7 +234,7 @@ def test_consensus_is_agreement_or_cited_override_and_fails_without_one(tmp_path
     assert consensus["stage"] == "1"
     assert consensus["queue_sha256"] == protocol.sha256_path(queue_path)
     assert consensus["roles"]["stage_1_reconciler"]["prompt"] == {
-        "path": "stage-1-reconciler-v5.txt",
+        "path": "stage-1-reconciler-v6.txt",
         "sha256": protocol.sha256_path(protocol.ROLES["stage_1_reconciler"].prompt),
     }
     assert consensus["roles"]["stage_1_reconciler"]["citable_sources"] == {
@@ -461,7 +461,7 @@ def test_a_reconciler_cites_only_pages_it_opened_itself() -> None:
     schema = protocol.role_inputs(role)["schema"]
 
     def answer(citations: list[str]) -> dict:
-        return {"case_id": case["case_id"], "evidence_sha256": HASH_1,
+        return {"case_id": case["case_id"],
                 "resolutions": {"useful_granularity": {"outcome": "too_broad", "rationale": "r",
                                                        "citations": citations}}}
 
@@ -478,7 +478,7 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
         "stage_1_reconciler", "stage_1_reviewer", "stage_2_reconciler", "stage_2_reviewer",
     ]
     assert bindings["prompts"]["stage_2_reviewer"]["path"] == (
-        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v5.txt"
+        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v6.txt"
     )
     assert bindings["citable_sources"] == {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
@@ -614,7 +614,7 @@ def test_runner_retries_format_failures_up_to_the_cap(monkeypatch, tmp_path: Pat
     assert fake.made == 3
     stored = [json.loads((tmp_path / f"review-unit-001.attempt-{n}.json").read_text()) for n in (1, 2, 3)]
     assert stored[0]["failure"].startswith("invalid decision: JSONDecodeError")
-    assert stored[1]["failure"] == "decision does not echo the case ID and evidence hash exactly"
+    assert stored[1]["failure"] == "decision does not echo the case ID exactly"
     assert stored[2]["decision"] == good
     assert [r["attempt"] for r in stored] == [1, 2, 3]
     # A decided case is not called again.
@@ -827,7 +827,7 @@ def test_only_insufficient_evidence_may_cite_nothing() -> None:
         assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
 
     stage_2 = protocol.ROLES["stage_2_reviewer"]
-    answer = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "canonical_identity": "insufficient_evidence",
+    answer = {"case_id": case["case_id"], "canonical_identity": "insufficient_evidence",
               "reasoning": "r", "citations": []}
     schema_2 = protocol.role_inputs(stage_2)["schema"]
     assert protocol.validate({"events": events(answer, opens=nothing_loaded)}, case, stage_2, schema_2)["decision"] == answer
@@ -841,7 +841,7 @@ def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(t
     item = protocol.reconciliation_queue("1", json.loads(queue_path.read_text()), records)["cases"][0]
     role = protocol.ROLES["stage_1_reconciler"]
     schema = protocol.role_inputs(role)["schema"]
-    uncited = {"case_id": "review-unit-002", "evidence_sha256": HASH_2, "resolutions": {
+    uncited = {"case_id": "review-unit-002", "resolutions": {
         "useful_granularity": {"outcome": "too_broad", "rationale": "No page loaded.", "citations": []}}}
     record = protocol.validate({"events": events(uncited)}, item, role, schema)
     assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
@@ -986,3 +986,14 @@ def test_only_marked_sources_are_read_in_browserbase_and_trismegistos_is_exclude
     assert protocol.browser_for("https://en.wikipedia.org/wiki/Abydos") == "local"
     assert protocol.citable_source_of("https://www.trismegistos.org/place/761") is None
     assert "trismegistos.org" in {e["domain"] for e in sources["excluded_examples"]}
+
+
+def test_the_model_never_sees_or_echoes_the_evidence_hash() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    item = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "case": case,
+            "disputed_questions": ["useful_granularity"], "reviews": []}
+    for role_name, value in (("stage_1_reviewer", case), ("stage_1_reconciler", item)):
+        inputs = protocol.role_inputs(protocol.ROLES[role_name])
+        content = protocol.compose_user_content(value, inputs["prompt"], inputs["schema"], inputs["citable_sources"])
+        assert HASH_1 not in content and "evidence_sha256" not in content
+        assert '"case_id": "review-unit-001"' in content

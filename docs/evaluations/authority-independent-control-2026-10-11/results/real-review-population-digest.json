@@ -110,44 +110,44 @@
       },
       "prompts": {
         "stage_1_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v5.txt",
-          "sha256": "ddc64e48f04c37c1c8f0173466f037bee055e3fdc4e7437349ed91ffb1f2d181"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reconciler-v6.txt",
+          "sha256": "8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e"
         },
         "stage_1_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v5.txt",
-          "sha256": "000f60be5d3e64f739c5833c870a39309b3414125d02c4438a677d6c543cc1f8"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-1-reviewer-v6.txt",
+          "sha256": "e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f"
         },
         "stage_2_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v5.txt",
-          "sha256": "7f1edf2b81d5443a03ecf4a9fa77cee579bdcba26d383e523e37388535fee9a8"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reconciler-v6.txt",
+          "sha256": "d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd"
         },
         "stage_2_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v5.txt",
-          "sha256": "1e560d70a2046856f7b6eae01fb1b2fa784af4fe528f8a7e06f661824c65c198"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v6.txt",
+          "sha256": "98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4"
         }
       },
       "protocol_version": "hapi-337-reregistration-consensus/1",
       "raw_response_contracts": {
         "stage_1_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reconciler-case-v2.schema.json",
-          "sha256": "2dacd3e8d89b316c6b2e1925c5ba10a9a25cab450e5378d28c608513056a8c6b"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
+          "sha256": "f780f4b6f61225fae7511ea1374eae758ccfb9e31f522e1ba5c8873b5fd211a7"
         },
         "stage_1_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v2.schema.json",
-          "sha256": "40149a920f7102a9a1e3c4d92e058ce2a87c57034e06de2d305fe0ec4db7b904"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-1-reviewer-case-v3.schema.json",
+          "sha256": "bcb59a3429ca3d031af242eab3082f25ded4e047f2ad958b42006dbbbd7d4bd4"
         },
         "stage_2_reconciler": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-case-v2.schema.json",
-          "sha256": "d8af93479a3ee845b42139c1a31c5e923b2e812eb4f9eebfa1a0691c0ed9a3cc"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
+          "sha256": "dd9535da0b94a9e3770f970dda666b77740f003a9e48c6c22aa6eee362257812"
         },
         "stage_2_reviewer": {
-          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reviewer-case-v2.schema.json",
-          "sha256": "a2cead8a90ddc35d5e04b432eac8e241ab5449a4941beeaa99e1ee27736f0b68"
+          "path": "docs/evaluations/authority-independent-control-2026-10-11/raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
+          "sha256": "b8fb1c959904bde658ae7a3a00d4a76aa788a90fc5ffe5275f2f9fea30e12ac3"
         }
       },
       "runner": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/run_harness_review.py",
-        "sha256": "4b8ffaf56c310b8e0ff75dcb8bc7e1821f19fb7967a261b280619e726eeb8459"
+        "sha256": "5b10e3d7ea5eb856eeacf9d696d5dac158d4f7a29594cec99efdbebbaaabe991"
       },
       "scorer": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
@@ -155,17 +155,17 @@
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "df4a94d4900a1a3117c36240cad969536fe13be904e4124654c7684cb4b67811"
+        "sha256": "8fd803aabd439cb5714456e5de2d096f5e4fff7a10098e4305320c926fd0b9d9"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "ae00784cbc8124594a12905cc925cfdfc41de8af5e4b44f968abf5415e84c3ab",
-    "review_protocol_manifest_sha256": "ae44d349eb20ac7ba83ab6459b1eaa0078bf5a336dded33a8144470e80a45aa0",
-    "stage_1_queue_sha256": "817a4e61fb069b17686565a3f8f19645128271b19971e0b23fc7bfafa699a873",
-    "stage_2_custodian_sha256": "4618824900665c6215c0f175738f1cc4aafe99afb4d968df95a515f28702e5bc"
+    "private_population_manifest_sha256": "ecdd173228c7e83ef66e86f43fcbe6b042b02b9316d115f71726455366dda173",
+    "review_protocol_manifest_sha256": "267944ed86f0df6daee2bccf874a745e4b3417f2ee45a8b0dcb0b98e3cdc03bf",
+    "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
+    "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
   },
   "population_counts": {
     "by_class": {
@@ -198,7 +198,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "ae44d349eb20ac7ba83ab6459b1eaa0078bf5a336dded33a8144470e80a45aa0"
+    "protocol_manifest_sha256": "267944ed86f0df6daee2bccf874a745e4b3417f2ee45a8b0dcb0b98e3cdc03bf"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }

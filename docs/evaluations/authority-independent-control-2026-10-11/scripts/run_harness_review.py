@@ -61,7 +61,7 @@ from review_protocol import (
 
 MODEL_ALIAS = "sonnet"
 EFFORT = "high"
-# A malformed answer (not JSON, schema-invalid, a miscopied case ID or hash, or a reconciler
+# A malformed answer (not JSON, schema-invalid, a miscopied case ID, or a reconciler
 # answer that resolves other than the disputed questions), an answer citing a page the call
 # did not open or a non-citable source, or a run whose search results or opened pages touched a blocked domain (the
 # search tool cannot exclude them), is retried, up to this many attempts per case. Every attempt is kept; a

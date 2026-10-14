@@ -1,4 +1,4 @@
-# Prompt-auditor reports, rounds 12–16 (2026-10-13), verbatim
+# Prompt-auditor reports, rounds 12–17 (2026-10-13/14), verbatim
 
 The final reports of the `prompt-auditor` agent (a Claude Code subagent of the working
 session) for the audit rounds summarised in `prompt-audit-2026-10-11.md`, copied exactly as
@@ -209,3 +209,25 @@ Round 16 (v6) verdict: PASS. There are no P0, P1 or P2 findings, so the four v5 
   - Tell the model nothing about `browser` in the prompts. They already do not mention it.
 
 **3. Tool description:** the new wording ("whose final_url belongs to a citable source may be cited") agrees with the prompt text and the code gate.
+
+## Round 17 (v7: no evidence hash in the model input)
+
+Round 17 (v7) verdict: PASS for all four v6 prompts. There are no P0, P1 or P2 findings.
+
+**Hash removal leaves nothing dangling**
+- A case-insensitive grep for "hash" and "sha256" across all three composed requests (Stage 1 reviewer, Stage 2 reviewer, Stage 1 reconciler) finds no match, in the case JSON, the reviews or the schema.
+- The same grep over the four `prompts/*-v6.txt` files finds no match either. Each now reads "Copy the case ID exactly." (line 9 in the Stage 2 prompts and the Stage 1 reconciler, line 12 in the Stage 1 reviewer).
+- The schema `$id` in the reconciler request is `.../stage-1-reconciler-case/3`. `evidence_sha256` is gone from both `properties` and `required`, and the remaining `required` is `case_id` and `resolutions` only. The stage-1 reviewer schema was not checked.
+- The reconciler prompt still says "the case exactly as they saw it". That stays true, because the reviewers and the reconciler both see the stripped case.
+
+**Leak or bias introduced: none**
+- Removing a 64-hex field cannot carry arm, class or selection information. It was a random digest and the same for every case.
+- `case_id` is still an ordinal (`review-unit-001`). It was in v5 and rounds 1-16 and is unchanged.
+- The model no longer needs to echo anything unrelated to the task. This removes a class-neutral transcription failure.
+
+**P3 note: the diff is larger than "one sentence"**
+- The v6 reconciler prompt contains "by the URL you opened or its final_url, both of which must belong to a citable source". That is the tightening I suggested as an optional P3 in round 15. It is not in the v5 text I audited, so v6 differs from v5 by more than the hash sentence.
+- I read it in the Stage 1 reconciler request only. I did not diff the other three v6 prompts against v5.
+- It is symmetric, names no outcome, and matches the code gate and the tool description. If the audit-prompt-bytes table in the README lists only the hash sentence as the delta, update it to mention both changes.
+
+Because the prompt bytes change, record new SHA-256 values for the four v6 files in the audited-bytes table, as with the earlier rounds.
