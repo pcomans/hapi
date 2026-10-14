@@ -12,8 +12,11 @@ When adding a new museum, these tests form the checklist. Run them with:
 """
 
 import ast
+import hashlib
 import importlib
+import importlib.util
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -276,3 +279,62 @@ def test_sync_search_depends_on_all_normalize_assets():
             f"In pipeline/assets/index/sync_search.py, add 'normalize_{source.value}' "
             f"to the deps list of the @asset decorator."
         )
+
+
+CODE_SUFFIXES = (".py", ".ts", ".tsx", ".js", ".mjs", ".sh", ".toml", ".yml", ".yaml")
+
+
+def test_no_code_names_a_checkout_path():
+    """A script that names a checkout path (the devcontainer's) reads that checkout's claim graph
+    and sources, which can be another branch's and stale. Code finds the repository from its
+    own location instead. Data files that record where a past run read are not code."""
+    repo_root = PIPELINE_ROOT.parent
+    tracked = subprocess.run(["git", "ls-files"], capture_output=True, text=True, check=True,
+                             cwd=str(repo_root)).stdout.splitlines()
+    code = [p for p in tracked if p.endswith(CODE_SUFFIXES)]
+    checkout = "/" + "workspaces/"  # split so this test does not name it
+    offenders = [p for p in code if checkout in (repo_root / p).read_text(encoding="utf-8")]
+    assert offenders == []
+    assert "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py" in code
+
+
+LINKABILITY_SCRIPTS = ("run_linkability", "inventory_inputs", "validate_outputs")
+
+
+@pytest.mark.parametrize("name", LINKABILITY_SCRIPTS)
+def test_linkability_scripts_read_their_own_repository(name, monkeypatch):
+    repo_root = PIPELINE_ROOT.parent.resolve()
+    path = repo_root / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts" / f"{name}.py"
+
+    def load():
+        spec = importlib.util.spec_from_file_location(f"_root_check_{name}", path)
+        module = importlib.util.module_from_spec(spec)
+        monkeypatch.setitem(sys.modules, spec.name, module)  # its dataclasses look it up
+        spec.loader.exec_module(module)
+        return module
+
+    monkeypatch.setattr(sys, "path", list(sys.path))  # run_linkability prepends its pipeline/
+    monkeypatch.delenv("HAPI_ROOT", raising=False)
+    module = load()
+    assert module.ROOT == repo_root
+    if name == "run_linkability":
+        assert Path(module.keys_for_form.__code__.co_filename).is_relative_to(repo_root)
+    assert module.GRAPH == repo_root / "web-claimgraph" / "data" / "claim-graph.json"
+    monkeypatch.setenv("HAPI_ROOT", str(repo_root))
+    assert load().ROOT == repo_root
+    monkeypatch.setenv("HAPI_ROOT", "/nonexistent/other-checkout")
+    with pytest.raises(RuntimeError, match="is not the repository this script is in"):
+        load()
+
+
+def test_linkability_checksums_describe_the_deliverable_as_produced():
+    """SHA256SUMS records the 2026-08-28 deliverable at 97f2e61; three of its scripts have
+    changed since (CHANGES.md). Every line must stay the hash of that file at that commit."""
+    repo_root = PIPELINE_ROOT.parent
+    sums = repo_root / "docs/evaluations/hapi-linkability-mvp-2026-08-28/SHA256SUMS"
+    lines = [line.split("  ", 1) for line in sums.read_text(encoding="utf-8").splitlines()]
+    assert len(lines) == 26
+    for digest, path in lines:
+        produced = subprocess.run(["git", "-C", str(repo_root), "show", f"97f2e61:{path}"],
+                                  capture_output=True, check=True).stdout
+        assert hashlib.sha256(produced).hexdigest() == digest, path

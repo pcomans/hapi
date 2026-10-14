@@ -21,7 +21,11 @@ from pathlib import Path
 from typing import Iterable
 
 
-ROOT = Path(os.environ.get("HAPI_ROOT", "/workspaces/content"))
+# The repository this script is in: never another checkout, whose claim graph or sources may
+# be stale. HAPI_ROOT, which callers still pass, must name this same repository.
+ROOT = Path(__file__).resolve().parents[4]
+if "HAPI_ROOT" in os.environ and Path(os.environ["HAPI_ROOT"]).resolve() != ROOT:
+    raise RuntimeError(f"HAPI_ROOT {os.environ['HAPI_ROOT']} is not the repository this script is in ({ROOT})")
 CORPUS = Path(os.environ.get("HAPI_CORPUS", "/tmp/hapi-corpus-2026-08-27"))
 OUT = Path(os.environ.get("HAPI_EVAL_OUT", "/tmp/hapi-linkability-mvp"))
 AUTH = ROOT / "pipeline" / "pipeline" / "authority"
@@ -32,6 +36,10 @@ PM_MEMPHIS = AUTH / "sources" / "porter-moss-memphis" / "reconciled.jsonl"
 
 sys.path.insert(0, str(ROOT / "pipeline"))
 from pipeline.authority.claimgraph.normalize import NameForm, keys_for_form  # noqa: E402
+# A `pipeline` package imported earlier from another checkout would pair its normalizer with
+# this repository's claim graph.
+if not Path(keys_for_form.__code__.co_filename).resolve().is_relative_to(ROOT):
+    raise RuntimeError(f"the pipeline package in use is {keys_for_form.__code__.co_filename}, not this repository's ({ROOT})")
 
 
 NAME_PREDICATES = {"hapi:display_name", "hapi:prenomen", "hapi:horus_name", "hapi:nomen"}

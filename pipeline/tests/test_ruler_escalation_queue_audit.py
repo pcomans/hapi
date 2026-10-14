@@ -9,6 +9,8 @@ import json
 import subprocess
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 AUDIT = ROOT / "docs/evaluations/ruler-escalation-queue"
 GRAPH = ROOT / "web-claimgraph/data/claim-graph.json"
@@ -178,3 +180,21 @@ def test_every_paid_verdict_is_committed() -> None:
         assert run[v["candidate_id"]]["reason"].startswith("Name-only match")
     llm = {cid for cid, r in run.items() if r["reviewer"] == "llm"}
     assert len(llm) + len(superseded) == 1229
+
+
+# The resolver these measurements loaded, as it was until 2026-10-14; it has changed since (it
+# reads its own repository, not a fixed checkout path).
+RESOLVER = "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
+RESOLVER_COMMIT = "97f2e61"
+
+
+@pytest.mark.parametrize("result", [
+    "results/escalation-queue.json", "results/rebuild.json",
+    "results/alternative-exclude-dyn-21-24/rebuild.json", "results/discarded-round-3/rebuild.json",
+])
+def test_measurements_are_bound_to_the_resolver_they_loaded(result: str) -> None:
+    resolver = subprocess.run(["git", "-C", str(ROOT), "show", f"{RESOLVER_COMMIT}:{RESOLVER}"],
+                              check=True, capture_output=True).stdout
+    recorded = json.loads((AUDIT / result).read_text())["inputs"]["resolver_sha256"]
+    assert recorded == hashlib.sha256(resolver).hexdigest() == (
+        "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0")
