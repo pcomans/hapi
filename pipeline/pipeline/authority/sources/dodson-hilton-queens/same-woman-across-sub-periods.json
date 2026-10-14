@@ -1,0 +1,17 @@
+{
+ "schema_version": "hapi-dodson-hilton-same-woman/1",
+ "rule": "D&H keys a row by (dh_id, sub_period). Every female dh_id that occurs under more than one sub_period is classified here as one woman (a cross-reference stub and her full Brief Life) or as different women; pipeline.authority.royal_women refuses any repeated female dh_id not listed. Each basis cites the rows' own fields (reconciled.jsonl) or this directory's README.",
+ "decided": "2026-10-14, from the rows' own fields, by Claude (claude-opus-5-5) in the session that added pipeline.authority.royal_women; reviewed in that PR.",
+ "entries": [
+  {"dh_id": "Takhat A", "same_woman": true, "sub_periods": ["The House of Ramesses", "The Feud of the Ramessides"],
+   "basis": "README (dh_id section): a cross-reference stub in House (daughter of Ramesses II, 'see next section') and her full Brief Life in Feud (wife of Sety II, mother of Amenmesse)."},
+  {"dh_id": "Isetneferet C", "same_woman": true, "sub_periods": ["The House of Ramesses", "The Feud of the Ramessides"],
+   "basis": "README (dh_id section): the granddaughter-of-Ramesses-II stub in House and the wife-of-Merenptah full entry in Feud."},
+  {"dh_id": "Henttawy Q", "same_woman": true, "sub_periods": ["The Decline of the Ramessides", "Of Kings and Priests"],
+   "basis": "Both rows: father Ramesses XI, roles KD, KW, KM. The Decline row (pp. 178-180) carries no spouse or children, a stub; the Of Kings and Priests row (pp. 190-194) is the full entry (wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A and others)."},
+  {"dh_id": "Tentamun B", "same_woman": true, "sub_periods": ["The Decline of the Ramessides", "Of Kings and Priests"],
+   "basis": "Both rows: father Ramesses XI, spouse Nesibanebdjedet I."},
+  {"dh_id": "Hetepti", "same_woman": true, "sub_periods": ["Seizers of the Two Lands", "Kings and Commoners"],
+   "basis": "Identical role codes on both rows (KM, M2L, UWC: King's Mother, mother of Amenemhat IV per the Seizers row, pp. 88-91); the Kings and Commoners row (pp. 98-103) carries no family fields, a cross-reference to the same king's mother."}
+ ]
+}
