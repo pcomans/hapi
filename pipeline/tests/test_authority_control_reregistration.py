@@ -788,8 +788,13 @@ def _frozen_run(run: Path) -> tuple[dict, dict]:
             "current_resolver_inputs_sha256": dict(sorted(comparison.CURRENT_INPUTS.items())),
             "compare_arms_sha256": queue_builder.sha256_path(SCRIPTS / "compare_arms.py"),
         },
-        "outputs_sha256": {"report.json": queue_builder.sha256_path(run / "report.json")},
+        "outputs_sha256": {},
     }
+    for name in queue_builder.RUN_OUTPUTS:
+        if name != "report.json":
+            with gzip.open(run / name, "wb") as handle:
+                handle.write(b"")
+        manifest["outputs_sha256"][name] = queue_builder.sha256_path(run / name)
     _write_run(run, manifest, extraction)
     return manifest, extraction
 
@@ -805,6 +810,7 @@ def _frozen_run(run: Path) -> tuple[dict, dict]:
     (lambda m, e: (e["archive"].update(sha256="0" * 64), m["inputs"]["corpus_archive"].update(sha256="0" * 64)),
      "run was made from another corpus archive"),
     (lambda m, e: m["inputs"]["mention_ledger"].update(rows=2), "run manifest ledger is not the extraction manifest's ledger"),
+    (lambda m, e: m["outputs_sha256"].pop("current-authority-links.ndjson.gz"), "run manifest binds outputs"),
 ])
 def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(tmp_path: Path, mutate, failure) -> None:
     run = tmp_path / "run"
@@ -868,35 +874,35 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
-    assert gate["schema_version"] == "hapi-337-page-load-gate/10"
+    assert gate["schema_version"] == "hapi-337-page-load-gate/11"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
     assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
     assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
     assert gate["max_class_deviation_percentage_points"] == 5
     stages = gate["stages"]
-    assert [(stages[s]["deciding_reviewer_calls"], stages[s]["calls_without_a_loaded_page"]) for s in "12"] == [
-        (216, 0), (130, 0)]
+    assert [(stages[s]["deciding_reviewer_calls"], stages[s]["deciding_reconciler_calls"],
+             stages[s]["calls_without_a_loaded_page"]) for s in "12"] == [(216, 1, 0), (130, 3, 0)]
     assert stages["1"]["citable_opens_class_deviation_percentage_points"] == {
         "ruler/authority_only_transition": -3.14, "ruler/literal_only_transition": 0.86,
-        "ruler/retained_control": 0.86, "site/authority_only_transition": -1.56,
-        "site/literal_only_transition": 0.37, "site/retained_control": 0.18,
+        "ruler/retained_control": 0.86, "site/authority_only_transition": -1.57,
+        "site/literal_only_transition": 0.38, "site/retained_control": 0.17,
     }
     assert stages["2"]["citable_opens_class_deviation_percentage_points"] == {
         "ruler/authority_only_transition": -4.74, "ruler/retained_control": 2.22,
-        "site/authority_only_transition": -0.29, "site/retained_control": 0.08,
+        "site/authority_only_transition": -0.28, "site/retained_control": 0.08,
     }
     assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
     scans = [stages[s]["local_host_opens_in_any_stored_call"] for s in "12"]
     assert [scan["local"] for scan in scans] == [[], []]
     assert [scan["urls_scanned"] for scan in scans] == [1850, 1218]
     # The v7 failure: the target records Stage 2 judges must load.
-    assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 112, "opened": 112}
+    assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 115, "opened": 115}
     # The scorer recomputes the gate from the same records and refuses to score a failed one;
     # the score names the gate result it recomputed, which is the committed one.
     assert score["page_load_gate"] == {"passed": True, "sha256": scorer.canonical_sha256(gate)}
     assert [stages[s]["opens_by_browser"] for s in "12"] == [
-        {"browserbase": {"loaded": 10, "opened": 13}, "local": {"loaded": 899, "opened": 908}},
-        {"browserbase": {"loaded": 5, "opened": 7}, "local": {"loaded": 579, "opened": 582}},
+        {"browserbase": {"loaded": 10, "opened": 13}, "local": {"loaded": 903, "opened": 912}},
+        {"browserbase": {"loaded": 5, "opened": 7}, "local": {"loaded": 599, "opened": 602}},
     ]
     assert [stages[s]["retried_after_local_failure_by_host"] for s in "12"] == [
         {"harvardartmuseums.org": 2, "brooklynmuseum.org": 1, "ifao.egnet.net": 1, "mfaboston6.emuseum.com": 1},
@@ -1148,6 +1154,7 @@ def test_the_page_load_gate_counts_a_citable_page_that_redirected_off_the_list_a
     for label in "AB":
         write_attempt(records / f"reviewer-{label}", "stage_1_reviewer", case, 1,
                       review_answer(case, "same_entity", "useful"), opens=(opened_page(), moved))
+    (records / "reconciliation-queue.json").write_text(json.dumps({"cases": []}))
     result = load_gate.stage_gate("1", queue_path, records, {"review-unit-001": {"authority_only_transition"}})
     # Two calls, each with a loaded museum record and a Pleiades link that ended on Wikipedia.
     assert result["citable_opens_by_transition_class"] == {
@@ -1226,6 +1233,7 @@ def test_the_page_load_gate_does_not_count_a_url_open_page_refuses(tmp_path: Pat
     for label in "AB":
         write_attempt(records / f"reviewer-{label}", "stage_1_reviewer", case, 1,
                       review_answer(case, "same_entity", "useful"), opens=(opened_page(), refused))
+    (records / "reconciliation-queue.json").write_text(json.dumps({"cases": []}))
     result = load_gate.stage_gate("1", queue_path, records, {"review-unit-001": {"authority_only_transition"}})
     assert result["citable_opens_by_transition_class"] == {
         "site/authority_only_transition": {"loaded": 2, "opened": 2}}
@@ -1311,3 +1319,50 @@ def test_the_committed_preflight_check_counts() -> None:
         r["url"] for r in rows if "ucl.ac.uk/museums-static/digitalegypt" in r["url"])
     assert sum(1 for r in rows if r["host"] == "pcma.uw.edu.pl" and "error" not in r
                and r["title"] == "Captcha Verification Needed") == 7
+
+
+def test_a_blocked_host_written_with_a_trailing_dot_is_still_blocked() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    record = protocol.validate({"events": events(review_answer(case, "same_entity", "useful"),
+                                                 opens=(opened_page(), opened_page("https://www.wikidata.org./wiki/Q1")))},
+                               case, role, protocol.role_inputs(role)["schema"])
+    assert record["failure"] == ("blocked domain used: ['https://www.wikidata.org./wiki/Q1', "
+                                 "'https://www.wikidata.org./wiki/Q1']")
+
+
+def test_the_page_load_gate_counts_the_reconcilers_pages(tmp_path: Path) -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    queue_path = tmp_path / "stage-1-queue.json"
+    queue_path.write_text(json.dumps({"cases": [case]}))
+    records = tmp_path / "stage-1"
+    write_attempt(records / "reviewer-A", "stage_1_reviewer", case, 1, review_answer(case, "same_entity", "useful"))
+    write_attempt(records / "reviewer-B", "stage_1_reviewer", case, 1, review_answer(case, "same_entity", "too_broad"))
+    item = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "case": case,
+            "disputed_questions": ["useful_granularity"], "reviews": []}
+    (records / "reconciliation-queue.json").write_text(json.dumps({"cases": [item]}))
+    walled = opened_page("https://pleiades.stoa.org/places/786036", loaded=False)
+    write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, {
+        "case_id": case["case_id"],
+        "resolutions": {"useful_granularity": {"outcome": "too_broad", "rationale": "r", "citations": [OPENED]}}},
+        opens=(opened_page(), walled))
+    result = load_gate.stage_gate("1", queue_path, records, {"review-unit-001": {"authority_only_transition"}})
+    assert (result["deciding_reviewer_calls"], result["deciding_reconciler_calls"]) == (2, 1)
+    # Two reviewer opens and the reconciler's two, one of which did not load.
+    assert result["citable_opens_by_transition_class"] == {
+        "site/authority_only_transition": {"loaded": 3, "opened": 4}}
+
+
+def test_the_scorer_accepts_only_the_committed_records(tmp_path: Path) -> None:
+    committed = json.loads((EVALUATION / "results" / "real-review-records.json").read_text())
+    stages = committed["stages"]
+    assert [sum(".attempt-" in name for name in stages[s]) for s in "12"] == [217, 133]
+    score = json.loads((EVALUATION / "results" / "real-adjudicated-score.json").read_text())
+    assert stages["1"]["consensus.json"] == score["input_hashes"]["stage_1_consensus"]
+    assert stages["2"]["consensus.json"] == score["input_hashes"]["stage_2_consensus"]
+    assert stages["2"]["queue.json"] == score["input_hashes"]["stage_2_queue"]
+    # Any other record set, here an empty one, is refused.
+    (tmp_path / "stage-1").mkdir()
+    (tmp_path / "stage-2").mkdir()
+    with pytest.raises(ValueError, match="stage 1 records differ from the committed"):
+        scorer.require_committed_records(ROOT, {"1": tmp_path / "stage-1", "2": tmp_path / "stage-2"})

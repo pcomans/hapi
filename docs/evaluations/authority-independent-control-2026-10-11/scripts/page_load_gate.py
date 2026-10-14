@@ -153,61 +153,72 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
     loaded_without_load_event_by_host = collections.Counter()
     retried_by_class, retried_by_host = counter(), collections.Counter()
     not_loaded_by_host = collections.Counter()
-    calls = calls_without_a_loaded_page = 0
+    calls = reconciler_calls = calls_without_a_loaded_page = 0
     expected_classes: set[str] = set()
+    # The deciding calls: both reviewers of every case, and the reconciler of every disputed
+    # one (its sources settle the dispute, so its pages count too).
+    deciding, classes_of_case = [], {}
     for case in read_json(queue_path)["cases"]:
         classes = classes_of.get(case["case_id"])
         if not classes:
             raise ProtocolFailure(f"stage {stage}: {case['case_id']} belongs to no scored case")
         classes = {f"{case['entity_type']}/{transition_class}" for transition_class in classes}
         expected_classes |= classes
-        for label in REVIEWERS:
-            _, stored = decided_record(records / f"reviewer-{label}", case, role, inputs)
-            record = validate({"events": stored["events"]}, case, role, inputs["schema"])
-            calls += 1
-            calls_without_a_loaded_page += not any(o["loaded"] for o in record["page_opens"])
-            decision = record["decision"]
-            for url in decision.get("citations", []) + [
-                u for resolution in decision.get("resolutions", {}).values() for u in resolution["citations"]
-            ]:
-                source = citable_source_of(url)
-                for transition_class in classes:
-                    citations_by_class[transition_class][source["role"]] += 1
-                    citation_domains_by_class[transition_class][source["domain"] + source.get("path_prefix", "")] += 1
-            for opened in record["page_opens"]:
-                if "browser" in opened:
-                    by_browser[opened["browser"]]["opened"] += 1
-                    by_browser[opened["browser"]]["loaded"] += opened["loaded"]
-                museum = museum_of(opened["url"])
-                # A URL open_page refuses outright (not http(s)) was never a source request.
-                source = citable_source_of(opened["url"]) if requestable(opened["url"]) else None
-                citable = source is not None
-                # A citable page counts as loaded only if the page it ended on is citable too,
-                # as for a citation (a redirect off the list is not an available source).
-                citable_loaded = opened["loaded"] and citable_source_of(opened["final_url"]) is not None
-                role_counts = by_role[source["role"] if citable else "not_citable"]
-                role_counts["opened"] += 1
-                role_counts["loaded"] += citable_loaded if citable else opened["loaded"]
-                if opened["loaded"] and not opened["load_event"]:
-                    loaded_without_load_event_by_host[_host(opened["url"])] += 1
-                if "local_failure" in opened:
-                    retried_by_host[_host(opened["url"])] += 1
-                    for c in classes:
-                        retried_by_class[c]["opened"] += 1
-                        retried_by_class[c]["loaded"] += opened["loaded"]
-                for bucket in [by_museum[museum]] + [all_by_class[c] for c in classes]:
-                    bucket["opened"] += 1
-                    bucket["loaded"] += opened["loaded"]
-                if citable:
-                    for c in classes:
-                        citable_by_class[c]["opened"] += 1
-                        citable_by_class[c]["loaded"] += citable_loaded
-                if not opened["loaded"]:
-                    not_loaded_by_host[_host(opened["url"])] += 1
+        classes_of_case[case["case_id"]] = classes
+        deciding += [(records / f"reviewer-{label}", case, role, inputs, classes) for label in REVIEWERS]
+    reconciler = ROLES[f"stage_{stage}_reconciler"]
+    reconciler_inputs = role_inputs(reconciler)
+    for item in read_json(records / "reconciliation-queue.json")["cases"]:
+        deciding.append((records / "reconciler", item, reconciler, reconciler_inputs, classes_of_case[item["case_id"]]))
+    for directory, case, call_role, call_inputs, classes in deciding:
+        _, stored = decided_record(directory, case, call_role, call_inputs)
+        record = validate({"events": stored["events"]}, case, call_role, call_inputs["schema"])
+        calls += not call_role.reconciler
+        reconciler_calls += call_role.reconciler
+        calls_without_a_loaded_page += not any(o["loaded"] for o in record["page_opens"])
+        decision = record["decision"]
+        for url in decision.get("citations", []) + [
+            u for resolution in decision.get("resolutions", {}).values() for u in resolution["citations"]
+        ]:
+            source = citable_source_of(url)
+            for transition_class in classes:
+                citations_by_class[transition_class][source["role"]] += 1
+                citation_domains_by_class[transition_class][source["domain"] + source.get("path_prefix", "")] += 1
+        for opened in record["page_opens"]:
+            if "browser" in opened:
+                by_browser[opened["browser"]]["opened"] += 1
+                by_browser[opened["browser"]]["loaded"] += opened["loaded"]
+            museum = museum_of(opened["url"])
+            # A URL open_page refuses outright (not http(s)) was never a source request.
+            source = citable_source_of(opened["url"]) if requestable(opened["url"]) else None
+            citable = source is not None
+            # A citable page counts as loaded only if the page it ended on is citable too,
+            # as for a citation (a redirect off the list is not an available source).
+            citable_loaded = opened["loaded"] and citable_source_of(opened["final_url"]) is not None
+            role_counts = by_role[source["role"] if citable else "not_citable"]
+            role_counts["opened"] += 1
+            role_counts["loaded"] += citable_loaded if citable else opened["loaded"]
+            if opened["loaded"] and not opened["load_event"]:
+                loaded_without_load_event_by_host[_host(opened["url"])] += 1
+            if "local_failure" in opened:
+                retried_by_host[_host(opened["url"])] += 1
+                for c in classes:
+                    retried_by_class[c]["opened"] += 1
+                    retried_by_class[c]["loaded"] += opened["loaded"]
+            for bucket in [by_museum[museum]] + [all_by_class[c] for c in classes]:
+                bucket["opened"] += 1
+                bucket["loaded"] += opened["loaded"]
+            if citable:
+                for c in classes:
+                    citable_by_class[c]["opened"] += 1
+                    citable_by_class[c]["loaded"] += citable_loaded
+            if not opened["loaded"]:
+                not_loaded_by_host[_host(opened["url"])] += 1
     overall_all = {k: sum(v[k] for v in by_museum.values()) for k in ("loaded", "opened")}
     verdict = class_verdict(expected_classes, citable_by_class)
     return {
         "deciding_reviewer_calls": calls,
+        "deciding_reconciler_calls": reconciler_calls,
         "calls_without_a_loaded_page": calls_without_a_loaded_page,
         "opens_by_museum_host": dict(sorted(by_museum.items())),
         "all_opens": overall_all,
@@ -247,7 +258,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/10",
+        "schema_version": "hapi-337-page-load-gate/11",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

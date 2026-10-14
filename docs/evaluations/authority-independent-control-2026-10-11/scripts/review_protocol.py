@@ -245,7 +245,8 @@ def _citable(url: str) -> bool:
 
 
 def _blocked(url: str | None) -> bool:
-    host = (urlparse(url or "").hostname or "").lower()
+    # A trailing dot (an absolute DNS name) names the same host.
+    host = (urlparse(url or "").hostname or "").lower().rstrip(".")
     return any(host == domain or host.endswith("." + domain) for domain in BLOCKED_DOMAINS)
 
 

@@ -192,12 +192,19 @@ def validate_run(repo_root: Path, run: Path) -> tuple[dict, dict]:
     ledger = run / "mentions.ndjson.gz"
     if sha256_path(ledger) != manifest["inputs"]["mention_ledger"]["gzip_sha256"]:
         raise ValueError("review population mention ledger does not match run manifest")
+    # Every run output the population is built from must be bound, not a subset.
+    if sorted(manifest["outputs_sha256"]) != sorted(RUN_OUTPUTS):
+        raise ValueError(f"run manifest binds outputs {sorted(manifest['outputs_sha256'])}, not {sorted(RUN_OUTPUTS)}")
     for name, expected in manifest["outputs_sha256"].items():
         if sha256_path(run / name) != expected:
             raise ValueError(f"review population input changed after run: {name}")
-    if sha256_path(run / "report.json") != manifest["outputs_sha256"]["report.json"]:
-        raise ValueError("report is not bound by the run manifest")
     return manifest, report
+
+
+RUN_OUTPUTS = (
+    "report.json", "typed-literal-arm.ndjson.gz", "current-authority-arm.ndjson.gz",
+    "typed-literal-links.ndjson.gz", "current-authority-links.ndjson.gz",
+)
 
 
 def load_source_urls(repo_root: Path, archive: Path) -> dict[str, str]:

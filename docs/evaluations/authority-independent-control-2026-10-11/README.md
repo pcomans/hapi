@@ -51,17 +51,17 @@ Brooklyn 1,156 / Harvard 8 (`results/real-run-report.json`).
 Reading it:
 - **Every judgment rests on pages the reviewer actually read.** The agents opened pages in a
   real browser, and only a page the call itself opened, that loaded, and that belongs to a
-  citable source counts as a citation. Museum record pages loaded 802 of 802 times in Stage 1
-  and 397 of 398 in Stage 2 (3 and 1 of them only when read again in Browserbase after the
-  local browser timed out); the iDAI gazetteer records the Stage 2 site cases ask about
-  loaded 112 of 112 times. Every class's loaded rate for citable pages is within 5 points of
+  citable source counts as a citation. In the deciding calls (reviewers and reconcilers),
+  museum record pages loaded 805 of 805 times in Stage 1 and 412 of 413 in Stage 2 (3 and 1
+  of them only when read again in Browserbase after the local browser timed out); the iDAI
+  gazetteer records the Stage 2 site cases ask about loaded 115 of 115 times. Every class's loaded rate for citable pages is within 5 points of
   its entity type's rate in both stages (largest gap: ruler authority gains in Stage 2, 4.7
   points below; `results/real-page-load-gate.json`, the Rule 14 gate. It was measured before
   any result was read and passed; the committed file is its recomputation under the rules
-  tightened on review, see "Reconciliation, Stage 2 and scoring"). All 346 deciding reviewer calls loaded at least one page.
-- **What the Stage 2 citations rest on:** 385 cite the case's own museum records, 105 the
-  target's iDAI gazetteer record, 65 an independent source (Pleiades 37, the Griffith
-  Institute 12, UCL's Digital Egypt 4, and others).
+  tightened on review, see "Reconciliation, Stage 2 and scoring"). All 350 deciding calls loaded at least one page.
+- **What the Stage 2 citations rest on** (reviewers and reconciler): 400 cite the case's own
+  museum records, 108 the target's iDAI gazetteer record, 67 an independent source (Pleiades
+  37, the Griffith Institute 13, UCL's Digital Egypt 4, and others).
 - **One false merge is scored as uncertain.** Case-067 (ruler, Met–Brooklyn, an authority
   gain): both Stage 1 reviewers found the two sides are different rulers, and Stage 2 found
   the target is not their identity. Granularity has nothing to judge for two different
@@ -95,7 +95,7 @@ Reading it:
 Review: Stage 1, 108 units, two reviewers agreeing on both questions in 107 (1 reconciled
 with a cited override); Stage 2, 65 proposed targets, agreeing in 62 (3 reconciled). Every
 reviewer and reconciler call was valid on its first attempt; no call hit a session limit, and
-no `open_page` call failed. In the deciding reviewer calls, Browserbase served 13 Stage 1 and
+no `open_page` call failed. In the deciding calls, Browserbase served 13 Stage 1 and
 7 Stage 2 page opens (15 loaded): 14 for the sources routed there, 6 read again after the local
 browser failed (4 museum record pages that timed out locally, all loaded; an IFAO page and an
 MFA Boston page that failed in both). The gate result counts these retries by class and host. All calls ran through
@@ -338,7 +338,13 @@ per-case pattern.
    rejected as unresearched (a URL `open_page` refuses, not http(s), is no attempt, and the
    gate does not count one; every v10 call tried at least one, and no v10 answer cites
    nothing), and the scorer accepts only the
-   committed population digest, not one supplied beside the queues.
+   committed population digest, not one supplied beside the queues. Last: the gate counts the
+   deciding reconciler calls too (1 in Stage 1, 3 in Stage 2; the Stage 2 site gaps are now
+   −0.28 and 0.08 points); the scorer accepts only the committed record set
+   (`results/real-review-records.json`, the SHA-256 of every stored call, consensus and queue
+   file: 217 Stage 1 and 133 Stage 2 calls); the population builder requires the run manifest
+   to bind every run output it reads; and a blocked domain written with a trailing dot is
+   still blocked.
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer
 key are byte-identical to the ones the Stage 1 reviewers ran on; the Stage 2 custodian

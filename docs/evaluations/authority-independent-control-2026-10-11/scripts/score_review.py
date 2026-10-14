@@ -464,6 +464,33 @@ def require_committed_digest(repo_root: Path, population_digest_path: Path) -> N
         raise ValueError(f"population digest is not the committed {COMMITTED_DIGEST}")
 
 
+COMMITTED_RECORDS = "docs/evaluations/authority-independent-control-2026-10-11/results/real-review-records.json"
+
+
+def records_manifest(stage_records: dict[str, Path]) -> dict:
+    """The SHA-256 of every JSON file in each stage's private record directory: every stored
+    call (reviewers and reconciler, every attempt), the consensus, the queues."""
+    return {
+        "schema_version": "hapi-337-review-records/1",
+        "stages": {stage: {path.relative_to(records).as_posix(): sha256_path(path)
+                           for path in sorted(records.rglob("*.json"))}
+                   for stage, records in sorted(stage_records.items())},
+    }
+
+
+def require_committed_records(repo_root: Path, stage_records: dict[str, Path]) -> None:
+    """The records scored must be exactly this registration's, as committed by hash: no call
+    added, removed or changed."""
+    committed = read_json(repo_root / COMMITTED_RECORDS)
+    found = records_manifest(stage_records)
+    for stage in sorted(set(committed["stages"]) | set(found["stages"])):
+        want, got = committed["stages"].get(stage, {}), found["stages"].get(stage, {})
+        differ = sorted(name for name in set(want) | set(got) if want.get(name) != got.get(name))
+        if differ:
+            raise ValueError(f"stage {stage} records differ from the committed {COMMITTED_RECORDS}: {differ[:5]}"
+                             f"{' and more' if len(differ) > 5 else ''}")
+
+
 def require_page_load_gate(page_load: dict) -> None:
     """A run whose citable pages loaded unequally across classes is not scored."""
     if not page_load["passed"]:
@@ -481,6 +508,7 @@ def score(
 ) -> dict:
     protocol = load_protocol(repo_root)
     require_committed_digest(repo_root, population_digest_path)
+    require_committed_records(repo_root, {"1": stage_1_records, "2": stage_2_records})
     digest = read_json(population_digest_path)
     verify_protocol_bindings(repo_root, digest)
     builder = repo_root / "docs/evaluations/authority-independent-control-2026-10-11/scripts/build_review_queue.py"
