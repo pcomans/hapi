@@ -1168,12 +1168,18 @@ def test_the_gate_lists_every_open_of_a_local_host(tmp_path: Path) -> None:
     assert load_gate.local_host_opens(tmp_path) == ["http://169.254.169.254/latest/meta-data"]
 
 
-def test_insufficient_evidence_without_opening_a_page_is_unresearched() -> None:
+def test_insufficient_evidence_without_trying_a_citable_page_is_unresearched() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
     unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
-    record = protocol.validate({"events": events(unsure, opens=())}, case, role, protocol.role_inputs(role)["schema"])
-    assert record["failure"] == "invalid decision: cites nothing without having opened a page"
+    stray = opened_page("https://example.org/nothing", loaded=False)
+    for opens in ((), (stray,), ("Error executing tool open_page",)):
+        record = protocol.validate({"events": events(unsure, opens=opens)}, case, role, schema)
+        assert record["failure"] == "invalid decision: cites nothing without having tried a citable page", opens
+    # A citable page that was tried and did not load is research.
+    record = protocol.validate({"events": events(unsure, opens=(stray, opened_page(loaded=False)))}, case, role, schema)
+    assert record["decision"] == unsure
 
 
 def test_the_scorer_accepts_only_the_committed_population_digest(tmp_path: Path) -> None:

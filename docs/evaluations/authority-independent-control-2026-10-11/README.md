@@ -332,8 +332,8 @@ per-case pattern.
    redirected off the list; the Stage 2 site gaps moved from 0.38 and −0.11 to −0.29 and 0.08
    points), and a call whose process exited unsuccessfully, or whose stream does not end in a
    successful result, decides nothing (all 350 v10 calls exited 0 with a successful result).
-   And then: an answer that cites nothing without having opened any page is rejected as
-   unresearched (every v10 call opened at least one page), and the scorer accepts only the
+   And then: an answer that cites nothing without having tried to open a citable page is
+   rejected as unresearched (every v10 call tried at least one), and the scorer accepts only the
    committed population digest, not one supplied beside the queues.
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer
