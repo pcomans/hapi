@@ -145,6 +145,15 @@ def test_the_dynasty_narrows_among_several_family_matches(women) -> None:
         "resolved", ["dodson_hilton:Iset A"], "dynasty")
 
 
+def test_a_candidate_of_unknown_dynasty_is_not_ruled_out_by_the_records(women) -> None:
+    def woman(name, dynasties):
+        return rw.RoyalWoman(target_id=f"dodson_hilton:{name}", label=name, labels=(name, "Iset"), alt_names=(),
+                             dynasties=dynasties, family_names=(), dh_rows=((name, "x"),), source_citations=({},))
+    female_kings = [w for w in women.values() if w.dh_rows[0][0] in ("Hatshepsut D", "Sobkneferu", "Tawosret")]
+    index = rw.build_index([woman("Iset A", (18,)), woman("Iset B", ())] + female_kings, KINGS)
+    assert resolve(index, "Iset", dynasty=18) == ("ambiguous", ["dodson_hilton:Iset A", "dodson_hilton:Iset B"], None)
+
+
 def test_a_royal_woman_cue_keeps_queens_and_kings_apart(index) -> None:
     # "Maatkare" is the Dynasty 21 God's Wife and Hatshepsut's throne name: a Dynasty 21
     # record's "Queen Maatkare" is the God's Wife, a Dynasty 18 record's is Hatshepsut.
