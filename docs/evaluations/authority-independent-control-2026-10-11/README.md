@@ -56,8 +56,9 @@ Reading it:
   local browser timed out); the iDAI gazetteer records the Stage 2 site cases ask about
   loaded 112 of 112 times. Every class's loaded rate for citable pages is within 5 points of
   its entity type's rate in both stages (largest gap: ruler authority gains in Stage 2, 4.7
-  points below; `results/real-page-load-gate.json`, the Rule 14 gate, measured before any
-  result was read). All 346 deciding reviewer calls loaded at least one page.
+  points below; `results/real-page-load-gate.json`, the Rule 14 gate. It was measured before
+  any result was read and passed; the committed file is its recomputation under the rules
+  tightened on review, see "Reconciliation, Stage 2 and scoring"). All 346 deciding reviewer calls loaded at least one page.
 - **What the Stage 2 citations rest on:** 385 cite the case's own museum records, 105 the
   target's iDAI gazetteer record, 65 an independent source (Pleiades 37, the Griffith
   Institute 12, UCL's Digital Egypt 4, and others).
@@ -258,7 +259,8 @@ the project owner's decision every scored call runs on the Claude Code subscript
   with the current `open_page` and no model, every citable page that failed to load in earlier
   runs' records and up to 3 per host that loaded (the iDAI gazetteer's 183 failed place pages
   sampled to 20). Run over the v5 to v9 records, with the v10 tool, on 2026-10-14
-  (`results/preflight-page-check.json`; it was first run before the v10 run, when Browserbase
+  (`results/preflight-page-check.json`, schema /1, which does not yet record the hashes of the
+  tool, list and script that made it, as the script now does; it was first run before the v10 run, when Browserbase
   refused sessions for lack of credit, and re-run in full after the v10 run): of 184 pages, 132
   loaded (11 UCL Digital Egypt pages in Browserbase, 3 UNESCO pages only on the Browserbase
   re-read), 34 do not exist (HTTP 404), and 18 did not load: PCMA 7 (a CAPTCHA, in Browserbase
@@ -359,7 +361,9 @@ so it stays.
   Checkpoint", Cloudflare's "Just a moment", Anubis's "Making sure you're not a bot" and "Oh
   noes!", "Captcha Verification Needed"). A wall with another title and status 200 would count
   as loaded, and could then be cited; the validator admits a citation only of a page so
-  loaded.
+  loaded. So would an error page served with status 200: the pre-flight check's
+  `arachne.dainst.org/place/2042876` ends on "Arachne | 404" with status 200 and counts as
+  loaded, and `dainst.org` is citable. No v10 call opened it.
 - **Surface text correlates with case type.** An authority-only gain has no common literal
   string by construction, so a case whose two sides show the same string can only be a retained
   control or a literal-only loss. The reviewer can infer that partition from the evidence it is
@@ -416,7 +420,10 @@ so it stays.
   shown by its last change (0196e45, 2026-10-13, before the v10 run) and by the test that pins
   its hash and the Playwright, MCP and pypdf versions. The local Chromium is the build
   `playwright install chromium` fetches for Playwright 1.58.0; the browser of a Browserbase
-  session is neither recorded nor pinned.
+  session is neither recorded nor pinned. (9) The rule that a call whose process exited
+  unsuccessfully decides nothing is checked when stored calls are read (`decided_record`), but
+  the runner, hash-bound, accepts a call through `validate` alone; in a later run such a call
+  would be stored as decided and then stop the run at consensus, loudly.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline

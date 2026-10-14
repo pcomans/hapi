@@ -39,11 +39,12 @@ import argparse
 import collections
 import ipaddress
 import json
+import socket
 from pathlib import Path
 from urllib.parse import urlparse
 
 from review_protocol import (
-    REVIEWERS, ROLES, ProtocolFailure, citable_source_of, decided_record, read_json, role_inputs, sha256_path,
+    OPEN_PAGE_TOOL, REVIEWERS, requestable, ROLES, ProtocolFailure, citable_source_of, decided_record, read_json, role_inputs, sha256_path,
     validate, write_atomic,
 )
 
@@ -74,23 +75,49 @@ def _rate(counts: dict) -> float:
 def is_local_host(host: str) -> bool:
     """A loopback, link-local, private or reserved address, or a name only a local network
     resolves (`localhost`, `*.local`, `*.internal`, a single label)."""
-    host = host.lower().strip("[]")
+    host = host.lower().strip("[]").rstrip(".")
     try:
         address = ipaddress.ip_address(host)
     except ValueError:
-        return host == "localhost" or host.endswith((".localhost", ".local", ".internal")) or "." not in host
+        if host.replace(".", "").isdigit():
+            # A shorthand IPv4 literal Chromium also accepts (`127.1` is 127.0.0.1).
+            address = ipaddress.ip_address(socket.inet_aton(host))
+        else:
+            return host == "localhost" or host.endswith((".localhost", ".local", ".internal")) or "." not in host
     return address.is_loopback or address.is_link_local or address.is_private or address.is_reserved
+
+
+def open_page_urls(events: list) -> list[str]:
+    """Every URL an `open_page` call in this event stream asked for, and every final URL one
+    returned, read from the events themselves (so a call that failed validation counts too)."""
+    urls = []
+    for event in events:
+        for block in (event.get("message") or {}).get("content") or []:
+            if not isinstance(block, dict):
+                continue
+            if block.get("type") == "tool_use" and block.get("name") == OPEN_PAGE_TOOL:
+                urls.append(block["input"]["url"])
+            if block.get("type") == "tool_result" and not block.get("is_error"):
+                text = block.get("content")
+                if isinstance(text, list):
+                    text = "".join(part.get("text", "") for part in text if isinstance(part, dict))
+                if isinstance(text, str) and text.startswith("{") and '"final_url"' in text:
+                    urls.append(json.loads(text)["final_url"])
+    return urls
 
 
 def local_host_opens(records: Path) -> list[str]:
     """Every URL `open_page` was asked for or ended on, in every stored call of the stage
-    (reviewers and reconciler, deciding or not), whose host is local (#358, item 7)."""
-    return sorted({
-        url for path in sorted(records.glob("*/*.attempt-*.json"))
-        for opened in read_json(path).get("page_opens", [])
-        for url in (opened.get("url"), opened.get("final_url"))
-        if url and is_local_host(urlparse(url).hostname or "")
-    })
+    (reviewers and reconciler, deciding or not), whose host is local (#358, item 7). A stored
+    attempt without an event stream made no call and is skipped by name, not by default."""
+    found = set()
+    for path in sorted(records.glob("*/*.attempt-*.json")):
+        stored = read_json(path)
+        if "events" not in stored:
+            continue
+        found.update(url for url in open_page_urls(stored["events"])
+                     if is_local_host(urlparse(url).hostname or ""))
+    return sorted(found)
 
 
 def deviations(by_class: dict) -> dict:
@@ -152,8 +179,7 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
                     by_browser[opened["browser"]]["loaded"] += opened["loaded"]
                 museum = museum_of(opened["url"])
                 # A URL open_page refuses outright (not http(s)) was never a source request.
-                requestable = isinstance(opened["url"], str) and opened["url"].startswith(("https://", "http://"))
-                source = citable_source_of(opened["url"]) if requestable else None
+                source = citable_source_of(opened["url"]) if requestable(opened["url"]) else None
                 citable = source is not None
                 # A citable page counts as loaded only if the page it ended on is citable too,
                 # as for a citation (a redirect off the list is not an available source).
@@ -247,8 +273,9 @@ def main() -> None:
     write_atomic(args.out, value)
     print(json.dumps(value, indent=1))
     if not value["passed"]:
-        raise ProtocolFailure("page-load gate failed: a class's loaded rate for citable sources deviates by more than "
-                              f"{MAX_CLASS_DEVIATION_PERCENTAGE_POINTS} percentage points")
+        raise ProtocolFailure("page-load gate failed: a class opened no citable page, or its loaded rate for "
+                              f"citable sources deviates by more than {MAX_CLASS_DEVIATION_PERCENTAGE_POINTS} "
+                              "percentage points")
 
 
 if __name__ == "__main__":

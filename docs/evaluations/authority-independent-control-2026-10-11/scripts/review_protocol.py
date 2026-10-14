@@ -249,16 +249,24 @@ def _blocked(url: str | None) -> bool:
     return any(host == domain or host.endswith("." + domain) for domain in BLOCKED_DOMAINS)
 
 
-def _page(url: str | None) -> tuple[str, str, str]:
-    """A URL's page identity: host without `www.`, path without trailing slash, and the query
-    (its parameters sorted), since a query can name the page (`?q=<id>`, `?p=<post>`). The
-    scheme and fragment are not part of it."""
+def _page(url: str | None) -> tuple[str, str, str, str]:
+    """A URL's page identity: host without `www.`, path without trailing slash, the query (its
+    parameters sorted), since a query can name the page (`?q=<id>`, `?p=<post>`), and a
+    fragment that routes a single-page app (`#!/show/<id>` on the iDAI gazetteer, `#/...`),
+    since it names the page too. The scheme and any other fragment (an anchor) are not part
+    of it."""
     parsed = urlparse((url or "").strip())
     return (
         (parsed.hostname or "").lower().removeprefix("www."),
         parsed.path.rstrip("/"),
         urlencode(sorted(parse_qsl(parsed.query, keep_blank_values=True))),
+        parsed.fragment if parsed.fragment.startswith(("!", "/")) else "",
     )
+
+
+def requestable(url: object) -> bool:
+    """Whether `open_page` would request this URL at all (it refuses any other scheme)."""
+    return isinstance(url, str) and url.startswith(("https://", "http://"))
 
 
 def opened_pages(record: dict) -> set[tuple[str, str, str]]:
@@ -452,8 +460,7 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     # citable page is unresearched, not a finding that the evidence is insufficient.
     # (A URL `open_page` refuses outright, not http(s), is no attempt.)
     if any(not citations for citations in citation_lists) and not any(
-        isinstance(o["url"], str) and o["url"].startswith(("https://", "http://")) and _citable(o["url"])
-        for o in record["page_opens"]
+        requestable(o["url"]) and _citable(o["url"]) for o in record["page_opens"]
     ):
         record["failure"] = "invalid decision: cites nothing without having tried a citable page"
         return record

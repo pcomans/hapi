@@ -1215,3 +1215,82 @@ def test_the_page_load_gate_does_not_count_a_url_open_page_refuses(tmp_path: Pat
         "site/authority_only_transition": {"loaded": 2, "opened": 2}}
     assert result["opens_by_citation_role"] == {
         "case_input": {"loaded": 2, "opened": 2}, "not_citable": {"loaded": 0, "opened": 2}}
+
+
+def test_a_routed_fragment_names_the_page_so_another_record_cannot_be_cited() -> None:
+    # The iDAI gazetteer routes by fragment: /app/#!/show/<id> is one page per id.
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
+    shown = "https://gazetteer.dainst.org/app/#!/show/2042907"
+    other = "https://gazetteer.dainst.org/app/#!/show/2042834"
+    opens = (opened_page(), opened_page("https://gazetteer.dainst.org/place/2042907", final_url=shown))
+    answer = review_answer(case, "same_entity", "useful")
+    record = protocol.validate({"events": events({**answer, "citations": [OPENED, other]}, opens=opens)}, case, role, schema)
+    assert record["failure"] == f"cites a page it did not open: {[other]}"
+    record = protocol.validate({"events": events({**answer, "citations": [OPENED, shown]}, opens=opens)}, case, role, schema)
+    assert record["decision"]["citations"] == [OPENED, shown]
+    # An ordinary anchor is not part of the page.
+    assert protocol._page(OPENED + "#provenance") == protocol._page(OPENED)
+
+
+def test_a_citable_url_whose_open_failed_counts_as_tried() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
+    stream = events(unsure, opens=("Error executing tool open_page",))
+    for event in stream:
+        for block in (event.get("message") or {}).get("content") or []:
+            if block.get("type") == "tool_use" and block["name"] == protocol.OPEN_PAGE_TOOL:
+                block["input"]["url"] = OPENED
+    record = protocol.validate({"events": stream}, case, role, protocol.role_inputs(role)["schema"])
+    assert record["page_opens"] == [{"url": OPENED, "loaded": False, "error": "Error executing tool open_page"}]
+    assert record["decision"] == unsure
+
+
+def test_a_reconciler_resolution_citing_nothing_without_trying_a_citable_page_is_rejected() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    item = {"case_id": case["case_id"], "evidence_sha256": HASH_1, "case": case,
+            "disputed_questions": ["useful_granularity"], "reviews": []}
+    role = protocol.ROLES["stage_1_reconciler"]
+    unresolved = {"case_id": case["case_id"], "resolutions": {"useful_granularity": {
+        "outcome": "insufficient_evidence", "rationale": "r", "citations": []}}}
+    record = protocol.validate({"events": events(unresolved, opens=())}, item, role, protocol.role_inputs(role)["schema"])
+    assert record["failure"] == "invalid decision: cites nothing without having tried a citable page"
+
+
+def test_local_host_shorthands_count_as_local() -> None:
+    assert [load_gate.is_local_host(h) for h in ("127.1", "localhost.", "10.1", "metmuseum.org.")] == [
+        True, True, True, False]
+
+
+def test_the_committed_rerun_proof_binds_the_scored_digest_and_population() -> None:
+    results = EVALUATION / "results"
+    proof = json.loads((results / "real-rerun-proof.json").read_text())
+    digest = json.loads((results / "real-review-population-digest.json").read_text())
+    score = json.loads((results / "real-adjudicated-score.json").read_text())
+    assert (proof["complete_runs_compared"], proof["all_registered_files_byte_identical"]) == (2, True)
+    files = proof["sha256_by_file"]
+    assert files["review/public-review-population-digest.json"] == protocol.sha256_path(
+        results / "real-review-population-digest.json") == score["input_hashes"]["review_population_digest"]
+    assert files["review/review-protocol-manifest.json"] == protocol.sha256_path(
+        results / "real-review-protocol-manifest.json") == digest["output_hashes"]["review_protocol_manifest_sha256"]
+    for name, key in (("stage-1-queue.json", "stage_1_queue_sha256"),
+                      ("private-answer-key.json", "private_answer_key_sha256"),
+                      ("stage-2-custodian.json", "stage_2_custodian_sha256")):
+        assert files[f"review/{name}"] == digest["output_hashes"][key]
+    assert score["input_hashes"]["stage_1_queue"] == digest["output_hashes"]["stage_1_queue_sha256"]
+    assert score["input_hashes"]["private_answer_key"] == digest["output_hashes"]["private_answer_key_sha256"]
+
+
+def test_the_committed_preflight_check_counts() -> None:
+    check = json.loads((EVALUATION / "results" / "preflight-page-check.json").read_text())
+    rows = check["pages"]
+    errors = [r for r in rows if "error" in r]
+    gone = [r for r in rows if "error" not in r and r["status"] in (404, 410)]
+    loaded = [r for r in rows if "error" not in r and r["loaded"]]
+    assert (len(rows), len(loaded), len(gone), len(rows) - len(loaded) - len(gone), len(errors)) == (184, 132, 34, 18, 5)
+    assert sorted(r["url"] for r in loaded if r["browser"] == "browserbase" and not r["local_failure"]) == sorted(
+        r["url"] for r in rows if "ucl.ac.uk/museums-static/digitalegypt" in r["url"])
+    assert sum(1 for r in rows if r["host"] == "pcma.uw.edu.pl" and "error" not in r
+               and r["title"] == "Captcha Verification Needed") == 7

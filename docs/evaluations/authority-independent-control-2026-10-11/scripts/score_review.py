@@ -467,9 +467,10 @@ def require_committed_digest(repo_root: Path, population_digest_path: Path) -> N
 def require_page_load_gate(page_load: dict) -> None:
     """A run whose citable pages loaded unequally across classes is not scored."""
     if not page_load["passed"]:
-        raise ValueError("the page-load gate failed on these records: "
-                         + json.dumps({s: v["citable_opens_class_deviation_percentage_points"]
-                                       for s, v in page_load["stages"].items()}))
+        raise ValueError("the page-load gate failed on these records: " + json.dumps({
+            s: {"deviations": v["citable_opens_class_deviation_percentage_points"],
+                "classes_without_citable_opens": v["classes_without_citable_opens"]}
+            for s, v in page_load["stages"].items()}))
 
 
 def score(

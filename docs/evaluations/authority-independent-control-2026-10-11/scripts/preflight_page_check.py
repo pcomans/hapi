@@ -23,7 +23,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import open_page_server
-from review_protocol import citable_source_of
+from review_protocol import CITABLE_SOURCES_PATH, OPEN_PAGE_SERVER_PATH, citable_source_of, sha256_path
 
 SEED = 337
 LOADED_PER_HOST = 3
@@ -36,19 +36,19 @@ def _host(url: str) -> str:
 
 
 def pages(run_dirs: list[Path]) -> list[str]:
-    ever_loaded: dict[str, bool] = {}
+    always_loaded: dict[str, bool] = {}
     for run in run_dirs:
         for path in sorted(run.glob("stage-*/*/*.attempt-*.json")):
             for opened in json.loads(path.read_text()).get("page_opens", []):
                 url = opened.get("url")
                 if url and citable_source_of(url):
-                    ever_loaded[url] = ever_loaded.get(url, True) and bool(opened.get("loaded"))
+                    always_loaded[url] = always_loaded.get(url, True) and bool(opened.get("loaded"))
     rng = random.Random(SEED)
-    failed = sorted(u for u, ok in ever_loaded.items() if not ok)
+    failed = sorted(u for u, ok in always_loaded.items() if not ok)
     gazetteer = [u for u in failed if _host(u) == "gazetteer.dainst.org"]
     chosen = [u for u in failed if u not in gazetteer] + rng.sample(gazetteer, min(GAZETTEER_SAMPLE, len(gazetteer)))
     loaded_by_host = collections.defaultdict(list)
-    for url, ok in sorted(ever_loaded.items()):
+    for url, ok in sorted(always_loaded.items()):
         if ok:
             loaded_by_host[_host(url)].append(url)
     for urls in loaded_by_host.values():
@@ -84,8 +84,11 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     rows = asyncio.run(check(pages(args.records)))
-    args.out.write_text(json.dumps({"schema_version": "hapi-337-preflight-page-check/1",
-                                    "runs": [p.name for p in args.records], "pages": rows},
+    args.out.write_text(json.dumps({"schema_version": "hapi-337-preflight-page-check/2",
+                                    "runs": [p.name for p in args.records],
+                                    "made_with": {path.name: sha256_path(path) for path in (
+                                        Path(__file__), OPEN_PAGE_SERVER_PATH, CITABLE_SOURCES_PATH)},
+                                    "pages": rows},
                                    indent=1, ensure_ascii=False) + "\n")
 
 
