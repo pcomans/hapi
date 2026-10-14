@@ -450,8 +450,10 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
         return record
     # ... and only after trying: an answer that cites nothing without having tried to open a
     # citable page is unresearched, not a finding that the evidence is insufficient.
+    # (A URL `open_page` refuses outright, not http(s), is no attempt.)
     if any(not citations for citations in citation_lists) and not any(
-        _citable(o["url"]) for o in record["page_opens"]
+        isinstance(o["url"], str) and o["url"].startswith(("https://", "http://")) and _citable(o["url"])
+        for o in record["page_opens"]
     ):
         record["failure"] = "invalid decision: cites nothing without having tried a citable page"
         return record

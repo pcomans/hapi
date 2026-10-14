@@ -1174,7 +1174,9 @@ def test_insufficient_evidence_without_trying_a_citable_page_is_unresearched() -
     schema = protocol.role_inputs(role)["schema"]
     unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
     stray = opened_page("https://example.org/nothing", loaded=False)
-    for opens in ((), (stray,), ("Error executing tool open_page",)):
+    refused = {**opened_page("ftp://www.metmuseum.org/art/collection/search/1", loaded=False)}
+    shouted = {**opened_page("HTTPS://www.metmuseum.org/art/collection/search/1", loaded=False)}
+    for opens in ((), (stray,), ("Error executing tool open_page",), (refused,), (shouted,)):
         record = protocol.validate({"events": events(unsure, opens=opens)}, case, role, schema)
         assert record["failure"] == "invalid decision: cites nothing without having tried a citable page", opens
     # A citable page that was tried and did not load is research.
