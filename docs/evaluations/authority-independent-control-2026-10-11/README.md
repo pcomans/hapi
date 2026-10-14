@@ -323,7 +323,11 @@ per-case pattern.
    records and refuses to score if it failed (the score names the gate result's hash), labels
    each case, and applies `decision-rule.md` in code (`decision_rule`). The last two checks
    were added after the v10 run, on Codex review; the v10 records were rescored with them, with
-   the same result, from a population rebuilt byte-identical to the one v10 ran on.
+   the same result, from a population rebuilt byte-identical to the one v10 ran on. Two rules
+   were corrected at the same time: the gate now fails a class whose calls opened no citable
+   page (none in v10), and the validator requires a citation only when a citable page loaded,
+   not any page, as the prompts say (no v10 call was rejected under the old rule: every call
+   was valid on its first attempt).
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer
 key are byte-identical to the ones the Stage 1 reviewers ran on; the Stage 2 custodian

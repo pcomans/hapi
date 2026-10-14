@@ -427,12 +427,16 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     if uncitable:
         record["failure"] = f"cites a non-citable source: {uncitable}"
         return record
-    # insufficient_evidence may cite nothing only when no page the call opened loaded.
+    # insufficient_evidence may cite nothing only when no citable page the call opened loaded
+    # (a page outside the list may lead to sources but can never be cited).
     citation_lists = (
         [r["citations"] for r in decision["resolutions"].values()] if role.reconciler else [decision["citations"]]
     )
-    if any(not citations for citations in citation_lists) and opened:
-        record["failure"] = "invalid decision: cites nothing although a page it opened loaded"
+    citable_loaded = any(
+        o["loaded"] and _citable(o["requested_url"]) and _citable(o["final_url"]) for o in record["page_opens"]
+    )
+    if any(not citations for citations in citation_lists) and citable_loaded:
+        record["failure"] = "invalid decision: cites nothing although a citable page it opened loaded"
         return record
     record["decision"] = decision
     return record

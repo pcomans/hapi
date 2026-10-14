@@ -20,7 +20,9 @@ toward its own (from the private answer key). Writes aggregate counts only.
 Classes are compared within each entity type (site, ruler), because the citable sources
 cover sites and rulers unequally (no ruler authority has an openable page). The gate passes
 when, in each stage and entity type, every class's loaded rate for opens of citable sources
-is within MAX_CLASS_DEVIATION_PERCENTAGE_POINTS of that entity type's overall rate for them. The
+is within MAX_CLASS_DEVIATION_PERCENTAGE_POINTS of that entity type's overall rate for them,
+and (from 2026-10-14, on Codex review) every class the stage's cases belong to has opened at
+least one citable page; an unmeasured class fails the gate. The
 rule and threshold were committed before the protocol v5 run (README); all opens are
 reported but not gated, since a page outside the citable sources can never be a citation.
 It fails loud.
@@ -68,6 +70,27 @@ def _rate(counts: dict) -> float:
     return counts["loaded"] / counts["opened"]
 
 
+def deviations(by_class: dict) -> dict:
+    """Each entity-type/class rate minus the rate of all opens of that entity type."""
+    overall = collections.defaultdict(lambda: {"loaded": 0, "opened": 0})
+    for key, counts in by_class.items():
+        for k in ("loaded", "opened"):
+            overall[key.split("/")[0]][k] += counts[k]
+    return {key: round(100 * (_rate(counts) - _rate(overall[key.split("/")[0]])), 2)
+            for key, counts in sorted(by_class.items())}
+
+
+def class_verdict(expected_classes: set[str], citable_by_class: dict) -> dict:
+    """The gate for one stage: every entity-type/class the stage's cases belong to must have
+    opened citable pages (a class with none is unmeasured, and fails), and each class's loaded
+    rate must be within MAX_CLASS_DEVIATION_PERCENTAGE_POINTS of its entity type's."""
+    measured = {key: counts for key, counts in citable_by_class.items() if counts["opened"]}
+    missing = sorted(expected_classes - measured.keys())
+    gated = deviations(measured)
+    return {"deviations": gated, "classes_without_citable_opens": missing,
+            "passed": not missing and all(abs(d) <= MAX_CLASS_DEVIATION_PERCENTAGE_POINTS for d in gated.values())}
+
+
 def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str, set[str]]) -> dict:
     role = ROLES[f"stage_{stage}_reviewer"]
     inputs = role_inputs(role)
@@ -80,11 +103,13 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
     retried_by_class, retried_by_host = counter(), collections.Counter()
     not_loaded_by_host = collections.Counter()
     calls = calls_without_a_loaded_page = 0
+    expected_classes: set[str] = set()
     for case in read_json(queue_path)["cases"]:
         classes = classes_of.get(case["case_id"])
         if not classes:
             raise ProtocolFailure(f"stage {stage}: {case['case_id']} belongs to no scored case")
         classes = {f"{case['entity_type']}/{transition_class}" for transition_class in classes}
+        expected_classes |= classes
         for label in REVIEWERS:
             _, stored = decided_record(records / f"reviewer-{label}", case, role, inputs)
             record = validate({"events": stored["events"]}, case, role, inputs["schema"])
@@ -123,15 +148,7 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
                 if not opened["loaded"]:
                     not_loaded_by_host[_host(opened["url"])] += 1
     overall_all = {k: sum(v[k] for v in by_museum.values()) for k in ("loaded", "opened")}
-    def deviations(by_class: dict) -> dict:
-        """Each entity-type/class rate minus the rate of all opens of that entity type."""
-        overall = collections.defaultdict(lambda: {"loaded": 0, "opened": 0})
-        for key, counts in by_class.items():
-            for k in ("loaded", "opened"):
-                overall[key.split("/")[0]][k] += counts[k]
-        return {key: round(100 * (_rate(counts) - _rate(overall[key.split("/")[0]])), 2)
-                for key, counts in sorted(by_class.items())}
-    gated = deviations(citable_by_class)
+    verdict = class_verdict(expected_classes, citable_by_class)
     return {
         "deciding_reviewer_calls": calls,
         "calls_without_a_loaded_page": calls_without_a_loaded_page,
@@ -139,8 +156,9 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         "all_opens": overall_all,
         "all_opens_by_transition_class": dict(sorted(all_by_class.items())),
         "all_opens_class_deviation_percentage_points": deviations(all_by_class),
+        "classes_without_citable_opens": verdict["classes_without_citable_opens"],
         "citable_opens_by_transition_class": dict(sorted(citable_by_class.items())),
-        "citable_opens_class_deviation_percentage_points": gated,
+        "citable_opens_class_deviation_percentage_points": verdict["deviations"],
         "not_loaded_opens_by_host": dict(sorted(not_loaded_by_host.items(), key=lambda kv: (-kv[1], kv[0]))),
         "opens_by_browser": dict(sorted(by_browser.items())),
         "opens_by_citation_role": dict(sorted(by_role.items())),
@@ -155,7 +173,7 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         "citations_by_transition_class_and_role": {
             c: dict(sorted(roles.items())) for c, roles in sorted(citations_by_class.items())
         },
-        "passed": all(abs(d) <= MAX_CLASS_DEVIATION_PERCENTAGE_POINTS for d in gated.values()),
+        "passed": verdict["passed"],
     }
 
 
@@ -171,7 +189,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/6",
+        "schema_version": "hapi-337-page-load-gate/7",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

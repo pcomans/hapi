@@ -29,6 +29,7 @@ protocol = _load("review_protocol", "review_protocol.py")
 scorer = _load("_reregistration_score_review", "score_review.py")
 queue_builder = _load("_reregistration_build_review_queue", "build_review_queue.py")
 runner = _load("_reregistration_run_harness_review", "run_harness_review.py")
+load_gate = _load("_reregistration_page_load_gate", "page_load_gate.py")
 
 HASH_1 = "1" * 64
 RUNTIME_PYPROJECT_SHA256 = "8c584c759b96f174115106336231535fc4b0fe10ae09e1612c57aaf1c3ea6a81"
@@ -861,7 +862,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
-    assert gate["schema_version"] == "hapi-337-page-load-gate/6"
+    assert gate["schema_version"] == "hapi-337-page-load-gate/7"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
     assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
     assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
@@ -878,6 +879,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
         "ruler/authority_only_transition": -4.74, "ruler/retained_control": 2.22,
         "site/authority_only_transition": 0.38, "site/retained_control": -0.11,
     }
+    assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
     # The v7 failure: the target records Stage 2 judges must load.
     assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 112, "opened": 112}
     # The scorer recomputes the gate from the same records and refuses to score a failed one;
@@ -1002,12 +1004,19 @@ def test_a_redirect_to_a_blocked_domain_fails_the_call() -> None:
     assert record["failure"] == "blocked domain used: ['https://www.wikidata.org/wiki/Q1']"
 
 
-def test_insufficient_evidence_may_cite_nothing_only_if_no_page_loaded() -> None:
+def test_insufficient_evidence_may_cite_nothing_only_if_no_citable_page_loaded() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
+    schema = protocol.role_inputs(role)["schema"]
     unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
-    record = protocol.validate({"events": events(unsure)}, case, role, protocol.role_inputs(role)["schema"])
-    assert record["failure"] == "invalid decision: cites nothing although a page it opened loaded"
+    record = protocol.validate({"events": events(unsure)}, case, role, schema)
+    assert record["failure"] == "invalid decision: cites nothing although a citable page it opened loaded"
+    # A loaded page outside the citable list (a research lead) does not oblige a citation.
+    wiki = "https://en.wikipedia.org/wiki/Abydos,_Egypt"
+    record = protocol.validate({"events": events(unsure, opens=(opened_page(wiki), opened_page(loaded=False)))},
+                               case, role, schema)
+    assert "failure" not in record
+    assert record["decision"] == unsure
 
 
 def test_a_stored_call_made_by_other_runner_or_browser_files_is_refused(tmp_path: Path) -> None:
@@ -1077,3 +1086,23 @@ def test_the_scorer_refuses_a_run_that_failed_the_page_load_gate() -> None:
     failed["stages"]["1"]["passed"] = failed["passed"] = False
     with pytest.raises(ValueError, match=r'the page-load gate failed on these records: .*"site/authority_only_transition": -7\.3'):
         scorer.require_page_load_gate(failed)
+
+
+def test_the_page_load_gate_fails_a_class_with_no_citable_opens() -> None:
+    expected = {"site/authority_only_transition", "site/retained_control"}
+    both = {"site/authority_only_transition": {"loaded": 9, "opened": 10},
+            "site/retained_control": {"loaded": 19, "opened": 20}}
+    assert load_gate.class_verdict(expected, both) == {
+        "deviations": {"site/authority_only_transition": -3.33, "site/retained_control": 1.67},
+        "classes_without_citable_opens": [], "passed": True}
+    # A class whose calls opened no citable page is unmeasured, not neutral.
+    one = {"site/retained_control": {"loaded": 19, "opened": 20},
+           "site/authority_only_transition": {"loaded": 0, "opened": 0}}
+    assert load_gate.class_verdict(expected, one) == {
+        "deviations": {"site/retained_control": 0.0},
+        "classes_without_citable_opens": ["site/authority_only_transition"], "passed": False}
+    assert load_gate.class_verdict(expected, {})["passed"] is False
+    # And a class more than 5 points below its entity type fails.
+    apart = {"site/authority_only_transition": {"loaded": 8, "opened": 10},
+             "site/retained_control": {"loaded": 20, "opened": 20}}
+    assert load_gate.class_verdict(expected, apart)["passed"] is False

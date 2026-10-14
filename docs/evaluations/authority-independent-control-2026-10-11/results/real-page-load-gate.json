@@ -6,7 +6,7 @@
  },
  "max_class_deviation_percentage_points": 5,
  "passed": true,
- "schema_version": "hapi-337-page-load-gate/6",
+ "schema_version": "hapi-337-page-load-gate/7",
  "stages": {
   "1": {
    "all_opens": {
@@ -163,6 +163,7 @@
      "whc.unesco.org": 1
     }
    },
+   "classes_without_citable_opens": [],
    "deciding_reviewer_calls": 216,
    "loaded_without_load_event_by_host": {
     "metmuseum.org": 4
@@ -363,6 +364,7 @@
      "ucl.ac.uk/museums-static/digitalegypt": 1
     }
    },
+   "classes_without_citable_opens": [],
    "deciding_reviewer_calls": 130,
    "loaded_without_load_event_by_host": {
     "gazetteer.dainst.org": 110,
