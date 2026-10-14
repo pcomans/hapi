@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import ipaddress
 import json
 from pathlib import Path
 from urllib.parse import urlparse
@@ -68,6 +69,28 @@ def museum_of(url: str) -> str:
 
 def _rate(counts: dict) -> float:
     return counts["loaded"] / counts["opened"]
+
+
+def is_local_host(host: str) -> bool:
+    """A loopback, link-local, private or reserved address, or a name only a local network
+    resolves (`localhost`, `*.local`, `*.internal`, a single label)."""
+    host = host.lower().strip("[]")
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        return host == "localhost" or host.endswith((".localhost", ".local", ".internal")) or "." not in host
+    return address.is_loopback or address.is_link_local or address.is_private or address.is_reserved
+
+
+def local_host_opens(records: Path) -> list[str]:
+    """Every URL `open_page` was asked for or ended on, in every stored call of the stage
+    (reviewers and reconciler, deciding or not), whose host is local (#358, item 7)."""
+    return sorted({
+        url for path in sorted(records.glob("*/*.attempt-*.json"))
+        for opened in read_json(path).get("page_opens", [])
+        for url in (opened.get("url"), opened.get("final_url"))
+        if url and is_local_host(urlparse(url).hostname or "")
+    })
 
 
 def deviations(by_class: dict) -> dict:
@@ -170,6 +193,7 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         "loaded_without_load_event_by_host": dict(sorted(
             loaded_without_load_event_by_host.items(), key=lambda kv: (-kv[1], kv[0]))),
         "retried_after_local_failure_by_transition_class": dict(sorted(retried_by_class.items())),
+        "local_host_opens_in_any_stored_call": local_host_opens(records),
         "retried_after_local_failure_by_host": dict(sorted(retried_by_host.items(), key=lambda kv: (-kv[1], kv[0]))),
         "citations_by_transition_class_and_source": {
             c: dict(sorted(domains.items(), key=lambda kv: (-kv[1], kv[0])))
@@ -194,7 +218,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/8",
+        "schema_version": "hapi-337-page-load-gate/9",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

@@ -866,7 +866,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
-    assert gate["schema_version"] == "hapi-337-page-load-gate/8"
+    assert gate["schema_version"] == "hapi-337-page-load-gate/9"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
     assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
     assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
@@ -884,6 +884,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
         "site/authority_only_transition": -0.29, "site/retained_control": 0.08,
     }
     assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
+    assert [stages[s]["local_host_opens_in_any_stored_call"] for s in "12"] == [[], []]
     # The v7 failure: the target records Stage 2 judges must load.
     assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 112, "opened": 112}
     # The scorer recomputes the gate from the same records and refuses to score a failed one;
@@ -1151,3 +1152,15 @@ def test_the_page_load_gate_counts_a_citable_page_that_redirected_off_the_list_a
         "case_input": {"loaded": 2, "opened": 2}, "independent": {"loaded": 0, "opened": 2}}
     assert result["all_opens_by_transition_class"] == {
         "site/authority_only_transition": {"loaded": 4, "opened": 4}}
+
+
+def test_the_gate_lists_every_open_of_a_local_host(tmp_path: Path) -> None:
+    assert [load_gate.is_local_host(h) for h in (
+        "127.0.0.1", "10.0.0.5", "169.254.169.254", "192.168.1.1", "[::1]", "localhost", "db.internal",
+        "typesense", "printer.local", "www.metmuseum.org", "8.8.8.8")] == [
+        True, True, True, True, True, True, True, True, True, False, False]
+    case = stage_1_case("review-unit-001", HASH_1)
+    inward = opened_page("https://w.example.org/a", final_url="http://169.254.169.254/latest/meta-data")
+    write_attempt(tmp_path / "reviewer-A", "stage_1_reviewer", case, 1,
+                  review_answer(case, "same_entity", "useful"), opens=(opened_page(), inward))
+    assert load_gate.local_host_opens(tmp_path) == ["http://169.254.169.254/latest/meta-data"]

@@ -392,15 +392,19 @@ so it stays.
   evidence a reviewer can check.
 - **`open_page` defects found after the v10 run**, fixed only in the next registration (#358;
   the stored calls are bound to the browser tool's hash, so changing it voids them). None changed
-  a v10 call: no v10 `open_page` call failed, and every Browserbase re-read that failed
-  returned a page record. (1) When the Browserbase re-read itself raises, the error drops the
+  a v10 call: no v10 `open_page` call failed, every Browserbase re-read that failed returned
+  a page record, and no call opened a local host (7). (1) When the Browserbase re-read itself raises, the error drops the
   local failure reason. (2) The page text is read without the navigation guard the title has
   (above). (3) A page whose `load` never fires waits 15 seconds twice. (4) A PDF records
   `load_event` true although none was measured. (5) A Browserbase session is not released if
   connecting to it fails. (6) The Browserbase re-read is not paced. (7) `open_page` will open
   a loopback, link-local or private-network URL the model gives it (it blocks only listed
-  domains), so a page or search result could point it at a service on the review host; what
-  was reachable from the container during the runs was not recorded.
+  domains), so a page or search result could point it at a service on the review host. No
+  stored v10 call, reviewer or reconciler, deciding or not, asked `open_page` for or ended on
+  a loopback, link-local, private or internal host (the gate result's
+  `local_host_opens_in_any_stored_call`, empty in both stages). Not recorded, and so not
+  checked: the requests a loaded page makes itself, and a public name resolving to a private
+  address.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
