@@ -413,12 +413,16 @@
   "evaluation_date": "2026-10-11",
   "input_hashes": {
     "private_answer_key": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "review_population_digest": "2fe1255273a093f0fca2b210b1293d83ab1dc39bc56cec028911d734a690c821",
+    "review_population_digest": "ac27307b0f8f67ba08147b2ea3affe268209f087a23542a2416621939883dc83",
     "stage_1_consensus": "368cee1906a4250bf73c1909a2a4886ff62136b09c410f44ce9b4d3715e87c42",
     "stage_1_queue": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_consensus": "e96ae0032a7e68d943b3f22e84662df61d1039882e57a284c8547a1645dddd24",
     "stage_2_custodian": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda",
     "stage_2_queue": "fe450d4d2edb1e6027624bd548b521848bbe8b32272260a1e2987121c289c898"
+  },
+  "page_load_gate": {
+    "passed": true,
+    "sha256": "7d50bbf3713e172120b5fb80bbedcf9a993b444a88c1c1216e4c83797740cfcd"
   },
   "primary_decision_counts": {
     "a_authority_only_same_useful_exact_target": 13,
@@ -428,8 +432,8 @@
     "e_literal_only_false_or_not_useful_removal": 16,
     "f_transition_uncertainty": 2
   },
-  "private_join_sha256": "c08242145d678c67bee1d6698c25e8f99711e4ec56ee11a20487402431183fbb",
+  "private_join_sha256": "ca0daa5b1d5c5bf76fabc1e2be6e5fa0b270e0ae2d1b8653cb37b7e2e5a10365",
   "review_status": "COMPLETE_TRACEABLE",
   "schema_version": "hapi-authority-control-adjudicated-score/3",
-  "scorer_sha256": "6fa0e7a497ea6f809eac38982db0e62bea211a7ea1b7693168a986f8723b620e"
+  "scorer_sha256": "b7d6254d05f1ff91d3d3ad015e6cd7f697bfba34290ecb841e171246f754b905"
 }

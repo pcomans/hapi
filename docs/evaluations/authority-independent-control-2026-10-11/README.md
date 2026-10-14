@@ -318,8 +318,12 @@ per-case pattern.
 3. **Stage 2** runs the same way: two independent reviewers, then the reconciler on
    disagreements, then a frozen consensus.
 4. **Scoring.** `score_review.py` verifies both consensus files against the records, checks
-   every protocol file against the population digest, labels each case, and applies
-   `decision-rule.md` in code (`decision_rule`).
+   every protocol file against the population digest (from 2026-10-14 also the browser tool,
+   the citable-source list and the page-load gate), recomputes the page-load gate from the same
+   records and refuses to score if it failed (the score names the gate result's hash), labels
+   each case, and applies `decision-rule.md` in code (`decision_rule`). The last two checks
+   were added after the v10 run, on Codex review; the v10 records were rescored with them, with
+   the same result, from a population rebuilt byte-identical to the one v10 ran on.
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer
 key are byte-identical to the ones the Stage 1 reviewers ran on; the Stage 2 custodian

@@ -488,6 +488,10 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
         "sha256": protocol.sha256_path(protocol.OPEN_PAGE_SERVER_PATH),
     }
+    assert bindings["page_load_gate"] == {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
+        "sha256": protocol.sha256_path(SCRIPTS / "page_load_gate.py"),
+    }
 
 
 def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_decision(tmp_path: Path) -> None:
@@ -876,6 +880,9 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     }
     # The v7 failure: the target records Stage 2 judges must load.
     assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 112, "opened": 112}
+    # The scorer recomputes the gate from the same records and refuses to score a failed one;
+    # the score names the gate result it recomputed, which is the committed one.
+    assert score["page_load_gate"] == {"passed": True, "sha256": scorer.canonical_sha256(gate)}
     assert [stages[s]["opens_by_browser"] for s in "12"] == [
         {"browserbase": {"loaded": 10, "opened": 13}, "local": {"loaded": 899, "opened": 908}},
         {"browserbase": {"loaded": 5, "opened": 7}, "local": {"loaded": 579, "opened": 582}},

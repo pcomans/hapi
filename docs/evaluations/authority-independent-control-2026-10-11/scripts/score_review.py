@@ -450,6 +450,7 @@ def score(
     bindings = digest["input_hashes"]["review_protocol"]
     bound = [
         bindings["validator"], bindings["runner"], bindings["scorer"], bindings["artifact_schema"],
+        bindings["browser_tool"], bindings["citable_sources"], bindings["page_load_gate"],
         *bindings["prompts"].values(), *bindings["raw_response_contracts"].values(),
         *bindings["launcher_system_prompts"].values(),
     ]
@@ -480,6 +481,14 @@ def score(
     )
     consensus_1 = protocol.verify_consensus("1", stage_1_consensus_path, stage_1_queue_path, stage_1_records)
     consensus_2 = protocol.verify_consensus("2", stage_2_consensus_path, stage_2_queue_path, stage_2_records)
+    # The pre-registered page-load gate, recomputed from these same records: a run whose
+    # citable pages loaded unequally across classes is not scored.
+    page_load = load_protocol(repo_root, "page_load_gate").gate(
+        (stage_1_queue_path, stage_1_records), (stage_2_queue_path, stage_2_records), answer_key_path)
+    if not page_load["passed"]:
+        raise ValueError("the page-load gate failed on these records: "
+                         + json.dumps({s: v["citable_opens_class_deviation_percentage_points"]
+                                       for s, v in page_load["stages"].items()}))
     answer = read_json(answer_key_path)
     joined = validate_and_join(
         read_json(stage_1_queue_path), consensus_1, stage_2_queue, consensus_2, answer
@@ -516,6 +525,7 @@ def score(
                           if case["transition_class"] == "retained_control")
             for category in CALIBRATION_CATEGORIES
         },
+        "page_load_gate": {"passed": True, "sha256": canonical_sha256(page_load)},
         "decision_rule": decision_rule(joined),
         "adjudicated_arm_outcomes": arm_outcomes(joined),
         "review_status": "COMPLETE_TRACEABLE",

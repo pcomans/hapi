@@ -106,6 +106,7 @@ def review_protocol_inputs(repo_root: Path) -> dict:
         "browser_tool": binding(protocol.OPEN_PAGE_SERVER_PATH),
         "citable_sources": binding(protocol.CITABLE_SOURCES_PATH),
         "scorer": binding(repo_root / EVALUATION_ROOT / "scripts/score_review.py"),
+        "page_load_gate": binding(repo_root / EVALUATION_ROOT / "scripts/page_load_gate.py"),
         "artifact_schema": binding(repo_root / REVIEW_SCHEMA_PATH),
         "prompts": {name: binding(role.prompt) for name, role in sorted(protocol.ROLES.items())},
         "raw_response_contracts": {

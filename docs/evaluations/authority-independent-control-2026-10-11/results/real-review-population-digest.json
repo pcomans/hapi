@@ -88,7 +88,7 @@
     "literal_links_sha256": "78f8b221ca3325ad5908bb9b479b374de82345f59ea6357981739b097068b237",
     "mention_ledger_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
     "report_sha256": "7c1b61c5cb640ce52de1ad87572cfd14dd013482870d1e21d889e9380f3a404a",
-    "review_population_builder_sha256": "944068c914c7f3279ab305824f850597c61526b94b2bdf477eb6f466d0d2b4b5",
+    "review_population_builder_sha256": "dde4816e64736c39114d5fe8e1e85b2c58e5fce3d179c6afbe9e8e38c261aa10",
     "review_protocol": {
       "artifact_schema": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/review-artifact.schema.json",
@@ -107,6 +107,10 @@
           "path": "docs/evaluations/authority-independent-control-2026-10-11/launcher-instructions/review-system-v4.txt",
           "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
         }
+      },
+      "page_load_gate": {
+        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
+        "sha256": "f46d6f422c294884751ee91a75781cd2741cb900f17a47e7ffe234a56e6e2802"
       },
       "prompts": {
         "stage_1_reconciler": {
@@ -151,7 +155,7 @@
       },
       "scorer": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-        "sha256": "6fa0e7a497ea6f809eac38982db0e62bea211a7ea1b7693168a986f8723b620e"
+        "sha256": "b7d6254d05f1ff91d3d3ad015e6cd7f697bfba34290ecb841e171246f754b905"
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
@@ -162,8 +166,8 @@
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "704c171e714f86410f7c1e592608b7b97264214821f64028a1e94abda05a3303",
-    "review_protocol_manifest_sha256": "4169f4f717430c24b9db86e91950bb3fff83673ffcbb36c3749eb61d9832114e",
+    "private_population_manifest_sha256": "9579b5171503bf5604e23971db7f118c9fb5611cea8774a155ea80720bfcfe46",
+    "review_protocol_manifest_sha256": "ce419dabc022389a87656a450f88f1cf2103446dac2d395e32c7e4a507d80e92",
     "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
   },
@@ -198,7 +202,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "4169f4f717430c24b9db86e91950bb3fff83673ffcbb36c3749eb61d9832114e"
+    "protocol_manifest_sha256": "ce419dabc022389a87656a450f88f1cf2103446dac2d395e32c7e4a507d80e92"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }
