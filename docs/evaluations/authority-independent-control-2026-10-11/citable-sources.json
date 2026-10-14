@@ -266,10 +266,9 @@
   },
   {
    "domain": "escholarship.org",
-   "path_prefix": "/uc/nelc_uee",
-   "category": "scholarly_publication",
+   "category": "open_repository",
    "role": "independent",
-   "institution": "UCLA Encyclopedia of Egyptology"
+   "institution": "eScholarship, University of California's open archive (including the UCLA Encyclopedia of Egyptology)"
   },
   {
    "domain": "persee.fr",

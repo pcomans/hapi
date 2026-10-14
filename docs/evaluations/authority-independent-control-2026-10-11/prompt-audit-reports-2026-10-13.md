@@ -248,3 +248,16 @@ Round 18 (v8) verdict: PASS. There are no P0, P1 or P2 findings.
 **P3 (not blocking):** errors raised by `open_page` reach the agent ("may not be opened in this review", "redirected to ..."). They echo only the host and URL, as in v7.
 
 The prompts (`*-v6`), `review-system-v4.txt` and `citable-sources.json` are unchanged since round 17 and were not re-audited.
+
+## Round 19 (v9: all of eScholarship citable)
+
+Round 19 (v9) verdict: PASS. There are no P0 or P1 findings.
+
+- **Answer or proxy leak: none.** The changed entry names only the domain, a category (`open_repository`), role `independent` and a generic institution string. It has no case, target, entity, class or Hapi/evaluation reference. Naming the UCLA Encyclopedia of Egyptology describes the publisher and points at no case.
+- **Class or entity-type bias: none.** Dropping the path prefix widens eligibility for all eScholarship content alike, for every class and entity type.
+- **Steering: none.** The entry says nothing about what any page says; it only decides whether a cited URL counts.
+
+P3 notes (no action required):
+1. The `open_repository` criterion ("citable only for a deposit of published, peer-reviewed work, not for a working paper") is the same text HAL uses.
+2. Moving UEE from `scholarly_publication` to `open_repository` puts its articles under that caveat; neutral, since UEE is peer-reviewed.
+3. Without the prefix, non-UEE eScholarship working papers are citable by domain; the category text is the only guard. This is citation hygiene, not leakage.
