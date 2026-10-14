@@ -349,7 +349,7 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
                 # from the server's own flag (`reported_loaded`), so a rule change reaches
                 # every stored call when it is re-checked.
                 record["page_opens"].append({
-                    "url": url, **{key: opened[key] for key in ("requested_url", "final_url", "status", "title", "browser")},
+                    "url": url, **{key: opened[key] for key in ("requested_url", "final_url", "status", "title", "browser", "load_event")},
                     "reported_loaded": opened["loaded"], "loaded": page_loaded(opened["status"], opened["title"], opened["text"]),
                 })
     final = next((e for e in reversed(events) if e.get("type") == "result"), None)

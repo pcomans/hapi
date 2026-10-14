@@ -231,3 +231,20 @@ Round 17 (v7) verdict: PASS for all four v6 prompts. There are no P0, P1 or P2 f
 - It is symmetric, names no outcome, and matches the code gate and the tool description. If the audit-prompt-bytes table in the README lists only the hash sentence as the delta, update it to mention both changes.
 
 Because the prompt bytes change, record new SHA-256 values for the four v6 files in the audited-bytes table, as with the earlier rounds.
+
+## Round 18 (v8: open_page reads pages whose `load` event never fires)
+
+Round 18 (v8) verdict: PASS. There are no P0, P1 or P2 findings.
+
+**Tool description, new clause:** "load_event (whether the page finished loading within 15 seconds; if not, the text is what had rendered by then)".
+- It is generic. It names no site, record, source, case or target, and does not mention Hapi or the evaluation.
+- It states page-load state only. The citation rule ("Only a page with loaded: true whose final_url belongs to a citable source may be cited") is unchanged and does not involve `load_event`, so the clause steers reviewers neither toward nor away from any record.
+- "15" comes from the constant `LOAD_EVENT_WAIT_SECONDS`, not from any case.
+
+**Result shape:** requested_url, final_url, status, title, loaded, text, text_truncated, load_event, browser, and (Browserbase only) browserbase_session_id. All describe the fetch; none depends on a case's class. `load_event` depends on the page alone; the PDF path sets it true.
+
+**Not model input:** the module docstring, which names the iDAI gazetteer and the piwik.dainst.org cause.
+
+**P3 (not blocking):** errors raised by `open_page` reach the agent ("may not be opened in this review", "redirected to ..."). They echo only the host and URL, as in v7.
+
+The prompts (`*-v6`), `review-system-v4.txt` and `citable-sources.json` are unchanged since round 17 and were not re-audited.

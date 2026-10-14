@@ -96,7 +96,7 @@
       },
       "browser_tool": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py",
-        "sha256": "7bb3c9c888375d694d581bf95220e8f9369eda9d2e140d9fb70504cd06fd7643"
+        "sha256": "c6665190c0ea78de7f755d37d5f8d33354c0880ee30aa3b4579a921f09c9d6ff"
       },
       "citable_sources": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
@@ -155,15 +155,15 @@
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "8fd803aabd439cb5714456e5de2d096f5e4fff7a10098e4305320c926fd0b9d9"
+        "sha256": "177d3a74c122eca2167a57508b2d67d77ed23352b5e5abacf43a1bd55e1993ee"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "ecdd173228c7e83ef66e86f43fcbe6b042b02b9316d115f71726455366dda173",
-    "review_protocol_manifest_sha256": "267944ed86f0df6daee2bccf874a745e4b3417f2ee45a8b0dcb0b98e3cdc03bf",
+    "private_population_manifest_sha256": "bcc32d9b2ca18d584451534ddaadfbefc494d3d733e917f873a3d9ec2aca8030",
+    "review_protocol_manifest_sha256": "ec3e6d8d268359f4d84fac1db6844ff1c36f38ba77ec8b08fc19e0d6aafa9fd3",
     "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
   },
@@ -198,7 +198,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "267944ed86f0df6daee2bccf874a745e4b3417f2ee45a8b0dcb0b98e3cdc03bf"
+    "protocol_manifest_sha256": "ec3e6d8d268359f4d84fac1db6844ff1c36f38ba77ec8b08fc19e0d6aafa9fd3"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }

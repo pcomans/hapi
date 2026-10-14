@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""#337 review protocol v6: the review agents' one way to read a web page.
+"""#337 review protocol v8: the review agents' one way to read a web page.
 
 An MCP server (stdio) with a single tool, `open_page`, that loads a URL in Chromium (headful,
 on the virtual X display `xvfb-run` gives it) and returns what the page or PDF says. The Met and Brooklyn collection sites sit behind Vercel's
@@ -19,6 +19,13 @@ across parallel calls. A PDF is read with pypdf. Sources marked `"browser": "bro
 (`BROWSERBASE_API_KEY`). A navigation error is not caught: the tool
 call fails and the agent sees the error.
 
+Navigation waits for the HTML to be parsed (`domcontentloaded`), then up to
+LOAD_EVENT_WAIT_SECONDS for the `load` event, and records whether it fired (`load_event`). The
+v7 run waited for `load` itself, which some pages never reach: on the iDAI gazetteer's place
+pages an analytics script (piwik.dainst.org) never finishes loading, although the record has
+rendered within seconds, so every open of the record the Stage 2 reviewers were judging timed
+out. A page whose `load` fires is read exactly as before.
+
 Launched once per review call by `run_harness_review.py` (`--mcp-config`, under `xvfb-run`).
 """
 
@@ -36,12 +43,14 @@ from urllib.parse import urlparse
 import requests
 from mcp.server.mcpserver import MCPServer
 from playwright.async_api import Browser, Error as PlaywrightError, Page, Response, async_playwright
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from pypdf import PdfReader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from review_protocol import BLOCKED_DOMAINS, CHECKPOINT_TITLES, OPEN_PAGE_SERVER, browser_for, page_loaded  # noqa: E402
 
 CHECKPOINT_WAIT_SECONDS = 30
+LOAD_EVENT_WAIT_SECONDS = 15
 NAVIGATION_TIMEOUT_MS = 45_000
 MIN_SECONDS_BETWEEN_OPENS_PER_HOST = 2.0
 MAX_TEXT_CHARS = 40_000
@@ -134,14 +143,14 @@ async def _pdf_download(page: Page, url: str) -> dict:
     if not content_type.startswith("application/pdf"):
         raise ValueError(f"{url} started a download that is not a PDF: {content_type!r}")
     title, text = _pdf_text(await response.body(), url)
-    return {"final_url": response.url, "status": response.status, "title": title, "text": text}
+    return {"final_url": response.url, "status": response.status, "title": title, "text": text, "load_event": True}
 
 
 async def _html(page: Page, url: str) -> dict:
     documents: list[Response] = []
     page.on("response", lambda r: documents.append(r) if (
         r.request.is_navigation_request() and r.frame == page.main_frame) else None)
-    await page.goto(url, wait_until="load", timeout=NAVIGATION_TIMEOUT_MS)
+    await page.goto(url, wait_until="domcontentloaded", timeout=NAVIGATION_TIMEOUT_MS)
     if documents[-1].headers.get("content-type", "").startswith("application/pdf"):
         # A headful browser shows a PDF in its viewer, which has no page text: read the file,
         # fetched in full through the same browser context.
@@ -151,17 +160,24 @@ async def _html(page: Page, url: str) -> dict:
     while any(marker in title for marker in CHECKPOINT_TITLES) and time.monotonic() < deadline:
         await page.wait_for_timeout(1000)
         title = await page.title()
-    await page.wait_for_load_state("load")
-    return {"final_url": page.url, "status": documents[-1].status, "title": title,
-            "text": await page.inner_text("body")}
+    try:
+        await page.wait_for_load_state("load", timeout=LOAD_EVENT_WAIT_SECONDS * 1000)
+        load_event = True
+    except PlaywrightTimeoutError:
+        # Not a failure to read: the page is read as it stands and the result says `load`
+        # never fired, so a page read this way can be counted.
+        load_event = False
+    return {"final_url": page.url, "status": documents[-1].status, "title": await page.title(),
+            "text": await page.inner_text("body"), "load_event": load_event}
 
 
 @server.tool(structured_output=False, description=(
     "Open a web page or PDF in a real browser and return its visible text. Returns JSON: "
     "requested_url, final_url, status (HTTP status of the final document), title (for a PDF, "
     "\"PDF: \" and its title), loaded (true only if status is 200, the page is not a bot "
-    f"checkpoint or wall, and it has text), text (visible text, at most {MAX_TEXT_CHARS} characters) and "
-    "text_truncated. Only a page with loaded: true whose final_url belongs to a citable source may be cited."
+    "checkpoint or wall, and it has text), load_event (whether the page finished loading within "
+    f"{LOAD_EVENT_WAIT_SECONDS} seconds; if not, the text is what had rendered by then), text (visible text, "
+    f"at most {MAX_TEXT_CHARS} characters) and text_truncated. Only a page with loaded: true whose final_url belongs to a citable source may be cited."
 ))
 async def open_page(url: str) -> str:
     host = (urlparse(url).hostname or "").lower()
@@ -186,6 +202,7 @@ async def open_page(url: str) -> str:
         "loaded": page_loaded(opened["status"], opened["title"], opened["text"]),
         "text": opened["text"][:MAX_TEXT_CHARS],
         "text_truncated": len(opened["text"]) > MAX_TEXT_CHARS,
+        "load_event": opened["load_event"],
         "browser": opened["browser"],
         **({"browserbase_session_id": opened["browserbase_session_id"]} if "browserbase_session_id" in opened else {}),
     }, ensure_ascii=False)

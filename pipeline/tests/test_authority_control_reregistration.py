@@ -55,7 +55,7 @@ def opened_page(url: str = OPENED, *, loaded: bool = True, final_url: str | None
     """What `open_page` returns (open_page_server.py) for one page."""
     return {"requested_url": url, "final_url": final_url or url, "status": status or (200 if loaded else 429),
             "title": title or ("Object" if loaded else "Vercel Security Checkpoint"), "loaded": loaded,
-            "text": "Object record" if loaded else "", "text_truncated": False, "browser": "local"}
+            "text": "Object record" if loaded else "", "text_truncated": False, "browser": "local", "load_event": True}
 
 
 def events(answer: dict | str, *, search_url: str = SEARCHED, opens: tuple = (opened_page(),),
@@ -135,7 +135,7 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
     assert record["web_searches"] == ["Abydos"]
     assert record["web_search_results"] == [{"title": "Abydos", "url": SEARCHED}]
     assert record["page_opens"] == [{"url": OPENED, "requested_url": OPENED, "final_url": OPENED,
-                                     "status": 200, "title": "Object", "browser": "local",
+                                     "status": 200, "title": "Object", "browser": "local", "load_event": True,
                                      "reported_loaded": True, "loaded": True}]
     assert record["usage"] == {"output_tokens": 10}
     assert record["notional_cost_usd"] == 0.5
@@ -932,6 +932,23 @@ def test_loaded_is_re_derived_from_the_stored_status_and_title() -> None:
     record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
                                                   "citations": [OPENED, walled]}, opens=opens)}, case, role, schema)
     assert record["failure"] == f"cites a page it did not open: {[walled]}"
+
+
+def test_a_page_read_before_its_load_event_counts_and_says_so() -> None:
+    # The iDAI gazetteer's place pages never fire `load` (an analytics script never arrives);
+    # open_page_server.py reads them as rendered and reports load_event false.
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    place = "https://gazetteer.dainst.org/place/2042907"
+    shown = "https://gazetteer.dainst.org/app/#!/show/2042907"
+    opens = (opened_page(), {**opened_page(place, final_url=shown, title="Saqqāra | iDAI.gazetteer"),
+                             "load_event": False})
+    record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+                                                  "citations": [OPENED, place]}, opens=opens)},
+                               case, role, protocol.role_inputs(role)["schema"])
+    assert [(o["final_url"], o["load_event"], o["loaded"]) for o in record["page_opens"]] == [
+        (OPENED, True, True), (shown, False, True)]
+    assert record["decision"]["citations"] == [OPENED, place]
 
 
 def test_a_redirect_to_a_blocked_domain_fails_the_call() -> None:

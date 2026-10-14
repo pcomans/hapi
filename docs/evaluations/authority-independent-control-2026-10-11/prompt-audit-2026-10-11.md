@@ -221,10 +221,10 @@ wording on final URLs).
 |---|---|---|---|
 | 17 | v7 | **PASS** (no P0/P1/P2) | none (P3: noted that the v5 files include the round-15 post-audit wording) |
 
-## Audited prompt bytes
+## v7 audited bytes (the v7 run, superseded)
 
-The v7 prompts (`*-v6.txt`), system prompt, citable-source list and browser tool (whose
-description is model input) that run, by SHA-256 (a test checks these against the files).
+The files of the v7 run, superseded because its browser tool timed out on every iDAI
+gazetteer place page, by SHA-256.
 
 | File | SHA-256 |
 |---|---|
@@ -235,3 +235,31 @@ description is model input) that run, by SHA-256 (a test checks these against th
 | `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
 | `citable-sources.json` | `62e59f2b1f5574bf6f1c88aeda117f7719044cf2686e359f5aa64ca97c8fd0cd` |
 | `open_page_server.py` | `7bb3c9c888375d694d581bf95220e8f9369eda9d2e140d9fb70504cd06fd7643` |
+
+## Round 18: v8, pages whose `load` event never fires (2026-10-14)
+
+In the v7 run every open of an iDAI gazetteer place page (the record each Stage 2 case asks
+about) timed out: `open_page` waited for the `load` event, which an analytics script on those
+pages (piwik.dainst.org) keeps from ever firing, although the record renders within seconds.
+`open_page` now waits for `domcontentloaded`, then up to 15 seconds for `load`, and reports
+`load_event`. Its tool description gained one clause about `load_event`; the prompts, system
+prompt and citable-source list are unchanged.
+
+| Round | State | Verdict | Findings acted on |
+|---|---|---|---|
+| 18 | v8 | **PASS** (no P0/P1/P2) | none (P3: tool errors echo the host and URL, as in v7) |
+
+## Audited prompt bytes
+
+The v8 prompts (`*-v6.txt`), system prompt, citable-source list and browser tool (whose
+description is model input) that run, by SHA-256 (a test checks these against the files).
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v6.txt` | `e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f` |
+| `stage-1-reconciler-v6.txt` | `8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e` |
+| `stage-2-reviewer-v6.txt` | `98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4` |
+| `stage-2-reconciler-v6.txt` | `d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `62e59f2b1f5574bf6f1c88aeda117f7719044cf2686e359f5aa64ca97c8fd0cd` |
+| `open_page_server.py` | `c6665190c0ea78de7f755d37d5f8d33354c0880ee30aa3b4579a921f09c9d6ff` |
