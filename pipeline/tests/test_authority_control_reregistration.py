@@ -868,7 +868,7 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
     score = json.loads((results / "real-adjudicated-score.json").read_text())
-    assert gate["schema_version"] == "hapi-337-page-load-gate/9"
+    assert gate["schema_version"] == "hapi-337-page-load-gate/10"
     assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
     assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
     assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
@@ -886,7 +886,9 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
         "site/authority_only_transition": -0.29, "site/retained_control": 0.08,
     }
     assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
-    assert [stages[s]["local_host_opens_in_any_stored_call"] for s in "12"] == [[], []]
+    scans = [stages[s]["local_host_opens_in_any_stored_call"] for s in "12"]
+    assert [scan["local"] for scan in scans] == [[], []]
+    assert [scan["urls_scanned"] for scan in scans] == [1850, 1218]
     # The v7 failure: the target records Stage 2 judges must load.
     assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 112, "opened": 112}
     # The scorer recomputes the gate from the same records and refuses to score a failed one;
@@ -1165,7 +1167,21 @@ def test_the_gate_lists_every_open_of_a_local_host(tmp_path: Path) -> None:
     inward = opened_page("https://w.example.org/a", final_url="http://169.254.169.254/latest/meta-data")
     write_attempt(tmp_path / "reviewer-A", "stage_1_reviewer", case, 1,
                   review_answer(case, "same_entity", "useful"), opens=(opened_page(), inward))
-    assert load_gate.local_host_opens(tmp_path) == ["http://169.254.169.254/latest/meta-data"]
+    assert load_gate.local_host_opens(tmp_path) == {
+        "urls_scanned": 4, "local": ["http://169.254.169.254/latest/meta-data"]}
+    # Claude Code stores an MCP result as a list of text parts; the scan reads that form too,
+    # and a URL open_page refuses (no scheme) is never requested, so not counted.
+    path = tmp_path / "reviewer-A" / "review-unit-001.attempt-1.json"
+    stored = json.loads(path.read_text())
+    for event in stored["events"]:
+        for block in (event.get("message") or {}).get("content") or []:
+            if block.get("type") == "tool_result" and block.get("tool_use_id", "").startswith("o"):
+                block["content"] = [{"type": "text", "text": block["content"]}]
+            if block.get("type") == "tool_use" and block.get("input", {}).get("url") == "https://w.example.org/a":
+                block["input"]["url"] = "w.example.org/a"
+    path.write_text(json.dumps(stored))
+    assert load_gate.local_host_opens(tmp_path) == {
+        "urls_scanned": 3, "local": ["http://169.254.169.254/latest/meta-data"]}
 
 
 def test_insufficient_evidence_without_trying_a_citable_page_is_unresearched() -> None:
@@ -1260,8 +1276,9 @@ def test_a_reconciler_resolution_citing_nothing_without_trying_a_citable_page_is
 
 
 def test_local_host_shorthands_count_as_local() -> None:
-    assert [load_gate.is_local_host(h) for h in ("127.1", "localhost.", "10.1", "metmuseum.org.")] == [
-        True, True, True, False]
+    assert [load_gate.is_local_host(h) for h in (
+        "127.1", "0x7f.1", "localhost.", "10.1", "100.64.0.1", "metmuseum.org.", "1.2.3.4.5.org")] == [
+        True, True, True, True, True, False, False]
 
 
 def test_the_committed_rerun_proof_binds_the_scored_digest_and_population() -> None:

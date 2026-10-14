@@ -44,7 +44,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from review_protocol import (
-    OPEN_PAGE_TOOL, REVIEWERS, requestable, ROLES, ProtocolFailure, citable_source_of, decided_record, read_json, role_inputs, sha256_path,
+    OPEN_PAGE_TOOL, _open_page_result, REVIEWERS, requestable, ROLES, ProtocolFailure, citable_source_of, decided_record, read_json, role_inputs, sha256_path,
     validate, write_atomic,
 )
 
@@ -73,51 +73,52 @@ def _rate(counts: dict) -> float:
 
 
 def is_local_host(host: str) -> bool:
-    """A loopback, link-local, private or reserved address, or a name only a local network
-    resolves (`localhost`, `*.local`, `*.internal`, a single label)."""
+    """A loopback, link-local, private, shared (CGNAT) or otherwise non-global address, in any
+    form Chromium accepts (`127.1`, `0x7f.1`), or a name only a local network resolves
+    (`localhost`, `*.local`, `*.internal`, a single label)."""
     host = host.lower().strip("[]").rstrip(".")
     try:
         address = ipaddress.ip_address(host)
     except ValueError:
-        if host.replace(".", "").isdigit():
-            # A shorthand IPv4 literal Chromium also accepts (`127.1` is 127.0.0.1).
+        try:
             address = ipaddress.ip_address(socket.inet_aton(host))
-        else:
+        except OSError:  # not an IPv4 literal in any form: a name
             return host == "localhost" or host.endswith((".localhost", ".local", ".internal")) or "." not in host
-    return address.is_loopback or address.is_link_local or address.is_private or address.is_reserved
+    return not address.is_global
 
 
 def open_page_urls(events: list) -> list[str]:
     """Every URL an `open_page` call in this event stream asked for, and every final URL one
-    returned, read from the events themselves (so a call that failed validation counts too)."""
-    urls = []
+    returned, matched to the call by its tool-use id (an error result names no final URL)."""
+    calls, urls = {}, []
     for event in events:
         for block in (event.get("message") or {}).get("content") or []:
-            if not isinstance(block, dict):
-                continue
             if block.get("type") == "tool_use" and block.get("name") == OPEN_PAGE_TOOL:
+                calls[block["id"]] = block
                 urls.append(block["input"]["url"])
-            if block.get("type") == "tool_result" and not block.get("is_error"):
-                text = block.get("content")
-                if isinstance(text, list):
-                    text = "".join(part.get("text", "") for part in text if isinstance(part, dict))
-                if isinstance(text, str) and text.startswith("{") and '"final_url"' in text:
-                    urls.append(json.loads(text)["final_url"])
+            elif block.get("type") == "tool_result" and block.get("tool_use_id") in calls:
+                opened = _open_page_result(block)
+                if "error" not in opened:
+                    urls.append(opened["final_url"])
     return urls
 
 
-def local_host_opens(records: Path) -> list[str]:
-    """Every URL `open_page` was asked for or ended on, in every stored call of the stage
-    (reviewers and reconciler, deciding or not), whose host is local (#358, item 7). A stored
-    attempt without an event stream made no call and is skipped by name, not by default."""
-    found = set()
+def local_host_opens(records: Path) -> dict:
+    """The URLs `open_page` was asked for or ended on, in every stored call of the stage
+    (reviewers and reconciler, deciding or not), and those whose host is local (#358, item 7).
+    A stored attempt without an event stream made no call and is skipped by name; a URL
+    `open_page` refuses outright is never requested and not counted."""
+    scanned, found = 0, set()
     for path in sorted(records.glob("*/*.attempt-*.json")):
         stored = read_json(path)
         if "events" not in stored:
             continue
-        found.update(url for url in open_page_urls(stored["events"])
-                     if is_local_host(urlparse(url).hostname or ""))
-    return sorted(found)
+        for url in open_page_urls(stored["events"]):
+            if requestable(url):
+                scanned += 1
+                if is_local_host(urlparse(url).hostname or ""):
+                    found.add(url)
+    return {"urls_scanned": scanned, "local": sorted(found)}
 
 
 def deviations(by_class: dict) -> dict:
@@ -246,7 +247,7 @@ def gate(stage_1: tuple[Path, Path], stage_2: tuple[Path, Path], answer_key_path
         "2": stage_gate("2", *stage_2, stage_2_classes),
     }
     value = {
-        "schema_version": "hapi-337-page-load-gate/9",
+        "schema_version": "hapi-337-page-load-gate/10",
         "inputs": {
             "stage_1_queue_sha256": sha256_path(stage_1[0]),
             "stage_2_queue_sha256": sha256_path(stage_2[0]),

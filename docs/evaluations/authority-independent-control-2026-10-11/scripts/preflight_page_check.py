@@ -69,7 +69,7 @@ async def check(urls: list[str]) -> list[dict]:
                 try:
                     opened = json.loads(await open_page_server.open_page(url))
                 except Exception as err:  # recorded per page: this check reports failures
-                    rows.append({"url": url, "host": host, "error": f"{type(err).__name__}: {str(err).splitlines()[0]}"})
+                    rows.append({"url": url, "host": host, "error": f"{type(err).__name__}: {(str(err).splitlines() or [''])[0]}"})
                     continue
                 rows.append({"url": url, "host": host, **{k: opened.get(k) for k in (
                     "final_url", "status", "title", "loaded", "load_event", "browser", "local_failure")}})

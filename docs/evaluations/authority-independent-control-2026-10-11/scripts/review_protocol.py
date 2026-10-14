@@ -265,11 +265,12 @@ def _page(url: str | None) -> tuple[str, str, str, str]:
 
 
 def requestable(url: object) -> bool:
-    """Whether `open_page` would request this URL at all (it refuses any other scheme)."""
+    """Whether the URL has a scheme `open_page` requests (it refuses any other; it also refuses
+    an http(s) URL with no host, which no citable source matches either)."""
     return isinstance(url, str) and url.startswith(("https://", "http://"))
 
 
-def opened_pages(record: dict) -> set[tuple[str, str, str]]:
+def opened_pages(record: dict) -> set[tuple[str, str, str, str]]:
     """The pages a validated record shows the call read: every `open_page` result that loaded,
     under the URL it requested and the URL it ended on. A citation of the requested URL of a
     redirect is checkable: following it reaches the page the call read (in the v4 run,

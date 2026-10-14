@@ -410,10 +410,12 @@ so it stays.
   a loopback, link-local or private-network URL the model gives it (it blocks only listed
   domains), so a page or search result could point it at a service on the review host. No
   stored v10 call, reviewer or reconciler, deciding or not, asked `open_page` for or ended on
-  a loopback, link-local, private or internal host (the gate result's
-  `local_host_opens_in_any_stored_call`, empty in both stages). Not recorded, and so not
-  checked: the requests a loaded page makes itself, and a public name resolving to a private
-  address. (8) A call is bound to the runner's and browser tool's source, not to the
+  a loopback, link-local, private or other non-global host (the gate result's
+  `local_host_opens_in_any_stored_call`: 1,850 Stage 1 and 1,218 Stage 2 requested and final
+  URLs read from the calls' events, none local). Not recorded, and so not checked: the
+  requests a loaded page makes itself, a public name resolving to a private address, and a
+  redirect onto a local host whose navigation then failed (the error names only the
+  requested URL). (8) A call is bound to the runner's and browser tool's source, not to the
   dependencies that ran them (`runtime/uv.lock`, the Chromium build). The served model and the
   Claude Code release are checked per call from its stored init event (`claude-sonnet-5-5`,
   2.1.299; all 350 v10 calls). No call records the lock: the lock in force at run time is

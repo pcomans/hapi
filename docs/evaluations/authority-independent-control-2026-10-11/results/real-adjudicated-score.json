@@ -413,7 +413,7 @@
   "evaluation_date": "2026-10-11",
   "input_hashes": {
     "private_answer_key": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "review_population_digest": "5f69004991da10f085895f0ca1f5a7d8ef5276a6cf5c3124b4366b0df095c6e7",
+    "review_population_digest": "bb49762ff0b6033a1c07213a57a489eb4942cc14469e5b03c1d497f6c08f2283",
     "stage_1_consensus": "368cee1906a4250bf73c1909a2a4886ff62136b09c410f44ce9b4d3715e87c42",
     "stage_1_queue": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_consensus": "e96ae0032a7e68d943b3f22e84662df61d1039882e57a284c8547a1645dddd24",
@@ -422,7 +422,7 @@
   },
   "page_load_gate": {
     "passed": true,
-    "sha256": "706b46fe6d92939ea67a88d69207ac832b3be5d6ad4da64c2dc2e2f48d186049"
+    "sha256": "86ea79aea7d42aa24913b041fc4b1089ac18ff97667f65901c977dbb1b33e892"
   },
   "primary_decision_counts": {
     "a_authority_only_same_useful_exact_target": 13,
@@ -432,7 +432,7 @@
     "e_literal_only_false_or_not_useful_removal": 16,
     "f_transition_uncertainty": 2
   },
-  "private_join_sha256": "f8d7a3657f27c897391fd85a894b3b808697021a53fb4348b460005030845a8e",
+  "private_join_sha256": "4885546bd49558671867e67e10a0437853b9d45246482aee9b3bd343f612f5e0",
   "review_status": "COMPLETE_TRACEABLE",
   "schema_version": "hapi-authority-control-adjudicated-score/3",
   "scorer_sha256": "f87e7beebf9927ef2e46027c7df2b46a118c64fde7dc37c176d1028084f17b57"

@@ -6,7 +6,7 @@
  },
  "max_class_deviation_percentage_points": 5,
  "passed": true,
- "schema_version": "hapi-337-page-load-gate/9",
+ "schema_version": "hapi-337-page-load-gate/10",
  "stages": {
   "1": {
    "all_opens": {
@@ -168,7 +168,10 @@
    "loaded_without_load_event_by_host": {
     "metmuseum.org": 4
    },
-   "local_host_opens_in_any_stored_call": [],
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 1850
+   },
    "not_loaded_opens_by_host": {
     "egyptartefacts.griffith.ox.ac.uk": 8,
     "ifao.egnet.net": 1,
@@ -371,7 +374,10 @@
     "gazetteer.dainst.org": 110,
     "metmuseum.org": 1
    },
-   "local_host_opens_in_any_stored_call": [],
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 1218
+   },
    "not_loaded_opens_by_host": {
     "metmuseum.org": 1,
     "pcma.uw.edu.pl": 2,
