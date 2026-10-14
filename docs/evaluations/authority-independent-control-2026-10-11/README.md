@@ -333,7 +333,9 @@ per-case pattern.
    points), and a call whose process exited unsuccessfully, or whose stream does not end in a
    successful result, decides nothing (all 350 v10 calls exited 0 with a successful result).
    And then: an answer that cites nothing without having tried to open a citable page is
-   rejected as unresearched (every v10 call tried at least one), and the scorer accepts only the
+   rejected as unresearched (a URL `open_page` refuses, not http(s), is no attempt, and the
+   gate does not count one; every v10 call tried at least one, and no v10 answer cites
+   nothing), and the scorer accepts only the
    committed population digest, not one supplied beside the queues.
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer

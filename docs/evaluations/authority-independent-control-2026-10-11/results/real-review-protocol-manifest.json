@@ -21,7 +21,7 @@
     },
     "page_load_gate": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
-      "sha256": "c57d99c754c3ba6bec8f388d73fecedf6984dc3fbfa243e0968a02c55c2e4713"
+      "sha256": "cf1e6853b0d768f61f6b070a3075a16cbfedbc96ea7137552b35952d7aafa5ff"
     },
     "prompts": {
       "stage_1_reconciler": {

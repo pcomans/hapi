@@ -151,7 +151,9 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
                     by_browser[opened["browser"]]["opened"] += 1
                     by_browser[opened["browser"]]["loaded"] += opened["loaded"]
                 museum = museum_of(opened["url"])
-                source = citable_source_of(opened["url"])
+                # A URL open_page refuses outright (not http(s)) was never a source request.
+                requestable = isinstance(opened["url"], str) and opened["url"].startswith(("https://", "http://"))
+                source = citable_source_of(opened["url"]) if requestable else None
                 citable = source is not None
                 # A citable page counts as loaded only if the page it ended on is citable too,
                 # as for a citation (a redirect off the list is not an available source).

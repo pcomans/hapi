@@ -1199,3 +1199,19 @@ def test_a_call_made_by_another_claude_code_release_is_refused() -> None:
     stream = events(review_answer(case, "same_entity", "useful"), claude_code_version="2.1.300")
     record = protocol.validate({"events": stream}, case, role, protocol.role_inputs(role)["schema"])
     assert record["failure"] == "Claude Code '2.1.300', not '2.1.299'"
+
+
+def test_the_page_load_gate_does_not_count_a_url_open_page_refuses(tmp_path: Path) -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    queue_path = tmp_path / "stage-1-queue.json"
+    queue_path.write_text(json.dumps({"cases": [case]}))
+    records = tmp_path / "stage-1"
+    refused = opened_page("ftp://www.metmuseum.org/art/collection/search/1", loaded=False)
+    for label in "AB":
+        write_attempt(records / f"reviewer-{label}", "stage_1_reviewer", case, 1,
+                      review_answer(case, "same_entity", "useful"), opens=(opened_page(), refused))
+    result = load_gate.stage_gate("1", queue_path, records, {"review-unit-001": {"authority_only_transition"}})
+    assert result["citable_opens_by_transition_class"] == {
+        "site/authority_only_transition": {"loaded": 2, "opened": 2}}
+    assert result["opens_by_citation_role"] == {
+        "case_input": {"loaded": 2, "opened": 2}, "not_citable": {"loaded": 0, "opened": 2}}
