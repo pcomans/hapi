@@ -332,6 +332,9 @@ per-case pattern.
    redirected off the list; the Stage 2 site gaps moved from 0.38 and −0.11 to −0.29 and 0.08
    points), and a call whose process exited unsuccessfully, or whose stream does not end in a
    successful result, decides nothing (all 350 v10 calls exited 0 with a successful result).
+   And then: an answer that cites nothing without having opened any page is rejected as
+   unresearched (every v10 call opened at least one page), and the scorer accepts only the
+   committed population digest, not one supplied beside the queues.
 
 The population digest was rebuilt for these files: the Stage 1 queue and the private answer
 key are byte-identical to the ones the Stage 1 reviewers ran on; the Stage 2 custodian
@@ -404,7 +407,10 @@ so it stays.
   a loopback, link-local, private or internal host (the gate result's
   `local_host_opens_in_any_stored_call`, empty in both stages). Not recorded, and so not
   checked: the requests a loaded page makes itself, and a public name resolving to a private
-  address.
+  address. (8) A call is bound to the runner's and browser tool's source, not to the runtime
+  that ran them (`runtime/uv.lock`, the Claude Code and Chromium versions). For v10: all 350
+  stored calls record Claude Code 2.1.299 and served model `claude-sonnet-5-5` in their init
+  events, and `runtime/uv.lock` (pinned by a test) last changed on 2026-10-13, before the run.
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline

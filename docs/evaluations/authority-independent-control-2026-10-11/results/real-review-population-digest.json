@@ -155,19 +155,19 @@
       },
       "scorer": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-        "sha256": "2f51c33f0a20c2ff6bf6e445a9424b31d509e317322fcad5120456fce1a4b929"
+        "sha256": "b875fd507e6064a5472df1e8482f0ed71785ebab5a26dc53049430a5c2e484e1"
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-        "sha256": "50b551f27fc47cd230e7f1b5a5924199790d5c6186141148c794095f51ce7b9d"
+        "sha256": "96c697efefde1d00b67bd73a1ccff7284f1a6b5ca202191746bb8dd22317bba1"
       }
     },
     "run_manifest_sha256": "a4c9e2ec031e8059bb738a3b8497a94e699e0faab196d886759e1745d0ca60be"
   },
   "output_hashes": {
     "private_answer_key_sha256": "838d88a697cf6b43fc149a9649ff6b8e65e0e005f7b834d0b78d35b211afa220",
-    "private_population_manifest_sha256": "0fcbca6701d604ea7a04251688532597e94fab8facb71147cb203923c7f8f7b0",
-    "review_protocol_manifest_sha256": "616dd8207014590d4b5f2b573e59f091b112b776f8cb1777e146ef6443c3f698",
+    "private_population_manifest_sha256": "e1842c5c519fc94ac5540406f0148f3a76537d1950a42de48767f4e534b8662f",
+    "review_protocol_manifest_sha256": "f1d6be03f6400ce939503bd6f86ac4098569b99775204fdbb79a4ed0178bc699",
     "stage_1_queue_sha256": "a4d15cf7dad64965f9ad036287bc33b94a585782f6bec6045c404bfcd4b35b20",
     "stage_2_custodian_sha256": "28b82813cf395af4b4394af0e1503431d87486d9fe2bcc68d71a1531eaf77dda"
   },
@@ -202,7 +202,7 @@
     "total": 98
   },
   "review": {
-    "protocol_manifest_sha256": "616dd8207014590d4b5f2b573e59f091b112b776f8cb1777e146ef6443c3f698"
+    "protocol_manifest_sha256": "f1d6be03f6400ce939503bd6f86ac4098569b99775204fdbb79a4ed0178bc699"
   },
   "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
 }

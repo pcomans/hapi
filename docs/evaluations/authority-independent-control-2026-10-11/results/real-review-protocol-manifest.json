@@ -66,11 +66,11 @@
     },
     "scorer": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/score_review.py",
-      "sha256": "2f51c33f0a20c2ff6bf6e445a9424b31d509e317322fcad5120456fce1a4b929"
+      "sha256": "b875fd507e6064a5472df1e8482f0ed71785ebab5a26dc53049430a5c2e484e1"
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/review_protocol.py",
-      "sha256": "50b551f27fc47cd230e7f1b5a5924199790d5c6186141148c794095f51ce7b9d"
+      "sha256": "96c697efefde1d00b67bd73a1ccff7284f1a6b5ca202191746bb8dd22317bba1"
     }
   },
   "queue_inputs": {

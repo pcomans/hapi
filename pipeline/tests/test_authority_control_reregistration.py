@@ -1164,3 +1164,20 @@ def test_the_gate_lists_every_open_of_a_local_host(tmp_path: Path) -> None:
     write_attempt(tmp_path / "reviewer-A", "stage_1_reviewer", case, 1,
                   review_answer(case, "same_entity", "useful"), opens=(opened_page(), inward))
     assert load_gate.local_host_opens(tmp_path) == ["http://169.254.169.254/latest/meta-data"]
+
+
+def test_insufficient_evidence_without_opening_a_page_is_unresearched() -> None:
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
+    record = protocol.validate({"events": events(unsure, opens=())}, case, role, protocol.role_inputs(role)["schema"])
+    assert record["failure"] == "invalid decision: cites nothing without having opened a page"
+
+
+def test_the_scorer_accepts_only_the_committed_population_digest(tmp_path: Path) -> None:
+    committed = EVALUATION / "results" / "real-review-population-digest.json"
+    scorer.require_committed_digest(ROOT, committed)
+    made = tmp_path / "digest.json"
+    made.write_text(json.dumps({**json.loads(committed.read_text()), "made_beside_the_queues": True}))
+    with pytest.raises(ValueError, match="population digest is not the committed"):
+        scorer.require_committed_digest(ROOT, made)

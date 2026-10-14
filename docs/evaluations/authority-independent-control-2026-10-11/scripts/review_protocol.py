@@ -443,6 +443,11 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     if any(not citations for citations in citation_lists) and citable_loaded:
         record["failure"] = "invalid decision: cites nothing although a citable page it opened loaded"
         return record
+    # ... and only after trying: an answer that cites nothing without opening any page is
+    # unresearched, not a finding that the evidence is insufficient.
+    if any(not citations for citations in citation_lists) and not record["page_opens"]:
+        record["failure"] = "invalid decision: cites nothing without having opened a page"
+        return record
     record["decision"] = decision
     return record
 

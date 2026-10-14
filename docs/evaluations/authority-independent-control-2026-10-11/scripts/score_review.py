@@ -454,6 +454,16 @@ def verify_protocol_bindings(repo_root: Path, digest: dict) -> None:
             raise ValueError(f"population digest review-protocol binding changed: {binding['path']}")
 
 
+COMMITTED_DIGEST = "docs/evaluations/authority-independent-control-2026-10-11/results/real-review-population-digest.json"
+
+
+def require_committed_digest(repo_root: Path, population_digest_path: Path) -> None:
+    """The population digest must be this registration's committed one (rebuilt twice from the
+    frozen run and corpus, `results/real-rerun-proof.json`), not one made beside the queues."""
+    if sha256_path(population_digest_path) != sha256_path(repo_root / COMMITTED_DIGEST):
+        raise ValueError(f"population digest is not the committed {COMMITTED_DIGEST}")
+
+
 def require_page_load_gate(page_load: dict) -> None:
     """A run whose citable pages loaded unequally across classes is not scored."""
     if not page_load["passed"]:
@@ -469,6 +479,7 @@ def score(
     private_out: Path, public_out: Path,
 ) -> dict:
     protocol = load_protocol(repo_root)
+    require_committed_digest(repo_root, population_digest_path)
     digest = read_json(population_digest_path)
     verify_protocol_bindings(repo_root, digest)
     builder = repo_root / "docs/evaluations/authority-independent-control-2026-10-11/scripts/build_review_queue.py"
