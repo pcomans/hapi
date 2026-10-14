@@ -100,7 +100,11 @@ no `open_page` call failed. In the deciding calls, Browserbase served 13 Stage 1
 browser failed (4 museum record pages that timed out locally, all loaded; an IFAO page and an
 MFA Boston page that failed in both). The gate result counts these retries by class and host. All calls ran through
 Claude Code (Claude Sonnet 5.5) on the subscription; the records are private
-(`dropbox/hapi-337-review-v10-2026-10-14/`), bound by the hashes in the score.
+(`dropbox/hapi-337-review-v10-2026-10-14/`), bound by the hashes in the score and in
+`results/real-review-records.json`. They are private for the reason the corpus outputs are
+(2026-09-13 README): they carry the museums' record text verbatim, from a corpus archive with
+museum-specific redistribution terms. The answer key is private so no reviewer can see a
+case's class.
 
 **Superseded runs** (all on the same frozen population: the 108 Stage 1 units and the private
 answer key are byte-identical in every run). Each was stopped or superseded for a defect in
@@ -354,6 +358,13 @@ so it stays.
 
 ## Known limitations (disclosed)
 
+- **One citation list for both Stage 1 questions.** The Stage 1 reviewer schema
+  (`stage-1-reviewer-case-v3`) takes one `citations` list for `same_entity` and
+  `useful_granularity`, required unless both are `insufficient_evidence`, so a call does not
+  show which page supports which judgment, and one question can be answered on a page cited
+  for the other. Reconciler resolutions already cite per question. Per-question citations are
+  left to the next registration (#358, item 11): the schema is part of every stored call's
+  input, so changing it voids the v10 calls.
 - **Thinking summaries.** Calls run with `--thinking-display summarized`, so a call's
   thinking is stored as Claude Code's summary of it. 348 of the 350 deciding records of the v10
   run carry one; the other 2 have no thinking block at all (the model answered without
@@ -405,7 +416,7 @@ so it stays.
 - **Released ruler targets omit builder internals.** Claim-statement IDs and a label count
   are dropped from a target's metadata at release (`UNRELEASED_TARGET_METADATA`); they are no
   evidence a reviewer can check.
-- **`open_page` defects found after the v10 run**, fixed only in the next registration (#358;
+- **`open_page` and runner defects found after the v10 run**, fixed only in the next registration (#358;
   the stored calls are bound to the browser tool's hash, so changing it voids them). None changed
   a v10 call: no v10 `open_page` call failed, every Browserbase re-read that failed returned
   a page record, and no call opened a local host (7). (1) When the Browserbase re-read itself raises, the error drops the
@@ -431,7 +442,10 @@ so it stays.
   session is neither recorded nor pinned. (9) The rule that a call whose process exited
   unsuccessfully decides nothing is checked when stored calls are read (`decided_record`), but
   the runner, hash-bound, accepts a call through `validate` alone; in a later run such a call
-  would be stored as decided and then stop the run at consensus, loudly.
+  would be stored as decided and then stop the run at consensus, loudly. (10)
+  `open_page_server.py`'s blocked-domain check keeps a trailing dot, so it would open
+  `www.wikidata.org.`; the validator strips the dot, so such a call fails and is retried. No
+  stored v10 URL has a trailing-dot host (#358, item 12).
 - **A different-entity pair cannot be labelled b** (case-067 above). The classifier fix belongs
   to the next registration (#358).
 - This measures the current resolver's potential on the frozen ledger, not deployed pipeline
