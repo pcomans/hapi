@@ -209,9 +209,14 @@ def test_ruler_ambiguity_results_are_pinned_to_the_committed_graph_and_script():
     assert results["inputs"]["script_sha256"] == _sha256(
         EVAL / "scripts" / "measure_ruler_ambiguity.py"
     )
-    assert results["inputs"]["resolver_sha256"] == _sha256(
-        REPO_ROOT / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
-    )
+    # The resolver as it was when these results were measured; it has changed since (it reads
+    # its own repository, not a fixed checkout path).
+    resolver_342 = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "show",
+         f"{GRAPH_342_COMMIT}:docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"],
+        check=True, capture_output=True,
+    ).stdout
+    assert results["inputs"]["resolver_sha256"] == hashlib.sha256(resolver_342).hexdigest()
     assert results["inputs"]["control_sha256"] == _sha256(
         REPO_ROOT / "docs/evaluations/authority-independent-control-2026-09-13/scripts/compare_arms.py"
     )

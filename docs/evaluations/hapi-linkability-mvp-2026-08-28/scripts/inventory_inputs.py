@@ -13,7 +13,11 @@ import subprocess
 from pathlib import Path
 
 
-ROOT = Path(os.environ.get("HAPI_ROOT", "/workspaces/content"))
+# The repository this script is in: never another checkout, whose claim graph or sources may
+# be stale. HAPI_ROOT, which callers still pass, must name this same repository.
+ROOT = Path(__file__).resolve().parents[4]
+if "HAPI_ROOT" in os.environ and Path(os.environ["HAPI_ROOT"]).resolve() != ROOT:
+    raise RuntimeError(f"HAPI_ROOT {os.environ['HAPI_ROOT']} is not the repository this script is in ({ROOT})")
 CORPUS = Path(os.environ.get("HAPI_CORPUS", "/tmp/hapi-corpus-2026-08-27"))
 OUT = Path(os.environ.get("HAPI_EVAL_OUT", "/tmp/hapi-linkability-mvp"))
 AUTH = ROOT / "pipeline" / "pipeline" / "authority"
