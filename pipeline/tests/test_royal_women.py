@@ -185,6 +185,8 @@ def test_a_woman_is_never_chosen_against_the_records_dynasty(index) -> None:
     # Nefertiti is Dynasty 18: a Dynasty 22 record's "Queen Nefertiti" is another woman, whom
     # the transcribed chapters do not hold (D&H has no Dynasty 22 onward).
     assert resolve(index, "Nefertiti", dynasty=22) == ("unmatched", [], "record_dynasty_contradicts")
+    # An unknown dynasty is not a contradiction (pharaoh.se gives Cleopatra VII none).
+    assert resolve(index, "Cleopatra VII", dynasty=33) == ("resolved", ["king:cleopatra-vii-p"], None)
 
 
 def test_the_normalized_path_finds_a_spelling_variant(index) -> None:

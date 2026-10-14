@@ -28,8 +28,9 @@ The rule, which is deterministic and fixed here:
        the record's dynasty, when the record gives exactly one.
   Otherwise the mention stays ambiguous.
 * A woman is never chosen against the record's own single dynasty: D&H covers some dynasties
-  only (none of 4–10, 14–17 or 22 onward), so a lone name match from another dynasty is
-  another woman, and the mention stays unmatched.
+  only (none of 4–10, 14–17 or 22 onward), so a lone name match of another known dynasty is
+  another woman, and the mention stays unmatched. A candidate whose dynasty the authority
+  does not give is not contradicted.
 * D&H keys a row by (dh_id, sub_period). Every female dh_id under more than one sub_period
   is classified in `same-woman-across-sub-periods.json` as one woman or several; an
   unclassified one raises.
@@ -279,7 +280,7 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
                 chosen, rule = dynasty[0], "dynasty"
     if chosen is None:
         return {**base, "status": "ambiguous" if candidates else "unmatched", "target_ids": candidates}
-    if record_dynasty is not None and record_dynasty not in index.dynasties[chosen]:
+    if record_dynasty is not None and index.dynasties[chosen] and record_dynasty not in index.dynasties[chosen]:
         return {**base, "status": "unmatched", "target_ids": [], "context_rule": "record_dynasty_contradicts"}
     # A D&H woman who later reigned resolves to the king.
     return {**base, "status": "resolved", "target_ids": [index.king_ids.get(chosen, chosen)], "context_rule": rule,
