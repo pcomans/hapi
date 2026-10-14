@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import io
 import json
+import shutil
+import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 import pytest
@@ -755,6 +759,25 @@ def _write_run(run: Path, manifest: dict, extraction: dict) -> None:
     (run / "run-manifest.json").write_text(json.dumps(manifest))
 
 
+@pytest.fixture(scope="module")
+def frozen_inputs_root(tmp_path_factory) -> Path:
+    """The tree #337's population is built in: the resolver inputs as frozen at
+    `compare_arms.BASE_COMMIT` (`CURRENT_INPUTS`, which a later main has changed: the claim
+    graph, by #357) and the current #337 scripts, whose hashes the run manifest and the
+    population digest bind. This is how the README says to rebuild the population."""
+    comparison = queue_builder.load_comparison_module(ROOT)
+    dest = tmp_path_factory.mktemp("frozen-inputs")
+    archive = subprocess.run(
+        ["git", "-C", str(ROOT), "archive", comparison.BASE_COMMIT, *sorted(comparison.CURRENT_INPUTS)],
+        check=True, capture_output=True,
+    ).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+        tar.extractall(dest, filter="data")
+    shutil.copytree(SCRIPTS, dest / SCRIPTS.relative_to(ROOT))
+    comparison.verify_current_inputs(dest)  # the frozen bytes, checked for real
+    return dest
+
+
 def _frozen_run(run: Path) -> tuple[dict, dict]:
     """A minimal run directory whose manifests carry the frozen provenance."""
     import gzip
@@ -812,23 +835,37 @@ def _frozen_run(run: Path) -> tuple[dict, dict]:
     (lambda m, e: m["inputs"]["mention_ledger"].update(rows=2), "run manifest ledger is not the extraction manifest's ledger"),
     (lambda m, e: m["outputs_sha256"].pop("current-authority-links.ndjson.gz"), "run manifest binds outputs"),
 ])
-def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(tmp_path: Path, mutate, failure) -> None:
+def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(
+        tmp_path: Path, mutate, failure, frozen_inputs_root) -> None:
     run = tmp_path / "run"
     manifest, extraction = _frozen_run(run)
-    accepted, report = queue_builder.validate_run(ROOT, run)
+    accepted, report = queue_builder.validate_run(frozen_inputs_root, run)
     assert (accepted["base_commit"], report) == (manifest["base_commit"], {})
     mutate(manifest, extraction)
     _write_run(run, manifest, extraction)
     with pytest.raises(ValueError, match=failure):
-        queue_builder.validate_run(ROOT, run)
+        queue_builder.validate_run(frozen_inputs_root, run)
 
 
-def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(tmp_path: Path) -> None:
+def test_review_population_refuses_a_tree_whose_resolver_inputs_are_not_the_frozen_ones(
+        tmp_path: Path, frozen_inputs_root) -> None:
+    # The live claim graph, changed by #357 after #337 froze its inputs.
+    tampered = tmp_path / "tree"
+    shutil.copytree(frozen_inputs_root, tampered)
+    shutil.copyfile(ROOT / "web-claimgraph/data/claim-graph.json", tampered / "web-claimgraph/data/claim-graph.json")
+    run = tmp_path / "run"
+    _frozen_run(run)
+    with pytest.raises(ValueError, match="current resolver input changed: web-claimgraph/data/claim-graph.json"):
+        queue_builder.validate_run(tampered, run)
+
+
+def test_review_population_rejects_an_extraction_manifest_the_run_does_not_name(
+        tmp_path: Path, frozen_inputs_root) -> None:
     run = tmp_path / "run"
     _frozen_run(run)
     (run / "extraction-manifest.json").write_text("{}")
     with pytest.raises(ValueError, match="extraction manifest does not match the run manifest"):
-        queue_builder.validate_run(ROOT, run)
+        queue_builder.validate_run(frozen_inputs_root, run)
 
 
 def test_only_insufficient_evidence_may_cite_nothing() -> None:
