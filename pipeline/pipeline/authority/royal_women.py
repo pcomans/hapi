@@ -278,6 +278,8 @@ ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])(?!\w)")
 # ends in I, V or X ("AHHOTPII", "TETI"), where nothing tells a run-on numeral from the name's
 # own letters (Codex review). The claim-graph fold and the weak-sign key would each drop it
 # and accept the bare name.
+# Lowercase too: "vi," or "ii." is a numeral or a name fragment, and either way unreadable.
+QUALIFIED_NUMERAL = re.compile(r"(?=.*[^A-Za-z])[^A-Za-z]*[IVXivx]+[^A-Za-z]*")
 UNREAD_NUMERAL = re.compile(r"[(\[][IVXivx]+\??(?:[)\]](?!\w)|(?![\w)\]]))"
                             r"|(?:(?<![A-Za-z])[IVXivx]+|(?<=[a-z])[IVX]+)\??[)\]](?!\w)"
                             r"|[a-z][IVX]+[.,;:]?(?=\s|$)"
@@ -427,8 +429,16 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     # "Berenike[II]") would be deleted by the fold and the bare name accepted: refuse instead.
     # So is more than one numeral ("Neferu I II"): the keys would read them run together as one
     # ("neferuiii", Neferu III) (Codex review).
-    if UNREAD_NUMERAL.search(text) or sum(bool(NUMERAL.match(t)) for t in text.split()) > 1:
+    # And any token still holding a numeral with a mark the readable forms lack ("II?", "?II",
+    # "II!"): the keys would drop the mark and read a numeral the source doubts (Codex review).
+    if UNREAD_NUMERAL.search(text) or sum(bool(NUMERAL.match(t)) for t in text.split()) > 1 \
+            or any(QUALIFIED_NUMERAL.fullmatch(t) for t in text.split()):
         return {"resolution_method": None, "candidate_ids": [], "context_rule": "unreadable_numeral",
+                "status": "unmatched", "target_ids": []}
+    # A doubt mark anywhere ("Berenike II (?)", "Berenike II ?", "Ahhotep?") questions the
+    # reading, and every key drops it: refuse rather than resolve with confidence (Codex review).
+    if "?" in text:
+        return {"resolution_method": None, "candidate_ids": [], "context_rule": "doubted_mention",
                 "status": "unmatched", "target_ids": []}
     exact = sorted(index.exact.get(surface_key(text), ()))
     if exact:

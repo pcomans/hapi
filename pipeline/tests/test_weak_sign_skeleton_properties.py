@@ -577,6 +577,14 @@ def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_inde
     assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"])
 
 
+@pytest.mark.parametrize("text", ["Berenike II ?", "Berenike II (?)", "Berenike II [?]", "Cleopatre ? II",
+                                  "Berenike (?)", "Ahhotep?"])
+def test_a_doubt_mark_anywhere_refuses_the_mention(graph_index, text) -> None:
+    """A detached doubt mark questions the reading as an attached one does (Codex review)."""
+    found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=33)
+    assert (found["status"], found["context_rule"], found["target_ids"]) == ("unmatched", "doubted_mention", [])
+
+
 @pytest.mark.parametrize(("text", "target"), [
     ("Mer[i]taten", "dodson_hilton:Meryetaten"), ("Meryet[a]ten", "dodson_hilton:Meryetaten"),
     ("[I]setneferet", None)])
@@ -595,7 +603,8 @@ def test_a_restoration_inside_a_word_is_not_a_numeral(graph_index, text, target)
     "Cleopatre (II", "Cleopatre II]", "Berenike [II", "Berenike II)", "Cleopatre ( II", "Berenike II ].",
     "Cleopatre(II", "Berenike[II", "CleopatreII)", "BerenikeII]", "Cleopatre(ii", "Berenike[II?", "CleopatreIII).",
     "CLEOPATREII", "BERENIKEII.", "AHHOTPII", "TETI", "TETISHERI",  # all-caps: TETI is the deliberate loud miss
-    "Nefertit[i]", "Neferu I II", "Neferu I I", "Cleopatre II (III)"])
+    "Nefertit[i]", "Neferu I II", "Neferu I I", "Cleopatre II (III)",
+    "Berenike II?", "Berenike II?.", "Cleopatre ?II", "Cleopatre II!", "Cleopatre ii?"])
 def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
     """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
     name to match another ruler (scope review of the Codex fix): it is refused."""
