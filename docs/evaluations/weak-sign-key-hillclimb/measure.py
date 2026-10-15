@@ -16,6 +16,7 @@ import importlib.util
 import itertools
 import json
 import re
+import sys
 import unicodedata
 from pathlib import Path
 
@@ -29,6 +30,7 @@ KEY_IMPORT = "from .claimgraph.normalize import translit_key\n"
 def frozen_translit_key():
     spec = importlib.util.spec_from_file_location("weak_sign_hillclimb_normalize", HERE / "normalize_frozen.py")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module  # its dataclasses look the module up
     spec.loader.exec_module(module)
     return module.translit_key
 
