@@ -291,6 +291,8 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
 
 
 NUMERAL_WRAPPING = "()[].,;:"
+SPACED_NUMERAL = re.compile(r"([(\[])\s*([IVX]+)\s*([)\]])")
+ATTACHED_NUMERAL = re.compile(r"(\w)([(\[]\s*[IVX]+\s*[)\]])")
 UNREAD_NUMERAL = re.compile(r"\[\s*[IVXivx]+\s*\??\s*\]")
 
 
@@ -406,6 +408,10 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     # A wrapped regnal numeral ("[II]", "(II)", "II.") is written bare before any tier: the
     # fold deletes bracketed text, so "Berenike [II]" would otherwise meet the bare "Berenike"
     # on the claim-graph keys and resolve to another ruler (Codex review).
+    # A wrapped numeral attached to the name ("Cleopatre(II)", "Berenike[II]") is split off
+    # first, as the claim-graph matcher reads it (Codex review).
+    text = SPACED_NUMERAL.sub(r"\1\2\3", text)  # "[ II ]" -> "[II]"
+    text = ATTACHED_NUMERAL.sub(r"\1 \2", text)
     text = " ".join(numeral_of(t) or t for t in text.split())
     # Any bracketed numeral still left (uncertain "[II?]", lowercase "[ii]", "[ II ]",
     # "Berenike[II]") would be deleted by the fold and the bare name accepted: refuse instead.

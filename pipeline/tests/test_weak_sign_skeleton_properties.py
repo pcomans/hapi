@@ -550,7 +550,7 @@ def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_inde
     assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"])
 
 
-@pytest.mark.parametrize("text", ["Berenike [II?]", "Berenike [ii]", "Berenike [ II ]", "Berenike[II]"])
+@pytest.mark.parametrize("text", ["Berenike [II?]", "Berenike [ii]", "Berenike[ii]", "Berenike [II?],"])
 def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
     """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
     name to match another ruler (scope review of the Codex fix): it is refused."""
@@ -559,7 +559,8 @@ def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph
 
 
 def test_trailing_punctuation_wraps_a_numeral(graph_index) -> None:
-    for text in ("Berenike [II],", "Berenike II;", "Berenike (II):"):
+    # and an attached wrapped numeral is split off (Codex review): "Berenike[II]", "Berenike(II)".
+    for text in ("Berenike [II],", "Berenike II;", "Berenike (II):", "Berenike[II]", "Berenike(II)", "Berenike [ II ]"):
         found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=33)
         assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"]), text
 
@@ -575,3 +576,11 @@ def test_a_numbered_labels_keys_meet_no_other_targets_unnumbered_label(graph_ind
             bucket[name_key] |= targets
     clashes = {k: (numbered[k], unnumbered[k]) for k in numbered if k in unnumbered and unnumbered[k] - numbered[k]}
     assert clashes == {}
+
+
+def test_an_attached_numeral_selects_or_refuses_on_the_weak_sign_tier(graph_index) -> None:
+    def found(text):
+        f = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=33)
+        return f["status"], f["target_ids"]
+    assert found("Cleopatre(II)") == ("resolved", ["leprohon-leprohon-33.08a"])
+    assert found("Cleopatre(III)") == ("unmatched", [])
