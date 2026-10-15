@@ -290,7 +290,8 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
             index.normalized[key].add(target_id)
 
 
-NUMERAL_WRAPPING = "()[]."
+NUMERAL_WRAPPING = "()[].,;:"
+UNREAD_NUMERAL = re.compile(r"\[\s*[IVXivx]+\s*\??\s*\]")
 
 
 def numeral_of(token: str) -> str | None:
@@ -406,6 +407,11 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     # fold deletes bracketed text, so "Berenike [II]" would otherwise meet the bare "Berenike"
     # on the claim-graph keys and resolve to another ruler (Codex review).
     text = " ".join(numeral_of(t) or t for t in text.split())
+    # Any bracketed numeral still left (uncertain "[II?]", lowercase "[ii]", "[ II ]",
+    # "Berenike[II]") would be deleted by the fold and the bare name accepted: refuse instead.
+    if UNREAD_NUMERAL.search(text):
+        return {"resolution_method": None, "candidate_ids": [], "context_rule": "unreadable_numeral",
+                "status": "unmatched", "target_ids": []}
     exact = sorted(index.exact.get(surface_key(text), ()))
     if exact:
         candidates, method = exact, "raw_exact"

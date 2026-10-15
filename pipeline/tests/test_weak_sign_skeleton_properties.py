@@ -548,3 +548,30 @@ def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_inde
     assert checked == 36  # 12 numbered labels, three wrappings each
     found = rw.resolve_royal_woman(graph_index, "Berenike [II]", record_king_ids=set(), record_dynasty=33)
     assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"])
+
+
+@pytest.mark.parametrize("text", ["Berenike [II?]", "Berenike [ii]", "Berenike [ II ]", "Berenike[II]"])
+def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
+    """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
+    name to match another ruler (scope review of the Codex fix): it is refused."""
+    found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=33)
+    assert (found["status"], found["context_rule"], found["target_ids"]) == ("unmatched", "unreadable_numeral", [])
+
+
+def test_trailing_punctuation_wraps_a_numeral(graph_index) -> None:
+    for text in ("Berenike [II],", "Berenike II;", "Berenike (II):"):
+        found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=33)
+        assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"]), text
+
+
+def test_a_numbered_labels_keys_meet_no_other_targets_unnumbered_label(graph_index) -> None:
+    """"Neferu I" keys as "neferui": no unnumbered label of another target may share a
+    claim-graph key with a numbered one (scope review)."""
+    numbered, unnumbered = collections.defaultdict(set), collections.defaultdict(set)
+    for key, targets in graph_index.exact.items():
+        tokens = key.split()
+        bucket = numbered if len(tokens) > 1 and rw.NUMERAL.match(tokens[-1].upper()) else unnumbered
+        for name_key in rw.name_keys(key):
+            bucket[name_key] |= targets
+    clashes = {k: (numbered[k], unnumbered[k]) for k in numbered if k in unnumbered and unnumbered[k] - numbered[k]}
+    assert clashes == {}
