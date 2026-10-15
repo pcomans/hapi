@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import collections
 import gzip
+import hashlib
 import importlib.util
 import json
 import sys
@@ -35,10 +36,11 @@ def _module(name: str, path: Path):
     return module
 
 
-def _ledger(extractor, archive: Path, work: Path) -> dict[str, dict]:
+def _ledger(extractor, archive: Path, work: Path) -> tuple[dict[str, dict], str]:
     ledger, manifest = work / "ledger.ndjson.gz", work / "manifest.json"
     extractor.build_from_archive(archive, ledger, manifest)
-    return {row["mention_id"]: row for row in map(json.loads, gzip.open(ledger, "rt")) if "mention_id" in row}
+    rows = {row["mention_id"]: row for row in map(json.loads, gzip.open(ledger, "rt")) if "mention_id" in row}
+    return rows, hashlib.sha256(ledger.read_bytes()).hexdigest()
 
 
 def diff(archive: Path, repo_root: Path) -> dict:
@@ -47,8 +49,8 @@ def diff(archive: Path, repo_root: Path) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / "a").mkdir()
         (Path(tmp) / "b").mkdir()
-        old = _ledger(_module("_v10_extractor", V10), archive, Path(tmp) / "a")
-        new = _ledger(_module("_361_extractor", HERE / "extract_mentions.py"), archive, Path(tmp) / "b")
+        old, old_sha = _ledger(_module("_v10_extractor", V10), archive, Path(tmp) / "a")
+        new, new_sha = _ledger(_module("_361_extractor", HERE / "extract_mentions.py"), archive, Path(tmp) / "b")
     lost = sorted(set(old) - set(new))
     changed = sorted(i for i in set(old) & set(new)
                      if {k: v for k, v in new[i].items() if k != "record_dynasty"} != old[i])
@@ -64,7 +66,11 @@ def diff(archive: Path, repo_root: Path) -> dict:
                              .endswith(c) for c in (*ROYAL_WOMAN_CUES, "queen"))]
     not_read_as_cued = sum(not royal_women.royal_woman_cued(r["field_value"], r["span_start"]) for r in cued_by_extractor)
     return {
-        "schema_version": "hapi-361-ledger-diff/1",
+        "schema_version": "hapi-361-ledger-diff/2",
+        # Which ledgers and extractors were compared, so the diff is bound to the registered run.
+        "v10_ledger_gzip_sha256": old_sha, "ledger_gzip_sha256": new_sha,
+        "v10_extractor_sha256": hashlib.sha256(V10.read_bytes()).hexdigest(),
+        "extractor_sha256": hashlib.sha256((HERE / "extract_mentions.py").read_bytes()).hexdigest(),
         "v10_mentions": len(old), "new_mentions": len(new),
         "lost": len(lost), "changed_ignoring_record_dynasty": len(changed), "added": len(added),
         "added_by_royal_woman_cue": dict(sorted(by_cue.items())),

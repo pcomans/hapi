@@ -1584,6 +1584,18 @@ def test_the_committed_ledger_diff() -> None:
             diff["changed_ignoring_record_dynasty"]) == (148_871, 148_964, 93, 0, 0)
     assert "none" not in diff["added_by_royal_woman_cue"] and sum(diff["added_by_royal_woman_cue"].values()) == 93
     assert diff["royal_woman_cued_mentions_the_resolver_does_not_read_as_cued"] == 0
+    # Bound to the registered run: the ledger it diffed is the run's, made by this extractor.
+    manifest = json.loads((EVALUATION / "results" / "real-run-manifest.json").read_text())
+    assert diff["ledger_gzip_sha256"] == manifest["inputs"]["mention_ledger"]["gzip_sha256"]
+    assert diff["extractor_sha256"] == protocol.sha256_path(SCRIPTS / "extract_mentions.py")
+    assert diff["royal_woman_cued_mentions"] == 239
+
+
+def test_the_readme_states_the_registered_ledger() -> None:
+    manifest = json.loads((EVALUATION / "results" / "real-run-manifest.json").read_text())
+    ledger = manifest["inputs"]["mention_ledger"]
+    readme = (EVALUATION / "README.md").read_text()
+    assert f"{ledger['rows']:,} mentions, gzip SHA-256 `{ledger['gzip_sha256'][:12]}…`" in readme
 
 
 def test_the_registration_scores_rulers_only() -> None:
@@ -1720,13 +1732,20 @@ def test_a_call_that_exited_unsuccessfully_decides_nothing_on_any_path(monkeypat
 
 
 def test_the_gate_counts_a_measured_false_load_event_only(tmp_path: Path) -> None:
-    """#358 fix 4: a PDF's `load_event` is None (not measured) and is not counted as a page that
-    loaded without its load event; a measured false is."""
+    """#358 fix 4: a PDF's `load_event` is None (not measured) and the gate does not count it as
+    a page that loaded without its load event; a measured false it does."""
+    case = stage_1_case("review-unit-001", HASH_1)
+    queue_path = tmp_path / "stage-1-queue.json"
+    queue_path.write_text(json.dumps({"cases": [case]}))
+    records = tmp_path / "stage-1"
     pdf = {**opened_page("https://www.metmuseum.org/a.pdf"), "load_event": None}
-    late = {**opened_page("https://www.metmuseum.org/art/collection/search/2"), "load_event": False}
-    counted = [o for o in (pdf, late, opened_page()) if o["loaded"] and o["load_event"] is False]
-    assert counted == [late]
-    assert 'if opened["loaded"] and opened["load_event"] is False' in (SCRIPTS / "page_load_gate.py").read_text()
+    late = {**opened_page("https://www.brooklynmuseum.org/opencollection/objects/1"), "load_event": False}
+    for label in ("A", "B"):
+        write_attempt(records / f"reviewer-{label}", "stage_1_reviewer", case, 1,
+                      review_answer(case, "same_entity", "useful"), opens=(opened_page(), pdf, late))
+    (records / "reconciliation-queue.json").write_text(json.dumps({"cases": []}))  # the reviewers agree
+    result = load_gate.stage_gate("1", queue_path, records, {"review-unit-001": {"authority_only_transition"}})
+    assert result["loaded_without_load_event_by_host"] == {"brooklynmuseum.org": 2}
 
 
 class _StubPage:

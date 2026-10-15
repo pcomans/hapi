@@ -70,7 +70,7 @@
     },
     "validator": {
       "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/review_protocol.py",
-      "sha256": "344e01cb2bee6f7a08672c439407fa8eb26116d543523e365bbf555fc3ef42fe"
+      "sha256": "338b0f314e81dd38e37af78b74cdc2b4633035cb66e4e9e6d059586643be7253"
     }
   },
   "queue_inputs": {

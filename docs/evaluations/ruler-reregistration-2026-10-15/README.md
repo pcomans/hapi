@@ -32,9 +32,8 @@ protocol and decision rule?
    - Princess.
 
    Before, "mother" and "wife" were stop words after a bare "queen" or "king", and "princess"
-   was no cue. An opening quote after a cue is not part of the name (`'The King's Wife
-   "Nefertity"'`). Each mention also carries its record's dynasty, as the canonical record
-   gives it. The span after a cue is v10's: a quote before the name stays in it
+   was no cue. Each mention also carries its record's dynasty, as the canonical record gives
+   it. The span after a cue is v10's: a quote before the name stays in it
    ('"Nefertity'), and the mention reader refuses it, which is a missed link and never the
    kings (a first draft stripped the quote, and the resolver then read the name as uncued; code
    review).
@@ -43,7 +42,7 @@ protocol and decision rule?
    (`results/ledger-diff.json`, tested):
    - 93 new mentions, each after a royal-woman cue;
    - none of v10's lost or changed (148,871 → 148,964);
-   - none of the 238 royal-woman-cued mentions is one the resolver would not read as cued.
+   - none of the 239 royal-woman-cued mentions is one the resolver would not read as cued.
 
    The extractor still reads no authority file. A test checks that its cues match the
    resolver's on a fixed list of cue phrases.
@@ -96,7 +95,7 @@ The four prompts, the system prompt and the citable-source list are v10's bytes,
   - D&H's rows, same-woman decisions and female rulers;
   - the TLA names and link decisions.
 - **The corpus** is #337's (`hapi-museum-corpus-2026-08-27`, the same archive SHA-256).
-- **The mention ledger:** 148,964 mentions, gzip SHA-256 `9bdd60c4…`.
+- **The mention ledger:** 148,964 mentions, gzip SHA-256 `98ec263a0aa2…`.
 - **Two independent complete runs** are byte-identical in all 15 registered files
   (`results/real-rerun-proof.json`).
 - **The review population** (`results/real-review-population-digest.json`), rulers only:

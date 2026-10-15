@@ -387,11 +387,6 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     if final is None or final.get("subtype") != "success" or final.get("is_error"):
         record["failure"] = "the call did not end in a successful result"
         return record
-    # A process that exited unsuccessfully decides nothing, whatever it answered: here, the one
-    # check every path reads (a new call, a re-check, a decided record, the gate) (#358 item 9).
-    if record["exit_code"] != 0:
-        record["failure"] = f"the call's process exited {record['exit_code']}"
-        return record
     if not record["stated_text"]:
         record["failure"] = "no final text"
         return record
@@ -399,6 +394,12 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     record["final_text"] = final_text
     if SESSION_LIMIT_TEXT in final_text:
         record["failure"] = f"Claude Code session limit: {final_text}"
+        return record
+    # A process that exited unsuccessfully decides nothing, whatever it answered: here, the one
+    # check every path reads (a new call, a re-check, a decided record, the gate) (#358 item 9);
+    # after the session-limit check, so a session limit stays resumable.
+    if record["exit_code"] != 0:
+        record["failure"] = f"the call's process exited {record['exit_code']}"
         return record
     # The answer is the JSON object that ends the final message. A note the model writes on
     # its own line(s) before it ("I'm wrapping up ...") is kept, not parsed.
