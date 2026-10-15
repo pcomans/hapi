@@ -585,6 +585,14 @@ def test_the_resolvers_numeral_reader_agrees_with_the_matchers() -> None:
     # A transliteration is a name token.
     ("Jꜥḥ-ms.w", ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes A"], "family")),
     ("Ḥi", ("unmatched", None, [], None)),
+    # Codex reviews: a numeral before the name is not hers; a decomposed letter does not keep an
+    # attached numeral from being split; the middle dot is a separator as in the keys.
+    ("II Ahhotep", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhote\u0301p(II)", ("resolved", "committed_normalized", ["dodson_hilton:Ahhotep II"], None)),
+    ("Ahmes·Nefertiry", ("resolved", "committed_normalized", ["dodson_hilton:Ahmes-Nefertiry"], None)),
+    ("Berenike ii", ("unmatched", None, [], "unreadable_numeral")),
+    ("Berenike Ii", ("unmatched", None, [], "unreadable_numeral")),
+    ("Tiye (wife of amenhotep III)", ("unmatched", None, [], "unreadable_numeral")),
 ])
 def test_the_mention_reader_reads_names_and_refuses_the_rest(index, text, expected) -> None:
     f = rw.resolve_royal_woman(index, text, record_king_ids={"king:taa-ii"}, record_dynasty=None)

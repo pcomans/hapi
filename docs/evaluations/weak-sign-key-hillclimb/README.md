@@ -26,7 +26,7 @@ Recall and coverage by split, and strict strong merges over the whole set (names
   addition to v2-4, c/q → k fails the rule as z/s and ṯ/t do: strict merges rise 226 → 244
   for half a point of recall. The owner dropped it. The Ptolemaic queens' Greek and Latin
   spellings (Kleopatra, Berenice) are to meet through cited alternative names instead.
-- **A test checks this.** v2-4's code is the committed key's, and the acceptance rule rejects
+- **A test checks this.** v2-4's code is the committed key's (with the one later change below), and the acceptance rule rejects
   v2-1 against v2-4.
 
 **Held-out check:** the claim graph's king spellings.
@@ -59,6 +59,15 @@ Recall and coverage by split, and strict strong merges over the whole set (names
   | v2-2 | 293 | 265 |
   | v2-3 | 270 | 242 |
   | v2-4 | 234 | 206 |
+
+## Changes after the climb
+
+- **= and ⸗ separate segments** (Codex review of PR #365). The key already split on spaces,
+  hyphens, dots and middle dots. A transliteration's = and ⸗ were deleted by the fold, so a
+  digraph could span them: "Hot=s=hepset" read s + h as š. Measured on the TLA set, recall
+  and coverage on every split and the strict merges are unchanged, and so is the held-out
+  check (105 of 206). A test checks that the live key is v2-4 with only this change, and that
+  both measure the same on all of these.
 
 ## Limits of this climb (from its code and egyptologist reviews)
 

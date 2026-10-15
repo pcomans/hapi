@@ -33,7 +33,7 @@ Rules, in the order applied
    h + U+0331 and read as h; lowercased and composed it is ẖ, which folds to kh (TLA lemma
    400409 `H̱nm.w`, Khnum, `tla-2018-names`). Square brackets go (the letters a transcriber
    restores in them stay: "[Mut]metennefer" is Mutmetennefer, as the resolver's `labels_for`
-   reads it). The text is split on spaces, hyphens and dots, and each token is folded by
+   reads it). The text is split on spaces, hyphens, dots, middle dots and = ⸗, and each token is folded by
    `claimgraph.normalize.translit_key` (unchanged): Beckerath's German digraphs (ch→kh,
    sch→sh, dsch/tsch→dj/tj), the transliteration glyphs (ꜣ ꜥ→a, ḥ→h, ḫ ẖ→kh, š→sh, ṯ→tj,
    ḏ→dj, ḳ→q, ꞽ→i), diacritics stripped, and every other non-alphanumeric dropped — so
@@ -151,7 +151,7 @@ from .claimgraph.normalize import translit_key
 
 MIN_WEAK_SIGN_CONSONANTS = 3
 
-_SEPARATORS = re.compile(r"[\s.\-·]+")
+_SEPARATORS = re.compile(r"[\s.\-·=⸗]+")
 _DIGITS = re.compile(r"[0-9]")
 # Rule 4: the vowels and the weak signs y, w and j (a j inside dj or tj is part of that unit).
 _WEAK_UNITS = frozenset("aeiouywj")

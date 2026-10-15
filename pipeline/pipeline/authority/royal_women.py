@@ -18,7 +18,7 @@ The rule, which is deterministic and fixed here:
   that lands on her resolves to the king.
 * A mention is read before any tier (`read_mention`), and what cannot be read is refused, not
   guessed. Every token must be a regnal numeral, bare or in one matching bracket pair, or a
-  name token (letters of any script, ʿ ʾ ', - . = ⸗, a restoration in brackets inside the word;
+  name token (letters of any script, ʿ ʾ ', - . · = ⸗, a restoration in brackets inside the word;
   read as letters). At most one numeral is allowed. A whole-word parenthesis with a space
   inside is a description and is dropped, unless it doubts or holds a numeral, which is
   refused: whose numeral it is cannot be told ("Tiye (wife of Amenhotep III)" is refused too).
@@ -283,12 +283,12 @@ DESCRIPTION = re.compile(r"(?<!\S)\([^()]*\s[^()]*\)(?!\S)")
 # broken wrapper may hide a cut numeral ("(II" of "(III)"). An attached pair is split off
 # unless a letter follows: "Mer[I]taten" restores a letter.
 ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])(?!\w)")
-# A name token: letters (any script), combining marks, ʿ ʾ ' ’, the separators - . = ⸗, and
+# A name token: letters (any script), combining marks, ʿ ʾ ' ’, the separators - . · = ⸗, and
 # a restoration in brackets inside the word ("Mer[i]taten").
 NAME_LETTERS = r"[^\W\d_]|[\u0300-\u036f'’]"
-_RESTORED = rf"(?:{NAME_LETTERS}|[-.=⸗])+"
-NAME_TOKEN = re.compile(rf"(?:{NAME_LETTERS}|[-.=⸗]|\[{_RESTORED}\]|\({_RESTORED}\))+[,;:]?")
-SEGMENT = re.compile(r"[-.=⸗]")
+_RESTORED = rf"(?:{NAME_LETTERS}|[-.·=⸗])+"
+NAME_TOKEN = re.compile(rf"(?:{NAME_LETTERS}|[-.·=⸗]|\[{_RESTORED}\]|\({_RESTORED}\))+[,;:]?")
+SEGMENT = re.compile(r"[-.·=⸗]")
 NUMERAL_LETTERS = set("IVXivx")
 
 
@@ -354,6 +354,9 @@ def read_mention(text: str) -> tuple[str, str | None]:
     Every token must be a readable numeral (`numeral_of`) or a name token; at most one numeral;
     no numeric character (a digit, "Ⅱ"). Anything else is refused, not guessed: an allow-list,
     so a form nobody foresaw fails loudly (code review of PR #365)."""
+    # Composed first: a decomposed final letter ("é" as e + U+0301) is no \w, and an attached
+    # numeral after it would not be split off (Codex review).
+    text = unicodedata.normalize("NFC", text)
     if any(c.isnumeric() for c in text):
         return text, "unreadable_numeral"
     if LACUNA.search(text):  # as the authority side refuses it (`labels_for`)
@@ -367,6 +370,8 @@ def read_mention(text: str) -> tuple[str, str | None]:
     tokens, numerals = [], 0
     for token in text.split():
         if numeral := numeral_of(token):
+            if not tokens:  # "II Berenike": a list marker or stray numeral, not hers (Codex review)
+                return text, "unreadable_numeral"
             tokens.append(numeral)
             numerals += 1
         elif refusal := _refusal(token):

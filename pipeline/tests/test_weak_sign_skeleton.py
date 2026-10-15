@@ -350,3 +350,10 @@ def test_base_spelling_drops_the_letter_and_the_numeral() -> None:
     assert rw.base_spelling("Cleopatra VII Philopator") == "cleopatra philopator"
     assert rw.base_spelling("Cleopatra (VII)") == rw.base_spelling("Cleopatra VII.") == "cleopatra"
     assert rw.base_spelling("Mut-Tuy") == "mut-tuy" and rw.base_spelling("Meryetre(-Hatshepsut)") == "meryetre(-hatshepsut)"
+
+
+def test_every_transliteration_separator_keeps_a_digraph_boundary() -> None:
+    """Codex review: = and ⸗ separate segments as - and . do, so s + h across them is not š."""
+    assert weak_sign_skeleton("Hot=s=hepset") == weak_sign_skeleton("Hot-s-hepset") == "htshps"
+    assert weak_sign_skeleton("Hot⸗s⸗hepset") == "htshps" != weak_sign_skeleton("Hatshepset")
+    assert weak_sign_skeleton("Ahmose·Nefertari") == weak_sign_skeleton("Ahmose-Nefertari")

@@ -91,8 +91,23 @@ def test_the_committed_key_is_v2_4_by_the_project_owners_decision() -> None:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         tree.body = tree.body[1:]  # the module docstring
         return ast.dump(tree)
-    assert code(EVAL / "keys" / "v2-4-no-c-q-as-k.py") == code(
-        REPO / "pipeline" / "pipeline" / "authority" / "weak_sign_skeleton.py")
+    # One change after the climb (Codex review of PR #365, README "Changes after the climb"): =
+    # and ⸗ also separate segments, so a digraph never spans them. Measured: no change.
+    v2_4 = (EVAL / "keys" / "v2-4-no-c-q-as-k.py").read_text(encoding="utf-8")
+    before, after = 'r"[\\s.\\-·]+"', 'r"[\\s.\\-·=⸗]+"'
+    assert v2_4.count(before) == 1
+    live = REPO / "pipeline" / "pipeline" / "authority" / "weak_sign_skeleton.py"
+    def code_of(source: str) -> str:
+        tree = ast.parse(source)
+        tree.body = tree.body[1:]
+        return ast.dump(tree)
+    assert code_of(v2_4.replace(before, after)) == code_of(live.read_text(encoding="utf-8"))
+    h = harness()
+    rows = h.tla_rows()
+    snapshot, current = (h.measure(h.load_key(path), rows) for path in (EVAL / "keys" / "v2-4-no-c-q-as-k.py", live))
+    assert (snapshot["splits"], snapshot["strong_merges"]) == (current["splits"], current["strong_merges"])
+    held = json.loads((EVAL / "results" / "held-out-king-spellings.json").read_text(encoding="utf-8"))
+    assert h.held_out(h.load_key(live)) == held["v2-4-no-c-q-as-k"]  # the held-out check, unchanged too
     v2_1, v2_4 = result("v2-1-j-weak-in-transliterations"), result("v2-4-no-c-q-as-k")
     for r in (v2_1, v2_4):
         r.pop("against"), r.pop("accepted")
