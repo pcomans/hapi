@@ -66,7 +66,7 @@
     },
     "scorer": {
       "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/score_review.py",
-      "sha256": "2396c5ca7ec630c1589cc3654dfc6c2f204ff9c3574e558feed0b10f3ca07fdb"
+      "sha256": "4384ccacf258d75b6700f3aafd1493e93bd3df47ee7140b212278e8cfb747b69"
     },
     "validator": {
       "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/review_protocol.py",

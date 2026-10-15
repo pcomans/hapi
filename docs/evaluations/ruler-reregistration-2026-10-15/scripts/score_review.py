@@ -306,6 +306,14 @@ def record_counts(literal: set[str], authority: set[str]) -> dict:
     return result
 
 
+# Travels with the record figures (Codex review of #368): a node is judged from at most five
+# records per side, so a record figure is not a judgment of each record it counts.
+RECORD_FIGURES_NOTE = (
+    "Record figures count every record on a judged node (node membership). A node is judged from "
+    "at most five of its records per side, so they are not record-by-record judgments; the "
+    "decision rule counts cases, one label per node.")
+
+
 def arm_outcomes(cases: list[dict]) -> dict:
     entity_types = sorted({case["entity_type"] for case in cases})
     museums = sorted({museum for case in cases for museum in case["museum_pair"]})
@@ -333,6 +341,7 @@ def arm_outcomes(cases: list[dict]) -> dict:
             },
         }
     return {
+        "record_figures_note": RECORD_FIGURES_NOTE,
         "useful_nodes_by_arm": node_counts(cases),
         "by_entity_type": {
             entity_type: node_counts(entity_cases)

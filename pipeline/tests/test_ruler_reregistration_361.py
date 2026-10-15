@@ -1809,3 +1809,11 @@ def test_open_page_refuses_a_name_resolving_to_a_private_address_and_a_redirect_
         asyncio.run(page_server.open_page("https://museum.example/record"))
     with pytest.raises(ValueError, match="local or private-network host"):
         asyncio.run(page_server.open_page("https://intranet.example/x"))
+
+
+def test_record_figures_carry_the_note_that_they_are_node_membership() -> None:
+    """Codex review of #368: the five-record cap means a record figure is not a record judgment;
+    the score says so beside the figures."""
+    outcomes = scorer.arm_outcomes([])
+    assert outcomes["record_figures_note"] == scorer.RECORD_FIGURES_NOTE
+    assert "node membership" in scorer.RECORD_FIGURES_NOTE and "at most five" in scorer.RECORD_FIGURES_NOTE

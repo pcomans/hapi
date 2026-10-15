@@ -154,8 +154,22 @@ earlier runs had tried, with the fixed tool and no model (`results/preflight-pag
 - **Hidden harness context.** Claude Code adds its own fixed context to every headless call,
   which cannot be stored under subscription auth. It is accepted as in #337 (project owner,
   2026-10-15; measured in `pipeline/pipeline/authority/sources/tla-2018-names/links/probe-hidden-context/`).
+- **A node is judged from at most five records per side** (v10's protocol: the prompts, v10's
+  audited bytes, state the cap).
+  - Reviewers see every surface string of a side, with its count, field paths and roles
+    (`exact_mention_variants`); only each record's own context is capped. On the Met side the
+    four changed nodes hold 27, 31, 2 and 31 records.
+  - What the cap can hide is a homonym: one of the shown strings naming a different ruler in a
+    record the reviewers do not see.
+  - The decision rule counts cases, one label per node, so the verdict rests on judged nodes.
+    The score's record figures count every record on those nodes, so they measure node
+    membership, not record-by-record judgments. The score says so beside them
+    (`record_figures_note`; Codex review of #368).
+  - Showing every record would change the audited prompts, so it is left to the next
+    registration (#358).
 - **v10's other limitations stand where not fixed above**, and the next registration inherits
   them (#358):
+  - the five-record cap per side (above);
   - one citation list for both Stage 1 questions;
   - thinking stored as Claude Code's summary;
   - walls recognised by their titles;
