@@ -37,9 +37,10 @@ from .weak_sign_skeleton import weak_sign_skeleton
 TLA_DIR = Path(__file__).resolve().parent / "sources" / "tla-2018-names"
 TLA = TLA_DIR / "reconciled.jsonl"
 LINKS_DIR = TLA_DIR / "links"
-# A rendering ends at its first gloss: "(Frau des Ahmose)", or a second rendering after ";" or
-# "," ("Ahmose-Nofretari; Nefertari"), which is left out with it.
-GLOSS = re.compile(r"\s*[\(;,].*$")
+# A description in a translation value: a parenthesis ("(Frau des Ahmose)", the "(?)" of
+# "Chnum(?)-anchu") or a tail after a comma (", der Ältere"). A second spelling after ";"
+# ("Ni-hep; Ni-Apis") is a rendering of its own.
+DESCRIPTION = re.compile(r"\s*\([^)]*\)|,.*$")
 STRICT_SEPARATORS = re.compile(r"[.\-=⸗~ʾ\s\[\]()]|\u032f|\u032e")
 
 BY_RULE = ("raw_exact", "committed_normalized")
@@ -83,16 +84,23 @@ def tla_rows() -> list[dict]:
     return [json.loads(line) for line in lines[1:]]
 
 
+def spellings_of(value: str | None) -> list[str]:
+    """The spellings a translation value gives, its descriptions removed; a bracketed value is
+    a description only. The one reading of a TLA value, for the candidates, the linked
+    spellings and the review prompt alike."""
+    value = DESCRIPTION.sub("", value or "").strip()
+    if not value or value.startswith("["):
+        return []
+    return [part.strip() for part in value.split(";") if part.strip()]
+
+
 def renderings(row: dict) -> list[str]:
-    """The lemma's transliteration, then each translation value with its gloss removed; a
-    bracketed value is a description, not a name."""
+    """The lemma's transliteration, then each spelling its translation values give."""
     out = [row["transliteration"]]
-    for value in (t["value"] for t in row["translations"] if t.get("value")):
-        if value.startswith("["):
-            continue
-        value = GLOSS.sub("", value).strip()
-        if value and value not in out:
-            out.append(value)
+    for translation in row["translations"]:
+        for spelling in spellings_of(translation.get("value")):
+            if spelling not in out:
+                out.append(spelling)
     return out
 
 

@@ -69,21 +69,14 @@ def labelled(unit: tl.Unit) -> dict[str, tl.Option]:
 
 
 LANGUAGES = {"de": "German", "en": "English"}
-# A description: a parenthesis ("(Frau des Ahmose)", "(?)") or a tail after a comma
-# (", der Ältere"). A second spelling after ";" ("Ni-hep; Ni-Apis") is kept.
-DESCRIPTION = re.compile(r"\s*\([^)]*\)|,.*$")
-
-
 def spellings(row: dict) -> str:
     """A lemma's modern spellings as the prompt shows them: German, then English, each value
-    with any description removed (`DESCRIPTION`); a bracketed value is a description only, and
-    a language without a value is "(none)". No id: a lemma id says nothing of the name and could
-    proxy its source (prompt audit v2, round 1)."""
+    read by `tla_links.spellings_of`, and "(none)" for a language without one. No id: a lemma id
+    says nothing of the name and could proxy its source (prompt audit v2, round 1)."""
     out = []
     for lang, language in LANGUAGES.items():
-        values = [DESCRIPTION.sub("", t.get("value") or "").strip() for t in row["translations"] if t["lang"] == lang]
-        values = [v for v in values if v and not v.startswith("[")]
-        out.append(f"{language}: {', '.join(values) if values else '(none)'}")
+        values = [s for t in row["translations"] if t["lang"] == lang for s in tl.spellings_of(t.get("value"))]
+        out.append(f"{language}: {'; '.join(values) if values else '(none)'}")
     return " | ".join(out)
 
 
