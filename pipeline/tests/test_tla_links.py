@@ -145,6 +145,11 @@ def test_the_runner_reads_a_clean_answer_and_names_each_malformed_one() -> None:
     silent_hook = {"type": "system", "subtype": "hook_response", "hook_name": "h", "stdout": "", "output": ""}
     assert review.validate(_record("X", _answer(), extra_events=[silent_hook])) == {"answer": json.loads(_answer())}
     assert review.validate(_record("X", "no json")) == {"failure": "answer is not a JSON object at the end of the message"}
+    # v2.1: one closing ```json fence around the final object is read; anything after it is not.
+    assert review.validate(_record("X", "```json\n" + _answer() + "\n```")) == {"answer": json.loads(_answer())}
+    assert review.validate(_record("X", "Note.\n```\n" + _answer() + "\n```\n")) == {"answer": json.loads(_answer())}
+    assert review.validate(_record("X", "```json\n" + _answer() + "\n```\nMore.")) == {
+        "failure": "answer is not a JSON object at the end of the message"}
     assert review.validate(_record("X", _answer(unit_id="Y"))) == {"failure": "answer does not echo the unit id"}
     assert review.validate(_record("X", _answer(choices=("C3",)))) == {"failure": "choices ['C3'] are not distinct labels"}
     assert review.validate(_record("X", _answer(choices=("C1", "C1")))) == {

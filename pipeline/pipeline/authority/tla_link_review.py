@@ -37,10 +37,10 @@ from . import tla_links as tl
 MODELS = {"A": ("sonnet", "claude-sonnet-5-5"), "B": ("opus", "claude-opus-5-5"),
           "reconciler": ("opus", "claude-opus-5-5")}
 EFFORT = "high"
-# Format retries only: a call whose answer is not a bare JSON object at the end (Opus often
-# fences it) is stored and retried; the first valid answer counts. Raised from 3 to 6 when the
-# reconciler fenced all three of its first attempts on one unit (links/README.md).
-MAX_ATTEMPTS = 6
+# Format retries only: a call whose answer cannot be read is stored and retried; the first valid
+# answer counts.
+MAX_ATTEMPTS = 3
+FENCED_ANSWER = re.compile(r"```(?:json)?\s*(\{.*\})\s*```$", re.S)
 PROMPTS = tl.LINKS_DIR / "prompts"
 RUNS = tl.LINKS_DIR / "runs"
 DECISIONS = tl.LINKS_DIR / "decisions.jsonl"
@@ -152,6 +152,9 @@ def validate(record: dict) -> dict:
     if record["exit_code"] != 0 or final.get("type") != "result" or final.get("subtype") != "success":
         return {"failure": f"call did not end in a successful result: {final.get('type')!r}/{final.get('subtype')!r}"}
     text = final["result"].strip()
+    # v2.1: the final object may sit in one closing ```json fence, as Opus writes it.
+    if fenced := FENCED_ANSWER.search(text):
+        text = fenced.group(1)
     start = text.rfind("\n{") + 1 if not text.startswith("{") else 0
     try:
         answer = json.loads(text[start:])
