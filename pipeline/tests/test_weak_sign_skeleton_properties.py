@@ -37,8 +37,8 @@ WEAK = {"y": "i", "i": "y", "w": "u", "u": "w"}
 # Consonants that stand alone after the fold (never part of kh, sh, ch, dj, tj, th), each
 # with a different consonant to swap in that also stands alone.
 SWAP = {"b": "f", "f": "b", "m": "n", "n": "m", "p": "b", "r": "l", "l": "r", "z": "b"}
-# After the fold: no c or q (both k), j only in dj/tj.
-KEY_ALPHABET = re.compile(r"^(?:[bdfghklmnprstvxz]|(?<=[dt])j)+$")
+# After the fold: no c or q (both k); the digraph units written ḫ š ḏ ṯ; no j outside them.
+KEY_ALPHABET = re.compile(r"^[bdfghklmnprstvxzḫšḏṯ]+$")
 
 
 @pytest.fixture(scope="module")
@@ -94,12 +94,17 @@ def test_rule_0_the_authority_side_strips_the_disambiguator_and_keeps_the_numera
 
 
 def test_rule_1_case_and_separators_do_not_count(names) -> None:
+    boundary_pair = re.compile(r"[sk][\s\-]h|[dt][\s\-]j", re.I)
     for name in keyed(names):
         key = weak_sign_skeleton(name)
         for variant in {name.lower(), name.title(), name.replace("-", " "), name.replace("-", ""),
                         name.replace(" ", "-"), name.replace(" ", ""), f"  {name}  "}:
             if any(DISAMBIGUATOR.match(t) for t in variant.split()):
                 continue  # an uppercase single letter would be read as a D&H letter by the resolver
+            if boundary_pair.search(name) and variant in (name.replace("-", ""), name.replace(" ", "")):
+                # A digraph is a unit within a token (rule 1), so the separator between the
+                # s and h of "Ahmes-Henutemipet" is kept information: written solid it reads š.
+                continue
             assert weak_sign_skeleton(variant) == key, (name, variant)
 
 
@@ -150,8 +155,12 @@ def test_rule_4_every_weak_sign_may_be_its_other_rendering_or_absent(names) -> N
             swapped = name[:i] + WEAK[ch.lower()] + name[i + 1:]
             dropped = name[:i] + name[i + 1:]
             assert weak_sign_skeleton(swapped) == key, (name, swapped)
-            # Dropping it changes nothing, unless that exposes a final t (rule 3 is surface-final).
-            if not (dropped.endswith("t") and not name.endswith("t")):
+            # Dropping it changes nothing, unless that exposes a final t (rule 3 is surface-final)
+            # or joins the letters of a digraph pair ("Syhefernerer" without its y reads š: a
+            # digraph is a unit of the written letters, rule 1).
+            before, after = name[i - 1:i].lower(), name[i + 1:i + 2].lower()
+            joins_pair = (before in ("s", "k") and after == "h") or (before in ("d", "t") and after == "j")
+            if not (dropped.endswith("t") and not name.endswith("t")) and not joins_pair:
                 assert weak_sign_skeleton(dropped) == key, (name, dropped)
             checked += 1
     assert checked == 258
@@ -165,9 +174,9 @@ def test_rule_4_j_is_a_weak_sign_except_in_dj_and_tj(names) -> None:
         assert weak_sign_skeleton("J" + name.lower()) == key, name
         assert weak_sign_skeleton(name.replace(" ", "-J").replace("-", "-J")) == key, name
     # In dj/tj (ḏ, ṯ after the fold) the j is the consonant's and stays: ḏ is not d.
-    assert weak_sign_skeleton("Nedjmetes") == "ndjmts" != weak_sign_skeleton("Nedmetes") == "ndmts"
-    assert weak_sign_skeleton("Netjerkhet") == "ntjrkh" != weak_sign_skeleton("Neterkhet") == "ntrkh"
-    assert weak_sign_skeleton("Djedmutesankh") == weak_sign_skeleton("Jdjedmutesankh") == "djdmtsnkh"
+    assert weak_sign_skeleton("Nedjmetes") == "nḏmts" != weak_sign_skeleton("Nedmetes") == "ndmts"
+    assert weak_sign_skeleton("Netjerkhet") == "nṯrḫ" != weak_sign_skeleton("Neterkhet") == "ntrḫ"
+    assert weak_sign_skeleton("Djedmutesankh") == weak_sign_skeleton("Jdjedmutesankh") == "ḏdmtsnḫ"
 
 
 def test_a_real_consonant_always_changes_the_key(names) -> None:
@@ -291,20 +300,33 @@ def test_every_key_is_reached_by_a_rendering_the_first_two_tiers_miss(index) -> 
     # dynasty alone (female rulers, and women none of whose kin the stand-in king authority
     # resolves, on a key of four consonants or more), or by nothing (Tetisherit and the
     # like, and three-consonant keys without a resolvable king).
-    assert (groups, singles, by_king, by_dynasty_only, never) == (37, 160, 53, 78, 29)
+    # (The stand-in now resolves Amenemhat I, which moves two Dynasty 12 women from
+    # dynasty-only to by-king.)
+    assert (groups, singles, by_king, by_dynasty_only, never) == (37, 160, 55, 76, 29)
 
 
 def test_the_narrowing_rules_pick_within_a_group_and_the_confirmation_still_applies(index) -> None:
     """For every shared key: each member a named family king singles out resolves (rule
     "family", overriding any dynasty); each dynasty that singles a member out resolves her
-    only when the key is not family-only and the dynasty confirms her (rule "dynasty")."""
-    by_family = by_dynasty = dynasty_refused = 0
+    only when the key is not family-only and the dynasty confirms her (rule "dynasty"); a
+    key in DIFFERENT_NAMES stays ambiguous whatever the record says."""
+    by_family = by_dynasty = dynasty_refused = withheld = 0
     for key, targets in sorted(index.weak_sign.items()):
         if len(targets) < 2:
             continue
         labels = _labels_under(index, key, targets)
         variant = next((v for v in (_variant_only_the_third_tier_finds(index, label) for label in labels) if v), None)
         if variant is None:
+            continue
+        if key in rw.DIFFERENT_NAMES:
+            # Different names on one key: no king and no dynasty may pick (a family king would
+            # pick the woman linked to him whatever her name). Egyptologist review, P1.
+            for member in sorted(targets):
+                for kwargs in ({"kings": index.family_king_ids[member]}, {"dynasty": 99}, {}):
+                    f = _resolve(index, variant, **kwargs)
+                    assert (f["status"], f["context_rule"], f["target_ids"]) == (
+                        "ambiguous", "weak_sign_different_names", sorted(targets)), (variant, kwargs)
+                    withheld += 1
             continue
         for member in sorted(targets):
             kings = index.family_king_ids[member]
@@ -326,7 +348,9 @@ def test_the_narrowing_rules_pick_within_a_group_and_the_confirmation_still_appl
             else:
                 assert (f["status"], f["context_rule"]) == ("unmatched", "weak_sign_unconfirmed"), (variant, dynasty)
                 dynasty_refused += 1
-    assert (by_family, by_dynasty, dynasty_refused) == (21, 19, 99)
+    # The three family picks and 33 dynasty refusals the DIFFERENT_NAMES keys used to yield
+    # are now withheld outright (20 members x 3 records).
+    assert (by_family, by_dynasty, dynasty_refused, withheld) == (18, 19, 66, 60)
 
 
 def test_the_third_tier_only_ever_returns_indexed_royal_women_or_female_rulers(index, women) -> None:
@@ -346,14 +370,20 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
     family-only key, never against her own dynasty; otherwise it is refused or ambiguous."""
     outcomes = collections.Counter()
     for key, targets in sorted(index.weak_sign.items()):
-        text = key + "a"
+        # The key plus a vowel folds back to the key; a hyphen keeps two units that are
+        # written as a digraph's letters (s-h in "hmshntmp") from reading as one.
+        text = re.sub(r"(?<=[sk])(?=h)|(?<=[dt])(?=j)", "-", key) + "a"
+        assert weak_sign_skeleton(text) == key, (key, text)
         if rw.surface_key(text) in index.exact or any(k in index.normalized for k in rw.name_keys(text)):
             outcomes["caught by an earlier tier"] += 1
             continue
         for dynasty in range(0, 34):
             f = _resolve(index, text, dynasty=dynasty)
             assert f["resolution_method"] == "weak_sign_skeleton", text
-            if f["status"] == "resolved":
+            if key in rw.DIFFERENT_NAMES:
+                assert (f["status"], f["context_rule"]) == ("ambiguous", "weak_sign_different_names"), (text, dynasty)
+                outcomes["ambiguous", "weak_sign_different_names"] += 1
+            elif f["status"] == "resolved":
                 woman = f["royal_woman_id"]
                 assert woman in targets
                 assert not _family_only(key), (text, dynasty)
@@ -362,12 +392,14 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
                 outcomes["resolved"] += 1
             else:
                 outcomes[f["status"], f["context_rule"]] += 1
-    # 197 keys x 34 dynasties: no bare key is an indexed label or claim-graph key.
+    # 197 keys x 34 dynasties: no bare key is an indexed label or claim-graph key. The three
+    # DIFFERENT_NAMES keys (102 = 3 x 34) were 33 refusals and 69 plain ambiguities before.
     assert outcomes == {
         "resolved": 147,
         ("unmatched", "record_dynasty_contradicts"): 4849,
-        ("unmatched", "weak_sign_unconfirmed"): 562,
-        ("ambiguous", None): 1140,
+        ("unmatched", "weak_sign_unconfirmed"): 529,
+        ("ambiguous", None): 1071,
+        ("ambiguous", "weak_sign_different_names"): 102,
     }
 
 

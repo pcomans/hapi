@@ -36,10 +36,10 @@ def test_rule_1_brackets_separators_half_rings_and_the_fold() -> None:
     assert weak_sign_skeleton("Meryetamun") == weak_sign_skeleton("Merytamun") == weak_sign_skeleton("Meryet-Amun") == "mrtmn"
     # The transliteration glyphs and the German digraphs fold as the committed table says;
     # ꜣ and ꜥ fold to "a" and go with the vowels.
-    assert weak_sign_skeleton("ꜥꜣ-ḫpr-kꜣ-rꜥ") == weak_sign_skeleton("Aakheperkare") == "khprkr"
-    assert weak_sign_skeleton("Chnemetneferhedjet") == weak_sign_skeleton("Khnemetneferhedjet") == "khnmtnfrhdj"
+    assert weak_sign_skeleton("ꜥꜣ-ḫpr-kꜣ-rꜥ") == weak_sign_skeleton("Aakheperkare") == "ḫprkr"
+    assert weak_sign_skeleton("Chnemetneferhedjet") == weak_sign_skeleton("Khnemetneferhedjet") == "ḫnmtnfrhḏ"
     assert weak_sign_skeleton("Nofretete") == weak_sign_skeleton("Nefertiti") == "nfrtt"
-    assert weak_sign_skeleton("Meryetre(-Hatshepsut)") == weak_sign_skeleton("Meryetre-Hatshepsut") == "mrtrhtshps"
+    assert weak_sign_skeleton("Meryetre(-Hatshepsut)") == weak_sign_skeleton("Meryetre-Hatshepsut") == "mrtrhtšps"
     # Digits are not a name.
     assert weak_sign_skeleton("–18P") == ""
     # The key strips no disambiguator: that is the resolver's, on the authority side.
@@ -55,10 +55,10 @@ def test_rule_1_the_digraphs_dj_and_tj_are_decided_within_a_token() -> None:
     assert weak_sign_skeleton("Nfrt-jrj") == weak_sign_skeleton("Nefertiry") == "nfrtr"
     assert weak_sign_skeleton("Jꜥḥ-ms-nfrt-jrj") == weak_sign_skeleton("Ahmes-Nefertiry") == "hmsnfrtr"
     # Within a token the digraph stands: ḏ is not d, ṯ is not t.
-    assert weak_sign_skeleton("Nodjmet") == weak_sign_skeleton("Nedjemet") == "ndjm"
-    assert weak_sign_skeleton("Djedmutesankh") == weak_sign_skeleton("ḏd-mwt-s-ꜥnḫ") == "djdmtsnkh"
-    assert weak_sign_skeleton("Sitdjehuty") == weak_sign_skeleton("Satdjehuti") == "stdjht"
-    assert weak_sign_skeleton("Nedjmetes") == "ndjmts" != weak_sign_skeleton("Nedmetes") == "ndmts"
+    assert weak_sign_skeleton("Nodjmet") == weak_sign_skeleton("Nedjemet") == "nḏm"
+    assert weak_sign_skeleton("Djedmutesankh") == weak_sign_skeleton("ḏd-mwt-s-ꜥnḫ") == "ḏdmtsnḫ"
+    assert weak_sign_skeleton("Sitdjehuty") == weak_sign_skeleton("Satdjehuti") == "stḏht"
+    assert weak_sign_skeleton("Nedjmetes") == "nḏmts" != weak_sign_skeleton("Nedmetes") == "ndmts"
 
 
 def test_rule_2_c_and_q_are_k() -> None:
@@ -70,45 +70,46 @@ def test_rule_2_c_and_q_are_k() -> None:
     assert weak_sign_skeleton("Anuketemheb") == weak_sign_skeleton("Anuqetemheb") == "nktmhb"
     assert weak_sign_skeleton("Dedetanuq") == weak_sign_skeleton("Dedetanuk") == "ddtnk"
     # After the fold: the German ch is kh, not k-h.
-    assert weak_sign_skeleton("Chnemet") == weak_sign_skeleton("Khnemet") == "khnm"
+    assert weak_sign_skeleton("Chnemet") == weak_sign_skeleton("Khnemet") == "ḫnm"
 
 
 def test_rule_3_one_final_t_of_the_folded_string_is_dropped() -> None:
     # D&H "Tetisherit" (pp. 118-119); Leprohon 18.01's note, "the Tetisheri pyramid".
-    assert weak_sign_skeleton("Tetisherit") == weak_sign_skeleton("Tetisheri") == "ttshr"
+    assert weak_sign_skeleton("Tetisherit") == weak_sign_skeleton("Tetisheri") == "ttšr"
     # PM I.2, 751 writes the optional ending in parentheses.
     assert weak_sign_skeleton("Tanezem(t)") == weak_sign_skeleton("Tanezem") == "tnzm"
-    assert weak_sign_skeleton("Meryetaten-tasherit") == weak_sign_skeleton("Meryetaten-tasheri") == "mrttntshr"
+    assert weak_sign_skeleton("Meryetaten-tasherit") == weak_sign_skeleton("Meryetaten-tasheri") == "mrttntšr"
     # The last token's final t only; a t exposed by dropping a final weak sign is kept, so
     # "Henttawy" keeps its hntt and "Ahhotepti" is not "Ahhotep".
     assert weak_sign_skeleton("Henttawy") == "hntt"
     assert weak_sign_skeleton("Ahhotepti") == "hhtpt" != weak_sign_skeleton("Ahhotep") == "hhtp"
     assert weak_sign_skeleton("Nubhotepti") == "nbhtpt" != weak_sign_skeleton("Nubhotepet") == "nbhtp"
-    assert weak_sign_skeleton("Iset Ta-Hemdjert") == weak_sign_skeleton("Iset Ta-Hemdjer") == "stthmdjr"
+    assert weak_sign_skeleton("Iset Ta-Hemdjert") == weak_sign_skeleton("Iset Ta-Hemdjer") == "stthmḏr"
 
 
 def test_rule_4_vowels_and_the_weak_signs_i_y_w_j_are_dropped() -> None:
     # Vowels: D&H "Ahmes", pharaoh.se "Iah mesu" / "Ahmose", Leprohon "iah mes(u)".
     assert weak_sign_skeleton("Ahmes-Nefertiry") == weak_sign_skeleton("Ahmose-Nefertiry") == "hmsnfrtr"
     assert weak_sign_skeleton("Ahmes") == weak_sign_skeleton("Iah mesu") == weak_sign_skeleton("Ahmose") == "hms"
-    assert weak_sign_skeleton("Ankhesenamun") == weak_sign_skeleton("Ankhesenamon") == "nkhsnmn"
+    assert weak_sign_skeleton("Ankhesenamun") == weak_sign_skeleton("Ankhesenamon") == "nḫsnmn"
     # ꞽ/y: D&H "Nefertiry", PM I.2, 762 "Nefertari", PM I.2, 599 "Nefertere".
     assert weak_sign_skeleton("Nefertiry") == weak_sign_skeleton("Nefertari") == weak_sign_skeleton("Nefertere") == "nfrtr"
-    assert weak_sign_skeleton("ḫꜣstꞽ") == weak_sign_skeleton("Khasty") == weak_sign_skeleton("Khasti") == "khst"
+    assert weak_sign_skeleton("ḫꜣstꞽ") == weak_sign_skeleton("Khasty") == weak_sign_skeleton("Khasti") == "ḫst"
     # w/u: D&H "Nebettawy", PM I.2, 761 "Nebttaui"; pharaoh.se "Semsu" for smsw.
     assert weak_sign_skeleton("Nebettawy") == weak_sign_skeleton("Nebttaui") == "nbtt"
     assert weak_sign_skeleton("smsw") == weak_sign_skeleton("Semsu") == "sms"
     # j outside dj/tj is the weak sign.
     assert weak_sign_skeleton("Jah") == weak_sign_skeleton("Iah") == ""  # one consonant left
-    assert weak_sign_skeleton("Mutnodjmet") == weak_sign_skeleton("Mutnedjmet") == "mtndjm"
+    assert weak_sign_skeleton("Mutnodjmet") == weak_sign_skeleton("Mutnedjmet") == "mtnḏm"
 
 
 def test_rule_5_the_minimum_is_three_consonants_digraphs_counting_one() -> None:
     assert MIN_WEAK_SIGN_CONSONANTS == 3
-    assert [consonant_count(k) for k in ("khnm", "hntt", "djdmtsnkh", "sththr", "tkh", "ndjm", "")] == [3, 4, 7, 6, 2, 3, 0]
+    # A digraph is one unit, written ḫ š ḏ ṯ, so the count is the key's length.
+    assert [consonant_count(k) for k in ("ḫnm", "hntt", "ḏdmtsnḫ", "sththr", "tḫ", "nḏm", "")] == [3, 4, 7, 6, 2, 3, 0]
     # Three consonants: a key (the resolver takes it with a named family king only).
     assert [weak_sign_skeleton(n) for n in ("Inhapy", "Ahmes", "Sitre", "Mutemwia", "Khnemet", "Tawosret", "Hrere")] == [
-        "nhp", "hms", "str", "mtm", "khnm", "tsr", "hrr"]
+        "nhp", "hms", "str", "mtm", "ḫnm", "tsr", "hrr"]
     # Two or fewer: no key.
     assert [weak_sign_skeleton(n) for n in (
         "Tiye", "Tey", "Ti", "Tuy", "Tyti", "Kiya", "Iset", "Huy", "Iy", "Takhat", "Tjuiu", "Aat", "Tem")] == [""] * 13
@@ -118,7 +119,7 @@ def test_rule_5_the_minimum_is_three_consonants_digraphs_counting_one() -> None:
 
 
 def test_distinct_names_that_differ_only_in_what_the_key_keeps_stay_apart() -> None:
-    assert weak_sign_skeleton("Isetneferet") == "stnfr" != weak_sign_skeleton("Isetemkheb") == "stmkhb"
+    assert weak_sign_skeleton("Isetneferet") == "stnfr" != weak_sign_skeleton("Isetemkheb") == "stmḫb"
     assert weak_sign_skeleton("Sitamun") == "stmn" != weak_sign_skeleton("Sitmut") == "stm"
     assert weak_sign_skeleton("Bintanath") == "bntnth" != weak_sign_skeleton("Bentʿanta") == "bntnt"
     assert weak_sign_skeleton("Henuttaneb") == "hnttnb" != weak_sign_skeleton("Henttawy") == "hntt"
@@ -149,6 +150,7 @@ CITATIONS = [
     ("porter-moss-theban-necropolis", "tomb_id", "QV33", "occupant_name", "Tanezem(t)", "source_citation.page", 751),
     ("porter-moss-theban-necropolis", "tomb_id", "QV60", "occupant_name", "Nebttaui", "source_citation.page", 761),
     ("porter-moss-theban-necropolis", "tomb_id", "QV66", "occupant_name", "Nefertari", "source_citation.page", 762),
+    ("porter-moss-theban-necropolis", "tomb_id", "TT38", "occupant_name", "Zeserkaraʿsonb", "source_citation.page", 69),
     ("leprohon-2013-titulary", "leprohon_id", "leprohon-21.05", "birth_names[0].transliteration", "imn m ipt",
      "source_citation.printed_page", 140),
     ("leprohon-2013-titulary", "leprohon_id", "leprohon-21.05", "birth_names[0].anglicised", "imen em ipet",
@@ -187,8 +189,16 @@ CITATIONS = [
     ("pharaoh-se", "slug", "Semerkhet", "throne_names[1].transliteration", "smsw", None, None),
     ("pharaoh-se", "slug", "Qaa", "throne_names[2].name", "Qebehu", None, None),
     ("pharaoh-se", "slug", "Qaa", "throne_names[2].transliteration", "ḳbhw", None, None),
+    ("pharaoh-se", "slug", "Qaa", "throne_names[2].gardiner", "q-b-H-w-W15", None, None),
     ("pharaoh-se", "slug", "Tiu", "birth_names[0].name", "Tiu", None, None),
     ("pharaoh-se", "slug", "Tiu", "birth_names[0].transliteration", "t-ꞽ-w", None, None),
+    ("tla-2018-names", "tla_id", "400409", "transliteration", "H̱nm.w", None, None),
+    ("tla-2018-names", "tla_id", "400409", "translations[1].value", "Khnum", None, None),
+    ("tla-2018-names", "tla_id", "400051", "transliteration", "Z-n-wsr.t", None, None),
+    ("tla-2018-names", "tla_id", "400058", "transliteration", "Z-n-wsr.t", None, None),
+    ("tla-2018-names", "tla_id", "400058", "translations[1].value", "Senwosret", None, None),
+    ("tla-2018-names", "tla_id", "400020", "transliteration", "Mnṯ.w-ḥtp.w", None, None),
+    ("tla-2018-names", "tla_id", "400020", "translations[1].value", "Mentuhotep", None, None),
     ("dodson-hilton-queens", "dh_id", "Ahmes-Nefertiry", "name", "Ahmes-Nefertiry", "source_citation.pdf_pages", "118-119"),
     ("dodson-hilton-queens", "dh_id", "Tetisherit", "name", "Tetisherit", "source_citation.pdf_pages", "118-119"),
     ("dodson-hilton-queens", "dh_id", "Ahmes B", "name", "Ahmes B", "source_citation.pdf_pages", "126-130"),
@@ -216,7 +226,7 @@ CITATIONS = [
 @pytest.mark.parametrize(("source", "id_field", "row_id", "path", "value", "page_field", "page"), CITATIONS,
                          ids=[f"{c[0]}/{c[2]}/{c[3]}" for c in CITATIONS])
 def test_each_citation_names_a_committed_row_field_and_value(source, id_field, row_id, path, value, page_field, page) -> None:
-    rows = [r for r in _rows(source) if r[id_field] == row_id]
+    rows = [r for r in _rows(source) if r.get(id_field) == row_id]  # TLA's first row is a `_source` header
     assert rows, (source, row_id)
     matching = [r for r in rows if _field(r, path) == value]
     assert matching, (source, row_id, path, [_field(r, path) for r in rows])
@@ -232,7 +242,8 @@ def test_the_docstring_cites_each_row_and_marks_the_uncommitted_books() -> None:
     for cited_value in ("Merytamun", "Meryet-Amun", "ʿAhmosi Nefertere", "Tanezem(t)", "Nebttaui", "imen em ipet",
                         "iah mes(u)", "Tetisheri pyramid", "djehuty", "netjeru", "Berenike", "Kleopatra", "Qliu pa dra",
                         "Iah mesu", "Khasty", "Netjery khet", "Meni", "Teti", "Semsu", "Qebehu", "Tiu", "Anuketemheb",
-                        "Anuqneferetweben", "Dedetanuq", "Tetisherit", "Nebettawy A"):
+                        "Anuqneferetweben", "Dedetanuq", "Tetisherit", "Nebettawy A", "H̱nm.w", "Z-n-wsr.t",
+                        "Mnṯ.w-ḥtp.w", "Zeserkaraʿsonb", "Menkauhor", "Raʿdjedef", "Wadjkheperreʿ"):
         assert cited_value in doc, cited_value
     # The books that are on disk but not committed are marked so wherever they are cited; no
     # Gardiner section numbers are quoted; the rendering that contradicted the rules ("Tao"
@@ -300,9 +311,9 @@ def test_the_collision_table_over_the_dodson_and_hilton_women(women) -> None:
     assert len(colliding) == 34
     assert len({t for members in colliding.values() for t in members}) == 106
     assert sorted(colliding) == [
-        "dnfr", "hhtp", "hms", "hntt", "hnttnb", "htb", "htshps", "khnmtnfrhdj", "khnmtnfrhdjtr", "mrtmn", "mrtpth",
-        "mtndjm", "mtt", "nbhtpt", "nbkhs", "nbt", "nbtn", "nbtnh", "nfr", "nfrhtp", "nfrpth", "nfrr", "nfrtr", "nskhns",
-        "nthhtp", "rdtns", "rnsnb", "sbkmsf", "snbhns", "sththr", "stmkhb", "stmn", "stnfr", "tntmn"]
+        "dnfr", "hhtp", "hms", "hntt", "hnttnb", "htb", "htšps", "mrtmn", "mrtpth", "mtnḏm", "mtt", "nbhtpt", "nbt",
+        "nbtn", "nbtnh", "nbḫs", "nfr", "nfrhtp", "nfrpth", "nfrr", "nfrtr", "nsḫns", "nthhtp", "rdtns", "rnsnb",
+        "sbkmsf", "snbhns", "sththr", "stmn", "stmḫb", "stnfr", "tntmn", "ḫnmtnfrhḏ", "ḫnmtnfrhḏtr"]
     assert new == {
         "hntt": rw.DIFFERENT_NAMES["hntt"]["members"],
         "nbt": rw.DIFFERENT_NAMES["nbt"]["members"],
@@ -325,7 +336,7 @@ def test_the_collision_table_over_the_dodson_and_hilton_women(women) -> None:
 def test_the_threshold_decision_three_consonants_with_a_named_king_against_four(women, monkeypatch) -> None:
     """At four consonants the key never merges different names on its own, but 44 more women
     are unreachable, among them Ahmes A/B (hms), Inhapy (nhp), Sitre A (str), Mutemwia (mtm)
-    and Khnemet (khnm, three consonants in four letters). At three it reaches them, and the
+    and Khnemet (ḫnm, three consonants in four letters). At three it reaches them, and the
     resolver takes a three-consonant match with a named family king only, which is what
     the different-name groups need anyway."""
     keyed3, colliding3, new3, unkeyed3 = women_collisions(women)
@@ -375,24 +386,24 @@ def test_the_different_name_groups_are_exactly_the_index_members_or_the_index_re
 def test_a_capital_h_with_line_below_folds_as_kh() -> None:
     """TLA 400409 `H̱nm.w` = Khnum: H̱ has no precomposed capital, so the text is composed
     (NFC) after lowercasing, before the fold."""
-    assert weak_sign_skeleton("H̱nm.w") == weak_sign_skeleton("Khnum") == weak_sign_skeleton("Chnum") == "khnm"
-    assert weak_sign_skeleton("H\u0331nm.w") == weak_sign_skeleton("ẖnm.w") == "khnm"
+    assert weak_sign_skeleton("H̱nm.w") == weak_sign_skeleton("Khnum") == weak_sign_skeleton("Chnum") == "ḫnm"
+    assert weak_sign_skeleton("H\u0331nm.w") == weak_sign_skeleton("ẖnm.w") == "ḫnm"
 
 
-def test_in_a_transliteration_j_is_always_the_weak_sign() -> None:
-    """TLA 600234 `Jt=j-Jmn` Itiamun, 600269 `Mn-pḥ.tj-Rꜥw` Menpehtyre, 600456 `Jni̯-jtj=f`
-    Intef: in a transliteration ṯ is its own letter, so t + j is t and the weak sign."""
-    assert weak_sign_skeleton("Jt=j-Jmn") == weak_sign_skeleton("Itiamun") == "tmn"
-    assert weak_sign_skeleton("Mn-pḥ.tj-Rꜥw") == weak_sign_skeleton("Menpehtyre") == "mnphtr"
-    assert weak_sign_skeleton("Jni̯-jtj=f") == weak_sign_skeleton("Intef") == weak_sign_skeleton("Inyotef") == "ntf"
-    # ṯ itself is still the digraph, in a transliteration and in English alike.
-    assert weak_sign_skeleton("Nṯr.j-ḫ.t") == weak_sign_skeleton("Netjerikhet") == "ntjrkh"
-    # Without a transliteration sign the text is read as English or Umschrift: tj is ṯ.
-    assert weak_sign_skeleton("Netjerkhet") == "ntjrkh" != weak_sign_skeleton("Neterkhet") == "ntrkh"
-    assert weak_sign_skeleton("Jꜥḥ-ms-nfrt-jrj") == weak_sign_skeleton("Ahmose Nefertari") == "hmsnfrtr"
+def test_a_digraph_is_a_unit_of_the_folded_letters_never_of_letters_a_dropped_vowel_joins() -> None:
+    """Menkauhor (mn-kꜣw-ḥr) is k + h, not the ḫ of Menkheperre; ḏ written dj stays ḏ."""
+    assert weak_sign_skeleton("Menkauhor") == "mnkhr" != weak_sign_skeleton("Menkheperre") == "mnḫprr"
+    assert weak_sign_skeleton("Menkauhor") != weak_sign_skeleton("Menkhor")
+    # Porter & Moss renderings: the half-ring does not count, ḏ is kept.
+    assert weak_sign_skeleton("Wadjkheperreʿ") == weak_sign_skeleton("Wadjkheperre") == "ḏḫprr"
+    assert weak_sign_skeleton("Raʿdjedef") == weak_sign_skeleton("Radjedef") == "rḏdf" != weak_sign_skeleton("Radedef")
+    # Within a token only: a separator between s and h is kept information.
+    assert weak_sign_skeleton("Ahmes-Henutemipet") == "hmshntmp" != weak_sign_skeleton("Ahmeshenutemipet") == "hmšntmp"
 
 
-def test_z_and_s_and_t_and_tj_stay_apart() -> None:
-    """Rejected in the hill-climb: each merged distinct names."""
+def test_z_and_s_are_under_evaluation_and_stay_apart_for_now() -> None:
+    """TLA 400051 `Z-n-wsr.t` is "Senwosret" and PM writes "Zeserkaraʿsonb": z/s is an
+    attested convention, not adopted until the TLA measurement is redone."""
     assert weak_sign_skeleton("Z-n-wsr.t") == "znsr" != weak_sign_skeleton("Senwosret") == "snsr"
-    assert weak_sign_skeleton("Mnṯ.w-ḥtp.w") == "mntjhtp" != weak_sign_skeleton("Mentuhotep") == "mnthtp"
+    assert weak_sign_skeleton("Zeserkaraʿsonb") == "zsrkrsnb" != weak_sign_skeleton("Djeserkaresonb") == "ḏsrkrsnb"
+    assert weak_sign_skeleton("Mnṯ.w-ḥtp.w") == "mnṯhtp" != weak_sign_skeleton("Mentuhotep") == "mnthtp"

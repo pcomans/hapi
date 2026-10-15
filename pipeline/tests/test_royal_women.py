@@ -29,6 +29,7 @@ class Kings:
         "king:thutmose-i": (["Thutmose I"], (18,)),
         "king:thutmose-iv": (["Thutmose IV"], (18,)),
         "king:shoshenq-i": (["Shoshenq I"], (22,)),
+        "king:amenemhat-i": (["Amenemhat I"], (12,)),
         "king:ramesses-iii": (["Ramesses III"], (20,)),
         "king:hatshepsut": (["Hatshepsut", "Maatkare"], (18,)),
         "king:tausret": (["Tausret"], (19,)),
@@ -315,21 +316,27 @@ def test_a_three_consonant_key_takes_a_named_family_king_only(index) -> None:
     assert found(index, "Nubhotpet", dynasty=12) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nubhotepet"], None)
 
 
-def test_a_different_name_group_takes_a_named_family_king_only(index) -> None:
-    # hntt: Henttawy A-Q and Henutwati (wife of Ramesses V). Dynasty 19 leaves Henttawy A
-    # alone, but a dynasty cannot confirm a key that different names share.
-    assert found(index, "Henttaui", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
-    assert found(index, "Henttaui", dynasty=21)[:2] == ("ambiguous", "weak_sign_skeleton")
-    assert found(index, "Henttaui", kings={"king:ramesses-ii"}) == (
-        "resolved", "weak_sign_skeleton", ["dodson_hilton:Henttawy A"], "family")
-    assert found(index, "Henutwaty", kings={"king:ramesses-v"}) == (
-        "resolved", "weak_sign_skeleton", ["dodson_hilton:Henutwati"], "family")
-    # nfr: Neferu and Neferet, eleven women. Mentuhotep II names his Neferu II; Dynasty 11 alone does not.
-    assert found(index, "Nefru", kings={"king:mentuhotep-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Neferu II"], "family")
-    assert found(index, "Nefru", dynasty=11)[:2] == ("ambiguous", "weak_sign_skeleton")
-    # tntmn is one name (Tentamun / Tintamun): a dynasty narrows and confirms.
+def test_a_different_name_group_never_resolves(index) -> None:
+    """A key in DIFFERENT_NAMES cannot tell its names apart, so nothing in the record may
+    pick: not a dynasty, and not a family king either, who would pick the woman linked to
+    him whatever her name. The mention is ambiguous, `weak_sign_different_names`, before
+    any narrowing (egyptologist review of the weak-sign key, P1)."""
+    withheld = ("ambiguous", "weak_sign_skeleton", list(rw.DIFFERENT_NAMES["nfr"]["members"]), "weak_sign_different_names")
+    # The P1 case: "Nofret" (nfr) on a record naming Amenemhat I reached Neferu III, his
+    # daughter, through the family filter, though Nofret is nfrt, Neferet, not nfrw.
+    assert index.family_king_ids["dodson_hilton:Neferu III"] == {"king:amenemhat-i"}
+    assert found(index, "Nofret", kings={"king:amenemhat-i"}) == withheld
+    assert found(index, "Nofret", kings={"king:amenemhat-i"}, dynasty=12) == withheld
+    assert found(index, "Nefru", kings={"king:mentuhotep-ii"}) == withheld
+    assert found(index, "Nefru", dynasty=11) == withheld
+    # hntt: Henttawy A-Q and Henutwati (wife of Ramesses V); no king, no dynasty picks.
+    hntt = ("ambiguous", "weak_sign_skeleton", list(rw.DIFFERENT_NAMES["hntt"]["members"]), "weak_sign_different_names")
+    assert found(index, "Henttaui") == found(index, "Henttaui", dynasty=19) == found(index, "Henttaui", dynasty=21) == hntt
+    assert found(index, "Henttaui", kings={"king:ramesses-ii"}) == found(index, "Henutwaty", kings={"king:ramesses-v"}) == hntt
+    # tntmn is one name (Tentamun / Tintamun), not listed: a dynasty narrows and confirms.
     assert found(index, "Tentamon", dynasty=18) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Tintamun"], "dynasty")
-    assert found(index, "Tentamon", dynasty=20)[:2] == ("ambiguous", "weak_sign_skeleton")
+    assert found(index, "Tentamon", dynasty=20) == ("ambiguous", "weak_sign_skeleton", [
+        "dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun"], None)
 
 
 def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
@@ -343,11 +350,12 @@ def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
                                                      ["king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p"], None)
     assert found(index, "Ahhotp I", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotep I"], None)
     assert found(index, "Ahhotp II") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
-    # "II" leaves Neferu II and Neferet II; the husband picks.
-    assert found(index, "Nefru II", kings={"king:mentuhotep-ii"}) == (
-        "resolved", "weak_sign_skeleton", ["dodson_hilton:Neferu II"], "family")
-    assert found(index, "Nefru II")[2] == ["dodson_hilton:Neferet II", "dodson_hilton:Neferu II"]
-    assert found(index, "Nefru III", kings={"king:mentuhotep-ii"}) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    # "II" leaves Neferu II and Neferet II, "III" Neferu III alone; nfr is a DIFFERENT_NAMES
+    # key, so even then no king picks (the numeral narrows the candidates, nothing more).
+    assert found(index, "Nefru II", kings={"king:mentuhotep-ii"}) == ("ambiguous", "weak_sign_skeleton", [
+        "dodson_hilton:Neferet II", "dodson_hilton:Neferu II"], "weak_sign_different_names")
+    assert found(index, "Nefru III", kings={"king:mentuhotep-ii"}) == ("ambiguous", "weak_sign_skeleton", [
+        "dodson_hilton:Neferu III"], "weak_sign_different_names")
 
 
 def test_a_named_family_king_overrides_the_records_dynasty_on_every_tier(index) -> None:
@@ -419,7 +427,7 @@ def test_the_collision_helpers_agree_with_the_index(index) -> None:
     assert collisions["hntt"] == new["hntt"] == rw.DIFFERENT_NAMES["hntt"]["members"]
     assert new["tntmn"] == ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun")
     # Same-named women are the exact tier's collisions, not new ones.
-    assert collisions["stmkhb"] == tuple(sorted(index.exact["isetemkheb"])) and "stmkhb" not in new
+    assert collisions["stmḫb"] == tuple(sorted(index.exact["isetemkheb"])) and "stmḫb" not in new
     # female-rulers.json's king_name "Neferusobek" for the king Sobkneferu meets D&H's
     # princess Neferusobk (both Dynasty 12); the Ptolemaic female rulers share their names.
     assert new["nfrsbk"] == ("dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu")

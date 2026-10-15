@@ -45,15 +45,22 @@ The rule, which is deterministic and fixed here:
   evidence, and a queen has no throne name or reign that could corroborate it, as a king's
   match in the claim graph is corroborated. So the woman it chooses counts only if the
   record names one of her family kings, or the record's single dynasty is one of hers or
-  of her family kings'. Otherwise the mention stays unmatched (`weak_sign_unconfirmed`),
-  even as the only candidate. A woman with neither (Tetisherit, whose entry names only her
-  non-royal father) is not reachable on this tier. Two cases take a named family king only,
-  never a dynasty: a key of exactly `MIN_WEAK_SIGN_CONSONANTS` consonants (three consonants
-  merge names that differ in a weak sign alone), and a key in `DIFFERENT_NAMES`, the
-  committed list of keys that several *different* names share (Henttawy / Henutwati; see
-  the list for the readings and their provenance). Known limitation: the record's dynasty
-  is the object's, not her lifetime's, so a Ramesside stela of the deified Ahmes-Nefertiry
-  (Dynasty 19–20) is not confirmed by its dynasty; only a named family king would do.
+  of her family kings'. The family kings' dynasties only ever add: for a woman with a
+  dynasty of her own they can confirm one of hers' neighbours (Ahmes-Nefertiry has none of
+  her own, so Taa II's 17 and Ahmose I's 18 are what confirms her); they never rule a
+  dynasty out, which only her own dynasty does (the bullet below). Otherwise the mention
+  stays unmatched (`weak_sign_unconfirmed`), even as the only candidate. A woman with
+  neither (Tetisherit, whose entry names only her non-royal father) is not reachable on
+  this tier. A key of exactly `MIN_WEAK_SIGN_CONSONANTS` consonants takes a named family
+  king only, never a dynasty: three consonants merge names that differ in a weak sign
+  alone. A key in `DIFFERENT_NAMES`, the committed list of keys that several *different*
+  names share (Henttawy / Henutwati, Neferu / Neferet, Nebetia / Nebtit / Nebtu), never
+  resolves at all: the mention is ambiguous (`weak_sign_different_names`) before any
+  narrowing, because the key cannot tell the names apart and a family king would then pick
+  whichever woman is linked to him whatever her name ("Nofret" on a record naming Amenemhat
+  I would have reached Neferu III). Known limitation: the record's dynasty is the object's,
+  not her lifetime's, so a Ramesside stela of the deified Ahmes-Nefertiry (Dynasty 19–20)
+  is not confirmed by its dynasty; only a named family king would do.
 * A woman is never chosen against the record's own single dynasty: D&H is transcribed for
   some dynasties only (none of 4–10, 14 or 22 onward), so a lone name match of another known
   dynasty is another woman, and the mention stays unmatched. A candidate whose dynasty the
@@ -158,14 +165,19 @@ class RoyalWomenIndex:
     family_dynasties: dict[str, frozenset[int]] = field(default_factory=dict)
 
 
-# Weak-sign keys that several DIFFERENT names share among the D&H women: a match on one of
-# them is confirmed by a named family king only, never by a dynasty. Like the claim graph's
-# homonym list (matcher._HOMONYM_SPELLINGS), this is the committed record of what the key
-# cannot tell apart. `build_index` checks that each key's members are exactly these, so a
-# new D&H chapter that joins a group is reviewed here. Readings: Egyptian consonants; the
-# names are read by the egyptologist-reviewer (hntt, 2026-10-15) and in this pass (nfr,
-# nbt); the standard reference, Ranke, *Die ägyptischen Personennamen*, is not on disk. The
-# women and their pages are D&H's (sources/dodson-hilton-queens/reconciled.jsonl).
+# Weak-sign keys that several DIFFERENT names share among the D&H women. A mention on one of
+# these keys never resolves: it is returned ambiguous (`weak_sign_different_names`) before
+# the family or dynasty narrowing. Like the claim graph's homonym list
+# (matcher._HOMONYM_SPELLINGS), this is the committed record of what the key cannot tell
+# apart. `build_index` checks that each key's members are exactly these, so a new D&H
+# chapter that joins a group is reviewed here.
+# Basis, stated plainly: the "reading" of each group is an LLM reviewer's judgement (the
+# egyptologist-reviewer for hntt, the implementing agent for nfr and nbt, 2026-10-15) of
+# the names' Egyptian consonants. No on-disk source gives these readings: D&H print no
+# transliterations, and the standard reference, Ranke, *Die ägyptischen Personennamen*, is
+# not on disk. That is why the list can only ever withhold a match, never make one: being
+# listed costs recall on a key the readings may have got wrong, and nothing else. The women
+# and their pages are D&H's (sources/dodson-hilton-queens/reconciled.jsonl).
 DIFFERENT_NAMES: dict[str, dict] = {
     "hntt": {
         "members": ("dodson_hilton:Henttawy A", "dodson_hilton:Henttawy B", "dodson_hilton:Henttawy C",
@@ -397,6 +409,11 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
                                 if numerals <= index.weak_sign_numerals[skeleton][t])
             method = "weak_sign_skeleton" if candidates else None
     base = {"resolution_method": method, "candidate_ids": candidates, "context_rule": None}
+    if method == "weak_sign_skeleton" and skeleton in DIFFERENT_NAMES:
+        # The key cannot tell these names apart, so nothing in the record can: a family king
+        # would pick the woman linked to it whatever her name ("Nofret" and a record naming
+        # Amenemhat I would reach Neferu III). Egyptologist review of the weak-sign key, P1.
+        return {**base, "status": "ambiguous", "target_ids": candidates, "context_rule": "weak_sign_different_names"}
     chosen, rule = None, None
     if len(candidates) == 1:
         chosen = candidates[0]
