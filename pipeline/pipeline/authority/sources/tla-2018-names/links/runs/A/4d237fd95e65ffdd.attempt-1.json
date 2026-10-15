@@ -1,0 +1,579 @@
+{
+ "pair_id": "Senisonbe|706736",
+ "role": "reviewer",
+ "requested_model": "sonnet",
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Decide whether the name in record 1 and the name in record 2 are the same ancient Egyptian personal name or two different names.\n\nHow to compare, in this order:\n1. Read the transliteration in record 2 as a sequence of consonant signs, one letter each: ꜣ, ꞽ or j (also written ı͗ or i̯), y, ꜥ, w, b, p, f, m, n, r, h, ḥ, ḫ, ẖ, z, s, š, q, ḳ, k, g, t, ṯ, d, ḏ. A capital is the same sign as its lowercase. Dots, hyphens, = and spaces only separate elements.\n2. Go through the name in record 1 and match each of those signs, in the same order, to what represents it there. A modern spelling writes:\n   - h for ḥ or h; kh or ch for ḫ or ẖ; sh or sch for š; tj or t for ṯ; dj or d for ḏ; q or k for q or ḳ; s for s or z; every other sign by its own letter; one letter per sign, so a doubled letter stands for two signs;\n   - a vowel letter (a, e, i, o, u) for ꜣ or ꜥ, between the letters that represent its neighbouring signs (at the start or end of the name, a vowel letter next to the one neighbour);\n   - i or y for ꞽ, j or y, and u or w for w, or leaves any of these three out;\n   - extra vowel letters anywhere, which stand for no sign;\n   - and may leave out a t that ends an element (the feminine ending), at the end of the name or before a dot or hyphen.\n3. The two are the same name if every sign of the transliteration is matched this way, in order, and record 1's name has no consonant left over. They are different names if a sign of the transliteration other than ꞽ, j, y, w or an element-final t has nothing in record 1 to represent it (an ꜣ or ꜥ with no vowel letter between its neighbours' letters counts as nothing), if record 1's name has a consonant the transliteration lacks (a y or w with no ꞽ, j, y or w to stand for counts as one), if a letter stands for the wrong sign (a w for a j, an h for a k), or if the elements differ in order or number.\nDecide from the spellings only. Who bore the name, and any person a translation names, are not evidence that two spellings are one name.\n\nRecord 1: a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it (without the letter or numeral with which they tell apart women of one name).\nName: Senisonbe\n\nRecord 2: a lemma of the Thesaurus Linguae Aegyptiae lemma list (January 2018): its transliteration and its German and English translations, verbatim.\nLemma: 706736 (person_name)\nTransliteration: Sn=j-snb.w\nTranslations: de: \"Seni-senebu\"\n\nAnswer with this JSON object, and nothing after it:\n{\"pair_id\": \"Senisonbe|706736\", \"verdict\": \"same_name\" | \"different_name\" | \"insufficient_evidence\", \"reasoning\": \"<how each sign of the transliteration is or is not represented in record 1>\"}\nUse \"insufficient_evidence\" only when the two cannot be compared at all (for example, record 2's transliteration cannot be read as signs), never because you are unsure which way a rule applies.\n",
+ "user_content_sha256": "cc5e3a66870c0e3a635fd7d6a20b46270cae09d79afe82569a5beef3f99aa960",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "27251a26-94d9-4a7d-8fa8-e8d1d8363040",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "89cddaa1-fd72-4b6a-b7ef-72376c24ea8b",
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "27251a26-94d9-4a7d-8fa8-e8d1d8363040",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "e216ad02-4401-4422-8937-6ca85e601ae2",
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-_dcxxbga",
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:rescue",
+    "codex:result",
+    "codex:review",
+    "codex:setup",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "advisor",
+    "agents",
+    "auto-mode-setup",
+    "autocompact",
+    "clear",
+    "color",
+    "compact",
+    "config",
+    "output-style",
+    "context",
+    "effort",
+    "fast",
+    "focus",
+    "heapdump",
+    "init",
+    "mcp",
+    "import",
+    "model",
+    "__remote-workflow",
+    "workflow-launch-exec",
+    "reload-plugins",
+    "reload-skills",
+    "rename",
+    "ultrareview",
+    "security-review",
+    "usage-credits",
+    "extra-usage",
+    "usage",
+    "insights",
+    "recap",
+    "skill-doctor",
+    "goal",
+    "design-consent",
+    "design-revoke",
+    "list-agents",
+    "team-onboarding",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "terminal_slash_commands": [
+    "doctor",
+    "color",
+    "focus",
+    "reload-plugins"
+   ],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:result",
+    "codex:review",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "692c30fe-ad49-42c2-86b0-f62f807d311a",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link--dcxxbga/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1894311.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "6ff5f409-44ea-4504-9144-576a66db5a46"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "21f88341-1170-4c42-84f1-8603618f6c0c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 2,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "f11438e0-2865-4c09-a28a-d060a04db07e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 4,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "55c5adcf-971c-40b7-9a60-c8e092b85172"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 3,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "67f5abe8-f9c0-4808-8f74-14230d6e258f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 5,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "ecc58c3f-a396-4c78-9479-29872a16a76e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 4,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "80ba4b0f-4f51-420c-a807-7091e69373a7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "3e3589be-16b2-4ef4-9cce-e9c37cc2961d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 3,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "c001cb69-6787-46a8-965d-46ac527a5b12"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 2,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "0f5850cc-a73b-443f-84ed-0f1ec0ae3377"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 3,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "fe4e1aca-e4f0-433c-8cfb-4e92c7e53ea7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 6,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "0d7d5ef2-5ed3-4de9-b60f-75d4f9c975a5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 5,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "38b78041-811e-40bd-88ae-5ee46a63f92a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 1,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "c2e05bf2-fc96-41cb-a308-355e4e6523e7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 228,
+   "estimated_tokens_delta": 183,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "697f4344-8e96-4034-a7ae-02ed24b07b0c"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4EqsUoTzXG5nfvw9DN1",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking Sn=j-snb.w against the \"Senisonbe\" transliteration sign by sign, matching s, n, j, b consonants and allowing extra vowels and the omitted w.\n\n",
+      "signature": "CAQShQcKEAgSGAI4AUIIdGhpbmtpbmcSDJzJp6A0RmjDs8MP2RoMf5XjHz2F7EGYuBZ9IjDo8ERhzB+fS7NfRCKYozRKpZRJd/oxCT0WNdNFSVSRmbN1cgUl/aCBAlB6KbrG+98qoga9vEmnkEsaFTnNIoqLMHvtXsBgtbQLmgsZyUK+/S3XhMQfIFF/SpW7yuCqwtDX5Dc7NrFBB6mTNSeinpJkRr2U2CcQ/gGCuQXFMpHx708ip0NaKDVaz9MA/DFGLELgQIC1vSpcbA4/BsPJfE/OwDNr2CtnECqV9HFuq0fmqnlOcRlnKuLubYMiSnc7oJ/VJP1unE9taQjI7v/kk9tiDMrRsNrmM3qVFc8kwcYGr6ebyPwuzEuqzG53bxmfOFNXPJ2wtTcaDicDEC/NC/XQyrxNpMpT+rdyR1VKWzvahVF/uTFTmV9yIKVnBoBz2MAhbcN2H4GUm2AOIm6n231p8ZaDspW1ewr27iCJL3Ntl2Yy6alwFwRmDX1G7n/loqJk5pxGDOZmBshlH/8TxWRe5NmrFNu1l5sBDKz46q3nf701d3yBoerbo30yWk9KxTjhDw5fIAsj6gIafQxYWQWGkDgwCHzVkXdHJc3dzi85sJNEiGm0jXxX0t6+8s1920rDoaCCeZ+jPg4GnDDDwnvf7mAfj6/0fhcxjiFh5QDWiv0ecLhLx1/h94662WFe90lRWsPqZx/S6aBdeMYickA34Xp72KR93fo5erKKsAPK2H/SKWGf+aFmtpw6W7lHISIsdICZHzQKCNfAjiXj6leotHwh8hNVhbzv4APHu/KJti3kRUhg7yDNf7lF59NJyxwfCWpeOHCeYVkJZU6XxGMz/ooS3aliHak0JA0eXgP5Eyj0aajReaRY9GoHzTfZwt23B+4iEQIsqDZt5Ec3/GvFF/5a1hmz7/bLO6xDv2zpM/aakQYlT4gVLD2afblp3x+xi1T9Bi14l+9Ufnpk+XIIwL/bwhqJZq9OKMZ1L+Lu9FBhfdT/MLMpEHdD2kq+qo9J4nV/EvhQTSY8KwIZqJo2s2s+awfEljZApFLE27Kr6muFNtWtNVCPXyVRBUfKzUEntTzmHtkqcLMlCWtTkGwe8VbUwt1xS9SLdBNjXLjFiktA0Yt0M12dS0i6d4QFyJ2dE9t9HRKPUlmg2hUD5IzhI1PfL7xDoQDROQgyMU8Y6clam/2SGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1738,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1738
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "6e38b8ac-cd32-40fd-aa30-a5f75406e8de",
+   "timestamp": "2026-10-15T15:13:19.233Z",
+   "request_id": "req_011Cg4Eqs7j5NosdttPx9Q3E",
+   "thinking_duration_ms": 5452,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4EqsUoTzXG5nfvw9DN1",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"pair_id\": \"Senisonbe|706736\", \"verdict\": \"same_name\", \"reasoning\": \"The transliteration Sn=j-snb.w reads as the signs s, n, j, s, n, b, w. In Senisonbe, s is matched by S, and the e after it is an extra vowel letter that stands for no sign. n is matched by n, and j by i. The second s is matched by s, and the o after it is an extra vowel. The second n is matched by n and b by b. The final w has no letter, which is allowed because w may be left out, and the final e is another extra vowel. Every sign is matched in order and no consonant is left over, so the two spellings are the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1738,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1738
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "uuid": "3bce76a9-9c9a-4ff3-925e-79f7801bb209",
+   "timestamp": "2026-10-15T15:13:19.246Z",
+   "request_id": "req_011Cg4Eqs7j5NosdttPx9Q3E"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.04,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.1,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "7f098850-86c5-49d0-a80f-661fd8866851",
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532"
+  },
+  {
+   "duration_api_ms": 7811,
+   "stop_reason": "end_turn",
+   "session_id": "b3f485ea-a8fe-4a9d-8f4e-5f3818ce7532",
+   "total_cost_usd": 0.010676,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1738,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 372,
+    "output_tokens_details": {
+     "thinking_tokens": 154
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1738,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 372,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1738,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1738
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 372,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1738,
+     "webSearchRequests": 0,
+     "costUSD": 0.010676,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 154,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"pair_id\": \"Senisonbe|706736\", \"verdict\": \"same_name\", \"reasoning\": \"The transliteration Sn=j-snb.w reads as the signs s, n, j, s, n, b, w. In Senisonbe, s is matched by S, and the e after it is an extra vowel letter that stands for no sign. n is matched by n, and j by i. The second s is matched by s, and the o after it is an extra vowel. The second n is matched by n and b by b. The final w has no letter, which is allowed because w may be left out, and the final e is another extra vowel. Every sign is matched in order and no consonant is left over, so the two spellings are the same name.\"}",
+   "ttft_ms": 7816,
+   "type": "result",
+   "duration_ms": 7895,
+   "uuid": "d08bbe56-ca3a-4251-84dd-9a3c24132f05",
+   "ttft_stream_ms": 2363,
+   "time_to_request_ms": 39,
+   "first_content_frame_ms": 2363,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "pair_id": "Senisonbe|706736",
+   "verdict": "same_name",
+   "reasoning": "The transliteration Sn=j-snb.w reads as the signs s, n, j, s, n, b, w. In Senisonbe, s is matched by S, and the e after it is an extra vowel letter that stands for no sign. n is matched by n, and j by i. The second s is matched by s, and the o after it is an extra vowel. The second n is matched by n and b by b. The final w has no letter, which is allowed because w may be left out, and the final e is another extra vowel. Every sign is matched in order and no consonant is left over, so the two spellings are the same name."
+  }
+ }
+}

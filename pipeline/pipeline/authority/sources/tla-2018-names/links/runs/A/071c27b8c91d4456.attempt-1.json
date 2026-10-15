@@ -1,0 +1,635 @@
+{
+ "pair_id": "Hetepti|450252",
+ "role": "reviewer",
+ "requested_model": "sonnet",
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Decide whether the name in record 1 and the name in record 2 are the same ancient Egyptian personal name or two different names.\n\nHow to compare, in this order:\n1. Read the transliteration in record 2 as a sequence of consonant signs, one letter each: ꜣ, ꞽ or j (also written ı͗ or i̯), y, ꜥ, w, b, p, f, m, n, r, h, ḥ, ḫ, ẖ, z, s, š, q, ḳ, k, g, t, ṯ, d, ḏ. A capital is the same sign as its lowercase. Dots, hyphens, = and spaces only separate elements.\n2. Go through the name in record 1 and match each of those signs, in the same order, to what represents it there. A modern spelling writes:\n   - h for ḥ or h; kh or ch for ḫ or ẖ; sh or sch for š; tj or t for ṯ; dj or d for ḏ; q or k for q or ḳ; s for s or z; every other sign by its own letter; one letter per sign, so a doubled letter stands for two signs;\n   - a vowel letter (a, e, i, o, u) for ꜣ or ꜥ, between the letters that represent its neighbouring signs (at the start or end of the name, a vowel letter next to the one neighbour);\n   - i or y for ꞽ, j or y, and u or w for w, or leaves any of these three out;\n   - extra vowel letters anywhere, which stand for no sign;\n   - and may leave out a t that ends an element (the feminine ending), at the end of the name or before a dot or hyphen.\n3. The two are the same name if every sign of the transliteration is matched this way, in order, and record 1's name has no consonant left over. They are different names if a sign of the transliteration other than ꞽ, j, y, w or an element-final t has nothing in record 1 to represent it (an ꜣ or ꜥ with no vowel letter between its neighbours' letters counts as nothing), if record 1's name has a consonant the transliteration lacks (a y or w with no ꞽ, j, y or w to stand for counts as one), if a letter stands for the wrong sign (a w for a j, an h for a k), or if the elements differ in order or number.\nDecide from the spellings only. Who bore the name, and any person a translation names, are not evidence that two spellings are one name.\n\nRecord 1: a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it (without the letter or numeral with which they tell apart women of one name).\nName: Hetepti\n\nRecord 2: a lemma of the Thesaurus Linguae Aegyptiae lemma list (January 2018): its transliteration and its German and English translations, verbatim.\nLemma: 450252 (person_name)\nTransliteration: Ḥtp.t-j\nTranslations: de: \"Hetepet-i\"; en: \"Hetepet-i\"\n\nAnswer with this JSON object, and nothing after it:\n{\"pair_id\": \"Hetepti|450252\", \"verdict\": \"same_name\" | \"different_name\" | \"insufficient_evidence\", \"reasoning\": \"<how each sign of the transliteration is or is not represented in record 1>\"}\nUse \"insufficient_evidence\" only when the two cannot be compared at all (for example, record 2's transliteration cannot be read as signs), never because you are unsure which way a rule applies.\n",
+ "user_content_sha256": "031d5f0c5718aeb3afa971e86290cd98c395a0198dcaefb096f02b0eb74b1b40",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "eec19b58-d8db-45cd-93eb-e004bdf1e005",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "2b8b6063-1911-4e5b-89d5-bb6ff94942f8",
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "eec19b58-d8db-45cd-93eb-e004bdf1e005",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "4f2c0fde-22d9-40d4-92a3-dd4aa0a6ea38",
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-i19qs25c",
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:rescue",
+    "codex:result",
+    "codex:review",
+    "codex:setup",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "advisor",
+    "agents",
+    "auto-mode-setup",
+    "autocompact",
+    "clear",
+    "color",
+    "compact",
+    "config",
+    "output-style",
+    "context",
+    "effort",
+    "fast",
+    "focus",
+    "heapdump",
+    "init",
+    "mcp",
+    "import",
+    "model",
+    "__remote-workflow",
+    "workflow-launch-exec",
+    "reload-plugins",
+    "reload-skills",
+    "rename",
+    "ultrareview",
+    "security-review",
+    "usage-credits",
+    "extra-usage",
+    "usage",
+    "insights",
+    "recap",
+    "skill-doctor",
+    "goal",
+    "design-consent",
+    "design-revoke",
+    "list-agents",
+    "team-onboarding",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "terminal_slash_commands": [
+    "doctor",
+    "color",
+    "focus",
+    "reload-plugins"
+   ],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:result",
+    "codex:review",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "ecee877e-fb52-404a-8754-cf7d126b5f2e",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-i19qs25c/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1867627.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "49cffd97-a901-47d2-b40b-6731543ea576"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "75da8469-cb31-41dd-b06c-87914ea0c17b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 2,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "f1ea4d3d-ee9a-4fe0-9db4-f0dcba4ad93b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 4,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "fdbb5ff2-dfa8-4dbf-822a-a2eda38adc77"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 4,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "5583d931-39fa-41b2-b925-45043899910e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "1d8a79c3-9b10-40c8-9024-20beb6ca14f4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "bb108b28-2ed3-49e0-81c0-8a3a573730e6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 2,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "717cd5b3-1ffb-4921-9c40-af6a8132b0b3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 3,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "81150299-7bcc-485d-8065-df9c79301482"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 5,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "6c65d3db-2702-443e-9d56-9a5af0406e5b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 2,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "62efe27d-16f8-4b56-a50c-0aa05648cb32"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "6c8065b5-7a6d-4d67-8677-f1eba3f3d4db"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "d4b6de50-f368-4bf9-abc6-2ccacab595bd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 3,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "bedd090d-506a-4945-8f7a-98581022d236"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 2,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "16c6c847-b838-4566-be1c-61ba20f83428"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 2,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "37fe1b7e-e067-443d-9b93-7264b44ba28b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "0ea3fecf-7aa1-417e-8c15-ec543391e6a9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 7,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "49c91add-1d52-4c18-848d-1171b804f2ea"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "d5d7f03c-51ae-4100-97f6-1c6f592bdb38"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 3,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "8884a065-5b6e-42b7-bff1-2e00a5a63afd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 1,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "c27aeca5-6229-4e6f-9c95-8c57cbc488e1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 237,
+   "estimated_tokens_delta": 188,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "b154d316-63e6-4fa1-a1b7-dfa69c3d98d1"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4DtApmxvZsCUcjGBUX8",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking whether the transliteration \"Hetepti\" matches the hieroglyphic signs ḥ-t-p-t-j, mapping each consonant to its Latin equivalent with inserted vowels.\n\n",
+      "signature": "CAQSqAcKEAgSGAI4AUIIdGhpbmtpbmcSDNQ03hsbbaQawQc/RBoMQh7tznzJqR+1if9uIjBbIx+/XoqjnTTf0uNkZmB5kFWMYATdpZ7MZQrIy/NlRohrXDZEjSsM4FSkxQWrRjMqxQZOoKCc35HNZSa38usfBdfCwH5ww8Zg0eizs7jG56k3E8dN9RrQ4CmgUpdtj3OOTHyF/A4dBld/oE3EvkyFYbqsx42NKdXvxPQ4cBAbTMYpEPSc5ZGTmENRZzsiZbjp2y7ggLSybYb//Q8M3K39zkvTsVNOmqYTsHLkO05PYIED/QM7TExR8EQ+WfAW3S1NobczrhTZ8zlwM44T4R+TNs1WelkvI1RFUQGklwAHvCQJNSQs93wJizM8piVLvs5jfGaijllBBX81f6m8cXF8X4u3Cacvgkv7+6eKTIod0QZovOzGbPpOVBlEjAi9vcvMvJ2mYO1cU3YN8dIXFgyLbOISWoQJHdTFMlLT63TLFJSM1QqgGhZQqVkCczuAXRfNqCairPZa1s05IC10v+mrS5B2RXP6pYBPmx6aM0dMDLIYKAMh4NsUwcUuteh1Dw0ZfPKx/KRZwExnRMpH5rPnohzBcEFlswOp1xHGyDKnleCEfLP6ecvxRcjxXEDfdTIlTKmk9z5NkaT51UON6jZqzqfaYujSQfiaJSVj303yIF9fAnSqrob4sLPrHAw+srWXDVA9GgGtLBf4sSod5DtENyeSsUyWZ8v7FeInzB3RgAkeCDmQtxbJCdNIUBunEVOybSjEe+CR2mqzUhk1EfPwu+xCR+d/ETMd5zipuJYv40e7WCHl578GBCwedSnJYADMg82lzn578Zv/XY8a3hCAJGJJS/F2GUwBKrgGYANr3TqCiSsQsxcSpJYYsnzBloJXeJ4mDOSq25FUHzGse/VuVxOGFliqFiqhcRnLzpLn9iHMb5DviycNfsv0dcWL1qoPcvVEXXrHUvgqohSYa+bwmBtA4rzD4OhrrIYncHPjqzBYApVbRQXEE28cgvXHhGnxadgoqpPd/ILUWsJCpt6c+TTXfv9ggJkiC83iMrJGR0cihpfbM91taTLbKk91T0WrGt2NoN9p/0lipYSISzreTpcDv7ptw5q/SjVv/3CkaU/g5p1/FRq4ebXy5wKEdaq4kK5HUU9BWs3CC2NB870KQBPv/iJ9ZUeUp1ghCXPlU4MH7KUb7jh13qTqUwvaZi3ZuJ3KZgE4KFXTGoJRCN4C/swnYY+hZd4YAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1747,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1747
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "b34713ee-f8a5-476d-931b-f738fe5fdcfe",
+   "timestamp": "2026-10-15T15:00:42.199Z",
+   "request_id": "req_011Cg4DtAY9rTz2E3E3jkCM2",
+   "thinking_duration_ms": 5262,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4DtApmxvZsCUcjGBUX8",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"pair_id\": \"Hetepti|450252\", \"verdict\": \"same_name\", \"reasoning\": \"Record 2's Ḥtp.t-j reads as the signs ḥ, t, p, then t (ending its element before the hyphen), then j. In Hetepti, h stands for ḥ, the first t for t, p for p, and the second t for the element-final t. The final i stands for j, which a modern spelling may write as i or leave out. The two e's are extra vowel letters that stand for no sign. Every sign is matched in order and no consonant in Hetepti is left over.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1747,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1747
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "uuid": "b85d43f7-5afe-46f9-b5cb-cb8b585d3005",
+   "timestamp": "2026-10-15T15:00:42.206Z",
+   "request_id": "req_011Cg4DtAY9rTz2E3E3jkCM2"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.02,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.1,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "d9c904f7-2444-428a-a711-94a5f2824729",
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea"
+  },
+  {
+   "duration_api_ms": 6383,
+   "stop_reason": "end_turn",
+   "session_id": "5221ea43-b306-44ef-ba5e-40ca0cbd62ea",
+   "total_cost_usd": 0.010552,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1747,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 356,
+    "output_tokens_details": {
+     "thinking_tokens": 167
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1747,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 356,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1747,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1747
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 356,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1747,
+     "webSearchRequests": 0,
+     "costUSD": 0.010552,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 167,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"pair_id\": \"Hetepti|450252\", \"verdict\": \"same_name\", \"reasoning\": \"Record 2's Ḥtp.t-j reads as the signs ḥ, t, p, then t (ending its element before the hyphen), then j. In Hetepti, h stands for ḥ, the first t for t, p for p, and the second t for the element-final t. The final i stands for j, which a modern spelling may write as i or leave out. The two e's are extra vowel letters that stand for no sign. Every sign is matched in order and no consonant in Hetepti is left over.\"}",
+   "ttft_ms": 6393,
+   "type": "result",
+   "duration_ms": 6474,
+   "uuid": "4c5d56a4-0ce0-4b6d-98d8-59b1ee08aa0d",
+   "ttft_stream_ms": 1130,
+   "time_to_request_ms": 40,
+   "first_content_frame_ms": 1130,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "pair_id": "Hetepti|450252",
+   "verdict": "same_name",
+   "reasoning": "Record 2's Ḥtp.t-j reads as the signs ḥ, t, p, then t (ending its element before the hyphen), then j. In Hetepti, h stands for ḥ, the first t for t, p for p, and the second t for the element-final t. The final i stands for j, which a modern spelling may write as i or leave out. The two e's are extra vowel letters that stand for no sign. Every sign is matched in order and no consonant in Hetepti is left over."
+  }
+ }
+}

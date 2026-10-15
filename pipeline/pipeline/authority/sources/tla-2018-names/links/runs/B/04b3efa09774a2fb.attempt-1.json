@@ -1,0 +1,643 @@
+{
+ "pair_id": "Minemaes|550286",
+ "role": "reviewer",
+ "requested_model": "sonnet",
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Decide whether the name in record 1 and the name in record 2 are the same ancient Egyptian personal name or two different names.\n\nHow to compare, in this order:\n1. Read the transliteration in record 2 as a sequence of consonant signs, one letter each: ꜣ, ꞽ or j (also written ı͗ or i̯), y, ꜥ, w, b, p, f, m, n, r, h, ḥ, ḫ, ẖ, z, s, š, q, ḳ, k, g, t, ṯ, d, ḏ. A capital is the same sign as its lowercase. Dots, hyphens, = and spaces only separate elements.\n2. Go through the name in record 1 and match each of those signs, in the same order, to what represents it there. A modern spelling writes:\n   - h for ḥ or h; kh or ch for ḫ or ẖ; sh or sch for š; tj or t for ṯ; dj or d for ḏ; q or k for q or ḳ; s for s or z; every other sign by its own letter; one letter per sign, so a doubled letter stands for two signs;\n   - a vowel letter (a, e, i, o, u) for ꜣ or ꜥ, between the letters that represent its neighbouring signs (at the start or end of the name, a vowel letter next to the one neighbour);\n   - i or y for ꞽ, j or y, and u or w for w, or leaves any of these three out;\n   - extra vowel letters anywhere, which stand for no sign;\n   - and may leave out a t that ends an element (the feminine ending), at the end of the name or before a dot or hyphen.\n3. The two are the same name if every sign of the transliteration is matched this way, in order, and record 1's name has no consonant left over. They are different names if a sign of the transliteration other than ꞽ, j, y, w or an element-final t has nothing in record 1 to represent it (an ꜣ or ꜥ with no vowel letter between its neighbours' letters counts as nothing), if record 1's name has a consonant the transliteration lacks (a y or w with no ꞽ, j, y or w to stand for counts as one), if a letter stands for the wrong sign (a w for a j, an h for a k), or if the elements differ in order or number.\nDecide from the spellings only. Who bore the name, and any person a translation names, are not evidence that two spellings are one name.\n\nRecord 1: a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it (without the letter or numeral with which they tell apart women of one name).\nName: Minemaes\n\nRecord 2: a lemma of the Thesaurus Linguae Aegyptiae lemma list (January 2018): its transliteration and its German and English translations, verbatim.\nLemma: 550286 (person_name)\nTransliteration: Mnw-ms.w\nTranslations: de: \"Min-mesu\"; en: \"Min-mesu\"\n\nAnswer with this JSON object, and nothing after it:\n{\"pair_id\": \"Minemaes|550286\", \"verdict\": \"same_name\" | \"different_name\" | \"insufficient_evidence\", \"reasoning\": \"<how each sign of the transliteration is or is not represented in record 1>\"}\nUse \"insufficient_evidence\" only when the two cannot be compared at all (for example, record 2's transliteration cannot be read as signs), never because you are unsure which way a rule applies.\n",
+ "user_content_sha256": "0f7813b978495894265616aec92286136337c8b0f3191ac54ac8fc28eb8f633b",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "172c0857-eacd-4140-b392-e8a8e5a1c473",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "0ada704f-c773-4d5e-bca5-b0b48fb6e735",
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "172c0857-eacd-4140-b392-e8a8e5a1c473",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "d4e447a2-2be1-4b15-82ff-01347c0c2b87",
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-awxd0sb6",
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:rescue",
+    "codex:result",
+    "codex:review",
+    "codex:setup",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "advisor",
+    "agents",
+    "auto-mode-setup",
+    "autocompact",
+    "clear",
+    "color",
+    "compact",
+    "config",
+    "output-style",
+    "context",
+    "effort",
+    "fast",
+    "focus",
+    "heapdump",
+    "init",
+    "mcp",
+    "import",
+    "model",
+    "__remote-workflow",
+    "workflow-launch-exec",
+    "reload-plugins",
+    "reload-skills",
+    "rename",
+    "ultrareview",
+    "security-review",
+    "usage-credits",
+    "extra-usage",
+    "usage",
+    "insights",
+    "recap",
+    "skill-doctor",
+    "goal",
+    "design-consent",
+    "design-revoke",
+    "list-agents",
+    "team-onboarding",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "terminal_slash_commands": [
+    "doctor",
+    "color",
+    "focus",
+    "reload-plugins"
+   ],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:result",
+    "codex:review",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "5da2f308-e725-4aac-b9f9-0c68cb141003",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-awxd0sb6/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1883291.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "7500949f-c572-4fec-a4a8-aa764b54be82"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "cb7e2719-4047-4927-b6c0-d95144b03435"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "10806c68-f288-4c8a-a7d4-8efffd631a33"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "605a8e6d-ede2-47a2-aade-75b5efa15a9b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "eb0d8047-1960-4c7d-9e8f-69bf614470db"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "1d7fb67c-ff8d-428a-8fab-761a44de9165"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 5,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "f3abb5ad-9932-4b7f-b40e-37ef46c3f064"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "79fb0c5f-33f9-4aa6-9cee-d19a49046f85"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 2,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "c3c70aea-f8c4-4007-a6cc-e3ecd14b292e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "e1d0b168-6776-4a3d-86ca-4b443dae939c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 2,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "19c4f3e4-8328-4c84-8ce9-8872bcbf77dd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 2,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "0ae6a688-df81-4bbf-9fb0-c588291cf0d5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 3,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "422af8cd-30e7-423a-bf39-5a3348a97298"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "f0243af5-2a38-4bf8-a886-f0a5db879a33"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 3,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "dc5007b2-67a5-41ac-8e79-5b3680eb3fcb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "75aa0297-edb5-4ea1-80bc-69c8ea7a15ca"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 2,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "28f78b03-c9bc-4f65-ab1d-77b147ebb63c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 4,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "eab211ce-c619-40b1-a4e6-a0e59bf3c228"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 4,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "d832314d-a80f-4e07-a71c-eb12aa9bfc25"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 3,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "dd77edab-bf24-4780-9a47-6b8b2b168a53"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 3,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "493bad3f-6551-4c90-83c6-816d6185ee5a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 1,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "38948a94-aa6b-466e-ad28-d16a20521e4e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 249,
+   "estimated_tokens_delta": 201,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "7ff93b0f-b7f6-44e7-ba7c-2b485c0d528d"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4ENNz33HWuqxMW3fdNo",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking \"Minemaes\" against the consonant skeleton m-n-w-m-s-w, matching each letter to a sign while treating extra vowels as filler between consonants.\n\n",
+      "signature": "CAQS2AcKEAgSGAI4AUIIdGhpbmtpbmcSDFiocV/uT/3ABIJIKBoM2PSAxxZgfsiXZcYuIjDeoo+/h8E6+JMAmi+xMe9C3dQoGjh/cteeJ1qlVksjXqJ+6gF5y7vug6OjwVpPSi8q9QbxTqWXGuhViqLTzPtO+hui7zh7SQkQXCXlmci1t9fXB6DswzjzcJ4POAX7PAiiJHRCvwGnstGFhfxd7GW3YEzAsozQilHPKS2U3d0SZZN0N/sNo+Q5qgdxN7NRyGntowhhGUKjM7hhXAMw/3HLkm18Keuq5O+RfuuC55g1HKgzl3Eyp1lwxG4Jy1MtVXxjc13crYAwfSJJE0EpKJ1eAqoKF953z+bMHYukDh5CxvmjtWS297L+e6vM6P48L8aBWkEe0sxfcjsF6GvSASzjRiELpQttGbXr9DK9LvoDOVZsnWEu0r6qfmTccWALOsecOgAc9zH0GZLQrVKOBjt8AgWHsuLGVwQRLD3jLx0O+QkwGMFN5EturGAY8agKRL5CcYhIHt7AJr2GKZSQpyJl7rzn7T5OfWVzfiBqmGlldqoiRNPZhJOEQNx37akV5C4sWn+qbKS/anNTgWus3oeAlQsNhkcj4/O+qf5nkb4F25y3asPEmYizMbgctaLewKP2057iSpX/XVKwNzVHWgqzmg2jRhZa7wl1ZLdxiq728SV4GBoIymMx50GhsXW6OkHAgqtE7xMeR3coUJoBlGb8JKUv2w8SJML+603PVPZlj5k/EIvwyMmP3HdJJYk+eU+cZawr681FfuNg19c5e2YwE+d2msOD1yCc3qcdoaosv8U7OSlNZC2zWBXxsMiGRLSEV2IMhKcFCpLnhGskvvVzt70LgioUQ0Zd7ACK7Kuq4sg9pFR8JdvLNzFm6Olb7+t8E2IpxH2ewmteaBBsPGkTMvoDOh2aI6zHZHWgIyGgPndA3Zu0St7g15cbbAbnJybU6PuwDsItrdqlZ7BgI52VHC40UgC2mWAl8238Av1+IBVUNlMZdANFktabA1aBJNp+BCyjjs97qrApKNj+wAwk7IQK+w5SaeqeG3whNUmEBRRamTXh1AFnzmDVapAYeHZKKVk0v2fVGm/91k+Qj/u5EmEFyN/SQRinIfo3haktxLLfJjk8TBhxQcamoFmDUnCYwcxdbuPXZEW33iMD8HNzsKzZ7C5qwnaSuHa8jUlDnAWSqCliRcM/uE9gpKaRn1TGtXVv0zwlkH+w8nJ+nUxkXRhkVp0po3vS+ChEwZQaDNIPCX+LTWMOFcmnoYFnDkhMyk+F/jVvAT3IiF7zxN9JLIpBCNyYtv4YAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 349,
+     "cache_read_input_tokens": 1396,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 349
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "114d2bea-3864-4029-b4d0-6606a5a970f3",
+   "timestamp": "2026-10-15T15:07:04.960Z",
+   "request_id": "req_011Cg4ENMUkmgJiEqHDYqVuk",
+   "thinking_duration_ms": 4546,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4ENNz33HWuqxMW3fdNo",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"pair_id\": \"Minemaes|550286\", \"verdict\": \"same_name\", \"reasoning\": \"Mnw-ms.w reads as the signs m, n, w, m, s, w. In Minemaes, M stands for m, and the following i is an extra vowel letter. n stands for n. The first w may be left out, and the e after n is an extra vowel. m stands for the second m. The a and e are extra vowels, s stands for s, and the final w is left out. Every sign is matched in order, and no consonant of Minemaes (M, n, m, s) is left over. The two are the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 349,
+     "cache_read_input_tokens": 1396,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 349
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "uuid": "8601f72e-5a35-4587-a366-2764154bfd11",
+   "timestamp": "2026-10-15T15:07:04.967Z",
+   "request_id": "req_011Cg4ENMUkmgJiEqHDYqVuk"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.04,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.1,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "05d2c718-10e4-4668-8f0f-15c93ec6e1d8",
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92"
+  },
+  {
+   "duration_api_ms": 6737,
+   "stop_reason": "end_turn",
+   "session_id": "5d057ca2-d226-441f-af9c-61038cdb8b92",
+   "total_cost_usd": 0.005309599999999999,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 349,
+    "cache_read_input_tokens": 1396,
+    "output_tokens": 377,
+    "output_tokens_details": {
+     "thinking_tokens": 185
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 349,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 377,
+      "cache_read_input_tokens": 1396,
+      "cache_creation_input_tokens": 349,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 349
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 377,
+     "cacheReadInputTokens": 1396,
+     "cacheCreationInputTokens": 349,
+     "webSearchRequests": 0,
+     "costUSD": 0.005309599999999999,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 185,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"pair_id\": \"Minemaes|550286\", \"verdict\": \"same_name\", \"reasoning\": \"Mnw-ms.w reads as the signs m, n, w, m, s, w. In Minemaes, M stands for m, and the following i is an extra vowel letter. n stands for n. The first w may be left out, and the e after n is an extra vowel. m stands for the second m. The a and e are extra vowels, s stands for s, and the final w is left out. Every sign is matched in order, and no consonant of Minemaes (M, n, m, s) is left over. The two are the same name.\"}",
+   "ttft_ms": 6749,
+   "type": "result",
+   "duration_ms": 6828,
+   "uuid": "38ea01f9-4697-4dc3-9ad9-a2a5d15fb0b1",
+   "ttft_stream_ms": 2203,
+   "time_to_request_ms": 43,
+   "first_content_frame_ms": 2203,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "pair_id": "Minemaes|550286",
+   "verdict": "same_name",
+   "reasoning": "Mnw-ms.w reads as the signs m, n, w, m, s, w. In Minemaes, M stands for m, and the following i is an extra vowel letter. n stands for n. The first w may be left out, and the e after n is an extra vowel. m stands for the second m. The a and e are extra vowels, s stands for s, and the final w is left out. Every sign is matched in order, and no consonant of Minemaes (M, n, m, s) is left over. The two are the same name."
+  }
+ }
+}
