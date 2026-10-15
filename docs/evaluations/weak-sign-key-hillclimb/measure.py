@@ -1,23 +1,18 @@
-"""The weak-sign key's hill-climb on the TLA 2018 names: a fixed split, two metrics.
+"""The weak-sign key's hill-climb, protocol v2 (PROTOCOL.md): TLA names, split by name,
+recall and coverage per split, strong merges over the whole set; and the held-out check on
+the claim graph's king spellings.
 
-Ground truth: `pipeline/pipeline/authority/sources/tla-2018-names/reconciled.jsonl` (CC BY-SA
-4.0). Each lemma's transliteration and its German and English translations, glosses and
-bracketed descriptions removed, are one name in several conventions: their keys should meet
-(recall). Two lemmas whose transliterations differ in a strong consonant should not share a key
-(strong merges). Nothing here reads museum records.
+    cd pipeline && uv run python ../docs/evaluations/weak-sign-key-hillclimb/measure.py keys/v2-0-baseline.py
 
-    cd pipeline && uv run python ../docs/evaluations/weak-sign-key-hillclimb/measure.py \\
-        keys/iteration-2.py --split validation
-
-The split is by a hash of the TLA id: train 60%, validation 20%, test 20%. Iterations were
-accepted on train and checked on validation; the test split was scored once, at the end
-(`results/test-final.json`), for the starting and the final key.
+Keys are measured with `normalize_frozen.py`, never the live normalizer.
 """
 
 from __future__ import annotations
 
 import argparse
+import collections
 import hashlib
+import importlib.util
 import itertools
 import json
 import re
@@ -27,20 +22,55 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 TLA = REPO / "pipeline" / "pipeline" / "authority" / "sources" / "tla-2018-names" / "reconciled.jsonl"
-SPLITS = ("train", "validation", "test")
+GRAPH = REPO / "web-claimgraph" / "data" / "claim-graph.json"
+KEY_IMPORT = "from .claimgraph.normalize import translit_key\n"
 
 
-def split_of(tla_id: str) -> str:
-    h = int(hashlib.sha256(f"weak-sign-hillclimb/{tla_id}".encode()).hexdigest(), 16) % 10
+def frozen_translit_key():
+    spec = importlib.util.spec_from_file_location("weak_sign_hillclimb_normalize", HERE / "normalize_frozen.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.translit_key
+
+
+def load_key(path: Path):
+    source = path.read_text(encoding="utf-8")
+    if source.count(KEY_IMPORT) != 1:
+        raise ValueError(f"{path} does not import translit_key as the committed key does")
+    namespace = {"translit_key": frozen_translit_key(), "__name__": "weak_sign_hillclimb_key"}
+    exec(compile(source.replace(KEY_IMPORT, ""), str(path), "exec"), namespace)  # noqa: S102 (a committed snapshot)
+    return namespace["weak_sign_skeleton"]
+
+
+# --- TLA ground truth -------------------------------------------------------------------------
+
+GLOSS = re.compile(r"\s*[\(;,].*$")
+STRICT_DROP = re.compile(r"[.\-=⸗~ʾ\s()\[\]]|̯|̮")
+STRONG_DROP = re.compile(r"[ꜣjywiꞽ]")
+FOLD_AWARE = str.maketrans({"ḥ": "h", "ẖ": "ḫ"})
+
+
+def tla_rows() -> list[dict]:
+    lines = TLA.read_text(encoding="utf-8").splitlines()
+    if "_source" not in json.loads(lines[0]):
+        raise ValueError(f"{TLA} does not start with its _source header")
+    return [json.loads(line) for line in lines[1:]]
+
+
+def name_of(row: dict) -> str:
+    return unicodedata.normalize("NFC", STRICT_DROP.sub("", row["transliteration"]).casefold())
+
+
+def strong_skeleton(name: str) -> str:
+    return STRONG_DROP.sub("", name[:-1] if name.endswith("t") else name)
+
+
+def split_of(name: str) -> str:
+    h = int(hashlib.sha256(f"weak-sign-hillclimb-v2/{name}".encode()).hexdigest(), 16) % 10
     return "train" if h < 6 else "validation" if h < 8 else "test"
 
 
-GLOSS = re.compile(r"\s*[\(;,].*$")
-
-
 def renderings(row: dict) -> list[str]:
-    """The transliteration, then each translation value with its gloss removed; a bracketed
-    value is a description, not a name."""
     out = [row["transliteration"]]
     for value in (t["value"] for t in row["translations"] if t.get("value")):
         if value.startswith("["):
@@ -51,62 +81,84 @@ def renderings(row: dict) -> list[str]:
     return out
 
 
-# The transliteration's own signs, every consonant distinct: two lemmas with one strict key
-# are one name in two entries, not a merge.
-STRICT_DROP = re.compile(r"[.\-=\s()\[\]⸗~ʾ]|i̯|u̯|̯")
-# The weak signs and a final t, which the key is meant to drop, and the consonants English
-# renderings never tell apart (ḥ/h, ẖ/ḫ, q/k). Fixed before iteration 1 was accepted and
-# applied to every iteration (README).
-WEAK = re.compile(r"[ꜣꜥjyw]|ꞽ|i")
-ENGLISH_SAME = str.maketrans({"ḥ": "h", "ẖ": "ḫ", "q": "k", "ḳ": "k"})
-
-
-def strict_key(transliteration: str) -> str:
-    return unicodedata.normalize("NFC", STRICT_DROP.sub("", transliteration).casefold())
-
-
-def strong_skeleton(strict: str) -> str:
-    s = strict[:-1] if strict.endswith("t") else strict
-    return WEAK.sub("", s.translate(ENGLISH_SAME))
-
-
-def load_key(path: Path):
-    namespace: dict = {}
-    source = path.read_text(encoding="utf-8").replace(
-        "from .claimgraph.normalize import", "from pipeline.authority.claimgraph.normalize import")
-    exec(compile(source, str(path), "exec"), namespace)  # noqa: S102 (a committed key snapshot)
-    return namespace["weak_sign_skeleton"]
-
-
-def measure(key, rows: list[dict], split: str) -> dict:
-    rows = [r for r in rows if split_of(r["tla_id"]) == split]
-    pairs = met = 0
-    keyed: dict[str, set[str]] = {}
+def measure(key, rows: list[dict]) -> dict:
+    per_split = {s: {"pairs": 0, "met": 0, "renderings": 0, "keyed": 0} for s in ("train", "validation", "test")}
+    by_key: dict[str, set[str]] = collections.defaultdict(set)
     for row in rows:
+        name = name_of(row)
+        stats = per_split[split_of(name)]
         forms = renderings(row)
         keys = [key(f) for f in forms]
-        for (_, ka), (_, kb) in itertools.combinations(zip(forms, keys), 2):
+        stats["renderings"] += len(forms)
+        stats["keyed"] += sum(1 for k in keys if k)
+        for ka, kb in itertools.combinations(keys, 2):
+            if ka and kb:
+                stats["pairs"] += 1
+                stats["met"] += ka == kb
+        for k in keys:
+            if k:
+                by_key[k].add(name)
+
+    def merges(skeleton) -> dict[str, list[str]]:
+        return {k: sorted(v) for k, v in sorted(by_key.items()) if len({skeleton(n) for n in v}) > 1}
+
+    strict = merges(strong_skeleton)
+    fold_aware = merges(lambda n: strong_skeleton(n.translate(FOLD_AWARE)))
+    return {
+        "splits": {s: {**v, "recall": round(v["met"] / v["pairs"], 4), "coverage": round(v["keyed"] / v["renderings"], 4)}
+                   for s, v in per_split.items()},
+        "strong_merges": {"names": sum(len(v) for v in strict.values()), "groups": strict},
+        "fold_aware_merges": {"names": sum(len(v) for v in fold_aware.values())},
+    }
+
+
+def accepted(before: dict, after: dict) -> bool:
+    b, a = before["splits"], after["splits"]
+    return (a["train"]["recall"] > b["train"]["recall"]
+            and a["validation"]["recall"] >= b["validation"]["recall"]
+            and a["train"]["coverage"] >= b["train"]["coverage"]
+            and a["validation"]["coverage"] >= b["validation"]["coverage"]
+            and after["strong_merges"]["names"] <= before["strong_merges"]["names"])
+
+
+# --- Held-out: the claim graph's king spellings ------------------------------------------------
+
+NUMERAL = re.compile(r"\s+[IVX]+\b")
+PAREN = re.compile(r"\s*\(.*$")
+
+
+def king_clusters() -> list[list[str]]:
+    graph = json.loads(GRAPH.read_text(encoding="utf-8"))
+    node = {r["id"]: r for r in graph["rulers"]}
+    out = []
+    for cluster in graph["clusters"]:
+        names = sorted({NUMERAL.sub("", PAREN.sub("", node[m]["display_name"])).strip()
+                        for m in cluster["member_ids"]} - {""})
+        out.append(names)
+    return out
+
+
+def held_out(key) -> dict:
+    pairs = met = 0
+    owners: dict[str, set[int]] = collections.defaultdict(set)
+    for i, names in enumerate(king_clusters()):
+        keys = [key(n) for n in names]
+        for ka, kb in itertools.combinations(keys, 2):
             if ka and kb:
                 pairs += 1
                 met += ka == kb
-        k = key(row["transliteration"])
-        if k:
-            keyed.setdefault(k, set()).add(strict_key(row["transliteration"]))
-    strong = {k: sorted(v) for k, v in sorted(keyed.items())
-              if len(v) > 1 and len({strong_skeleton(x) for x in v}) > 1}
-    names = sum(len(v) for v in keyed.values())
-    return {"split": split, "lemmas": len(rows), "positive_pairs": pairs, "met": met,
-            "recall": round(met / pairs, 4), "keyed_names": names,
-            "names_in_strong_merges": sum(len(v) for v in strong.values()), "strong_merges": strong}
-
-
-def tla_rows() -> list[dict]:
-    return [json.loads(line) for line in TLA.read_text(encoding="utf-8").splitlines()][1:]
+        for k in keys:
+            if k:
+                owners[k].add(i)
+    shared = sorted(k for k, v in owners.items() if len(v) > 1)
+    return {"pairs": pairs, "met": met, "recall": round(met / pairs, 4), "keys_shared_by_clusters": shared}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("key", help="a key snapshot under keys/")
-    parser.add_argument("--split", choices=SPLITS, required=True)
+    parser.add_argument("key")
+    parser.add_argument("--held-out", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(measure(load_key(HERE / args.key), tla_rows(), args.split), ensure_ascii=False, indent=1))
+    key = load_key(HERE / args.key)
+    result = held_out(key) if args.held_out else measure(key, tla_rows())
+    print(json.dumps(result, ensure_ascii=False, indent=1))
