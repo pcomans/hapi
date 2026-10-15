@@ -16,6 +16,13 @@ The rule, which is deterministic and fixed here:
   unmatched. Every other ruler mention resolves among the kings, as before.
 * A D&H woman who later reigned (Hatshepsut D, Sobkneferu, Tawosret) is the king: a mention
   that lands on her resolves to the king.
+* A mention is read before any tier (`read_mention`), and what cannot be read is refused, not
+  guessed. Every token must be a regnal numeral, bare or in one matching bracket pair, or a
+  name token (letters of any script, ʿ ʾ ', - . = ⸗, a restoration in brackets inside the
+  word). At most one numeral is allowed. A whole-word parenthesis with a space inside is a
+  description and is dropped. Refusals are `unreadable_numeral` (a lowercase, broken,
+  run-on, all-caps-final or second numeral; any numeric character, superscripts included),
+  `doubted_mention` (a "?") and `unreadable_mention` (any other mark).
 * A woman's alternative name that is itself a king's name is not one of her names: such an
   identity (Meryetaten as the king Neferneferuaten) is disputed, and the king lists decide it.
 * D&H tells same-named women apart by a letter or numeral ("Tiye A", "Neferu II"); museum
@@ -266,24 +273,97 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
 BRACKET_PAIRS = {"(": ")", "[": "]"}
 # Space inside a bracket is closed up first ("[ II ]" -> "[II]", "( II" -> "(II").
 BRACKET_SPACE = re.compile(r"([(\[])\s+|\s+([)\]])")
-# Only a matching pair wraps a numeral: "(II]", "(II" and "II)" are unread (below), not II, since a
-# broken wrapper may hide a cut numeral ("(II" of "(III)") (Codex review).
+# A whole-word parenthesis with a space inside is a description of the woman, not her name
+# ("Tiye (wife of Amenhotep III)"), unless it offers numerals ("Neferu (II or III)").
+DESCRIPTION = re.compile(r"(?<!\S)\([^()]*\s[^()]*\)(?!\S)")
+NUMERAL_ALTERNATIVE = re.compile(r"\(\s*[IVXivx]+(?:\s*(?:or|/|,|\?)\s*[IVXivx]+)+\s*\??\s*\)")
+# Only a matching pair wraps a numeral: "(II]", "(II" and "II)" are unread, not II, since a
+# broken wrapper may hide a cut numeral ("(II" of "(III)"). An attached pair is split off
+# unless a letter follows: "Mer[I]taten" restores a letter.
 ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])(?!\w)")
-# A numeral left beside a bracket after the readable ones are written bare (`numeral_of`;
-# attached pairs are split off first) is unread: lowercase, doubted, mismatched or with a lone
-# bracket, spaced or attached ("(ii)", "[II?]", "(II]", "(II", "II)", "Cleopatre(II",
-# "CleopatreII)"). A bracket followed by a letter is a restoration inside a word, not a
-# numeral ("Mer[i]taten", "[I]setneferet"); one that ends a word cannot be told from a
-# lowercase numeral ("Nefertit[i]" as "Berenike[ii]") and is refused (Codex review); so is one run on to the name ("CleopatreII."), and an all-uppercase word that
-# ends in I, V or X ("AHHOTPII", "TETI"), where nothing tells a run-on numeral from the name's
-# own letters (Codex review). The claim-graph fold and the weak-sign key would each drop it
-# and accept the bare name.
-# Lowercase too: "vi," or "ii." is a numeral or a name fragment, and either way unreadable.
-QUALIFIED_NUMERAL = re.compile(r"(?=.*[^A-Za-z])[^A-Za-z]*[IVXivx]+[^A-Za-z]*")
-UNREAD_NUMERAL = re.compile(r"[(\[][IVXivx]+\??(?:[)\]](?!\w)|(?![\w)\]]))"
-                            r"|(?:(?<![A-Za-z])[IVXivx]+|(?<=[a-z])[IVX]+)\??[)\]](?!\w)"
-                            r"|[a-z][IVX]+[.,;:]?(?=\s|$)"
-                            r"|(?<!\S)[A-Z]*[A-HJ-UWYZ][IVX]+[.,;:]?(?!\S)")
+# A name token: letters (any script), combining marks, ʿ ʾ ' ’, the separators - . = ⸗, and
+# a restoration in brackets inside the word ("Mer[i]taten").
+NAME_LETTERS = r"[^\W\d_]|[\u0300-\u036f'’]"
+NAME_TOKEN = re.compile(rf"(?:{NAME_LETTERS}|[-.=⸗]|\[(?:{NAME_LETTERS}|[-.=⸗])+\]|\((?:{NAME_LETTERS}|[-.=⸗])+\))+[,;:]?")
+SEGMENT = re.compile(r"[-.=⸗]")
+NUMERAL_LETTERS = set("IVXivx")
+
+
+def _refusal(token: str) -> str | None:
+    """Why a token that is no readable numeral cannot be read as part of a name, or None. A
+    numeral it may hold is unread, never dropped: the keys would delete it and accept the bare
+    name (Codex reviews of PR #365)."""
+    # A piece of it, between marks, made of numeral letters ("(II]", "[ii?"), or a capital
+    # numeral run on to a lowercase name ("CleopatreII)").
+    numeral_like = any(piece and set(piece) <= NUMERAL_LETTERS for piece in re.split(r"[\W_]+", token)) \
+        or bool(re.search(r"[a-z][IVX]+(?![a-z])", token))
+    if "?" in token:
+        return "unreadable_numeral" if numeral_like else "doubted_mention"
+    if not NAME_TOKEN.fullmatch(token):
+        return "unreadable_numeral" if numeral_like else "unreadable_mention"
+    core = token.rstrip(".,;:")
+    # A restoration that ends the word and holds only numeral letters cannot be told from a
+    # lowercase numeral ("Nefertit[i]" as "Berenike[ii]").
+    if (end := re.search(r"[\[(]([^\])]*)[\])]$", core)) and set(end[1]) <= NUMERAL_LETTERS:
+        return "unreadable_numeral"
+    whole = re.sub(r"[\[\]()]", "", core)
+    if set(whole) <= NUMERAL_LETTERS:  # "ii", "vi": a lowercase numeral or no name
+        return "unreadable_numeral"
+    for segment in SEGMENT.split(whole):
+        if not segment:
+            continue
+        if set(segment) <= set("IVX") or (len(segment) > 1 and set(segment) <= NUMERAL_LETTERS):
+            return "unreadable_numeral"  # "Ahhotp-II", "Ahhotp-ii"
+        # A name ends in a lowercase letter, so a capital I, V or X ending a longer segment may be
+        # a run-on numeral: "CleopatreII", "Ahhotp'II", "AhhotpʿII", and in all caps "AHHOTPII"
+        # (and so "TETI", where nothing tells the name's own letters from a numeral).
+        if len(segment) > 1 and segment[-1] in "IVX":
+            return "unreadable_numeral"
+    return None
+
+
+def _description_refusal(description: str, own: set[str]) -> str | None:
+    """Why a whole-word parenthesis cannot be dropped as a description, or None. It is the
+    mention's own when it doubts ("(?)", "(II ?)") or holds a numeral that follows no other
+    name ("(perhaps II)", "(? II)") or the mention's own name ("Ahhotep (Ahhotep II)", `own`
+    being the mention's words outside it); "(wife of Amenhotep III)" is about someone else."""
+    words = [w.strip(".,;:?") for w in description[1:-1].split()]
+    for i, core in enumerate(words):
+        if core and set(core) <= NUMERAL_LETTERS:
+            before = words[i - 1] if i else ""
+            if not (before[:1].isupper() and not set(before) <= NUMERAL_LETTERS) or before.casefold() in own:
+                return "unreadable_numeral"
+    return "doubted_mention" if "?" in description else None
+
+
+def read_mention(text: str) -> tuple[str, str | None]:
+    """The mention with its readable numerals written bare, and why it cannot be read, or None.
+    Every token must be a readable numeral (`numeral_of`) or a name token; at most one numeral;
+    no numeric character (a digit, "Ⅱ"). Anything else is refused, not guessed: an allow-list,
+    so a form nobody foresaw fails loudly (code review of PR #365)."""
+    if any(c.isnumeric() for c in text):
+        return text, "unreadable_numeral"
+    text = BRACKET_SPACE.sub(lambda m: m[1] or m[2], text)
+    if NUMERAL_ALTERNATIVE.search(text):
+        return text, "unreadable_numeral"
+    own = {w.strip(".,;:?").casefold() for w in DESCRIPTION.sub(" ", text).split()}
+    for description in DESCRIPTION.findall(text):
+        if refusal := _description_refusal(description, own):
+            return text, refusal
+    text = DESCRIPTION.sub(" ", text)
+    text = ATTACHED_NUMERAL.sub(r"\1 \2", text)
+    tokens, numerals = [], 0
+    for token in text.split():
+        if numeral := numeral_of(token):
+            tokens.append(numeral)
+            numerals += 1
+        elif refusal := _refusal(token):
+            return text, refusal
+        else:
+            tokens.append(token)
+    if numerals > 1:  # "Neferu I II": the keys would run them together ("neferuiii")
+        return text, "unreadable_numeral"
+    return " ".join(tokens), None
 
 
 def numeral_of(token: str) -> str | None:
@@ -417,31 +497,11 @@ def royal_woman_cued(field_value: str, span_start: int) -> bool:
 
 def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: set[str],
                         record_dynasty: int | None) -> dict:
-    # A wrapped regnal numeral ("[II]", "(II)", "II.") is written bare before any tier: the
-    # fold deletes bracketed text, so "Berenike [II]" would otherwise meet the bare "Berenike"
-    # on the claim-graph keys and resolve to another ruler (Codex review).
-    # A wrapped numeral attached to the name ("Cleopatre(II)", "Berenike[II]") is split off
-    # first, as the claim-graph matcher reads it (Codex review).
-    text = BRACKET_SPACE.sub(lambda m: m[1] or m[2], text)
-    text = ATTACHED_NUMERAL.sub(r"\1 \2", text)
-    text = " ".join(numeral_of(t) or t for t in text.split())
-    # Any bracketed numeral still left (uncertain "[II?]", lowercase "[ii]", "[ II ]",
-    # "Berenike[II]") would be deleted by the fold and the bare name accepted: refuse instead.
-    # So is more than one numeral ("Neferu I II"): the keys would read them run together as one
-    # ("neferuiii", Neferu III) (Codex review).
-    # And any token still holding a numeral with a mark the readable forms lack ("II?", "?II",
-    # "II!"): the keys would drop the mark and read a numeral the source doubts (Codex review).
-    # A numeric character is never part of a name: an Arabic numeral ("Ahhotp 2"), an OCR
-    # misreading of a Roman one ("Ahhotp 11") or a Unicode Roman numeral ("Berenike Ⅱ"), all of
-    # which every key would drop (Codex review).
-    if UNREAD_NUMERAL.search(text) or sum(bool(NUMERAL.match(t)) for t in text.split()) > 1 \
-            or any(QUALIFIED_NUMERAL.fullmatch(t) for t in text.split()) or any(c.isnumeric() for c in text):
-        return {"resolution_method": None, "candidate_ids": [], "context_rule": "unreadable_numeral",
-                "status": "unmatched", "target_ids": []}
-    # A doubt mark anywhere ("Berenike II (?)", "Berenike II ?", "Ahhotep?") questions the
-    # reading, and every key drops it: refuse rather than resolve with confidence (Codex review).
-    if "?" in text:
-        return {"resolution_method": None, "candidate_ids": [], "context_rule": "doubted_mention",
+    # Readable numerals are written bare before any tier ("Berenike [II]" would otherwise meet
+    # the bare "Berenike" on the claim-graph keys); a mention that cannot be read is refused.
+    text, refusal = read_mention(text)
+    if refusal:
+        return {"resolution_method": None, "candidate_ids": [], "context_rule": refusal,
                 "status": "unmatched", "target_ids": []}
     exact = sorted(index.exact.get(surface_key(text), ()))
     if exact:

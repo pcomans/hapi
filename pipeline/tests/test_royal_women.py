@@ -437,10 +437,15 @@ def test_the_weak_sign_tier_runs_only_when_the_first_two_find_nothing(index) -> 
     for label in placeholders:
         assert rw.resolve_royal_woman(index, label, record_king_ids=set(), record_dynasty=None)["context_rule"] == (
             "unreadable_numeral"), label
-    for label in (label for label in labels if label not in placeholders):
+    # The index holds surface keys (lowercased); a mention is cased as written, and a bare
+    # lowercase "i" is refused as an unread numeral, so the sweep reads each key re-cased.
+    def cased(key: str) -> str:
+        return " ".join(t.upper() if set(t) <= set("ivx") else t[:1].upper() + t[1:] for t in key.split())
+    for key in (label for label in labels if label not in placeholders):
+        label = cased(key)
         f = rw.resolve_royal_woman(index, label, record_king_ids=set(), record_dynasty=None)
         assert f["resolution_method"] == "raw_exact", label
-        assert f["candidate_ids"] == sorted(index.exact[label]), label
+        assert f["candidate_ids"] == sorted(index.exact[key]), label
         if "e" in label:
             variant = label.replace("e", "é", 1)
             g = rw.resolve_royal_woman(index, variant, record_king_ids=set(), record_dynasty=None)
@@ -521,3 +526,49 @@ def test_the_resolvers_numeral_reader_agrees_with_the_matchers() -> None:
     from pipeline.authority.claimgraph.matcher import regnal_number_of
     for name in ("Ramesses III", "Amenophis II.", "Psusennes I", "Userkare (I)", "Cleopatra VII"):
         assert rw.numeral_of(name.split()[-1]) == regnal_number_of(name), name
+
+
+@pytest.mark.parametrize(("text", "expected"), [
+    # A lowercase numeral is unread on every tier, never dropped (code review of PR #365): bare
+    # "ii" would otherwise be no numeral on the weak-sign tier and leave Ahhotep I.
+    ("Ahhotp ii", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep ii", ("unmatched", None, [], "unreadable_numeral")),
+    ("Neferu i ii", ("unmatched", None, [], "unreadable_numeral")),
+    ("Neferu I ii", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotp-II", ("unmatched", None, [], "unreadable_numeral")),
+    ("Neferu (II or III)", ("unmatched", None, [], "unreadable_numeral")),
+    # A description is dropped only when it is about someone else: one that doubts or holds a
+    # numeral of the mention's own is refused (scope review).
+    ("Ahhotep (II ?)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (perhaps II)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (? II)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (perhaps the mother)", ("resolved", "raw_exact", ["dodson_hilton:Ahhotep I"], "family")),
+    ("Ahhotep (probably ?)", ("unmatched", None, [], "doubted_mention")),
+    ("Ahhotep (Ahhotep II)", ("unmatched", None, [], "unreadable_numeral")),
+    # A capital I, V or X ending a longer segment may be a run-on numeral, after any letter.
+    ("Ahhotp'II", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotp’II", ("unmatched", None, [], "unreadable_numeral")),
+    ("AhhotpʿII", ("unmatched", None, [], "unreadable_numeral")),
+    ("AhhotEII", ("unmatched", None, [], "unreadable_numeral")),
+    # All caps hides where a name ends and a numeral starts, in any script or segment.
+    ("ʿAḤḤOTPII", ("unmatched", None, [], "unreadable_numeral")),
+    ("AHMOSE-NEFERTARII", ("unmatched", None, [], "unreadable_numeral")),
+    ("NEFERTARI", ("unmatched", None, [], "unreadable_numeral")),
+    ("NEFERTARII)", ("unmatched", None, [], "unreadable_mention")),
+    # A numeral standing apart is read in capitals too; a superscript is a numeric character.
+    ("CLEOPATRA III", ("unmatched", None, [], None)),
+    ("Nefertari¹", ("unmatched", None, [], "unreadable_numeral")),
+    # Anything that is no name token is refused, not guessed.
+    ("Ahhotep & Kamose", ("unmatched", None, [], "unreadable_mention")),
+    ("Ahhotep/Iah", ("unmatched", None, [], "unreadable_mention")),
+    # A whole-word description is not the name, and the name still resolves as it did.
+    ("Tiye (wife of Amenhotep III)", ("ambiguous", "raw_exact",
+                                      ["dodson_hilton:Tiye A", "dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"],
+                                      None)),
+    # A transliteration is a name token.
+    ("Jꜥḥ-ms.w", ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes A"], "family")),
+    ("Ḥi", ("unmatched", None, [], None)),
+])
+def test_the_mention_reader_reads_names_and_refuses_the_rest(index, text, expected) -> None:
+    f = rw.resolve_royal_woman(index, text, record_king_ids={"king:taa-ii"}, record_dynasty=None)
+    assert (f["status"], f["resolution_method"], f["target_ids"], f["context_rule"]) == expected

@@ -585,15 +585,17 @@ def test_a_doubt_mark_anywhere_refuses_the_mention(graph_index, text) -> None:
     assert (found["status"], found["context_rule"], found["target_ids"]) == ("unmatched", "doubted_mention", [])
 
 
-@pytest.mark.parametrize(("text", "target"), [
-    ("Mer[i]taten", "dodson_hilton:Meryetaten"), ("Meryet[a]ten", "dodson_hilton:Meryetaten"),
-    ("[I]setneferet", None)])
-def test_a_restoration_inside_a_word_is_not_a_numeral(graph_index, text, target) -> None:
-    """A bracket followed by a letter restores letters of the name (Codex review)."""
+@pytest.mark.parametrize(("text", "expected"), [
+    ("Mer[i]taten", ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")),
+    ("Meryet[a]ten", ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")),
+    ("[I]setneferet", ("ambiguous", "weak_sign_skeleton", ["dodson_hilton:Isetneferet A", "dodson_hilton:Isetneferet B",
+                                                           "dodson_hilton:Isetneferet C", "dodson_hilton:Isetneferet D"],
+                       None))])
+def test_a_restoration_inside_a_word_is_not_a_numeral(graph_index, text, expected) -> None:
+    """A bracket followed by a letter restores letters of the name (Codex review): the mention
+    reaches the weak-sign tier as the name, and only the record can confirm it."""
     found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=None)
-    assert found["context_rule"] != "unreadable_numeral", found
-    if target is not None:
-        assert target in found["target_ids"] + found["candidate_ids"], found
+    assert (found["status"], found["resolution_method"], found["target_ids"], found["context_rule"]) == expected
 
 
 @pytest.mark.parametrize("text", [
@@ -642,10 +644,18 @@ def test_an_attached_numeral_selects_or_refuses_on_the_weak_sign_tier(graph_inde
     assert found("Cleopatre(III)") == ("unmatched", [])
 
 
-def test_no_authority_label_runs_a_numeral_on_to_a_name(graph_index, women) -> None:
-    """The run-on numeral refusal ("CleopatreII.") must never fire on a real name."""
+def test_the_mention_reader_refuses_no_authority_label(graph_index, women) -> None:
+    """The allow-list (`read_mention`) must read every real name the authority holds: D&H's
+    labels and alternative names, the female rulers' king names, and every label the real king
+    graph gives them (titulary and transliterations included) — all but D&H's two placeholder
+    ids, which carry no name."""
     labels = [label for w in women for label in (*w.labels, *w.alt_names)]
     rulers = json.loads(rw.FEMALE_RULERS.read_text(encoding="utf-8"))["entries"]
     labels += [entry["king_name"] for entry in rulers]
-    assert len(labels) == 504 and "Cleopatra VII Philopator" in labels
-    assert [label for label in labels if rw.UNREAD_NUMERAL.search(label)] == []
+    kings = GraphKings()
+    for entry in rulers:  # every female ruler, with or without a D&H row, as build_index reads her
+        (king_id,) = kings.resolve(entry["king_name"])["target_ids"]
+        labels += [rw.LEADING_QUEEN.sub("", label) for label in kings.labels(king_id)]
+    assert "Cleopatra VII Philopator" in labels
+    refused = sorted({label for label in labels if rw.read_mention(label)[1]})
+    assert refused == ["–18P", "–18Q"]
