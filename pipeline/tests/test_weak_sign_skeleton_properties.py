@@ -605,7 +605,8 @@ def test_a_restoration_inside_a_word_is_not_a_numeral(graph_index, text, target)
     "CLEOPATREII", "BERENIKEII.", "AHHOTPII", "TETI", "TETISHERI",  # all-caps: TETI is the deliberate loud miss
     "Nefertit[i]", "Neferu I II", "Neferu I I", "Cleopatre II (III)",
     "Berenike II?", "Berenike II?.", "Cleopatre ?II", "Cleopatre II!", "Cleopatre ii?",
-    "Ahhotp 2", "Ahhotp 11", "Cleopatre (2)", "Berenike2", "Cleopatre ２"])
+    "Ahhotp 2", "Ahhotp 11", "Cleopatre (2)", "Berenike2", "Cleopatre ２",
+    "Berenike Ⅱ", "Cleopatre ⅲ", "BerenikeⅡ", "Cleopatre Ⅻ", "Ahhotp ½"])
 def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
     """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
     name to match another ruler (scope review of the Codex fix): it is refused."""

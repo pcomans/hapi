@@ -431,8 +431,8 @@ def test_the_weak_sign_tier_runs_only_when_the_first_two_find_nothing(index) -> 
     name the first two resolve, so it changes none of their results."""
     labels = [label for label in index.exact if label.strip()]
     assert len(labels) == 419
-    # D&H's placeholder ids ("–18P") carry no name, and a digit in a mention is refused.
-    placeholders = [label for label in labels if any(c.isdigit() for c in label)]
+    # D&H's placeholder ids ("–18P") carry no name, and a numeral character in a mention is refused.
+    placeholders = [label for label in labels if any(c.isnumeric() for c in label)]
     assert placeholders == ["–18p", "–18q"]
     for label in placeholders:
         assert rw.resolve_royal_woman(index, label, record_king_ids=set(), record_dynasty=None)["context_rule"] == (
