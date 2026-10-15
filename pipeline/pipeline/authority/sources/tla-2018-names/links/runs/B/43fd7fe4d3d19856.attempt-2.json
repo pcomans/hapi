@@ -1,0 +1,980 @@
+{
+ "unit_id": "Neferuni",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "nfrwnt",
+  "C2": "nfrnwj",
+  "C3": "nfrjwnw",
+  "C4": "nfrwnjt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Neferuni\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Nfr-wn.t\n  Lemma 1: German: Nefer-wenet | English: (none)\n\nCandidate C2: Nfr-nw-j\n  Lemma 1: German: Nefer-nu-i | English: Nefer-nw-i\n\nCandidate C3: Nfr-jwn.w\n  Lemma 1: German: Nefer-iunu | English: (none)\n\nCandidate C4: Nfr.w-Nj.t\n  Lemma 1: German: Neferu-Neith | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Neferuni\", \"choices\": [<zero or more of \"C1\", \"C2\", \"C3\", \"C4\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "11fe0c2ec590574e406765b8497f6b5f8d69f971f1ed7308d31689a212059562",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "3e3e3e7d-f3d9-4718-85f2-8347d5fabebd",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "13cbf08d-7269-48e3-a7b6-c36ad153b4d2",
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "3e3e3e7d-f3d9-4718-85f2-8347d5fabebd",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "43416eab-bb10-46b2-9090-e4995d6a25e0",
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-on2s7dmp",
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "c000e8c1-aeb9-4d1d-ae88-4a7c7fb80ee2",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-on2s7dmp/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1978105.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 6,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "57f8fac7-2942-4c14-b894-12dc9b0dccc6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "0818f7e1-fdd4-48fb-91ca-f0cc28865d83"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "cd6f951b-aa2c-4a00-9aab-db38e81a1ce0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 6,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "3b40dd4d-396a-45dd-a311-4ab7b378a90d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "e2886aaa-81d4-4c88-ba2f-395b7c1a0890"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "e92b5af8-1d0f-4f9d-a1c4-cf298de83cc1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "076ab6d2-c686-41ee-908f-6b8d04af6dba"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "cef93838-0829-4b6b-9011-48db49c52943"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "808e53ad-7708-4897-84e2-8274be5a7849"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "9e751d5e-28e7-4e83-a6f9-ee35f10c0141"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "c43af4b6-06d1-4233-90fd-04d48c6ddc43"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "46d69d29-4b02-48f3-aa70-8829eb7904b8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 6,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "1c48d1c7-8cf7-442a-9a29-dd4f6f800ba6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "5437d0bd-6fdf-4b56-8548-2ce3fae3fff1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "ce7acdc0-040a-4d04-99b6-d85f54cd43bf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "053f28b4-e8a2-4efe-be02-517b1fa66f61"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 62,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "9d2c8015-2001-405a-a363-3cf6e89e3a47"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 64,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "7267abbd-7640-482f-87d5-7c56ac62ebbc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 66,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "384c5d24-fcec-4d14-b725-a6a5fe6a0392"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 68,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "1b58052c-430a-4163-8770-ccae193a37c0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 70,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "35d4c7d9-ebbc-47c1-be8a-2a4d8a72e10a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 73,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "c6e146ce-102a-4ff6-80a3-47b1b8ab4782"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 79,
+   "estimated_tokens_delta": 6,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "9077aad6-0494-43b8-92f6-068e8a24411a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 81,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "bf3630f8-efd9-4038-a0bb-172f08d7688d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 83,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "83166c6b-e141-43bf-a9ed-523fe311657c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 86,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "edb0e0fe-2f04-4f96-9cac-015ae4f0fe5a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 90,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "4cd0a425-ecf2-4364-a932-81924961d746"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 95,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "2f6c7ea5-3ad5-46b6-a271-443a59f9a6a4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 98,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "f0af0c67-fdbb-41f5-b627-14bdd6a6f614"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 101,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "bc4c96fb-bf83-42f4-90ae-bba9a8e2dae3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 107,
+   "estimated_tokens_delta": 6,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "582cfd44-7534-4b0a-b827-b25a8ee4bc49"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 109,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "ec982c86-c7c4-46c7-af90-e00d87ea7b56"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 113,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "1cc75dee-7abe-443d-81f4-d4e6d78550b2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 120,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "8970aa02-fab8-4956-9341-8a9e0864742c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 123,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "b64345e6-0bdd-4911-85e7-66555ec5933b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 125,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "72f7f897-71d4-4fb9-a51d-3704eeac7494"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 130,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "eb87e88b-180b-4e0f-988e-47f42183160c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 132,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "c445e0c7-4c1c-4685-9821-28dd89f5ab36"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 135,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "beffa176-6eda-47ec-a886-6ff8cd4bbc76"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 142,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "76b6a3c8-8b0e-4e07-a2c9-56c4c4471220"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 143,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "5eb8f542-a18a-44a4-9c60-bc3e9272bb83"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 147,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "070610c3-20f9-434f-89f6-2e56ff6d6cf7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 148,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "5131b448-4f99-4b0c-b17d-4dccf59cf33d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 152,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "0a1aa531-0ad7-451f-9843-5dae6418c221"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 153,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "6765d9ac-948f-481c-ac86-6ed01665c266"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 157,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "2947cc93-a941-485b-b0d8-e911a81d57f4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 158,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "82f864fb-9d90-4bfd-9a65-d5febb17ce68"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 160,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "09174147-f9ce-4470-9701-4ebe2517ad49"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 165,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "d13ab320-1a92-4dbe-99eb-34a011e2da8d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 168,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "dbb92069-584a-404d-95f0-0cf0f8319511"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 175,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "1668700b-0aee-47ea-997a-62d967f375c0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 177,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "277652f0-3ad3-42fc-88c4-d814ab5648e9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 181,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "b58a447c-4c51-45a3-aa84-33c761374503"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 186,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "57e31824-30a4-4e51-b432-16fa5838e3dd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 188,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "6240b2de-8a33-46cf-b00d-4b6dfdfa2e69"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 191,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "88d49867-9993-47e8-9242-7dcea18ddc7a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 195,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "742afb25-15dc-45cb-a46a-b5315fdb02f9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 202,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "4dfa7de0-d66b-4160-9692-9d7c6e062062"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 204,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "23c819e5-f0e0-4ba9-ac01-c81008c41da7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 205,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "16ecb172-8413-4a6e-932b-263938175469"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 210,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "88728c86-04cc-4f69-96df-75fd1c1c97c3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 212,
+   "estimated_tokens_delta": 2,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "53821771-f75d-46ab-86bf-1abd34026d28"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 216,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "7f13a989-bf18-4768-96d1-99e2193d19f8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 220,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "ae13669f-840b-430d-b739-b438141c899c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 223,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "bc8824f6-6222-4d89-b6db-5ee93a8efa46"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 230,
+   "estimated_tokens_delta": 7,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "cfd9c6d0-5dd5-4368-90c0-77e932ea2841"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 234,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "dd0af738-99cb-48fd-937f-8652c738ff67"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 237,
+   "estimated_tokens_delta": 3,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "75bc5921-c1f0-469f-8628-ac0ced883252"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 243,
+   "estimated_tokens_delta": 6,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "2a863bf5-2248-4d1b-b80d-207b37f47afe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 244,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "c1590c26-acec-4226-93c6-10b0e63b1a2b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 248,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "6c676d88-0a88-4b02-8b06-d44da1d5d362"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 253,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "c583f072-5e8f-4c7e-8ff6-893d4db9f1a4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 258,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "6cb12568-c805-49c8-bff4-33c28b43181a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 263,
+   "estimated_tokens_delta": 5,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "257eac8a-2884-4397-9421-d4d096bd491e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 267,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "695ba2e5-fdda-457b-9f0e-2f4c295a7c2f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 271,
+   "estimated_tokens_delta": 4,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "deba6d0b-4616-4b59-a06d-266688037cf4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 272,
+   "estimated_tokens_delta": 1,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "57e46dff-c667-4b2d-ab2a-d4b5da92f4df"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 871,
+   "estimated_tokens_delta": 599,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "7f7b85a4-f381-4814-8114-d0ad1a9d0ed9"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LoNqkyv9cWVMJ9XKuA",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm trying to break down \"Neferuni\" into its hieroglyphic components, considering it might derive from \"Nefer\" plus \"wenet,\" with the final \"i\" being an added vowel to form something like \"Neferunet.\"\n\nI'm also testing a second possibility, Nfr-nw-j, but the consonant order doesn't quite line up as cleanly—it would require the \"w\" to be rendered as \"i,\" which feels like a stretch even though the rule technically permits it. Neither reading maps perfectly onto known names, so I'm weighing which candidate fits the conventional pattern better.\n\nReconsidering C4, dropping Neith's feminine -t ending seems plausible since the dot notation allows for omission, giving \"Neferu-Ni\" as a natural reading—Neferu being a very common element meaning \"beauty.\" I'm now weighing this against C1's \"Nefer-wenet\" reading to see which fits the transliteration pattern more naturally.\n\nC2 and C3 both feel strained given the letter correspondences, so I'll settle on C4 as my answer.\n\n",
+      "signature": "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"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1347,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "90cf0b79-d7a7-4d7e-b908-cae020a68d1c",
+   "timestamp": "2026-10-15T16:31:36.046Z",
+   "request_id": "req_011Cg4LoNcrpv22VPLFhdf32",
+   "thinking_duration_ms": 16467,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LoNqkyv9cWVMJ9XKuA",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Neferuni\", \"choices\": [\"C4\"], \"reasoning\": \"C4 is the only natural reading. Record 1 divides as Neferu-ni. C1 (Nfr-wn.t, 'Nefer-wenet', nfr + the place or goddess Wenet): the consonants can be forced to fit if the t is dropped and the final i is taken as an added vowel. But Wenet would be spelled -wenet or -wen, and Neferuni does not read naturally as nfr + wnt. Rejected. C2 (Nfr-nw-j, 'Nefer-nu-i'): the candidate has r-n-w-j, while Neferuni has r-u-n-i. It fits only if u is an added vowel, the w is rendered as the final i and the j is dropped. The natural spelling of these words is Nefernui, so this reading is strained. Rejected. C3 (Nfr-jwn.w, 'Nefer-iunu', nfr + Iunu, Heliopolis): it fits only if j is dropped and the final w is rendered as i. The natural spelling is Neferiunu, so record 1 does not render these words. Rejected. C4 (Nfr.w-Nj.t, 'Neferu-Neith', nfr.w 'beauty' + the goddess Neith): Neferu renders nfr.w, n renders n, i renders j, and the feminine ending .t is omitted, which the rules allow. Record 1 reads exactly as Neferu-Ni(t). Same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1347,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "uuid": "f6bad466-eadc-4bbd-adf8-8cd6470afebe",
+   "timestamp": "2026-10-15T16:31:39.962Z",
+   "request_id": "req_011Cg4LoNcrpv22VPLFhdf32"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "8d15c788-247c-4c65-a766-75d2d8da5687",
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c"
+  },
+  {
+   "duration_api_ms": 21386,
+   "stop_reason": "end_turn",
+   "session_id": "16f77bb5-f7b8-4a4a-a1cf-721780f01b5c",
+   "total_cost_usd": 0.0417174,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 345,
+    "cache_read_input_tokens": 1347,
+    "output_tokens": 1934,
+    "output_tokens_details": {
+     "thinking_tokens": 1431
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 345,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1934,
+      "cache_read_input_tokens": 1347,
+      "cache_creation_input_tokens": 345,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 345
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 1934,
+     "cacheReadInputTokens": 1347,
+     "cacheCreationInputTokens": 345,
+     "webSearchRequests": 0,
+     "costUSD": 0.0417174,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 1431,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Neferuni\", \"choices\": [\"C4\"], \"reasoning\": \"C4 is the only natural reading. Record 1 divides as Neferu-ni. C1 (Nfr-wn.t, 'Nefer-wenet', nfr + the place or goddess Wenet): the consonants can be forced to fit if the t is dropped and the final i is taken as an added vowel. But Wenet would be spelled -wenet or -wen, and Neferuni does not read naturally as nfr + wnt. Rejected. C2 (Nfr-nw-j, 'Nefer-nu-i'): the candidate has r-n-w-j, while Neferuni has r-u-n-i. It fits only if u is an added vowel, the w is rendered as the final i and the j is dropped. The natural spelling of these words is Nefernui, so this reading is strained. Rejected. C3 (Nfr-jwn.w, 'Nefer-iunu', nfr + Iunu, Heliopolis): it fits only if j is dropped and the final w is rendered as i. The natural spelling is Neferiunu, so record 1 does not render these words. Rejected. C4 (Nfr.w-Nj.t, 'Neferu-Neith', nfr.w 'beauty' + the goddess Neith): Neferu renders nfr.w, n renders n, i renders j, and the feminine ending .t is omitted, which the rules allow. Record 1 reads exactly as Neferu-Ni(t). Same name.\"}",
+   "ttft_ms": 17483,
+   "type": "result",
+   "duration_ms": 21475,
+   "uuid": "e1876bbf-3e65-4a32-8171-a8a6cffa2cc4",
+   "ttft_stream_ms": 1015,
+   "time_to_request_ms": 35,
+   "first_content_frame_ms": 1015,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Neferuni",
+   "choices": [
+    "C4"
+   ],
+   "reasoning": "C4 is the only natural reading. Record 1 divides as Neferu-ni. C1 (Nfr-wn.t, 'Nefer-wenet', nfr + the place or goddess Wenet): the consonants can be forced to fit if the t is dropped and the final i is taken as an added vowel. But Wenet would be spelled -wenet or -wen, and Neferuni does not read naturally as nfr + wnt. Rejected. C2 (Nfr-nw-j, 'Nefer-nu-i'): the candidate has r-n-w-j, while Neferuni has r-u-n-i. It fits only if u is an added vowel, the w is rendered as the final i and the j is dropped. The natural spelling of these words is Nefernui, so this reading is strained. Rejected. C3 (Nfr-jwn.w, 'Nefer-iunu', nfr + Iunu, Heliopolis): it fits only if j is dropped and the final w is rendered as i. The natural spelling is Neferiunu, so record 1 does not render these words. Rejected. C4 (Nfr.w-Nj.t, 'Neferu-Neith', nfr.w 'beauty' + the goddess Neith): Neferu renders nfr.w, n renders n, i renders j, and the feminine ending .t is omitted, which the rules allow. Record 1 reads exactly as Neferu-Ni(t). Same name."
+  }
+ }
+}

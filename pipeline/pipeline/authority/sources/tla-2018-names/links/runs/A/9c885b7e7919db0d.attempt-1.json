@@ -1,0 +1,609 @@
+{
+ "unit_id": "Mehytenweskhet",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "mḥtnwsḫt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Mehytenweskhet\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Mḥ.t-n-wsḫ.t\n  Lemma 1: German: Mehet-en-usechet | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Mehytenweskhet\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "b575e41a527c566ac2945850ad9faa41dfc3952fc9a92c764fd9c94c0f5d8c0e",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "f9e633ad-f9a6-4819-9512-73065fd593cb",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "6c93b9a7-2330-4bd6-9444-2a2143daa86b",
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "f9e633ad-f9a6-4819-9512-73065fd593cb",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "a882a3b1-3fe9-4494-88cb-8817bd05b894",
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-fufw5ukq",
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "8784e281-9130-42a7-83b4-de3f73bc5b34",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-fufw5ukq/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1970073.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "12c1ff5e-4f8b-4c9f-9ad5-cd3678b08b63"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "d6264be3-6002-4d26-b507-60e7368b2f34"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "0901e3e5-d797-47cc-98d3-a3e28df6b810"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "e1f5eeb3-98a9-43bb-9102-7987d9b01879"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "33551553-a854-4a3a-88a9-87c8def7b68f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "e4318037-401e-4664-89e6-db38699372ee"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "49cfefca-c08c-4958-867b-dcb2ed5a7fdf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "4f7370ee-91dd-4559-bfe7-d9b56e922b54"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "8f968155-7d93-47be-abc5-ed025b6774cc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 2,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "f8d93959-2e27-49b5-a96e-b74c5873c189"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "32fb5d02-4192-459a-9857-a046aaca90c8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 5,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "4a1f42f8-b27e-4da0-8faf-065cff1ce88e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "b55a9003-7600-4717-b0a1-db4e94855b89"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "68b22be0-893a-4559-b59c-b02cba6f95b9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "9781740d-9a9e-4fa5-b72a-6b104265114d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "11ac05d8-a776-4186-9e30-13067c1f1f27"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "cb31760b-1d8e-4eb0-90ce-89345710c896"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "2861715f-4004-4a15-b7f6-1b068a963c35"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "091d5f51-633e-4c80-ada3-ed863a791bdc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 2,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "1e4cd02b-8773-49e3-9b00-2ceeeecafc1b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "0ad5ac43-8c5a-403b-8f69-77c6aa8f0c8b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 3,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "08624b77-8235-47f9-b5e7-6a70a45df8ff"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 3,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "0cee9094-96d8-41a5-9bca-e575813c52c8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 5,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "3e5cd9a3-99c0-4978-81d5-f04ae813185d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 2,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "76d6824e-e8d6-47ef-9d25-93223335a223"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 4,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "1814ea7a-b2a6-41e4-92e3-9c0ea0ebe659"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 6,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "4e864ac2-cce4-4593-92e2-9b2710db39af"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "c2250766-4b4a-498b-a0b9-ee128bc419d6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 2,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "095467de-0b76-463d-a4bc-b031f3425c90"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 61,
+   "estimated_tokens_delta": 4,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "929c6722-4f44-4447-8813-03040abe60eb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 62,
+   "estimated_tokens_delta": 1,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "f82023ae-6b90-448e-88dd-2cbb8be6233e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 281,
+   "estimated_tokens_delta": 219,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "6895800d-bf01-4d8b-b55e-3261a6c2fd88"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LPm2qHhBokSDR4pZYJ",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down \"Mehytenweskhet,\" I'm testing whether it maps to Mḥ.t-n-wsḫ.t — the lioness goddess Mehet combined with \"wide hall/broad court\" — and the consonant pattern lines up well.\n\n",
+      "signature": "CAQS2ggKEAgSGAI4AUIIdGhpbmtpbmcSDJbdVIopS88WuyHM7RoMK6fJBfC9P752V67WIjDhpqcRTAxcWxiihTQEi5Zy5wZIA9a0WDTzYLuEcDhEPGJ5mWGa4wOSIXy2aHKRuqsq9wcH9RWYKTqlL7vTK2ogEKuXsDk+3ljsvxCBv/7+hDQv612g/IlyaKn0nS0JduaouimQ2FLI6MiBjCCnnYJfbJVcipzAgxHY2+W0fmEMDKBcjC3sSZDB2A9TbRrF2jm59IvuqAHuUfRfaICLTZwCz9WHDg6qiBTPNuEM3B72opTgG1rytKwDGeWU+H+opXMOVPaKZrQ/Fnstb5cWR76wC+Aw5YktNMgdnV5eHxJR+DqDk7aKgoT9JBVvNbpAF/nT7RoACbHmv+Zz2MuadZUBrU/wRdxnsAx81nr4iHhQ08ojVSCVLp2SLWVFvqyUhUYILQ9KWKZByw8kLnZlfS+IZxK7GCImWWUcFtD/L7sgibQU9fF7X+6wQNRR5Ptr/4BzcBSZ910wKedjJ1OfZvEyXWzo9mdnfvbOr7unVR13m9/vfJG7eMjszumUcry9Kz0mSL+AXc2b5+cUidxU2zZvNFMfxchz0AmI7VqgBKWL89SwE5a/q52RS3SFy6m01yE3AMP28cY9CxfqTrzlJUwKDsKEZYsK5u2optL+rIwY1wIPdHPl0JymfWE6Jime+WBYpEkju2Xl/W6ZmN8rhqHKSDPqKQhH+fmprQ6fBQaJtykEUztBjuLy6ZvrCf4FukpKPAl6HkYEJQhJxpqTFO7zrksagakkLk3AC5HLPxnRMA1dd8GV27APRW5VI749aW9+4nzwn3NMfAG/6ojnkh8aGDWsnIbPOHNrmUT9PG4dj2b94f74feqISTJzK6YdieYCQlJg9/DfmakQpV1Okw3Ema4foneyecOx4Ur25v0g7il7kbY0+hcgmE6NxArj9ZCUZlNCV8McJU8JwpzXwOR1DNCrMgU9CBL263ThYGnwandRGVhEbfc45uDKYOy/fBIDnUrXp8Qm+qJCtY5Z981Eic/J1xesu94Lqn5OYHst0ApfGZTIdbSunlWoZY/ZA6/aOvwXbrWPEtnxxbRGlnm1H62AR2anSniAEC+ns8v57kLET4E+h28DJ73tXzIpYhHzfnk4/yVXPWHlkD4akIdg0J8qrJUjCwcBWD9UtaTqvLRuYJh1t0iEucfubAYtEFIxO36JiNeTZRJGdG9kdAhqshGkhMZLw/K8RkbmovLm04291M0Jq/c0lsmgyEF3mj9t2SZIk7fXF0+/0rJHLsiLHK2JVsoz0BQ4btDMvoW6i/PQA0lpZFEZw9kUnOSVHjHAo3OVmitG3jt9yS3NuWzrRzcgvlrz90IoylGSDKyWeEw+Rx+yLCvpg4c+nmZKrlQ0vw3Ohhqw3weCj0Oc+Nz1hb+wT5NYuwU71ENO4cKXs6pocrnzfAgzqYlXUfPnsMnOfH0C89S8k4LcGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1565,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1565
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "039e196b-f4cd-4c8a-bed5-1bf30f39e319",
+   "timestamp": "2026-10-15T16:26:04.050Z",
+   "request_id": "req_011Cg4LPkjDhXY42CFGj8HRf",
+   "thinking_duration_ms": 4644,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LPm2qHhBokSDR4pZYJ",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Mehytenweskhet\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Mḥ.t-n-wsḫ.t, read as Mehet (Mḥ.t, the goddess Mehit), n ('of'), and wsḫ.t ('broad hall'). Record 1, Mehytenweskhet, reads as Mehy(t) + en + weskhet. The consonants are m, ḥ→h, t, n, w, s, ḫ→kh, t, in the same order as the candidate. The y is a weak consonant or added vowel, and both feminine t endings are present. The words are the same, so C1 is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1565,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1565
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "uuid": "3b886820-bd10-481e-b8d4-006091b457f8",
+   "timestamp": "2026-10-15T16:26:04.054Z",
+   "request_id": "req_011Cg4LPkjDhXY42CFGj8HRf"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "e3f4f803-d9fa-40a5-b82a-84c6ac3914fa",
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f"
+  },
+  {
+   "duration_api_ms": 5877,
+   "stop_reason": "end_turn",
+   "session_id": "606cc24a-7b70-405e-b95b-4c050f6b4b1f",
+   "total_cost_usd": 0.011224,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1565,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 496,
+    "output_tokens_details": {
+     "thinking_tokens": 274
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1565,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 496,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1565,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1565
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 496,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1565,
+     "webSearchRequests": 0,
+     "costUSD": 0.011224,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 274,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Mehytenweskhet\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Mḥ.t-n-wsḫ.t, read as Mehet (Mḥ.t, the goddess Mehit), n ('of'), and wsḫ.t ('broad hall'). Record 1, Mehytenweskhet, reads as Mehy(t) + en + weskhet. The consonants are m, ḥ→h, t, n, w, s, ḫ→kh, t, in the same order as the candidate. The y is a weak consonant or added vowel, and both feminine t endings are present. The words are the same, so C1 is the same name.\"}",
+   "ttft_ms": 5902,
+   "type": "result",
+   "duration_ms": 5982,
+   "uuid": "1ff18385-e0f1-4da7-b28d-2baae1627c64",
+   "ttft_stream_ms": 1258,
+   "time_to_request_ms": 51,
+   "first_content_frame_ms": 1258,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Mehytenweskhet",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is Mḥ.t-n-wsḫ.t, read as Mehet (Mḥ.t, the goddess Mehit), n ('of'), and wsḫ.t ('broad hall'). Record 1, Mehytenweskhet, reads as Mehy(t) + en + weskhet. The consonants are m, ḥ→h, t, n, w, s, ḫ→kh, t, in the same order as the candidate. The y is a weak consonant or added vowel, and both feminine t endings are present. The words are the same, so C1 is the same name."
+  }
+ }
+}

@@ -1,0 +1,577 @@
+{
+ "unit_id": "Ahhotep",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "jꜥḥḥtp"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Ahhotep\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Jꜥḥ-ḥtp\n  Lemma 1: German: Iah-hetep | English: Iah-hetep\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Ahhotep\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "dd9053592a4e8e4c51fdcafb11ad4fd5dd7efdcb6a20ae777087c53e08e42f97",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "20335987-4b12-4f3b-a48b-ecf43bf2e74e",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "40049f5d-1c92-406d-adbc-6b0239a62267",
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "20335987-4b12-4f3b-a48b-ecf43bf2e74e",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "7b458a98-32ec-4599-9ed4-76f12c2d35cc",
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-q4i179tp",
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "a0f66c22-614f-4c74-9f5b-c6c942045ca8",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-q4i179tp/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1965537.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "8dd8c2c9-f5d9-4306-a2d8-267923a79787"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "16a70060-50f6-4cd3-87b3-5399b0b2f48f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "47830e9b-29cd-44ea-9a2d-b226bed2c6d6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "4e0acecf-9132-4ba2-a961-209220a69bdc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "b0995060-153c-4114-ae71-57cefd72e0d6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "5d90773e-98b9-4417-a8bb-0e654cc0c3fa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "9a06c2fb-e95c-451c-9cf8-841d86272bf6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 4,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "203967b2-e800-404d-ab55-633d4cb84aa0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "03deb225-95ec-480c-8218-5a6b90c5a71f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "6c60093f-8912-446b-8083-567c7c9e14a7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "5f4ad891-9b8e-4a66-94e1-fa175da1d44e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "7a449de8-ab55-46b5-9272-144fcd9071f9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "acb27a44-9ca4-4e92-a82b-0c91b5242997"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 6,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "b1a6f79e-99fd-499c-a482-ff80cd597388"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 2,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "d8565ee3-67f5-4905-8c18-4f1c596be391"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 2,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "695095bd-0bef-4582-9e67-7c81ea7c08ea"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "d2bc304e-1e8f-4881-8922-35f9f17ba186"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "f1fbc839-183f-4e4d-8d2b-916e694c3443"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "ad760e37-9fd6-4fec-b242-186f1168c322"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "18f7fce8-3766-477c-825c-fa03536ae39f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "3e1044ea-5443-446d-815e-2dfc509d7f2a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 6,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "4ca65b1e-9595-4dfa-8d9d-31be352056fe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 58,
+   "estimated_tokens_delta": 5,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "dc95b4ab-451e-4c84-a7e2-f05edf9eb926"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 61,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "c7f9f0d8-0bdd-4e9d-823d-80c603768c0b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 64,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "3dd06c50-011b-47fd-809e-046e11bf32bc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 67,
+   "estimated_tokens_delta": 3,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "ea862413-adba-4634-a040-eedaa3d24894"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 68,
+   "estimated_tokens_delta": 1,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "483b850e-e090-4786-9654-7df8788edfdc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 225,
+   "estimated_tokens_delta": 157,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "7fc12faa-2e9e-415a-9cae-daad9d395a09"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LCSyKcYUXfXMd3Hx8f",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm breaking down \"Ahhotep\" etymologically — it derives from Egyptian \"Iah-hetep,\" combining the moon god Iah with \"hetep\" meaning satisfied or at peace, and I'm working through how the consonants map to the modern transliteration.\n\n",
+      "signature": "CAQS+wYKEAgSGAI4AUIIdGhpbmtpbmcSDBhGkUWJa4FDZdGrExoMdqGufk9Ze+LXF4WFIjA9ZJ4QbDvM4BKqJmaJlv+chgB4JisfbM0LsUF9Jn//Ndc2iPnc0ZfrQGzhcjkxjLUqmAb47rgxrdeXW1pFoxtPg+SF//XVCeKnDAMqb+BLPoH/axXQR0If/thA121RttbOqZGOTa41ip2Q+Mkog2a07/WndIYqusACjazj2qLNSDwwJNAZrHMNNKch/I7YnEFXS66l6VnN4X/n24azDkyMwCVab5fq9YbbKLDiW4DV3G69TQOIjhhTarnGM+ltBW/f1SzxKgk+Nl0NJnODPiATkALpvpi8mn5pNlcFnBcGnovARKeBTiFxlajO2YKpVPOg5vMEm0QUz8xMyP/o6WoMX1MGcpAeIuk5jVn4vZ119qMqHzetFHuq1ofGAv3YaIhx6cXEubKxIyUR1WK83KBs0zRhmmX46tswfrzLv1MKfjDccx/ZS+6ogaGnPxPHrEK+mKWeZmJm49UTiUR+3bwXP3pKMdMvIKli6rVmCwTd9nwmlLQuO+CLC9QLjSnSTellqq6sef29idarQBAg1z+ki35ks3biwpGwo2sRRrMvbziPtVJk69sWd6AN5GDQ6p/+KHQV2ifR+WoG6fAeEqcSJ2UvFN14CyLlsCFKW/AaT9kTugZIeCF84N8LK0Sh7LQxdyMQRn7LJoPzmhsmqm+VGPAzz5M9LhvHU9r49rf6UpDAligHPWJbhg9NjpCfUeO7nfdhRyQClp/Fy7Xceib6PtRiCMyraRkjK0gNDKYgKEhbJyW3nSB8S6vql3xIKmzOoB9+uWJN/relgS+kNGMZ6qvKMBh/RuLc4CHBkKZfXsoQ8hBqf7hIhWnPdEb1iua/DhHv0XuFzpxFWa5YskFwEboSpJERfw/tz5AkVuAaAvIebojuIEog3S7lgCAx0mENUtoxXNfrCtyAoNWPxFq0nZ7SmQKte+8zDYKjSL9uPVJRwjM8tl3SqLZrW0lYckdF2EWMrmcdkRlRUCor9XIJUppCVZoHbXeooN+BJekmSSUsRlyiiaOFZ3BIrNE8cFBMLKpUcIXIcopIzHih2B8ymCKWfAUKhI3FauaC4yOHx+QZx1xt7hOOGWyKzxq93XdV7KT0JuYm76U1R7/147YEA10Lvg/YPTq+hDAYAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1556,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1556
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "88ffa60c-a011-4af0-b448-ea76bcd194d5",
+   "timestamp": "2026-10-15T16:23:30.271Z",
+   "request_id": "req_011Cg4LCSkS48kFLDkQQM8so",
+   "thinking_duration_ms": 4417,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LCSyKcYUXfXMd3Hx8f",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Ahhotep\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Jꜥḥ-ḥtp, the moon god Iah followed by ḥtp 'be satisfied', and the TLA gives the modern spelling Iah-hetep. Record 1 'Ahhotep' reads as a(ꜥ) + h(ḥ) for Iah, with the weak j omitted and ꜥ rendered as a vowel, followed by h(ḥ) + o + t + p for ḥtp. No consonant is added or missing, and the words are the same and in the same order (Iah + hetep). This is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1556,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1556
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "uuid": "f7ee14a8-8f78-4d5c-9212-e784d567a99f",
+   "timestamp": "2026-10-15T16:23:30.274Z",
+   "request_id": "req_011Cg4LCSkS48kFLDkQQM8so"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.11,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "e2d70aac-baa7-4cb2-b429-373e3d7e0b1d",
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0"
+  },
+  {
+   "duration_api_ms": 5527,
+   "stop_reason": "end_turn",
+   "session_id": "6fea02ac-d453-449a-92a7-97732c904cb0",
+   "total_cost_usd": 0.010288,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1556,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 406,
+    "output_tokens_details": {
+     "thinking_tokens": 189
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1556,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 406,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1556,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1556
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 406,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1556,
+     "webSearchRequests": 0,
+     "costUSD": 0.010288,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 189,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Ahhotep\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Jꜥḥ-ḥtp, the moon god Iah followed by ḥtp 'be satisfied', and the TLA gives the modern spelling Iah-hetep. Record 1 'Ahhotep' reads as a(ꜥ) + h(ḥ) for Iah, with the weak j omitted and ꜥ rendered as a vowel, followed by h(ḥ) + o + t + p for ḥtp. No consonant is added or missing, and the words are the same and in the same order (Iah + hetep). This is the same name.\"}",
+   "ttft_ms": 5545,
+   "type": "result",
+   "duration_ms": 5601,
+   "uuid": "7d315a6d-1d48-451e-835d-34cfdc3638ba",
+   "ttft_stream_ms": 1128,
+   "time_to_request_ms": 35,
+   "first_content_frame_ms": 1128,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Ahhotep",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is Jꜥḥ-ḥtp, the moon god Iah followed by ḥtp 'be satisfied', and the TLA gives the modern spelling Iah-hetep. Record 1 'Ahhotep' reads as a(ꜥ) + h(ḥ) for Iah, with the weak j omitted and ꜥ rendered as a vowel, followed by h(ḥ) + o + t + p for ḥtp. No consonant is added or missing, and the words are the same and in the same order (Iah + hetep). This is the same name."
+  }
+ }
+}

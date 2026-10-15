@@ -1,0 +1,617 @@
+{
+ "unit_id": "Nesikhonsu",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "njswḫnsw"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Nesikhonsu\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: N.j-sw-Ḫns.w\n  Lemma 1: German: Neschons | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Nesikhonsu\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "d9459eaf4836af4df148cf98077c3cd77c7f00426c39fd9f3883305105969b22",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "42331759-4863-42bb-aa39-f6ae8a83e655",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "acb7a8b3-96f0-47b9-9498-38b8545d3714",
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "42331759-4863-42bb-aa39-f6ae8a83e655",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "e0c57d59-a127-409f-b066-4648f6214af0",
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-qtcob4fg",
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "a93cce0f-1c1a-451a-b2fa-d4a1543b7dfb",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-qtcob4fg/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1974719.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "7e127faf-a22c-47b9-9c5a-6adc31964b0b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "f8fd858e-dc8a-400f-a076-2e09953ca263"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 3,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "86240223-1bf1-4c1d-bc26-11c6ec42d723"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "5768af4a-f810-4e2d-aa60-48875533ce2a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "95df4eff-552f-4c86-b6bb-ea3c2f266e84"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "a8bc9916-bd2e-4b26-8df3-2d6800b244d7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "1edd859c-4977-422e-a0a2-1cd03fa73aa9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 4,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "9ebd165d-d6b8-4a3e-bd1c-cc21f2c4ebe3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "92ba2229-692c-4d70-b46b-dec501d6d42e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 5,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "c01955be-c93e-417f-98c0-7425d18472c2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "c5ebf120-76b9-45a7-b991-f5068ca4fd71"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "09616eea-28b0-499a-a058-f117c36c979d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "0f9c2790-6356-4fc5-89a4-f0e6ccc51dce"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "7358f4e0-498d-4ed4-9d2f-32ebd60cffce"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "31b739ed-8e9f-45a1-9287-2e43b8f8031f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "75274042-a9d0-4c9f-8043-cdd69640a9de"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "0a8749e4-78ef-44fd-b9f5-8d2f1bb2ab37"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "af4ede0e-65e6-4c95-9330-1a47bb237b63"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "ce197bd1-aa52-4e7d-a132-77d15554679d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "ed5ed382-6737-4aca-baa7-790bbb60c54c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 3,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "19a8a3d3-cfd7-41c7-b123-ac4939e0200f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "956942d0-6b7a-4695-aefc-7dd1b7291f83"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "5ae800b7-406e-4991-a595-463c2d4cdd36"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 3,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "a2dfb612-5379-4b54-ab9d-fdc57e5abad6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "72c2d6d8-195d-4dc8-bbe9-cefc61e98b8e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "7d735b5e-79ab-405f-8f05-a61c12187505"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 50,
+   "estimated_tokens_delta": 2,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "cae4fec5-10dd-4dea-ab04-80f51e93fe26"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "144d300c-d05b-4313-8919-38a150fcd381"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 4,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "8f1afae8-952d-4bc8-b83d-a22a75725c20"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 60,
+   "estimated_tokens_delta": 5,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "1844e5b8-d294-4406-b316-bd4cce4696dc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 63,
+   "estimated_tokens_delta": 3,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "505eb470-b526-4a1d-9091-a3e89061a585"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 64,
+   "estimated_tokens_delta": 1,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "70efbd66-6cdc-4334-b944-42d712c7acee"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 249,
+   "estimated_tokens_delta": 185,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "60a031a0-a21c-4b04-bc42-311c7977ba86"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LdCFkNi6EHXvVLCA3r",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm breaking down \"Nesikhonsu\" into its consonantal skeleton, comparing it against n.j-sw-Ḫns.w \"He belongs to Khonsu\" to see if the sounds n, s, kh, n, s line up with the candidate transliteration.\n\n",
+      "signature": "CAQS2QcKEAgSGAI4AUIIdGhpbmtpbmcSDIXVz7fEMgX7eb1DFBoMSBY2S3i+IXecX+TXIjD3IWHo8TmazBK4ExCpZ2oGNOZKXu1jfWQwSqxmPUl3jta2CXFJ6QUlys1caEO2Escq9gbNB2JpTIBbP8pwzBWE26js8+wKfeadnVHYrEdLNb51M0K+XuBsL8FyqUwYFUhFRNMHtNmojNIjjJIUnxvwzDLlLQ0UC7SmEwqjJKFd8tcAh6sADZpPwpHM2KcL/0M+Mn7oDzEpn2H/tAwCpFcvknAVNjQrkqi5VSmBdZMRCLKRWN6/0wW7T6y9hzciBkeehNYPp+fCpaCFL8fw3I0hOUuwfBvwS5L4dQmXzGNNToUU2u41cXQhp+FeO8iVpbEEoKCOKNbdxW5Ikn/GZoZgCsjBa+8ebjkPUuctVuUGT3vWFZSCymRFtD73BSzVXNjHY3blCKPpWGTU4onTYh9NAkoSqg1heO3DBs5jaweZNut4fTMmhK0skOiOtw1XM5G8Qh7iJycT0kugQU22eB5zd5ju6WtfjmYiSQXPGk6tRewbRrBvgKr1lQkgZ4hT0FlQbrGmayA6t+afmEneFyePamfwlCBw3P5RJIi+j5U68AgzRxysNBV5KT5eBrGg4hSqqpilggjg9GKDlefu9umtKUCqdbQtX2vsFzYCwtHZVd83uBSw9tWvSFTzyvAD7CNoUDnNQURvPNqBY9xP6lOG28IOKaY6vC/vz1US/y9LVagIeJPTO7LIZqe+ZW6okWERhhUMrKt0eCLy2/cNC0UShVpZHTbDKYqkGdjzr3Id3boxmQyifApc4fe9wJc+HjnGpkhtLVYYAtUMBsLgHRbemLwneXsLFcITLmoKCd9H3+SiJ0tICeJwKYYLi92aL7C8xErz8dLn9PqiNYOYAb9F+Y9GtCu9EU8G1hud5sefZAMJwK84b69MNX41C4cNIBDEzIjHtTEjDOQMwqf0oXeZQTva61cJ01L5dem8NC3zsvz2X0I0y+rHitThmw5sStiwWm7194x8lyx1vkWdSbX39ckrnMb/b/A8TsYQrL5vxmW6BVHzVOcL6jXj1opVT7iUPJ1cKIs8dfzXYLo+j/z1Cl1ksgB2WKDDvRQ6VE5/1rNnTlAyye7Yktxuj6q7IMiSOJ1zV/O+3ux4tSVnsSn5hGoiB3UQn/DJaTDTs10fORriGROFPYc94V8qa6W0IT6msfWXyi+MId/VacDzDsS08oV5yOl/yFZofrmFXXU7Gzhb580j9prj/YCe9dwNX/poYcjhLbEH3FNrQ15UDl2+sWPooDynZ7/RGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1554,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1554
+     },
+     "output_tokens": 9,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "ca21f998-f267-4aaa-af75-065884842b3d",
+   "timestamp": "2026-10-15T16:29:05.874Z",
+   "request_id": "req_011Cg4LdC3qqv9E5uikHBwGA",
+   "thinking_duration_ms": 4606,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LdCFkNi6EHXvVLCA3r",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Nesikhonsu\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is N.j-sw-Ḫns.w, 'He belongs to Khonsu', rendered 'Neschons' by the TLA. Its words are the nisbe-type formation n.j-sw ('he belongs to') followed by the god Khonsu. Record 1, Nesikhonsu, reads as ne-si-khonsu, with consonants n, s, kh, n, s. The weak consonants j and w of C1 may be rendered as i or dropped, and the vowels are conventional additions. Every other consonant (n, s, ḫ, n, s) is matched, and nothing extra is rendered or omitted. The words and their order are the same, so C1 is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1554,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1554
+     },
+     "output_tokens": 9,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "uuid": "9b556940-bc38-416e-afa1-7018b858c860",
+   "timestamp": "2026-10-15T16:29:05.881Z",
+   "request_id": "req_011Cg4LdC3qqv9E5uikHBwGA"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "5fe51b84-a249-4114-a904-623ed859d18f",
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc"
+  },
+  {
+   "duration_api_ms": 5425,
+   "stop_reason": "end_turn",
+   "session_id": "cd800b4c-37cf-459d-888d-1d92165858fc",
+   "total_cost_usd": 0.01104,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1554,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 482,
+    "output_tokens_details": {
+     "thinking_tokens": 223
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1554,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 482,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1554,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1554
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 482,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1554,
+     "webSearchRequests": 0,
+     "costUSD": 0.01104,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 223,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Nesikhonsu\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is N.j-sw-Ḫns.w, 'He belongs to Khonsu', rendered 'Neschons' by the TLA. Its words are the nisbe-type formation n.j-sw ('he belongs to') followed by the god Khonsu. Record 1, Nesikhonsu, reads as ne-si-khonsu, with consonants n, s, kh, n, s. The weak consonants j and w of C1 may be rendered as i or dropped, and the vowels are conventional additions. Every other consonant (n, s, ḫ, n, s) is matched, and nothing extra is rendered or omitted. The words and their order are the same, so C1 is the same name.\"}",
+   "ttft_ms": 5430,
+   "type": "result",
+   "duration_ms": 5513,
+   "uuid": "743eb05d-aaf3-4459-bba0-c4d6be1921ef",
+   "ttft_stream_ms": 824,
+   "time_to_request_ms": 36,
+   "first_content_frame_ms": 824,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Nesikhonsu",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is N.j-sw-Ḫns.w, 'He belongs to Khonsu', rendered 'Neschons' by the TLA. Its words are the nisbe-type formation n.j-sw ('he belongs to') followed by the god Khonsu. Record 1, Nesikhonsu, reads as ne-si-khonsu, with consonants n, s, kh, n, s. The weak consonants j and w of C1 may be rendered as i or dropped, and the vowels are conventional additions. Every other consonant (n, s, ḫ, n, s) is matched, and nothing extra is rendered or omitted. The words and their order are the same, so C1 is the same name."
+  }
+ }
+}

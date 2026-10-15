@@ -37,7 +37,10 @@ from . import tla_links as tl
 MODELS = {"A": ("sonnet", "claude-sonnet-5-5"), "B": ("opus", "claude-opus-5-5"),
           "reconciler": ("opus", "claude-opus-5-5")}
 EFFORT = "high"
-MAX_ATTEMPTS = 3
+# Format retries only: a call whose answer is not a bare JSON object at the end (Opus often
+# fences it) is stored and retried; the first valid answer counts. Raised from 3 to 6 when the
+# reconciler fenced all three of its first attempts on one unit (links/README.md).
+MAX_ATTEMPTS = 6
 PROMPTS = tl.LINKS_DIR / "prompts"
 RUNS = tl.LINKS_DIR / "runs"
 DECISIONS = tl.LINKS_DIR / "decisions.jsonl"

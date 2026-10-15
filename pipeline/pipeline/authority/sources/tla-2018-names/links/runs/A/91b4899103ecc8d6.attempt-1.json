@@ -1,0 +1,483 @@
+{
+ "unit_id": "Iaret",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "jꜣrt",
+  "C2": "jꜥrt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Iaret\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Jꜣrt\n  Lemma 1: German: Iaret | English: (none)\n\nCandidate C2: Jꜥr.t\n  Lemma 1: German: Iaret | English: Iaret\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Iaret\", \"choices\": [<zero or more of \"C1\", \"C2\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "6892a5dd660fa5855547606562cd531edb50eccc4966563769ef773175a3b847",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "7facb6fd-fbf5-4fd9-86bb-0c1fa6608f6b",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "04001fbf-6657-48ab-bd7f-2d8f17f191bf",
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "7facb6fd-fbf5-4fd9-86bb-0c1fa6608f6b",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "ed94d74d-0c73-402b-a1ef-bd14f638f3a0",
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-pb4vo_ue",
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "13edc864-06f6-4b7b-a8e7-323a4c25306c",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-pb4vo-ue/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1968119.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 6,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "7ebc2ef4-74a5-4fbc-a7de-ae4b9c2a8f9e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 2,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "1a2a094b-a027-419d-a500-39d8cbaf5446"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 4,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "bda9dfe1-cbcf-492c-af0c-b8edce740547"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 4,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "4a1716c0-2803-4f42-aec0-ef6ed3851b7b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 1,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "42929a90-dde6-4799-a2e8-b5429bc273b3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 1,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "22c859e9-9366-4184-badc-3e3b1d8320b7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "ab5ebc33-43b1-4445-baf5-4505c716b58a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 3,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "47c299de-2b02-41bc-a44f-2769a6ae0fa9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 2,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "f0b1a269-4662-4543-a985-6aa3eeca3791"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 5,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "05b8fe6a-44bc-4ac8-b044-ad577a859231"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 7,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "cc340b91-ff35-4567-b010-ec13da1e932b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 1,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "9f5dfa86-a390-458f-9be2-b74d751da20a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 6,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "4ac4b220-def0-43a9-a878-63931c7c6d4f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 4,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "f3d03541-9944-4312-b03b-efdc5e80ff15"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 1,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "0431d639-d26b-41cc-aff1-b91ec5e65c04"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 328,
+   "estimated_tokens_delta": 280,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "36e79d4b-940b-4f24-86fc-21e239c360e1"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LJnYTpDafey5JE18Xq",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking whether \"Iaret\" aligns with the Egyptian root jꜥr.t, meaning uraeus or rearing cobra, by matching the consonants j-ꜥ-r-t against the transliterated name.\n\n",
+      "signature": "CAQSmAoKEAgSGAI4AUIIdGhpbmtpbmcSDJK9deca8PsLYygMHBoMYaosdexUncNDEV4hIjC88hBJYLdFfG9hrtKazH92Uqdk/0RSskhF4AcIxmqwlN4iWcAV2bVZ7cAM0q5Ewx4qtQmfd3o8p98dsm2cZyDHcgvafhQ5AfiQYss1faffDdWoh645lGYPzHHac+dg6n836DcUadsDJ+NM1xYU/jJRvZdSHeg5e89Czdjowl7hK0P4/6mY/6G3IYsul+H+Koq0F6pdNOdynV0AjTa2vI4otpE5ecwSRN22rKDKxsY9PmFMi0BS3JLP+m8KMbRqM5XyZ01FG7bU6n8Auxibu3EFYyqDNbqj38hXDwt2IuNLcIu+j8lWjZmxlp2F3flDdOYwILq33HOQ2Ou312ncuA9ijiUlaiANNzPg3pZj2DWBeTcKnGaYJWiOD86fUNBvCoTOECN6c2hBoWrVy7HzK31FLZFnyqPw7OLJBXRHn+mwJwaK3e2V0zrXdZno5tS51vU0mbSZ0DRI7FjBF9guF7LBLHGyeCVeil7ahhhqpe5uBL/QHRUfhRsBkt6Z7hW63utmlWCHH6q1I9vR064BVG8Kkacx2ykACf6Fd42NjlwWdPpsPRFUitLdZ9ELFQ/28siu9mwjFieWe3H5jnaS6q8AADzeS748WEVnb9cS2bQjeIq1ivflPTUWgtrbGe0yNfNtqRLgyTzVVfrLqIlcGgq23rQvJd453Xa8upe5RPkjjN+zU020ogcAfWWedGqtFazynq47Si1qme+KJosn6sqKWyza/uNK3d925fuI70nQQ8UIHbrswhUnVwGCH148eHXw9wVdiWo8J+jybCm88xOFd6OdP06aw9TklRtMtrgOhvJXJyLNz/sBEppdj5L8g/wUrt7Yo0MwtAzdw/hbi4Ldy3zgZSp7WlN149p7V9HpzY4pyM++3ZXkG18VaklasXClQmgSfVtJMCvtNIV11EYtPfLchO6MBubhoOctoAxTS9KpiW9lLKKWQPP6oo19HhgJ6SkUaE8G56kxZ3qBArrq8/z96uh0vhFMUHRcaAHmDPKUM27k7xpBQ7I+37Ll4X4cXwRChNcp6mGdbu2kApsL5RdnPiZ5pQi4C0m+BAp82KOMGFzkhAftyeq+QM4BiugS6bE57egpvVhnBTdTf3rHUGQ/Aq3nn5q7T1TsRXNqPtk6w/h0W8PhIL48YJG8SDRn0s4mM/rV6Yl89RYDbk2yAi4ZmvfH/k+pUuIxk5EzO+xD7daDeUCP6hKT1jTMLEFTZdBMnOE1ywE6Ea6i5bktCRD/LxWPxgDo7aVLbEb5CmbpiFYEQW/0djT/bC8g13sm6DJz8qHzxL6pcbd8VESXoVLvWsKYkjLWYp5tzR97eRJaUHeeUXUj8QuWzl5bVs49aB6cfTujVHxZmuXze+NuADsuYoQuGJ26FTK7UD+1LsKfKeCApxwaeH8TOU/V1F8Uu7hKIzTRZ4ydRLoJWjIm9pE+YvzLZuHxa+COxpvrXTbxOmdWnPc4TVXjHkr5XGFYc4i68UXuFV5lWEq+03GdT5Yjct4MMtSt2ofWOuW5EtLdciy7NpjPMLeEXfTHKxOaHj8o1Ms5kliDCqen7pRRHdASSKIdmCWfQ409XYX99d1OHEhbcpu+gc5FWGANd8QGjpRojoY3XZKr3fNRiO4UjLvW7ueWTC/BDv3wrClr25MFYx9OUx4EnXfA3e3KhBbgD53X49ijDhgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1582,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1582
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "4f6004c2-9265-4ade-829a-9d998df4b746",
+   "timestamp": "2026-10-15T16:24:54.514Z",
+   "request_id": "req_011Cg4LJnLKXXTJLUCcQ7rFt",
+   "thinking_duration_ms": 3015,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LJnYTpDafey5JE18Xq",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Iaret\", \"choices\": [\"C1\", \"C2\"], \"reasoning\": \"C1 Jꜣrt is one word with a feminine .t ending, and the TLA gives its modern spelling as Iaret. Reading 'Iaret' as j→I, ꜣ→a, r, and t as the feminine ending covers every consonant, so it fits. C2 Jꜥr.t is one word, jꜥr.t, the uraeus, with a feminine .t ending, and the TLA gives Iaret in German and English. Reading 'Iaret' as j→I, ꜥ→a, r, .t→t fits in the same way. Neither candidate has an extra consonant or a missing one, and both lemmas carry the same modern name, so neither is a different word that merely shares consonants. I count both as orthographic variants of the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1582,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1582
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "uuid": "9dd08f58-9458-48b1-a1bc-ad268b3eb6da",
+   "timestamp": "2026-10-15T16:24:55.809Z",
+   "request_id": "req_011Cg4LJnLKXXTJLUCcQ7rFt"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "998cde2f-392a-4b12-b794-bf9ef70182ee",
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed"
+  },
+  {
+   "duration_api_ms": 5103,
+   "stop_reason": "end_turn",
+   "session_id": "cdf0ef2e-66c8-4f20-823c-445db97cb3ed",
+   "total_cost_usd": 0.012511999999999999,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1582,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 618,
+    "output_tokens_details": {
+     "thinking_tokens": 338
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1582,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 618,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1582,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1582
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 618,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1582,
+     "webSearchRequests": 0,
+     "costUSD": 0.012511999999999999,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 338,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Iaret\", \"choices\": [\"C1\", \"C2\"], \"reasoning\": \"C1 Jꜣrt is one word with a feminine .t ending, and the TLA gives its modern spelling as Iaret. Reading 'Iaret' as j→I, ꜣ→a, r, and t as the feminine ending covers every consonant, so it fits. C2 Jꜥr.t is one word, jꜥr.t, the uraeus, with a feminine .t ending, and the TLA gives Iaret in German and English. Reading 'Iaret' as j→I, ꜥ→a, r, .t→t fits in the same way. Neither candidate has an extra consonant or a missing one, and both lemmas carry the same modern name, so neither is a different word that merely shares consonants. I count both as orthographic variants of the same name.\"}",
+   "ttft_ms": 3825,
+   "type": "result",
+   "duration_ms": 5190,
+   "uuid": "7f320237-9132-4a6e-bf08-23cacb0e1ccf",
+   "ttft_stream_ms": 810,
+   "time_to_request_ms": 39,
+   "first_content_frame_ms": 810,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Iaret",
+   "choices": [
+    "C1",
+    "C2"
+   ],
+   "reasoning": "C1 Jꜣrt is one word with a feminine .t ending, and the TLA gives its modern spelling as Iaret. Reading 'Iaret' as j→I, ꜣ→a, r, and t as the feminine ending covers every consonant, so it fits. C2 Jꜥr.t is one word, jꜥr.t, the uraeus, with a feminine .t ending, and the TLA gives Iaret in German and English. Reading 'Iaret' as j→I, ꜥ→a, r, .t→t fits in the same way. Neither candidate has an extra consonant or a missing one, and both lemmas carry the same modern name, so neither is a different word that merely shares consonants. I count both as orthographic variants of the same name."
+  }
+ }
+}

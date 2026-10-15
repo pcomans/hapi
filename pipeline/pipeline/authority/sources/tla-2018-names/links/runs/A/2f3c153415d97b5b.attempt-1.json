@@ -1,0 +1,311 @@
+{
+ "unit_id": "Amenemopet",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "jmnmjpt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Amenemopet\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Jmn-m-Jp.t\n  Lemma 1: German: Amun-em-Ipet | English: Amun-em-Ipet\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Amenemopet\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "06cebf25ce97af019738e97b9a7a4f88c7547b7d2b3b26dee1a51a3af5662bf7",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "45bcd0ee-e5d7-454e-806d-7a05b81c5856",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "023312a5-d1f7-438a-83e7-12fb1443af65",
+   "session_id": "3c3a863b-1acf-4076-bacb-eb7a88d4614f"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "45bcd0ee-e5d7-454e-806d-7a05b81c5856",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "fdf11c64-48fa-4460-be09-bc16ed403446",
+   "session_id": "3c3a863b-1acf-4076-bacb-eb7a88d4614f"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-lwgdevyq",
+   "session_id": "3c3a863b-1acf-4076-bacb-eb7a88d4614f",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "54157085-bfae-4005-8185-a8257a2cd653",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-lwgdevyq/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1966089.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LDn4p5EGkYWFNN2uvP",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "Record 1 \"Amenemopet\" reads as Amen-em-opet: Amun (Jmn), the preposition m \"in\", and Opet (Jp.t, the Luxor temple/Opet festival).\n\nCandidate C1: Jmn-m-Jp.t\n- Words: Jmn (Amun) + m (in/as) + Jp.t (Ipet, Opet).\n- Consonants: J (weak, rendered as a vowel or dropped), m, n, m, J (weak), p, t. Record 1 gives a-m-e-n-e-m-o-p-e-t, which has m, n, m, p, t. The weak j's are rendered as vowels or omitted, and the final t is present anyway. The consonants match exactly.\n- The translations \"Amun-em-Ipet\" give the same words as record 1 reads as, so it is the same name.\n\n{\"unit_id\": \"Amenemopet\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Jmn-m-Jp.t = Amun + m (in) + Ipet/Opet. Record 1 Amenemopet reads as Amen-em-opet with consonants m-n-m-p-t; the weak j signs are rendered as vowels or omitted and the final t is the t of Jp.t. The translation 'Amun-em-Ipet' gives the same words, so it is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1561,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1561
+     },
+     "output_tokens": 2,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "3c3a863b-1acf-4076-bacb-eb7a88d4614f",
+   "uuid": "c6430592-e753-4b0b-ad63-baef7977c779",
+   "timestamp": "2026-10-15T16:23:47.051Z",
+   "request_id": "req_011Cg4LDmqvDsxdmMKceJAog"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "23f51b3b-2610-42eb-abf4-99ccfc5fd809",
+   "session_id": "3c3a863b-1acf-4076-bacb-eb7a88d4614f"
+  },
+  {
+   "duration_api_ms": 4291,
+   "stop_reason": "end_turn",
+   "session_id": "3c3a863b-1acf-4076-bacb-eb7a88d4614f",
+   "total_cost_usd": 0.010688,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1561,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 444,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1561,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 444,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1561,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1561
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 444,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1561,
+     "webSearchRequests": 0,
+     "costUSD": 0.010688,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 0,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "Record 1 \"Amenemopet\" reads as Amen-em-opet: Amun (Jmn), the preposition m \"in\", and Opet (Jp.t, the Luxor temple/Opet festival).\n\nCandidate C1: Jmn-m-Jp.t\n- Words: Jmn (Amun) + m (in/as) + Jp.t (Ipet, Opet).\n- Consonants: J (weak, rendered as a vowel or dropped), m, n, m, J (weak), p, t. Record 1 gives a-m-e-n-e-m-o-p-e-t, which has m, n, m, p, t. The weak j's are rendered as vowels or omitted, and the final t is present anyway. The consonants match exactly.\n- The translations \"Amun-em-Ipet\" give the same words as record 1 reads as, so it is the same name.\n\n{\"unit_id\": \"Amenemopet\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Jmn-m-Jp.t = Amun + m (in) + Ipet/Opet. Record 1 Amenemopet reads as Amen-em-opet with consonants m-n-m-p-t; the weak j signs are rendered as vowels or omitted and the final t is the t of Jp.t. The translation 'Amun-em-Ipet' gives the same words, so it is the same name.\"}",
+   "ttft_ms": 4312,
+   "type": "result",
+   "duration_ms": 4382,
+   "uuid": "5139f692-67dc-46f9-9b83-bfa8c40faed6",
+   "ttft_stream_ms": 1154,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 1154,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Amenemopet",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Jmn-m-Jp.t = Amun + m (in) + Ipet/Opet. Record 1 Amenemopet reads as Amen-em-opet with consonants m-n-m-p-t; the weak j signs are rendered as vowels or omitted and the final t is the t of Jp.t. The translation 'Amun-em-Ipet' gives the same words, so it is the same name."
+  }
+ }
+}

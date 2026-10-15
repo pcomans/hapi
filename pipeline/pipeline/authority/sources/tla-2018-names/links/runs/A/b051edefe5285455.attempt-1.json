@@ -1,0 +1,569 @@
+{
+ "unit_id": "Merestekhi",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "mristḫ"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Merestekhi\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Mri̯=s-tḫ\n  Lemma 1: German: Meries-tech | English: Meries-tekh\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Merestekhi\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "4f5a15e950b9a02bbb5e5f2e305d075f18a20aafc54a6ab07ec48dfa8f6f061b",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "8d34b64e-72f9-449e-8d4e-ea72c69705ab",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "2b3555a6-4e69-44e7-a6b5-91f2391855e1",
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "8d34b64e-72f9-449e-8d4e-ea72c69705ab",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "11cbdffd-e5b9-4cb5-a056-70f48d4765da",
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-ppam3e2o",
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "f4b60ad6-2c31-4afe-bcfb-fcc05d608a70",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-ppam3e2o/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1971169.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 3,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "08649d3c-4929-4288-a40c-9605e1c42213"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "9bb5e424-20c4-488e-bfca-42e3a33dcfe5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "366fcd0a-7fb3-4fe6-aa07-098eb080adce"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "f24d6fe8-c293-4f79-aaa7-f419aea2308e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "861b29ec-31f0-4c7b-83ce-06158904480b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "799210b9-66cd-4de6-89ec-250f331b36de"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 5,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "ddb976fb-0fc7-40b3-9f2f-c5827b9fba6c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "fc87e22f-eb78-43aa-a664-77ad2c490d2d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 4,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "61883c0b-ddd2-4c9d-b969-fd7cc1a299e8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "37bc2cfa-2b38-40b5-a8a0-bfdd41ebb573"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "3971b51b-e95a-4260-a0b3-aedfd8ef3f58"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "e6abb1f6-9199-4c8f-976b-537bcf911b85"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "d7b2aede-5277-45b7-9d11-3dae39ce2923"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "17c5e7a3-d820-4325-8a89-21490ac5ea8d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 3,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "55e3121b-eb8e-499d-a41b-1470c9ac7651"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 3,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "2875a439-0d52-43f0-a4f5-d35512508b4e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "9f84e036-fecd-4fb3-b190-8e8357ff8fa1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "182f8153-7a68-4eda-956b-9a558bcf91f4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "1369b120-2688-4c0e-9656-e1ff75f5e94b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 4,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "d7fbdd72-b4a2-4f81-8f6d-c9baf328401c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "92c74c85-0648-49a9-aae5-cfb1abe8e308"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 3,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "bfc67eea-03c3-4b84-a9a3-519ce653d79c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 3,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "b550403e-ebb9-432a-988c-8aea9902459a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 4,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "d6657d0a-88d3-4258-9404-73a54b8bc8fe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 2,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "20ae7f9a-cdaf-4742-85e3-974de51e5bc3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 52,
+   "estimated_tokens_delta": 1,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "4a151b47-fa05-43c7-8a98-a4c34db7711c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 247,
+   "estimated_tokens_delta": 195,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "b96b3a22-d0b8-4fa3-9c23-2f5dd1f2ed6d"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LSM4WjndZKvULAVwtC",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking \"Merestekhi\" against the consonant pattern m-r-s-t-ḫ — it lines up well with mri̯=s-tḫ, with the j treated as weak and the rest matching cleanly.\n\n",
+      "signature": "CAQS0gcKEAgSGAI4AUIIdGhpbmtpbmcSDOzqN0bblv1mjI1XXRoMvy0F7y+kMr6MTVLCIjA1oGXNmKPyaWnMs5lTTng2hQCHBwMTnyWUR6bJTdOE2CRUvoZ9lCZwYnuGkpuIQBwq7wZEJS4w6gPJNmOfaEMOMtUBAzv113JbyhbjpRADZF7oY1nIiK9zKMhqsbwuaidpgJ+TGxscnRS21DnsqEO0J9u5E+40PmCXcy9nySg7RZ/4IpaIrvcG1JoTkHtHi9Ydwt6OK6N2AiNThCjwZl4fCr/Yg8cvEAy8jCAyqOaKTrc4R9MnZzbCBwt22XkdWrMwEhqz51xJ4RYp8jx6bU2fkBHIuIXRLQGjwh3H+4WeUBcBruX8ERvgrr1EfYLc3VNvzsEMNWL4l75iHhiXeZindvwKRKzDBaXpCYkT65n6Q8fcbgxiv7MsYOAjdRntZRP2jRkZmfn8/s6uMa+msycQvelERpUKQcbz1JxwtylRw/AqjMPAlzvolPS5ULSWcUbaWATHLOWtFSakTtA9KTSHGQyBUPazr0vdB/XhRbFudwU9Fg/iVRKbUFzbpN+t53sEgTBiy075h2Z+0hVszhKTJk4Oudk1L9nTkuvsk/Topk1nyMJXgHjELN97fcmmRsCq3cpxYPU+u89WLx5FEQ+HPL/t/NDkhW++ho4JsBechWHlu5win5gxhj+6psxyFYJH3NHlywPhxoRCYpZiGbVcz/6e+v71F7CiMNHXk+Al6yF5DhnBnPomUqjOIvqaeOoxP08gT/gyRxihwSGusH4BFGIQmLx2i8chFe89D3X0X/wW7TtGjFhoJtwE+iZfsomMs3wT8Nte0FBLWSN+piO4rFwBD/7SXwNFAymIhAg/4e2G2g9jNd/MZ5zFu7s0TRCpMAPA7SvE04LxkMVwEoLFnBFCiDDpZ7SMdLJ1l3XYuy7wWvt7haWQcIiJS0XaZkyUWRPAo7npbYgp3LYCAXgJ2wUHXv/rL4iupNRlKzuvkM6ty9FHM9XFW2qDGqWDLRORE1tL59BkpM7/P6ikqW5LDUxvxzIbfOkgAS2vwPkSNzmIuLAPBiQBBl0O5/XFYFivhTaca+UTNEoVZFEItJl8DlN9H4vZpVaKhhdRpmGGsAaK+Ibm/XoKIrnBwVZnrLspmhuzoYAY2d7bYfIahVzyW759xwqMx+1kPZCd3JiPQEe/N2qTFUGigIfG7pFqJdwn16d2nzjRxRMFL98fXdEpQEqzcflmfe8A0gofz/WM8zPkWsstIiau1IbHBTUR8iaWT4t4dtJMjw/sdSExZTjY/kkYAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1554,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1554
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "c7e46b51-7e85-4ae1-b574-2cdb931e42f5",
+   "timestamp": "2026-10-15T16:26:38.057Z",
+   "request_id": "req_011Cg4LSLqcXVqNBzZJKp5io",
+   "thinking_duration_ms": 4035,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LSM4WjndZKvULAVwtC",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Merestekhi\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Mri̯=s-tḫ, read as 'Meries-tekh': the verb mri̯ 'to love', the suffix pronoun =s 'her', and the name tḫ (Tekh). Record 1 'Merestekhi' reads as m-e-r-e-s-t-e-kh-i. The consonants are m, r, s, t, kh in the same order. The weak j of mri̯ may be rendered as a vowel or left out. The final i is an added vowel letter, which the conventions allow. No consonant is added or missing, and the words are the same, so C1 is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1554,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1554
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "uuid": "cd3c6d2d-6cef-41ab-bf9b-a658b5176454",
+   "timestamp": "2026-10-15T16:26:38.061Z",
+   "request_id": "req_011Cg4LSLqcXVqNBzZJKp5io"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "52787011-a3d2-46ca-a4c6-3d798340b5aa",
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1"
+  },
+  {
+   "duration_api_ms": 4787,
+   "stop_reason": "end_turn",
+   "session_id": "f3c49896-4de6-4e72-a886-188497909ae1",
+   "total_cost_usd": 0.01061,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1554,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 439,
+    "output_tokens_details": {
+     "thinking_tokens": 210
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1554,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 439,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1554,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1554
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 439,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1554,
+     "webSearchRequests": 0,
+     "costUSD": 0.01061,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 210,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Merestekhi\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Mri̯=s-tḫ, read as 'Meries-tekh': the verb mri̯ 'to love', the suffix pronoun =s 'her', and the name tḫ (Tekh). Record 1 'Merestekhi' reads as m-e-r-e-s-t-e-kh-i. The consonants are m, r, s, t, kh in the same order. The weak j of mri̯ may be rendered as a vowel or left out. The final i is an added vowel letter, which the conventions allow. No consonant is added or missing, and the words are the same, so C1 is the same name.\"}",
+   "ttft_ms": 4801,
+   "type": "result",
+   "duration_ms": 4866,
+   "uuid": "c8e1a90f-d7d5-48f2-9d30-9a17294899bc",
+   "ttft_stream_ms": 765,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 765,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Merestekhi",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is Mri̯=s-tḫ, read as 'Meries-tekh': the verb mri̯ 'to love', the suffix pronoun =s 'her', and the name tḫ (Tekh). Record 1 'Merestekhi' reads as m-e-r-e-s-t-e-kh-i. The consonants are m, r, s, t, kh in the same order. The weak j of mri̯ may be rendered as a vowel or left out. The final i is an added vowel letter, which the conventions allow. No consonant is added or missing, and the words are the same, so C1 is the same name."
+  }
+ }
+}

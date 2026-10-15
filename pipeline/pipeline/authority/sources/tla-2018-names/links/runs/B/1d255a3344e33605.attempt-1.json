@@ -1,0 +1,561 @@
+{
+ "unit_id": "Nubhotepti",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "nbwḥtptj"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Nubhotepti\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Nbw-ḥtp.tj\n  Lemma 1: German: Nebu-hetepti | English: Nebu-hetepti\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Nubhotepti\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "e85ac26396525c667f0d455a62ae959018d726b7744725b96da73c62f857ef90",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "729c8c7d-59d3-4466-abcf-ca53444cbf51",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "fcf67131-2fd0-4ecb-b5f9-fe4b73f66724",
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "729c8c7d-59d3-4466-abcf-ca53444cbf51",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "4484a222-9670-4e71-8e9a-591bcaf1c229",
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-lrmezka2",
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "335ebd85-be9a-4f9e-a908-e1b0400c825e",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-lrmezka2/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1979062.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "5c7c053d-7153-4ccc-82e0-a8f9b8b81744"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 3,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "441affd6-1a98-48b2-813d-ce9897d6006a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "2ccf6424-71c9-4b62-9c47-89c679bc8b3f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "d7f8751f-9abb-4c89-80ac-791b5f0dee97"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "4ee17877-bcc7-448a-95d5-223ad89e9ee2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "60734fb8-0783-41b7-80c6-720cbea73383"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "2328f21b-7ac9-4f1e-8bea-9470846c317b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "78d54426-0942-417f-9bb4-77fc3fc7db05"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 4,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "44500b84-2205-4f6a-8a2b-f5ba388e4c78"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "88d83e67-fc6a-4be9-8cf5-f282b0a94000"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 2,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "79e95fb2-576b-46f1-8e15-5185b916f6d4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "70cdea57-c488-499b-a3ae-4da75292c2f9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "95ec2073-b1ad-4fa8-a64c-bd4f8235a2cb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "f1b1d99f-8cef-4f89-a0d0-5da0a92a993d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "99ab7d7e-e01c-4008-99bd-735d405d993f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "db418880-1500-464d-b0d3-1a0074f53353"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "b640a898-95ea-4df9-9884-0bf5888b40da"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 3,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "ee50dfec-8d22-415b-8b22-35bf02131d0a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 2,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "4a5229aa-61db-4556-a842-744163456445"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 3,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "91a72318-a280-491b-a292-215f7bb21957"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "80fce1bd-c276-48f5-bce7-f2a3bb519fcc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "c2302168-7d60-44ea-871f-26cd709f8d71"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 2,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "c97f00b0-28ee-4506-8abc-6742f8d82473"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 2,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "082b32ed-1289-4713-a983-9a6fb5a45044"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 1,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "47407d52-a4ed-40d4-a944-2282c73fef01"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 190,
+   "estimated_tokens_delta": 151,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "52ff7d07-4ee5-43ec-9f70-cacb22bbefed"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LvfX41Cmi3U3oZPAMb",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down Nubhotepti phonetically confirms it matches Nbw-ḥtp.tj, which fits as the name of Sobekhotep's wife.\n\n",
+      "signature": "CAQS8AUKEAgSGAI4AUIIdGhpbmtpbmcSDCeDLJPlh9h1fwRPHxoMo4GPfmai9VvpFRI6IjBC6jwMJbd/M/J6AH1P1dSEFB9YSHW9fnc5hZd+uNv1Zs5yB4hr8D9bnICDTxQlZBwqjQXEejD/l1TIO5Ug91Eplg+bcVLIGygCvleorHT2bWXCrXtEkVy1ens6JkIDxdgHSyJ9Vdc3XbxCxMstl6ZQDEWBioUXqyQrsNCgjn5Ja6RnXtK1xu3fPUaxPmeX5zdB6ANz7vL8WOUkZsJ40HOaZydQhplASin+toWEEohw3bT7f+mQLujEB9x0rOo0w+igNeos6zg2CQpDyKrmhGHohqflIrM0FdRN5veWL98xB+zR3Nao5hWbcWcIA2rwQDcT6/iNiw8ZQpRpciSFSqj7IIzgIbpZol2w7jlnL1jdi4h01kAjMDahnJ239PClzg/bG8ZBYq6iJXFaEak23XsF1iTQ55ClWuASktzYVpDUWuil66aBbry5/qVCf1fxol5tuKcWk8emyhPcdgGdYEt73ewFF3+ZAhFO55xoKk2NyLj/aMvZ2Ae6QL+uRyamGt6B8z/iBgRWZjx/BVmNSAKZWoVHrxtcX8hebla9cfGm9sa212ZPsfRgAswTxVumVfh4jsiRWYroQJism5BF8V7IK1HzJ824m0IP/zqpstuTkqONcPfw6cSkEPP1GxnqsihGBHQ8GRJF9mg/1cHCf3Bss/LZs6iLT0DDKqhSk/avx0ZVdmHJDWG/B3eKkMt8o7l598zILh9XhqB9PDYMX73qbgwS/6vMPVL7o3z2jlz9S7r35t1iKU1KMiY+VQ2NiSjxY2r9jN6M/mMqFoUN0iYNyBxZB3Sxa54AyeMdMboEq8PS4BGDwGwLANFfJQ1oLmh7nRtQiZP5YUd+vGR9+gbQ3F9v+3ZzPfT79aJaZxbA/8z5gbRnUZ+yU5/DtiMKqsg2DjnAmo/YTTZL8vDLeb84J1hjB7vzHflVa/d+o8gfjRgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1557,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1557
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "1d44ecca-ac1d-4845-bd1e-8f759a97b6a4",
+   "timestamp": "2026-10-15T16:33:01.894Z",
+   "request_id": "req_011Cg4LvfBDTfjanexi1dAha",
+   "thinking_duration_ms": 3367,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LvfX41Cmi3U3oZPAMb",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Nubhotepti\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Nbw-ḥtp.tj ('Nebu-hetepti') is made of the words nbw ('gold', the epithet of Hathor) + ḥtp ('to be content/satisfied') + the ending .tj. Record 1 reads letter for letter as those words. 'Nub' gives n-b with w rendered as u. 'hotep' gives ḥ as h, then t and p, with vowels added. 'ti' gives the .tj ending, with t kept and j as i. No consonant is added or left out, and the words are the same in the same order, so Nubhotepti is a modern spelling of Nbw-ḥtp.tj.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1557,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1557
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "uuid": "79b454de-773f-4293-bd10-d1c4fc485c97",
+   "timestamp": "2026-10-15T16:33:01.897Z",
+   "request_id": "req_011Cg4LvfBDTfjanexi1dAha"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "fcba09ca-48bb-4080-a597-e2c333043c95",
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a"
+  },
+  {
+   "duration_api_ms": 4490,
+   "stop_reason": "end_turn",
+   "session_id": "822cb931-ab7a-452b-bfdb-f5ee9778c45a",
+   "total_cost_usd": 0.019444,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1557,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 349,
+    "output_tokens_details": {
+     "thinking_tokens": 102
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1557,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 349,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1557,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1557
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 349,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1557,
+     "webSearchRequests": 0,
+     "costUSD": 0.019444,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 102,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Nubhotepti\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Nbw-ḥtp.tj ('Nebu-hetepti') is made of the words nbw ('gold', the epithet of Hathor) + ḥtp ('to be content/satisfied') + the ending .tj. Record 1 reads letter for letter as those words. 'Nub' gives n-b with w rendered as u. 'hotep' gives ḥ as h, then t and p, with vowels added. 'ti' gives the .tj ending, with t kept and j as i. No consonant is added or left out, and the words are the same in the same order, so Nubhotepti is a modern spelling of Nbw-ḥtp.tj.\"}",
+   "ttft_ms": 4501,
+   "type": "result",
+   "duration_ms": 4583,
+   "uuid": "047873d0-61f9-4207-9e5e-7aff37d1cee5",
+   "ttft_stream_ms": 1134,
+   "time_to_request_ms": 36,
+   "first_content_frame_ms": 1134,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Nubhotepti",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Nbw-ḥtp.tj ('Nebu-hetepti') is made of the words nbw ('gold', the epithet of Hathor) + ḥtp ('to be content/satisfied') + the ending .tj. Record 1 reads letter for letter as those words. 'Nub' gives n-b with w rendered as u. 'hotep' gives ḥ as h, then t and p, with vowels added. 'ti' gives the .tj ending, with t kept and j as i. No consonant is added or left out, and the words are the same in the same order, so Nubhotepti is a modern spelling of Nbw-ḥtp.tj."
+  }
+ }
+}

@@ -17,8 +17,9 @@ urn:nbn:de:kobv:b4-opus4-29190 (<https://edoc.bbaw.de/frontdoor/index/index/docI
   not covered by the repository's Apache-2.0 licence (see `NOTICE`).
 - **ShareAlike for later use.** Anything built from these rows, such as the spelling links
   to Dodson & Hilton's women (`links/`), is Adapted Material too. It must carry
-  this attribution per row and be shared under CC BY-SA 4.0, kept in its own data file rather
-  than mixed into Apache-licensed code or data.
+  this attribution and be shared under CC BY-SA 4.0, kept in this directory (whose README
+  and `NOTICE` entry give the attribution for every file in it) rather than mixed into
+  Apache-licensed code or data. A row copied elsewhere carries the attribution with it.
 - **Archive:** `vocabulary.zip` (committed; 11,268,762 bytes, SHA-256
   `886bfd30d81e73bdd0158caa4eb94f9c047eca02ffac4c1a930e170e7265ce5a`), member
   `aaew_wlist.json` (38,775 lemmas). Retrieved 2026-10-15.

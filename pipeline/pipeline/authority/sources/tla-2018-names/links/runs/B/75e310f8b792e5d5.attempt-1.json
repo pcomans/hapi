@@ -1,0 +1,449 @@
+{
+ "unit_id": "Kaneferu",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "kꜣjnfrw"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Kaneferu\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Kꜣ=j-nfr.w\n  Lemma 1: German: Kai-neferu | English: Kai-neferu\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Kaneferu\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "571e902d161e456662b555bd8a1ebf7c6e5231a606b4a6a7477e10069fd93ce2",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "a66509e0-c914-4bd7-bf22-aab6f8fb0194",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "44a6766f-f955-4890-90ed-78969cf2328f",
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "a66509e0-c914-4bd7-bf22-aab6f8fb0194",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "2745393e-739f-48a3-9260-fbd433d3e78f",
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-z__zu2vf",
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "d747ee9f-1808-4174-bb32-055712ea5c3b",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-z--zu2vf/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1970541.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 4,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "b8cf92b3-93a4-4fcf-ad55-fcfb496d4df4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 1,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "429995b0-5f7a-432e-a2d4-8faa6d30a37b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 3,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "92d9fde3-8dbb-4e39-931a-b90392585958"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 7,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "6e465b74-1c5e-4c8e-8725-3c9b3b14473f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 2,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "f240b6f2-4626-4115-8cd0-aab640d0527c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 4,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "2776d7a5-910e-4722-bd9d-e28b69076b12"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 5,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "d16ed673-3e5c-438c-aaa1-74ea456b9cf6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 7,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "148b9b29-0735-4467-ad46-592d766b47f7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 6,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "daf6f262-5521-49d0-b6f6-04f989289634"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 1,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "e28f8040-0e36-4f25-a3f9-cb8bda99a6d7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 1,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "96b8ebda-0a52-4458-a4ae-b7b59f33da09"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 213,
+   "estimated_tokens_delta": 172,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "98981924-9f11-43ea-8ebf-4808fe2594ad"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LQiy5jhcVD5TD1dTqz",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down Kꜣ=j-nfr.w phonetically, this transliterates to Kaneferu, meaning \"my ka is beauty\" — matching the known name. I'll go with C1.\n\n",
+      "signature": "CAQSzAYKEAgSGAI4AUIIdGhpbmtpbmcSDD9uMsgPFKAih2TkZBoM0gwtUf3fflSUa3heIjCNzJNivwKB0fSRjsLdEPVfpGA79FlzZwnFKE7fXaoibxZ0DUe3t7C7Lrddo3NZcgQq6QVzItixn6x+8aprpQXX4WoM1fp9OLCXY8tFZSKD78qg3/CHMAlA/IuYEWr1HgQqyXycMOMhF0lO+kdxDNmW/rPnnqQ85n8VX6b3ASka/mKMU4ni+vL2d5ALUIIcFAVVDyqRgaYdddW6kW+J2VaYTCa4rzWQM2BHl/Yu0sryURFuDBxJTQ98PGTOWQdKSeRUVpsb3CBpL1LBlgot7716CLXyrdlhKWb00+GWWLuBAjFz6syB1nNoUWmROPpYLYZqLoIMki7kJJVgornB02zbYBGFD8J+DrgFLoJ8PsDby0NPRZfAAFoi6WyXwHHLiSAbSXfsnccRimB9g3lTFoxrZSBiOrM7eSf+2OJuaeuLqghRmH4h0vX9yeBf07OikTitRYfJ8/sxp0VCtPX9NyhtdAffFrXfSTwkGVZSXoxk66cRchieNxOzXD5A/HIN2poUcbVwl6N1NYpmAodtRCIwGzR4xR/N72ZaJd1ebA5LH0+yXainsJDqcHdmPDeH9bpYbhExjTZp27djOwJfxyuHOGOCFLIy3OSErFGVit/Sqj2PTfXTbKN3BBxBkRUhxJxKWaIHquzdoyUBz9ycl/L9WqydaCmI2WTa+YUXFwQL8isJFe0fcLemRGCp8ZqJoP5zZEHqx+Dh7CgT3GJnGmGfROOKeSRz6A3kIMbzAft1h4GFH7f/WCIrlgxj/6DkpDv7fXNINtFAmOjFy4HcTug21ogPvV1RvCd8CprkzYjYuR27W1LmNuGZysSsBl+sQom/T2d+nzt0PJEgltmjREOMUucFiTlYvuv6dRpOzG8SVfljpU5hW4Uj9NPnXepUOSnv9l0pPG9bNwpIpaa7QjTQYZWSGNs9yoPRuXRVHlqEtSDBtZCIJKxPxbLJvr4Aguy5Wt4yUvU/fhJ5d7Q76KDuotcK8l1GjZKcSg7jzD3h6VQswU+0+7pYOY/9sje/CYJVFXM7wp1P77lvfGQJAAe9iLWS/AMAe/PEBy5VGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1553,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1553
+     },
+     "output_tokens": 4,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "e6124d99-1c69-4c8c-85d3-3bcd795dd607",
+   "timestamp": "2026-10-15T16:26:14.721Z",
+   "request_id": "req_011Cg4LQijhQKXejBq6R2cyt",
+   "thinking_duration_ms": 2483,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LQiy5jhcVD5TD1dTqz",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Kaneferu\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Kꜣ=j-nfr.w is made of kꜣ 'ka' with the suffix =j 'my', followed by nfr.w 'beauty/perfection'. The TLA renders it Kai-neferu. Reading record 1 'Kaneferu' against it: K = k; a = ꜣ; the weak suffix j is left unrendered, which the conventions allow; n-e-f-e-r = nfr with added vowels; u = the .w ending. Every consonant is accounted for and no extra consonant appears. 'Kaneferu' is the usual modern spelling of the same words ('my ka is beauty'), so record 1 is the same name as C1.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1553,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1553
+     },
+     "output_tokens": 4,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "uuid": "807833f5-7532-4603-8527-63918d5a495a",
+   "timestamp": "2026-10-15T16:26:16.022Z",
+   "request_id": "req_011Cg4LQijhQKXejBq6R2cyt"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "67672843-09c8-44bd-8bf2-aa75ab7f2d1b",
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d"
+  },
+  {
+   "duration_api_ms": 4754,
+   "stop_reason": "end_turn",
+   "session_id": "0763ffd8-fea8-4300-b1a2-0b2f3f613c5d",
+   "total_cost_usd": 0.020392,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1553,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 398,
+    "output_tokens_details": {
+     "thinking_tokens": 143
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1553,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 398,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1553,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1553
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 398,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1553,
+     "webSearchRequests": 0,
+     "costUSD": 0.020392,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 143,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Kaneferu\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Kꜣ=j-nfr.w is made of kꜣ 'ka' with the suffix =j 'my', followed by nfr.w 'beauty/perfection'. The TLA renders it Kai-neferu. Reading record 1 'Kaneferu' against it: K = k; a = ꜣ; the weak suffix j is left unrendered, which the conventions allow; n-e-f-e-r = nfr with added vowels; u = the .w ending. Every consonant is accounted for and no extra consonant appears. 'Kaneferu' is the usual modern spelling of the same words ('my ka is beauty'), so record 1 is the same name as C1.\"}",
+   "ttft_ms": 3467,
+   "type": "result",
+   "duration_ms": 4841,
+   "uuid": "6cab4ca7-0562-4fcf-9ea1-70bd1fe30945",
+   "ttft_stream_ms": 983,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 983,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Kaneferu",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Kꜣ=j-nfr.w is made of kꜣ 'ka' with the suffix =j 'my', followed by nfr.w 'beauty/perfection'. The TLA renders it Kai-neferu. Reading record 1 'Kaneferu' against it: K = k; a = ꜣ; the weak suffix j is left unrendered, which the conventions allow; n-e-f-e-r = nfr with added vowels; u = the .w ending. Every consonant is accounted for and no extra consonant appears. 'Kaneferu' is the usual modern spelling of the same words ('my ka is beauty'), so record 1 is the same name as C1."
+  }
+ }
+}

@@ -1,0 +1,490 @@
+{
+ "unit_id": "Neferhotep",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "nfrḥtpwr",
+  "C2": "nfrḥtpw"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Neferhotep\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Nfr-ḥtp wr\n  Lemma 1: German: Nefer-hetep | English: (none)\n\nCandidate C2: Nfr-ḥtp.w\n  Lemma 1: German: Nefer-hetepu | English: Nefer-hetepu\n  Lemma 2: German: Nefer-hetepu | English: Nefer-hetepu\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Neferhotep\", \"choices\": [<zero or more of \"C1\", \"C2\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "1d92e227531efdabfe9d6dbe9e46937add237534b3d202b27ba544b1a698acd5",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "de107452-091e-49cd-91b2-5a0655bc9332",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "f5e8dc8e-e2a9-4ce9-b184-e6959ef2da96",
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "de107452-091e-49cd-91b2-5a0655bc9332",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "00297cb1-ac9d-4e6b-b5be-e16fa829624d",
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-l7g756j6",
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "ee353c3d-adfd-4d5a-8cfb-bfa10e51e4e4",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-l7g756j6/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1976433.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "3eca65c4-0dad-4c58-bbc8-1261e005634b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "651dfc4e-4de1-4dd1-b933-8385bac9bb09"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 2,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "a0cefca2-fcfa-4fa1-9d8d-d4cb87c8a7ec"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 2,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "a5141a36-c230-41d9-92a6-1480691dab27"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 2,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "3cf491e2-513b-4799-b685-c32ed05dbbfe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 2,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "a1687b14-6df6-4cbb-9d0b-296fe0a6b97b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 1,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "144d71ec-a54f-4758-9345-14d225388fc5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "87422c91-a3fe-4d15-9dc6-487c95e3bc2c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 7,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "52809b29-0b42-44eb-a139-3cc264fb007c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 6,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "bac79672-9540-41a7-87d8-c80d9004c205"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 2,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "7446bc69-9e3a-43dd-9920-b035f407d7cf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 6,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "2129a1f2-44e6-4b13-b484-126a001996b2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 1,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "e54c8b11-32f1-4ba1-aac5-f529c430ead0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 7,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "c0d010e7-85d0-49c3-b843-547e77e3fcb6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 3,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "7b87154a-b2dc-4f97-b62d-f433e9d4e255"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 1,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "8debb222-3022-4e17-932a-44ccf1887a80"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 526,
+   "estimated_tokens_delta": 477,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "13d14bf4-a061-41d7-a146-32e40b6cfc11"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4Li81PMy1hR5mps1jLT",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking whether \"Nefer-hetepu\" with its plural ending could still match the recorded name, since weak consonants like that final .w are often dropped in transcription.\n\n",
+      "signature": "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"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 344,
+     "cache_read_input_tokens": 1291,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 344
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "82a487b4-ee5d-4b70-8d95-2c4068d5b82e",
+   "timestamp": "2026-10-15T16:30:15.466Z",
+   "request_id": "req_011Cg4Li7mkXfeERzwoAba89",
+   "thinking_duration_ms": 7199,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4Li81PMy1hR5mps1jLT",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Neferhotep\", \"choices\": [\"C2\"], \"reasoning\": \"C1 (Nfr-ḥtp wr): the words are nfr 'good, beautiful', ḥtp 'peace, contentment' and the epithet wr 'the great/elder'. Record 1 renders nfr-ḥtp but not wr. The r of wr is a full consonant that cannot be left out, so record 1 does not render all the candidate's words. This is a different name (Neferhotep the Elder), not a match. C2 (Nfr-ḥtp.w): the words are nfr plus the noun ḥtp in the plural ending .w (ḥtp.w). 'Neferhotep' renders n-f-r and h-t-p in the same order, with vowels added. The plural ending .w is a weak consonant, which the conventions allow to go unrendered. The noun is the same ḥtp in a plural form, not a different word that happens to share consonants, so record 1 can be read as exactly these words. This is a match, with the lean being that a plural ending of the same noun does not make a different word.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 344,
+     "cache_read_input_tokens": 1291,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 344
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "uuid": "45fa3820-0786-4117-b5ef-2f5d8e60d446",
+   "timestamp": "2026-10-15T16:30:17.773Z",
+   "request_id": "req_011Cg4Li7mkXfeERzwoAba89"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "dce4a107-a85f-4a12-bb56-9441b1b770a9",
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963"
+  },
+  {
+   "duration_api_ms": 10510,
+   "stop_reason": "end_turn",
+   "session_id": "88d82cca-6512-4b0d-9d80-fca982f36963",
+   "total_cost_usd": 0.023158200000000004,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 344,
+    "cache_read_input_tokens": 1291,
+    "output_tokens": 1007,
+    "output_tokens_details": {
+     "thinking_tokens": 648
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 344,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1007,
+      "cache_read_input_tokens": 1291,
+      "cache_creation_input_tokens": 344,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 344
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 1007,
+     "cacheReadInputTokens": 1291,
+     "cacheCreationInputTokens": 344,
+     "webSearchRequests": 0,
+     "costUSD": 0.023158200000000004,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 648,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Neferhotep\", \"choices\": [\"C2\"], \"reasoning\": \"C1 (Nfr-ḥtp wr): the words are nfr 'good, beautiful', ḥtp 'peace, contentment' and the epithet wr 'the great/elder'. Record 1 renders nfr-ḥtp but not wr. The r of wr is a full consonant that cannot be left out, so record 1 does not render all the candidate's words. This is a different name (Neferhotep the Elder), not a match. C2 (Nfr-ḥtp.w): the words are nfr plus the noun ḥtp in the plural ending .w (ḥtp.w). 'Neferhotep' renders n-f-r and h-t-p in the same order, with vowels added. The plural ending .w is a weak consonant, which the conventions allow to go unrendered. The noun is the same ḥtp in a plural form, not a different word that happens to share consonants, so record 1 can be read as exactly these words. This is a match, with the lean being that a plural ending of the same noun does not make a different word.\"}",
+   "ttft_ms": 8326,
+   "type": "result",
+   "duration_ms": 10705,
+   "uuid": "4c5da314-90f1-4eed-8603-32b81afcad70",
+   "ttft_stream_ms": 1126,
+   "time_to_request_ms": 140,
+   "first_content_frame_ms": 1126,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Neferhotep",
+   "choices": [
+    "C2"
+   ],
+   "reasoning": "C1 (Nfr-ḥtp wr): the words are nfr 'good, beautiful', ḥtp 'peace, contentment' and the epithet wr 'the great/elder'. Record 1 renders nfr-ḥtp but not wr. The r of wr is a full consonant that cannot be left out, so record 1 does not render all the candidate's words. This is a different name (Neferhotep the Elder), not a match. C2 (Nfr-ḥtp.w): the words are nfr plus the noun ḥtp in the plural ending .w (ḥtp.w). 'Neferhotep' renders n-f-r and h-t-p in the same order, with vowels added. The plural ending .w is a weak consonant, which the conventions allow to go unrendered. The noun is the same ḥtp in a plural form, not a different word that happens to share consonants, so record 1 can be read as exactly these words. This is a match, with the lean being that a plural ending of the same noun does not make a different word."
+  }
+ }
+}

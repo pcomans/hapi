@@ -1,0 +1,851 @@
+{
+ "unit_id": "Nubemhat",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "nbmht",
+  "C2": "nbmḥyt",
+  "C3": "nbjmjꜥḥ"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Nubemhat\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Nb-m-ht\n  Lemma 1: German: Neb-em-het | English: Neb-em-het\n\nCandidate C2: Nb-mḥy.t\n  Lemma 1: German: Neb-mehyt | English: (none)\n\nCandidate C3: Nb=j-m-jꜥḥ\n  Lemma 1: German: Nebi-em-jah | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Nubemhat\", \"choices\": [<zero or more of \"C1\", \"C2\", \"C3\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "0a9d73e89e87ff59f04db852f54bd4df1c707838319472450fd4f5c28d322444",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "2bce3707-cd5d-40f9-9dfd-2bc5ea2a78de",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "3e04a487-8712-4778-bcd7-739d0a956e7e",
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "2bce3707-cd5d-40f9-9dfd-2bc5ea2a78de",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "2d3cf2ab-ec80-44f7-9e1f-74f068c4843e",
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-6r4_z997",
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "e189979b-4db7-43da-b228-9bc6643e141e",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-6r4-z997/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1975014.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "129094c4-6400-49ae-8701-aa91ec8fe147"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "40fa1d64-b4f0-4b47-bd33-b45786ce0e5f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 5,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "a6588e2c-29c8-41af-80cd-e1a9ba2c53e3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "d224a43a-2650-4fcf-a0be-b095ed66a44c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "a87ef57e-51c9-49f9-a0cf-858c2f2d411d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "a2753c18-adb8-4ff7-a5a8-7b69567d16d8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "b6cf8d8b-27f1-47d9-ac85-6968b1969964"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "390d9ed3-32c3-453d-9d37-abb82a1c92b5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "42244206-a2af-4f43-ab18-3bf88938a0aa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "8258e795-667c-447b-b536-3307bf899048"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "f7dc3a5e-94c2-4a3e-8fad-a32587d7f11d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "67faf7a2-2df9-489b-bb74-65c61dcdfa8d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "bc56a771-67ca-4d60-8a39-382ef47fe286"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "14c5beae-a4a3-4352-982e-4b332f4220e4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "f16bd45e-8b42-470b-8f91-95504a03da2f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "69b72809-101f-4f21-bd8f-259bda4dc121"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "1ebf39df-3e94-4366-8adb-a9a7b198a76a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "25cf3a49-c373-4f96-9caa-7642bd8ebe00"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "6a387399-539a-4512-96d2-2baff9a19b55"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 5,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "a1bb1e98-5686-42d9-8df9-be4077c49091"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "9c94b758-1642-4a29-a749-51eb4dafed27"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 50,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "5fe5e0a1-7025-498d-a520-5c1b62768835"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "c632a68b-ca4e-4330-80e4-b42acb0b3d77"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "034dc798-57a1-4176-9deb-7457e8d910a1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "fc325c28-9198-437c-b302-5c7caf79b38b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 58,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "890c9e71-ba63-4e73-8883-c91b18eda847"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 59,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "13408e50-0e61-4a51-b48f-f49018ceec59"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 60,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "15b9dec5-cbba-427c-8173-0c77984326f0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 62,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "795b7bff-11b9-4db5-9e37-5988d46baf0d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 63,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "801fc921-43a5-42ab-9d85-9615e2bebef2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 65,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "c2ddb31f-cf73-4295-a81a-128d4ee2e43d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 67,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "fcd09591-1ba2-48ff-b110-d9d34e5705f4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 71,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "eafa054d-9675-497e-b757-940331ad3b16"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 74,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "ea15feba-ff82-4923-8c58-215217d99c90"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 78,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "f26d6683-febb-4396-b4b5-ebb5c58458f3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 84,
+   "estimated_tokens_delta": 6,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "f92ff47a-fa37-4b3a-b32a-eb4e236631bb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 87,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "91fed6e2-9771-43dc-a78e-abccef54586a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 89,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "4e11a5f2-aada-4064-94e0-96aaf5702af2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 92,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "6e76e4b3-9a68-4679-8074-ec8313b781a6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 94,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "49bb6fb6-c94e-48ed-a1c4-134e3982b109"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 96,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "b8ba9913-e53c-4ea8-b940-0cdd0f60944d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 99,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "97fba4e7-0d6f-402d-b301-e8accf1e671e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 100,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "49873459-309e-40a9-afbb-11e61a77cc95"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 101,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "b8b1a633-8208-4226-9d3a-e3e904822dc4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 102,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "33028846-a2dc-408d-8f05-bd166f66a720"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 104,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "5617c24a-9fb9-4e9c-89aa-d12c0ef073ae"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 106,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "1a7842c8-9e1b-4319-9349-981f9fe79991"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 110,
+   "estimated_tokens_delta": 4,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "cd019786-b71c-4e22-92d6-8a1e715e6b52"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 111,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "c3ba612f-5c9a-4df0-9bfa-ff26fcaa824d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 112,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "ce7f01eb-ed8b-4259-82ca-cd0e821e78d0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 113,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "e574f56a-dda9-4439-8671-632aff71c931"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 114,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "3acd4071-4ea0-4507-b27b-8d9e8c7bdeff"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 115,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "6385ef5c-4c6d-47ad-bd98-4d68171d4741"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 116,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "ce4674c5-e613-4248-b9b0-b2a8b84c1e20"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 121,
+   "estimated_tokens_delta": 5,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "eb7fdd46-975b-4e6e-97a5-ad67e8614a82"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 124,
+   "estimated_tokens_delta": 3,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "12ec8611-24d0-49ca-91b6-587ef1bc8161"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 126,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "eb0cd95e-8bd2-4ea3-bc6b-177b2cef6279"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 127,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "7275ad11-8a9b-4772-ae0d-d73e862efbf6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 129,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "ba2fd43f-25c4-49fd-995b-99f3f4bcb86f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 131,
+   "estimated_tokens_delta": 2,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "c9529472-7999-4723-89fd-c3857ca68897"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 132,
+   "estimated_tokens_delta": 1,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "56f402d5-2c4d-485c-acad-f88f8f5e2895"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 702,
+   "estimated_tokens_delta": 570,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "0f24f82e-9067-4c38-8b13-3fb4cddf58a0"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LeAtRPG2A2yeg8iMM4",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm trying to parse the name Nubemhat — it looks like it breaks down to \"nbw\" (gold) plus \"m-ḥꜣt\" (in front), distinguishing it from names using \"nb\" (lord) instead of \"nbw\" (gold).\n\nThe u could suggest \"gold\" rather than \"lord,\" but that's just spelling variation, not a different word. I'll go with C1 as matching Nubemhat, then move on to check C2, Nb-mḥy.t (Nebmehyt), which has an extra y and ḥ to account for.\n\n",
+      "signature": "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"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1650,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1650
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "0919970d-9650-4d89-934b-31223ef82289",
+   "timestamp": "2026-10-15T16:29:27.215Z",
+   "request_id": "req_011Cg4LeAboheUiZoTQ4ohyJ",
+   "thinking_duration_ms": 12324,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LeAtRPG2A2yeg8iMM4",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Nubemhat\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Nb-m-ht (Neb-em-het) is read as nb + m + ht. Record 1 'Nubemhat' reads as n-b / (e)m / h-a-t. The u and a are added vowels, and the consonants n b m h t match exactly, in the same words and order, so it is the same name. C2 Nb-mḥy.t (Neb-mehyt) is nb + mḥy.t, with no separate preposition m. The consonants can be made to fit, since y can be unrendered and t is the feminine ending. But record 1 reads naturally as nb + em + hat, with the preposition m as a separate word, so C2 would be a different word division and a different name. C3 Nb=j-m-jꜥḥ (Nebi-em-jah) has the suffix =j and the word jꜥḥ (moon). Record 1 has no corresponding h-final word, and its t would be an extra consonant. The final consonants are ꜥḥ versus ht, so C3 does not match.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1650,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1650
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "uuid": "00ddafba-9b7c-44a7-a3e7-b0a3324fe6ab",
+   "timestamp": "2026-10-15T16:29:28.087Z",
+   "request_id": "req_011Cg4LeAboheUiZoTQ4ohyJ"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "1661381d-7dde-475b-ad53-c74b4326bd30",
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca"
+  },
+  {
+   "duration_api_ms": 14402,
+   "stop_reason": "end_turn",
+   "session_id": "946330d5-7000-456c-b50e-9bb5cbefceca",
+   "total_cost_usd": 0.021494,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1650,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1489,
+    "output_tokens_details": {
+     "thinking_tokens": 1131
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1650,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 1489,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1650,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1650
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 1489,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1650,
+     "webSearchRequests": 0,
+     "costUSD": 0.021494,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 1131,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Nubemhat\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Nb-m-ht (Neb-em-het) is read as nb + m + ht. Record 1 'Nubemhat' reads as n-b / (e)m / h-a-t. The u and a are added vowels, and the consonants n b m h t match exactly, in the same words and order, so it is the same name. C2 Nb-mḥy.t (Neb-mehyt) is nb + mḥy.t, with no separate preposition m. The consonants can be made to fit, since y can be unrendered and t is the feminine ending. But record 1 reads naturally as nb + em + hat, with the preposition m as a separate word, so C2 would be a different word division and a different name. C3 Nb=j-m-jꜥḥ (Nebi-em-jah) has the suffix =j and the word jꜥḥ (moon). Record 1 has no corresponding h-final word, and its t would be an extra consonant. The final consonants are ꜥḥ versus ht, so C3 does not match.\"}",
+   "ttft_ms": 13545,
+   "type": "result",
+   "duration_ms": 14490,
+   "uuid": "1525201b-59d8-439c-b851-e839fcc6173f",
+   "ttft_stream_ms": 1220,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 1220,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Nubemhat",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Nb-m-ht (Neb-em-het) is read as nb + m + ht. Record 1 'Nubemhat' reads as n-b / (e)m / h-a-t. The u and a are added vowels, and the consonants n b m h t match exactly, in the same words and order, so it is the same name. C2 Nb-mḥy.t (Neb-mehyt) is nb + mḥy.t, with no separate preposition m. The consonants can be made to fit, since y can be unrendered and t is the feminine ending. But record 1 reads naturally as nb + em + hat, with the preposition m as a separate word, so C2 would be a different word division and a different name. C3 Nb=j-m-jꜥḥ (Nebi-em-jah) has the suffix =j and the word jꜥḥ (moon). Record 1 has no corresponding h-final word, and its t would be an extra consonant. The final consonants are ꜥḥ versus ht, so C3 does not match."
+  }
+ }
+}
