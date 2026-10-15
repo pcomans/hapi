@@ -1,6 +1,7 @@
 """The weak-sign key's hill-climb, protocol v2 (docs/evaluations/weak-sign-key-hillclimb/):
 every committed result is rebuilt from its key snapshot with the frozen normalizer, the
-acceptance rule is re-applied, and the accepted key is the committed key."""
+acceptance rule is re-applied, and the committed key is v2-4: the protocol accepted v2-1, and
+the project owner then dropped its c/q -> k rule."""
 
 from __future__ import annotations
 

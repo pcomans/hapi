@@ -465,3 +465,13 @@ def test_a_different_name_outside_dodson_and_hilton_can_still_meet_a_womans_key(
         "resolved", "weak_sign_skeleton", ["dodson_hilton:Sitre A"], None)  # sole candidate, confirmed by Sety I
     assert found(index, "Isetweret", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
     assert found(index, "Isetweret", dynasty=18) == ("unmatched", "weak_sign_skeleton", [], "record_dynasty_contradicts")
+
+
+def test_the_resolvers_numeral_reader_agrees_with_the_matchers() -> None:
+    """Two readers of a regnal number must not drift (Rule 4): `numeral_of` reads each token
+    (the resolver removes every numeral token before keying), the claim-graph matcher's
+    `regnal_number_of` a trailing number on a whole name. On the matcher's documented forms,
+    the last token gives the same number."""
+    from pipeline.authority.claimgraph.matcher import regnal_number_of
+    for name in ("Ramesses III", "Amenophis II.", "Psusennes I", "Userkare (I)", "Cleopatra VII"):
+        assert rw.numeral_of(name.split()[-1]) == regnal_number_of(name), name
