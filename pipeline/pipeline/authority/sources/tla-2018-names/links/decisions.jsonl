@@ -155,11 +155,9 @@
 {"basis": "agreement", "dh_name": "Sobkemheb", "dh_target_ids": ["dodson_hilton:Sobkemheb"], "pair_id": "Sobkemheb|706626", "tier": "weak_sign_skeleton", "tla_id": "706626", "verdict": "same_name"}
 {"basis": "agreement", "dh_name": "Taemwadjy", "dh_target_ids": ["dodson_hilton:Taemwadjy"], "pair_id": "Taemwadjy|708193", "tier": "weak_sign_skeleton", "tla_id": "708193", "verdict": "different_name"}
 {"basis": "agreement", "dh_name": "Tayuheret", "dh_target_ids": ["dodson_hilton:Tayuheret"], "pair_id": "Tayuheret|708138", "tier": "weak_sign_skeleton", "tla_id": "708138", "verdict": "different_name"}
-{"basis": "agreement", "dh_name": "Tentamun", "dh_target_ids": ["dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B"], "pair_id": "Tentamun|708230", "tier": "weak_sign_skeleton", "tla_id": "708230", "verdict": "same_name"}
 {"basis": "rule:raw_exact", "dh_name": "Ti", "dh_target_ids": ["dodson_hilton:Ti"], "pair_id": "Ti|708757", "tier": "raw_exact", "tla_id": "708757", "verdict": "same_name"}
 {"basis": "rule:raw_exact", "dh_name": "Ti", "dh_target_ids": ["dodson_hilton:Ti"], "pair_id": "Ti|850227", "tier": "raw_exact", "tla_id": "850227", "verdict": "same_name"}
 {"basis": "rule:raw_exact", "dh_name": "Tia", "dh_target_ids": ["dodson_hilton:Tia C", "dodson_hilton:Tia Q"], "pair_id": "Tia|708763", "tier": "raw_exact", "tla_id": "708763", "verdict": "same_name"}
-{"basis": "agreement", "dh_name": "Tintamun", "dh_target_ids": ["dodson_hilton:Tintamun"], "pair_id": "Tintamun|708230", "tier": "weak_sign_skeleton", "tla_id": "708230", "verdict": "same_name"}
 {"basis": "rule:raw_exact", "dh_name": "Tuia", "dh_target_ids": ["dodson_hilton:Tuia"], "pair_id": "Tuia|708835", "tier": "raw_exact", "tla_id": "708835", "verdict": "same_name"}
 {"basis": "rule:raw_exact", "dh_name": "Tuy", "dh_target_ids": ["dodson_hilton:Tuy A"], "pair_id": "Tuy|600132", "tier": "raw_exact", "tla_id": "600132", "verdict": "same_name"}
 {"basis": "agreement", "dh_name": "Werenro", "dh_target_ids": ["dodson_hilton:Werenro"], "pair_id": "Werenro|450224", "tier": "weak_sign_skeleton", "tla_id": "450224", "verdict": "different_name"}

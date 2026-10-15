@@ -15,8 +15,8 @@ urn:nbn:de:kobv:b4-opus4-29190 (<https://edoc.bbaw.de/frontdoor/index/index/docI
   `vocabulary.zip` is the publisher's archive, unchanged. `reconciled.jsonl` is an extract of
   it (Adapted Material) and is shared under the same licence, with this attribution; it is
   not covered by the repository's Apache-2.0 licence (see `NOTICE`).
-- **ShareAlike for later use.** Anything built from these rows, such as the planned
-  transliteration labels for Dodson & Hilton's women, is Adapted Material too. It must carry
+- **ShareAlike for later use.** Anything built from these rows, such as the spelling links
+  to Dodson & Hilton's women (`links/`), is Adapted Material too. It must carry
   this attribution per row and be shared under CC BY-SA 4.0, kept in its own data file rather
   than mixed into Apache-licensed code or data.
 - **Archive:** `vocabulary.zip` (committed; 11,268,762 bytes, SHA-256
@@ -51,7 +51,8 @@ The rows are used for **name spellings only, never for identity**:
 1. as a test set for the royal-women weak-sign key (a lemma's transliteration and its
    renderings, glosses and bracketed descriptions removed by tested code, are one name in
    several conventions);
-2. later, as Egyptological transliterations for Dodson & Hilton's women (ShareAlike above).
+2. as further spellings of Dodson & Hilton's women's names, through name-to-name links
+   decided by rule or by a stored model review (`links/`; ShareAlike above).
 
 A lemma does not map one-to-one to a name or a person: `Tjy` is three `person_name` lemmas
 (600348, 708792, 708799), `Nfr.t-jr.j` two, `Mnṯ.w-ḥtp.w` both a royal (400020 "Mentuhotep") and a

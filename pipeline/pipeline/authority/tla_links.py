@@ -80,10 +80,20 @@ def dh_names(women: list[rw.RoyalWoman]) -> dict[str, tuple[str, ...]]:
     return {name: tuple(sorted(ids)) for name, ids in sorted(names.items())}
 
 
+def withheld_keys(women: list[rw.RoyalWoman]) -> set[str]:
+    """The weak-sign keys that D&H's labels spell differently for different women (the
+    resolver's `different_spellings`, over the labels alone): the key cannot tell whether those
+    spellings are one name, so it proposes no pair on them."""
+    index = rw.RoyalWomenIndex(women={}, dynasties={}, family_king_ids={}, family_names_not_resolved={},
+                               king_ids={}, alt_names_dropped_as_king_names={})
+    for woman in women:
+        rw._add_weak_sign(index, woman.target_id, woman.labels)
+    return set(rw.different_spellings(index))
+
+
 def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
     """Every (D&H name, TLA personal-name lemma) pair whose spellings meet, with the first tier
-    they meet on. Weak-sign keys that different D&H names share (`DIFFERENT_NAMES`) propose
-    nothing: the key cannot tell those names apart."""
+    they meet on. A withheld weak-sign key (`withheld_keys`) proposes nothing."""
     exact: dict[str, set[str]] = collections.defaultdict(set)
     normalized: dict[str, set[str]] = collections.defaultdict(set)
     weak: dict[str, set[str]] = collections.defaultdict(set)
@@ -96,6 +106,7 @@ def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
                 normalized[key].add(row["tla_id"])
             if skeleton := weak_sign_skeleton(form):
                 weak[skeleton].add(row["tla_id"])
+    withheld = withheld_keys(women)
     pairs: list[Pair] = []
     for name, targets in dh_names(women).items():
         by_tier: dict[str, str] = {}
@@ -105,7 +116,7 @@ def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
             for tla_id in normalized.get(key, ()):
                 by_tier.setdefault(tla_id, "committed_normalized")
         skeleton = weak_sign_skeleton(name)
-        if skeleton and skeleton not in rw.DIFFERENT_NAMES:
+        if skeleton and skeleton not in withheld:
             for tla_id in weak.get(skeleton, ()):
                 by_tier.setdefault(tla_id, "weak_sign_skeleton")
         for tla_id, tier in sorted(by_tier.items()):

@@ -19,8 +19,13 @@ from test_royal_women import KINGS  # noqa: E402
 
 
 @pytest.fixture(scope="module")
-def pairs() -> list[tl.Pair]:
-    return tl.candidate_pairs(rw.load_royal_women(), tl.tla_rows())
+def women() -> list[rw.RoyalWoman]:
+    return rw.load_royal_women()
+
+
+@pytest.fixture(scope="module")
+def pairs(women) -> list[tl.Pair]:
+    return tl.candidate_pairs(women, tl.tla_rows())
 
 
 def by_id(pairs, pair_id):
@@ -29,9 +34,9 @@ def by_id(pairs, pair_id):
 
 
 def test_the_candidate_pairs_and_their_tiers(pairs) -> None:
-    assert len(pairs) == 167
+    assert len(pairs) == 165
     assert collections.Counter(p.tier for p in pairs) == {
-        "weak_sign_skeleton": 124, "raw_exact": 34, "committed_normalized": 9}
+        "weak_sign_skeleton": 122, "raw_exact": 34, "committed_normalized": 9}
     assert len({p.pair_id for p in pairs}) == len(pairs)
     # Same spelling, linked by rule: D&H "Ahmes-Nefertiry" against TLA 600465 is a weak-sign
     # pair (the TLA writes Ahmes-Nefertari), while an identical spelling is exact.
@@ -42,10 +47,14 @@ def test_the_candidate_pairs_and_their_tiers(pairs) -> None:
     assert {tla[p.tla_id]["subtype"] for p in pairs} == {"person_name"}
 
 
-def test_keys_that_different_names_share_propose_nothing(pairs) -> None:
+def test_keys_that_different_names_share_propose_nothing(pairs, women) -> None:
     from pipeline.authority.weak_sign_skeleton import weak_sign_skeleton
-    for pair in pairs:
-        assert weak_sign_skeleton(pair.dh_name) not in rw.DIFFERENT_NAMES or pair.tier != "weak_sign_skeleton"
+    # D&H spells these keys differently for different women: Henttawy / Henutwati, Nebetia /
+    # Nebtit / Nebtu, Neferet / Neferu, Tentamun / Tintamun.
+    assert tl.withheld_keys(women) == {"hntt", "nbt", "nfr", "tntmn"}
+    weak = [p for p in pairs if p.tier == "weak_sign_skeleton"]
+    assert len(weak) == 122
+    assert not {weak_sign_skeleton(p.dh_name) for p in weak} & tl.withheld_keys(women)
 
 
 def test_renderings_drop_glosses_and_descriptions() -> None:
@@ -112,3 +121,56 @@ def test_the_prompts_are_the_audited_ones() -> None:
     for name in ("system-v1.txt", "reviewer-v1.txt", "reconciler-v1.txt"):
         digest = hashlib.sha256((review.PROMPTS / name).read_bytes()).hexdigest()
         assert f"`{name}`: `{digest}`" in audit, name
+
+
+# --- The committed run: its calls and its decisions -----------------------------------------
+
+def _stored_calls() -> dict[str, list[dict]]:
+    return {role: [json.loads(p.read_text(encoding="utf-8")) for p in sorted((review.RUNS / role).glob("*.json"))]
+            for role in ("A", "B", "reconciler")}
+
+
+def test_every_stored_call_passes_the_protocol_and_states_its_reasoning() -> None:
+    calls = _stored_calls()
+    assert {role: len(records) for role, records in calls.items()} == {"A": 124, "B": 124, "reconciler": 2}
+    for role, records in calls.items():
+        for record in records:
+            checked = review.validate(record)  # raises on billed auth, another model, a tool or a hook
+            assert "answer" in checked, (role, record["pair_id"], checked)
+            assert checked["answer"]["reasoning"].strip()
+            assert record["requested_model"] == review.MODEL_ALIAS and record["role"] == (
+                "reconciler" if role == "reconciler" else "reviewer")
+
+
+def test_the_committed_decisions_are_rebuilt_from_the_stored_calls() -> None:
+    data = review.inputs()
+    committed = [json.loads(line) for line in review.DECISIONS.read_text(encoding="utf-8").splitlines()]
+    assert committed == [json.loads(json.dumps(d, sort_keys=True)) for d in review.decide(data)]
+    assert collections.Counter((d["tier"], d["verdict"], d["basis"]) for d in committed) == {
+        ("raw_exact", "same_name", "rule:raw_exact"): 34,
+        ("committed_normalized", "same_name", "rule:committed_normalized"): 9,
+        ("weak_sign_skeleton", "same_name", "agreement"): 70,
+        ("weak_sign_skeleton", "different_name", "agreement"): 50,
+        ("weak_sign_skeleton", "different_name", "reconciler"): 2}
+    assert [p.pair_id for p in review.disputed(data)] == [d["pair_id"] for d in committed if d["basis"] == "reconciler"]
+
+
+def test_calls_stored_for_pairs_that_are_no_longer_candidates_are_the_withheld_tntmn_pairs() -> None:
+    # The run's candidates withheld hntt, nbt and nfr; the resolver's rule (`withheld_keys`)
+    # later withheld tntmn too. The two pairs' calls stay on disk (Rule 13) and decide nothing.
+    data = review.inputs()
+    current = {review.file_id(p.pair_id) for p in review.review_pairs(data)}
+    for role in ("A", "B"):
+        orphans = sorted({json.loads(p.read_text(encoding="utf-8"))["pair_id"]
+                          for p in (review.RUNS / role).glob("*.json") if p.name.split(".")[0] not in current})
+        assert orphans == ["Tentamun|708230", "Tintamun|708230"], role
+
+
+def test_the_links_add_spellings_without_new_collisions_or_unwithheld_keys(women) -> None:
+    linked = tl.linked_spellings()
+    assert (len(linked), sum(map(len, linked.values()))) == (110, 304)
+    before = rw.build_index(women, KINGS)
+    after = rw.build_index(women, KINGS, linked_spellings=linked)
+    assert rw.different_spellings(after).keys() == rw.different_spellings(before).keys() == {
+        "hntt", "nbt", "nfr", "nfrsbk", "tntmn"}
+    assert rw.new_weak_sign_collisions(after) == rw.new_weak_sign_collisions(before)
