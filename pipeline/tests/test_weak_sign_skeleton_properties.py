@@ -490,7 +490,7 @@ def test_the_key_reads_no_museum_or_evaluation_data() -> None:
     imports = {(node.module, node.level) if isinstance(node, ast.ImportFrom) else (alias.name, 0)
                for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))
                for alias in (node.names if isinstance(node, ast.Import) else [None])}
-    assert imports == {("__future__", 0), ("re", 0), ("claimgraph.normalize", 1)}
+    assert imports == {("__future__", 0), ("re", 0), ("unicodedata", 0), ("claimgraph.normalize", 1)}
     code = ast.unparse([n for n in tree.body if not (isinstance(n, ast.Expr) and isinstance(n.value, ast.Constant))])
     for forbidden in ("open(", "read_text", "Path(", "ndjson", "dropbox", "corpus", "evaluations"):
         assert forbidden not in code, forbidden

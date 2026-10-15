@@ -1,0 +1,40 @@
+{
+ "train": {
+  "keyed_names": 1410,
+  "lemmas": 1997,
+  "met": 1467,
+  "names_in_strong_merges": 9,
+  "positive_pairs": 1849,
+  "recall": 0.7934,
+  "split": "train",
+  "strong_merges": {
+   "hnm": [
+    "jhnm",
+    "ẖnmw",
+    "ẖnmy"
+   ],
+   "mnkhr": [
+    "mnkꜣwḥrw",
+    "mnḫꜥwrꜥw"
+   ],
+   "rns": [
+    "jr⸮w?ns",
+    "rnsj"
+   ],
+   "tjnr": [
+    "tjjnr",
+    "ṯnry"
+   ]
+  }
+ },
+ "validation": {
+  "keyed_names": 473,
+  "lemmas": 682,
+  "met": 532,
+  "names_in_strong_merges": 0,
+  "positive_pairs": 652,
+  "recall": 0.816,
+  "split": "validation",
+  "strong_merges": {}
+ }
+}

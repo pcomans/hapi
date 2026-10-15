@@ -42,6 +42,15 @@ Rules, in the order applied
    occupant_alt_names) — two different queens of that name (`porter-moss-theban-necropolis`);
    D&H "Ahmes-Nefertiry" (dh_id Ahmes-Nefertiry, pp. 118–119) is PM I.2, 599
    "ʿAhmosi Nefertere" (row DAN-AhmosiNefertere, occupant_name).
+   Before the fold the text is lowercased and composed (Unicode NFC): a capital H̱ has no
+   precomposed form, so it would reach the fold as h + U+0331 and read as h; composed, it is
+   ẖ and folds to kh. TLA lemma 400409 is `H̱nm.w`, "Chnum"/"Khnum" (`tla-2018-names`).
+   **In an Egyptological transliteration j is always the weak sign.** A text with a sign
+   only a transliteration has (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ ḳ ꞽ, the markers = and ⸗, or the combining
+   marks of i̯ and ẖ) writes ṯ and ḏ as letters of their own, so its j is never the second
+   letter of tj/dj: TLA 600234 `Jt=j-Jmn` is "Itiamun", 600269 `Mn-pḥ.tj-Rꜥw` "Menpehtyre",
+   600456 `Jni̯-jtj=f` "Intef"/"Inyotef". (Adopted in the TLA hill-climb, iteration 2; see
+   `docs/evaluations/weak-sign-key-hillclimb/`.)
 2. **c and q are k.** Latin c and Greek κ: pharaoh.se row Cleopatra-VII has display
    "Cleopatra VII" with alt_labels "Kleopatra", and renders her Egyptian nomen
    "Qliu pa dra netjeret meret ites" (q for the κ of Κλεοπάτρα); Leprohon writes "Berenike"
@@ -97,6 +106,10 @@ Rules, in the order applied
 
 Not adopted
 -----------
+* z as s, and ṯ as t (TLA 400051/400058 `Z-n-wsr.t` "Senwosret"; 400020 `Mnṯ.w-ḥtp.w`
+  "Mentuhotep"): both are real rendering conventions, but on the TLA hill-climb's train split
+  each merged distinct names (z/s: strong merges 6 → 34, e.g. Semen and Sa-Amun; ṯ/t: 6 → 14,
+  e.g. sṯf and stf) for under two points of recall, so both were rejected.
 * Greek and Coptic forms (Amenophis for Amenhotep, Nitocris for Neith-Iqeret, Isis for
   Iset): no letter rule produces them; they are alternative names, which belong in the
   authority's alt-name lists.
@@ -109,12 +122,16 @@ Not adopted
 from __future__ import annotations
 
 import re
+import unicodedata
 
 from .claimgraph.normalize import translit_key
 
 MIN_WEAK_SIGN_CONSONANTS = 3
 
 _SEPARATORS = re.compile(r"[\s.\-·]+")
+# The signs that occur only in an Egyptological transliteration (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ ḳ ꞽ, the
+# suffix and dual markers = ⸗, the half-ring ʿ, and the combining marks of i̯ and ẖ).
+_TRANSLITERATION = re.compile("[ꜣꜥḥḫẖšṯḏḳꞽ=⸗ʿ\u0331\u032f\u0323\u032e]")
 _DIGITS = re.compile(r"[0-9]")
 # Rule 4: vowels, y, w, and a j that is not the second letter of dj/tj.
 _WEAK_SIGNS = re.compile(r"[aeiouyw]|(?<![dt])j")
@@ -129,6 +146,13 @@ def consonant_count(key: str) -> int:
 
 def weak_sign_skeleton(text: str) -> str:
     """The weak-sign skeleton of a name, or "" when it has fewer consonants than the minimum."""
+    # NFC after lowercasing: a capital H̱ has no precomposed form, so it reaches the fold as
+    # h + U+0331 and would read as h; lowercased and composed it is ẖ (U+1E96), which folds to kh.
+    text = unicodedata.normalize("NFC", text.lower())
+    # In an Egyptological transliteration ṯ and ḏ are letters of their own, so a j there is
+    # always the weak sign, never the second letter of tj/dj: "Jt=j-Jmn" is t + j, Itiamun.
+    if _TRANSLITERATION.search(text):
+        text = text.replace("j", "i")
     tokens = [translit_key(t) for t in _SEPARATORS.split(text.replace("[", "").replace("]", "")) if t]
     tokens = [_DIGITS.sub("", t).replace("c", "k").replace("q", "k") for t in tokens]
     tokens = [t for t in tokens if t]

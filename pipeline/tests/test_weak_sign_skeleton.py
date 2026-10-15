@@ -370,3 +370,29 @@ def test_the_different_name_groups_are_exactly_the_index_members_or_the_index_re
         rw.build_index(without, _StubKings())
     # A partial index that holds none of a group is not asked about it.
     rw.build_index([w for w in women if w.label in ("Hatshepsut D", "Sobkneferu", "Tawosret", "Nefertiti")], _StubKings())
+
+
+def test_a_capital_h_with_line_below_folds_as_kh() -> None:
+    """TLA 400409 `H̱nm.w` = Khnum: H̱ has no precomposed capital, so the text is composed
+    (NFC) after lowercasing, before the fold."""
+    assert weak_sign_skeleton("H̱nm.w") == weak_sign_skeleton("Khnum") == weak_sign_skeleton("Chnum") == "khnm"
+    assert weak_sign_skeleton("H\u0331nm.w") == weak_sign_skeleton("ẖnm.w") == "khnm"
+
+
+def test_in_a_transliteration_j_is_always_the_weak_sign() -> None:
+    """TLA 600234 `Jt=j-Jmn` Itiamun, 600269 `Mn-pḥ.tj-Rꜥw` Menpehtyre, 600456 `Jni̯-jtj=f`
+    Intef: in a transliteration ṯ is its own letter, so t + j is t and the weak sign."""
+    assert weak_sign_skeleton("Jt=j-Jmn") == weak_sign_skeleton("Itiamun") == "tmn"
+    assert weak_sign_skeleton("Mn-pḥ.tj-Rꜥw") == weak_sign_skeleton("Menpehtyre") == "mnphtr"
+    assert weak_sign_skeleton("Jni̯-jtj=f") == weak_sign_skeleton("Intef") == weak_sign_skeleton("Inyotef") == "ntf"
+    # ṯ itself is still the digraph, in a transliteration and in English alike.
+    assert weak_sign_skeleton("Nṯr.j-ḫ.t") == weak_sign_skeleton("Netjerikhet") == "ntjrkh"
+    # Without a transliteration sign the text is read as English or Umschrift: tj is ṯ.
+    assert weak_sign_skeleton("Netjerkhet") == "ntjrkh" != weak_sign_skeleton("Neterkhet") == "ntrkh"
+    assert weak_sign_skeleton("Jꜥḥ-ms-nfrt-jrj") == weak_sign_skeleton("Ahmose Nefertari") == "hmsnfrtr"
+
+
+def test_z_and_s_and_t_and_tj_stay_apart() -> None:
+    """Rejected in the hill-climb: each merged distinct names."""
+    assert weak_sign_skeleton("Z-n-wsr.t") == "znsr" != weak_sign_skeleton("Senwosret") == "snsr"
+    assert weak_sign_skeleton("Mnṯ.w-ḥtp.w") == "mntjhtp" != weak_sign_skeleton("Mentuhotep") == "mnthtp"

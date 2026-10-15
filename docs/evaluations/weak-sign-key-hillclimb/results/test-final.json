@@ -1,0 +1,32 @@
+{
+ "iteration-0.py": {
+  "keyed_names": 490,
+  "lemmas": 683,
+  "met": 481,
+  "names_in_strong_merges": 2,
+  "positive_pairs": 612,
+  "recall": 0.7859,
+  "split": "test",
+  "strong_merges": {
+   "nkhr": [
+    "njkꜣwḥrw",
+    "njẖrt"
+   ]
+  }
+ },
+ "iteration-2.py": {
+  "keyed_names": 490,
+  "lemmas": 683,
+  "met": 529,
+  "names_in_strong_merges": 2,
+  "positive_pairs": 612,
+  "recall": 0.8644,
+  "split": "test",
+  "strong_merges": {
+   "nkhr": [
+    "njkꜣwḥrw",
+    "njẖrt"
+   ]
+  }
+ }
+}
