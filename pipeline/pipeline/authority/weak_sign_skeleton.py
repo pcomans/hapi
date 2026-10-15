@@ -85,7 +85,13 @@ Rules, in the order applied
      "Teti" (row Teti, birth_names[1]); Leprohon renders ḏḥwty as "djehuty" (leprohon-16.02
      nebty_names[0], p. 83). The German Umschrift writes the sign j (Beckerath 1999, PDF pp.
      42 "mrj-Jmn", "Rꜥ-msj-sw", and 100 "Jmn-m-ḥꜣt", "Jmny"; not committed): a j outside a
-     dj/tj unit is the weak sign; inside one it is the unit's (rule 1).
+     dj/tj unit is the weak sign; inside one it is the unit's (rule 1). **In an Egyptological
+     transliteration every j is the weak sign**: a text with a sign only transliterations use
+     (ꜣ, ꜥ, ꞽ, = or ⸗, or the inverted breve of i̯) writes ṯ and ḏ as letters of their own, so
+     its t + j is t and the weak sign. TLA 600234 `Jt=j-Jmn` is "Itiamun", 600269
+     `Mn-pḥ.tj-Rꜥw` "Menpehtyre", 600456 `Jni̯-jtj=f` "Intef" (`tla-2018-names`). Porter &
+     Moss's half-ring ʿ does not trigger it: "Wadjkheperreʿ" keeps its ḏ. Adopted by the
+     hill-climb, protocol v2 (`docs/evaluations/weak-sign-key-hillclimb/`, C1).
    * w (quail chick) is rendered w or u, or omitted: pharaoh.se renders smsw as "Semsu" (row
      Semerkhet, throne_names[1]), ḳbḥw as "Qebehu" (row Qaa, throne_names[2]: the row's
      transliteration field writes "ḳbhw", its gardiner field "q-b-H-w-W15" has the ḥ) and
@@ -107,13 +113,16 @@ Rules, in the order applied
    Ti, Tuy, Tyti, Tia, Tiaa, Kiya, Iset, Huy, Iy, Imi, Iah, Aat, Ita, Tem …) are not
    reachable by this key at all; the resolver's tests list them.
 
-Under evaluation
-----------------
-* z as s, and ṯ as t: both are attested rendering conventions (TLA 400051 and 400058
-  `Z-n-wsr.t` "Senwosret", PM I.1, 69 "Zeserkaraʿsonb" (row TT38) for ḏsr-kꜣ-rꜥ-snb; TLA 400020
-  `Mnṯ.w-ḥtp.w` "Mentuhotep"), and neither is adopted here. Whether they gain more true matches than they
-  merge distinct names is being measured against the TLA names under a pre-registered
-  protocol; until that measurement is in, z stays z and ṯ stays ṯ.
+Measured and not adopted (hill-climb protocol v2, `docs/evaluations/weak-sign-key-hillclimb/`)
+--------------------------------------------------------------------------------------------
+* z as s (TLA 400051 and 400058 `Z-n-wsr.t` "Senwosret"; PM I.1, 69 "Zeserkaraʿsonb", row
+  TT38) and ṯ as t (TLA 400020 `Mnṯ.w-ḥtp.w` "Mentuhotep") are attested rendering
+  conventions. Measured against the TLA names, each raised recall but merged more distinct
+  names (strict strong merges 252 → 293 for z/s, 252 → 270 for ṯ/t), so neither is adopted.
+* Rule 2 (c and q as k) was measured too: removing it lowers TLA train recall from 85.48% to
+  84.93% and strict strong merges from 252 to 234 names. Under the protocol's acceptance rule
+  the removal is not adopted, so the rule stays. Its cost is recorded here: 18 names merged
+  for about half a point of recall.
 
 Not adopted
 -----------
@@ -168,6 +177,10 @@ def weak_sign_skeleton(text: str) -> str:
     # NFC after lowercasing: a capital H̱ has no precomposed form, so it reaches the fold as
     # h + U+0331 and would read as h; lowercased and composed it is ẖ (U+1E96), which folds to kh.
     text = unicodedata.normalize("NFC", text.lower())
+    # C1: in an Egyptological transliteration (a sign only transliterations use: ꜣ ꜥ ꞽ = ⸗ or
+    # the inverted breve of i̯) ṯ and ḏ are letters of their own, so a j is the weak sign.
+    if re.search("[ꜣꜥꞽ=⸗\u032f]", text):
+        text = text.replace("j", "i")
     tokens = [translit_key(t) for t in _SEPARATORS.split(text.replace("[", "").replace("]", "")) if t]
     tokens = [_DIGITS.sub("", t).replace("c", "k").replace("q", "k") for t in tokens]
     tokens = [t for t in tokens if t]

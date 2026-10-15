@@ -407,3 +407,14 @@ def test_z_and_s_are_under_evaluation_and_stay_apart_for_now() -> None:
     assert weak_sign_skeleton("Z-n-wsr.t") == "znsr" != weak_sign_skeleton("Senwosret") == "snsr"
     assert weak_sign_skeleton("Zeserkaraʿsonb") == "zsrkrsnb" != weak_sign_skeleton("Djeserkaresonb") == "ḏsrkrsnb"
     assert weak_sign_skeleton("Mnṯ.w-ḥtp.w") == "mnṯhtp" != weak_sign_skeleton("Mentuhotep") == "mnthtp"
+
+
+def test_in_a_transliteration_j_is_always_the_weak_sign() -> None:
+    """Hill-climb v2, C1: TLA 600234 `Jt=j-Jmn` Itiamun, 600269 `Mn-pḥ.tj-Rꜥw` Menpehtyre,
+    600456 `Jni̯-jtj=f` Intef. Porter & Moss's half-ring does not trigger it."""
+    assert weak_sign_skeleton("Jt=j-Jmn") == weak_sign_skeleton("Itiamun") == "tmn"
+    assert weak_sign_skeleton("Mn-pḥ.tj-Rꜥw") == weak_sign_skeleton("Menpehtyre") == "mnphtr"
+    assert weak_sign_skeleton("Jni̯-jtj=f") == weak_sign_skeleton("Intef") == "ntf"
+    assert weak_sign_skeleton("Nṯr.j-ḫ.t") == weak_sign_skeleton("Netjerikhet") == "nṯrḫ"
+    assert weak_sign_skeleton("Wadjkheperreʿ") == weak_sign_skeleton("Wadjkheperre") == "ḏḫprr"
+    assert weak_sign_skeleton("Jꜥḥ-ms-nfrt-jrj") == weak_sign_skeleton("Ahmose Nefertari") == "hmsnfrtr"
