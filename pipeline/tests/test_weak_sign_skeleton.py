@@ -203,19 +203,6 @@ CITATIONS = [
     ("dodson-hilton-queens", "dh_id", "Anuketemheb", "name", "Anuketemheb", "source_citation.pdf_pages", "178-180"),
     ("dodson-hilton-queens", "dh_id", "Anuqneferetweben", "name", "Anuqneferetweben", "source_citation.pdf_pages", "98-103"),
     ("dodson-hilton-queens", "dh_id", "Dedetanuq", "name", "Dedetanuq", "source_citation.pdf_pages", "98-103"),
-    # The DIFFERENT_NAMES readings (royal_women.py) cite these pages.
-    ("dodson-hilton-queens", "dh_id", "Henttawy A", "name", "Henttawy A", "source_citation.pdf_pages", "157-162"),
-    ("dodson-hilton-queens", "dh_id", "Henttawy Q", "name", "Henttawy Q", "source_citation.pdf_pages", "190-194"),
-    ("dodson-hilton-queens", "dh_id", "Henutwati", "spouse_names[0]", "Ramesses V", "source_citation.pdf_pages", "178-180"),
-    ("dodson-hilton-queens", "dh_id", "Neferu I", "name", "Neferu I", "source_citation.pdf_pages", "81-82"),
-    ("dodson-hilton-queens", "dh_id", "Neferu III", "name", "Neferu III", "source_citation.pdf_pages", "88-91"),
-    ("dodson-hilton-queens", "dh_id", "Neferu A", "name", "Neferu A", "source_citation.pdf_pages", "98-103"),
-    ("dodson-hilton-queens", "dh_id", "Neferu B", "name", "Neferu B", "source_citation.pdf_pages", "118-119"),
-    ("dodson-hilton-queens", "dh_id", "Neferet I", "name", "Neferet I", "source_citation.pdf_pages", "88-91"),
-    ("dodson-hilton-queens", "dh_id", "Neferet R", "name", "Neferet R", "source_citation.pdf_pages", "98-103"),
-    ("dodson-hilton-queens", "dh_id", "Nebetia", "dynasty", 18, "source_citation.pdf_pages", "126-130"),
-    ("dodson-hilton-queens", "dh_id", "Nebtu", "dynasty", 18, "source_citation.pdf_pages", "126-130"),
-    ("dodson-hilton-queens", "dh_id", "Nebtit", "dynasty", 13, "source_citation.pdf_pages", "98-103"),
 ]
 
 
@@ -296,10 +283,9 @@ def test_the_collision_table_over_the_dodson_and_hilton_women(women) -> None:
     pinned. Of the 352 women, 255 have a key; 97 (two consonants or fewer, or lacunose) are
     unreachable on this tier. 34 keys are shared, by 106 women; 30 of those groups are D&H's
     own same-named women ("Tiye A"/"Tiye C"), which the exact tier already returns
-    together. The key introduces four groups: three of different names (listed in
-    `DIFFERENT_NAMES`, never resolved on this tier) and Tentamun/Tintamun, one
-    name. Adding D&H chapters changes these numbers: update them with the new groups
-    reviewed, never silently."""
+    together. The key introduces four groups, each reached by the authority under more than
+    one spelling, so the resolver withholds them (`different_spellings`). Adding D&H chapters
+    changes these numbers: update them with the new groups reviewed, never silently."""
     assert len(women) == 352
     keyed, colliding, new, unkeyed = women_collisions(women)
     assert keyed == 255
@@ -311,15 +297,16 @@ def test_the_collision_table_over_the_dodson_and_hilton_women(women) -> None:
         "nbtn", "nbtnh", "nbḫs", "nfr", "nfrhtp", "nfrpth", "nfrr", "nfrtr", "nsḫns", "nthhtp", "rdtns", "rnsnb",
         "sbkmsf", "snbhns", "sththr", "stmn", "stmḫb", "stnfr", "tntmn", "ḫnmtnfrhḏ", "ḫnmtnfrhḏtr"]
     assert new == {
-        "hntt": rw.DIFFERENT_NAMES["hntt"]["members"],
-        "nbt": rw.DIFFERENT_NAMES["nbt"]["members"],
-        "nfr": rw.DIFFERENT_NAMES["nfr"]["members"],
-        # Tentamun (Dyns 20-21) and Tintamun (Dyn 18): one name, a vowel apart.
+        "hntt": ("dodson_hilton:Henttawy A", "dodson_hilton:Henttawy B", "dodson_hilton:Henttawy C",
+                 "dodson_hilton:Henttawy D", "dodson_hilton:Henttawy Q", "dodson_hilton:Henutwati"),
+        "nbt": ("dodson_hilton:Nebetia", "dodson_hilton:Nebtit", "dodson_hilton:Nebtu"),
+        "nfr": ("dodson_hilton:Neferet B", "dodson_hilton:Neferet I", "dodson_hilton:Neferet II", "dodson_hilton:Neferet Q",
+                "dodson_hilton:Neferet R", "dodson_hilton:Neferu A", "dodson_hilton:Neferu B", "dodson_hilton:Neferu I",
+                "dodson_hilton:Neferu II", "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"),
         "tntmn": ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun"),
     }
-    assert set(new) - set(rw.DIFFERENT_NAMES) == {"tntmn"}
     # The three-consonant keys several women share: two same-named groups, the alt-name
-    # pair Tuy A / Mut-Tuy B (an exact-tier group), and the two different-name groups.
+    # pair Tuy A / Mut-Tuy B (an exact-tier group), and two differently spelt groups.
     assert {k: [m.split(":", 1)[1] for m in v] for k, v in colliding.items() if consonant_count(k) == 3} == {
         "hms": ["Ahmes A", "Ahmes B"],
         "htb": ["Iuhetibu A", "Iuhetibu B Fendy", "Iuhetibu C", "Iuhetibu Q"],
@@ -346,82 +333,9 @@ def test_the_threshold_decision_three_consonants_with_a_named_king_against_four(
             "Neferet I", "Neferu II", "Nebtit", "Nebtu", "Nebetia", "Seneb A", "Sitmut"} <= set(gained)
 
 
-class _StubKings:
-    """Enough of a king authority to build the full index: the female rulers' king names."""
-
-    NAMES = {"Hatshepsut": "king:hatshepsut", "Neferusobek": "king:sobekneferu", "Tausret": "king:tausret",
-             "Queen Neith-Iqeret": "king:neith-iqeret", "Arsinoe II": "king:arsinoe-ii", "Berenike II": "king:berenike-ii",
-             "Cleopatra I": "king:cleopatra-i", "Cleopatra II": "king:cleopatra-ii", "Berenike": "king:berenike",
-             "Cleopatra VII Philopator": "king:cleopatra-vii-l", "Cleopatra VII": "king:cleopatra-vii-p"}
-
-    def resolve(self, name: str) -> dict:
-        found = [self.NAMES[name]] if name in self.NAMES else []
-        return {"status": "resolved" if found else "unmatched", "target_ids": found}
-
-    def labels(self, target_id: str) -> list[str]:
-        return [n for n, t in self.NAMES.items() if t == target_id]
-
-    def dynasties(self, target_id: str) -> tuple[int, ...]:
-        return ()
-
-
-def test_the_different_name_groups_are_exactly_the_index_members_or_the_index_refuses(women) -> None:
-    index = rw.build_index(women, _StubKings())
-    for key, group in rw.DIFFERENT_NAMES.items():
-        assert tuple(sorted(index.weak_sign[key])) == group["members"], key
-        assert consonant_count(key) >= MIN_WEAK_SIGN_CONSONANTS
-        assert group["reading"]
-    # A woman who leaves or joins a listed group is refused until the list is reviewed.
-    without = [w for w in women if w.label != "Henutwati"]
-    with pytest.raises(ValueError, match=r"DIFFERENT_NAMES\['hntt'\] lists .* but the index keys"):
-        rw.build_index(without, _StubKings())
-    # A partial index that holds none of a group is not asked about it.
-    rw.build_index([w for w in women if w.label in ("Hatshepsut D", "Sobkneferu", "Tawosret", "Nefertiti")], _StubKings())
-
-
-def test_a_capital_h_with_line_below_folds_as_kh() -> None:
-    """TLA 400409 `H̱nm.w` = Khnum: H̱ has no precomposed capital, so the text is composed
-    (NFC) after lowercasing, before the fold."""
-    assert weak_sign_skeleton("H̱nm.w") == weak_sign_skeleton("Khnum") == weak_sign_skeleton("Chnum") == "ḫnm"
-    assert weak_sign_skeleton("H\u0331nm.w") == weak_sign_skeleton("ẖnm.w") == "ḫnm"
-
-
-def test_a_digraph_is_a_unit_of_the_folded_letters_never_of_letters_a_dropped_vowel_joins() -> None:
-    """Menkauhor (mn-kꜣw-ḥr) is k + h, not the ḫ of Menkheperre; ḏ written dj stays ḏ."""
-    assert weak_sign_skeleton("Menkauhor") == "mnkhr" != weak_sign_skeleton("Menkheperre") == "mnḫprr"
-    assert weak_sign_skeleton("Menkauhor") != weak_sign_skeleton("Menkhor")
-    # Porter & Moss renderings: the half-ring does not count, ḏ is kept.
-    assert weak_sign_skeleton("Wadjkheperreʿ") == weak_sign_skeleton("Wadjkheperre") == "ḏḫprr"
-    assert weak_sign_skeleton("Raʿdjedef") == weak_sign_skeleton("Radjedef") == "rḏdf" != weak_sign_skeleton("Radedef")
-    # Within a token only: a separator between s and h is kept information.
-    assert weak_sign_skeleton("Ahmes-Henutemipet") == "hmshntmp" != weak_sign_skeleton("Ahmeshenutemipet") == "hmšntmp"
-
-
-def test_z_and_s_and_tj_and_t_stay_apart() -> None:
-    """Measured and not adopted (hill-climb v2): TLA 400051 `Z-n-wsr.t` is "Senwosret", but z as
-    s merged more distinct names than it joined. Porter & Moss's "Zeserkaraʿsonb" (TT38,
-    ḏsr-kꜣ-rꜥ-snb) writes z for ḏ, a different convention the key does not handle either."""
-    assert weak_sign_skeleton("Z-n-wsr.t") == "znsr" != weak_sign_skeleton("Senwosret") == "snsr"
-    assert weak_sign_skeleton("Zeserkaraʿsonb") == "zsrkrsnb" != weak_sign_skeleton("Djeserkaresonb") == "ḏsrkrsnb"
-    assert weak_sign_skeleton("Mnṯ.w-ḥtp.w") == "mnṯhtp" != weak_sign_skeleton("Mentuhotep") == "mnthtp"
-
-
-def test_a_j_is_the_weak_sign_in_a_text_with_a_transliteration_only_sign() -> None:
-    """Hill-climb v2, C1: TLA 600234 `Jt=j-Jmn` Itiamun, 600269 `Mn-pḥ.tj-Rꜥw` Menpehtyre,
-    600456 `Jni̯-jtj=f` Intef. The trigger is a sign only transliterations use (ꜣ ꜥ ꞽ = ⸗ i̯);
-    Porter & Moss's half-ring does not trigger it."""
-    assert weak_sign_skeleton("Jt=j-Jmn") == weak_sign_skeleton("Itiamun") == "tmn"
-    assert weak_sign_skeleton("Mn-pḥ.tj-Rꜥw") == weak_sign_skeleton("Menpehtyre") == "mnphtr"
-    assert weak_sign_skeleton("Jni̯-jtj=f") == weak_sign_skeleton("Intef") == "ntf"
-    assert weak_sign_skeleton("Wadjkheperreʿ") == weak_sign_skeleton("Wadjkheperre") == "ḏḫprr"
-    assert weak_sign_skeleton("Jꜥḥ-ms-nfrt-jrj") == weak_sign_skeleton("Ahmose Nefertari") == "hmsnfrtr"
-
-
-def test_the_c1_triggers_known_misses() -> None:
-    """Known limits of C1, pinned (code review of the climb): a transliteration without a
-    trigger sign keeps t + j as ṯ (TLA `Nfr.t-jy.tj`, Nefertiti; D&H's Nubhotepti as
-    `Nbw-ḥtp.tj`), and the trigger reads the whole text, so an English Dj beside a
-    transliteration loses its ḏ. A wider trigger is a candidate for a later protocol."""
-    assert weak_sign_skeleton("Nfr.t-jy.tj") == "nfrtṯ" != weak_sign_skeleton("Nofretete") == "nfrtt"
-    assert weak_sign_skeleton("Nbw-ḥtp.tj") == "nbhtpṯ" != weak_sign_skeleton("Nubhotepti") == "nbhtpt"
-    assert weak_sign_skeleton("Djeserkare (Ḏsr-kꜣ-Rꜥ)") == "dsrkrḏsrkr"  # the English Dj lost its ḏ
+def test_base_spelling_drops_the_letter_and_the_numeral() -> None:
+    assert rw.base_spelling("Neferu II") == "neferu"
+    assert rw.base_spelling("Tiye B Mereniset") == "tiye mereniset"
+    assert rw.base_spelling("Cleopatra VII Philopator") == "cleopatra philopator"
+    assert rw.base_spelling("Cleopatra (VII)") == rw.base_spelling("Cleopatra VII.") == "cleopatra"
+    assert rw.base_spelling("Mut-Tuy") == "mut-tuy" and rw.base_spelling("Meryetre(-Hatshepsut)") == "meryetre(-hatshepsut)"

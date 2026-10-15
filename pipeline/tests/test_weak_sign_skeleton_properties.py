@@ -239,7 +239,7 @@ def _labels_under(index, key: str, targets: set[str]) -> list[str]:
 
 
 def _family_only(key: str) -> bool:
-    return key in rw.DIFFERENT_NAMES or consonant_count(key) == MIN_WEAK_SIGN_CONSONANTS
+    return consonant_count(key) == MIN_WEAK_SIGN_CONSONANTS
 
 
 def _confirming(index, woman: str) -> set[int]:
@@ -250,8 +250,9 @@ def test_every_key_is_reached_by_a_rendering_the_first_two_tiers_miss(index) -> 
     """For every weak-sign key of the index: a rendering of one of its labels by the
     documented rules, which the first two tiers miss, finds exactly the key's targets. A
     single target resolves only when the record confirms it (a family king named, or a
-    dynasty among hers and her family kings' — unless the key is three consonants or in
-    DIFFERENT_NAMES, when only the king does), never on the bare name, and never against
+    dynasty among hers and her family kings' — unless the key is three consonants, when
+    only the king does; a key the authority spells in several forms for different targets is
+    never a single target), never on the bare name, and never against
     her own dynasty without a named king."""
     reached, skipped = 0, {}
     groups = singles = by_king = by_dynasty_only = never = 0
@@ -301,17 +302,19 @@ def test_every_key_is_reached_by_a_rendering_the_first_two_tiers_miss(index) -> 
     # dynasty alone (female rulers, and women none of whose kin the stand-in king authority
     # resolves, on a key of four consonants or more), or by nothing (Tetisherit and the
     # like, and three-consonant keys without a resolvable king).
-    # (The stand-in now resolves Amenemhat I, which moves two Dynasty 12 women from
-    # dynasty-only to by-king.)
-    assert (groups, singles, by_king, by_dynasty_only, never) == (37, 160, 55, 76, 29)
+    # (The stand-in resolves Amenemhat I and Sety II, which moves two Dynasty 12 women from
+    # dynasty-only to by-king and Tawosret, a three-consonant key, from never to by-king.)
+    assert (groups, singles, by_king, by_dynasty_only, never) == (37, 160, 56, 76, 28)
 
 
 def test_the_narrowing_rules_pick_within_a_group_and_the_confirmation_still_applies(index) -> None:
     """For every shared key: each member a named family king singles out resolves (rule
     "family", overriding any dynasty); each dynasty that singles a member out resolves her
     only when the key is not family-only and the dynasty confirms her (rule "dynasty"); a
-    key in DIFFERENT_NAMES stays ambiguous whatever the record says."""
+    key the authority spells differently for different targets (`different_spellings`) stays
+    ambiguous whatever the record says."""
     by_family = by_dynasty = dynasty_refused = withheld = 0
+    withheld_keys = rw.different_spellings(index)
     for key, targets in sorted(index.weak_sign.items()):
         if len(targets) < 2:
             continue
@@ -319,14 +322,14 @@ def test_the_narrowing_rules_pick_within_a_group_and_the_confirmation_still_appl
         variant = next((v for v in (_variant_only_the_third_tier_finds(index, label) for label in labels) if v), None)
         if variant is None:
             continue
-        if key in rw.DIFFERENT_NAMES:
-            # Different names on one key: no king and no dynasty may pick (a family king would
-            # pick the woman linked to him whatever her name). Egyptologist review, P1.
+        if key in withheld_keys:
+            # Different spellings on one key: no king and no dynasty may pick (a family king
+            # would pick the woman linked to him whatever her name). Egyptologist review, P1.
             for member in sorted(targets):
                 for kwargs in ({"kings": index.family_king_ids[member]}, {"dynasty": 99}, {}):
                     f = _resolve(index, variant, **kwargs)
                     assert (f["status"], f["context_rule"], f["target_ids"]) == (
-                        "ambiguous", "weak_sign_different_names", sorted(targets)), (variant, kwargs)
+                        "ambiguous", "weak_sign_different_spellings", sorted(targets)), (variant, kwargs)
                     withheld += 1
             continue
         for member in sorted(targets):
@@ -349,9 +352,9 @@ def test_the_narrowing_rules_pick_within_a_group_and_the_confirmation_still_appl
             else:
                 assert (f["status"], f["context_rule"]) == ("unmatched", "weak_sign_unconfirmed"), (variant, dynasty)
                 dynasty_refused += 1
-    # The three family picks and 33 dynasty refusals the DIFFERENT_NAMES keys used to yield
-    # are now withheld outright (20 members x 3 records).
-    assert (by_family, by_dynasty, dynasty_refused, withheld) == (18, 19, 66, 60)
+    # Withheld: hntt, nbt, nfr, nfrsbk and tntmn, 25 members x 3 records; tntmn's Tintamun,
+    # once picked by Thutmose IV (family) and by Dynasty 18, is among them.
+    assert (by_family, by_dynasty, dynasty_refused, withheld) == (17, 17, 66, 75)
 
 
 def test_the_third_tier_only_ever_returns_indexed_royal_women_or_female_rulers(index, women) -> None:
@@ -370,6 +373,7 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
     key resolves only a woman the dynasty confirms (hers or her family kings'), never on a
     family-only key, never against her own dynasty; otherwise it is refused or ambiguous."""
     outcomes = collections.Counter()
+    withheld_keys = rw.different_spellings(index)
     for key, targets in sorted(index.weak_sign.items()):
         # The key plus a vowel folds back to the key; a hyphen keeps two units that are
         # written as a digraph's letters (s-h in "hmshntmp") from reading as one.
@@ -381,9 +385,9 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
         for dynasty in range(0, 34):
             f = _resolve(index, text, dynasty=dynasty)
             assert f["resolution_method"] == "weak_sign_skeleton", text
-            if key in rw.DIFFERENT_NAMES:
-                assert (f["status"], f["context_rule"]) == ("ambiguous", "weak_sign_different_names"), (text, dynasty)
-                outcomes["ambiguous", "weak_sign_different_names"] += 1
+            if key in withheld_keys:
+                assert (f["status"], f["context_rule"]) == ("ambiguous", "weak_sign_different_spellings"), (text, dynasty)
+                outcomes["ambiguous", "weak_sign_different_spellings"] += 1
             elif f["status"] == "resolved":
                 woman = f["royal_woman_id"]
                 assert woman in targets
@@ -393,14 +397,15 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
                 outcomes["resolved"] += 1
             else:
                 outcomes[f["status"], f["context_rule"]] += 1
-    # 197 keys x 34 dynasties: no bare key is an indexed label or claim-graph key. The three
-    # DIFFERENT_NAMES keys (102 = 3 x 34) were 33 refusals and 69 plain ambiguities before.
+    # 197 keys x 34 dynasties: no bare key is an indexed label or claim-graph key. The five
+    # withheld keys (hntt, nbt, nfr, nfrsbk, tntmn) give 170 = 5 x 34; tntmn's two dynasty
+    # picks (Tintamun under 18, Tentamun B under 21) are among them.
     assert outcomes == {
-        "resolved": 147,
+        "resolved": 145,
         ("unmatched", "record_dynasty_contradicts"): 4849,
         ("unmatched", "weak_sign_unconfirmed"): 529,
-        ("ambiguous", None): 1071,
-        ("ambiguous", "weak_sign_different_names"): 102,
+        ("ambiguous", None): 1005,
+        ("ambiguous", "weak_sign_different_spellings"): 170,
     }
 
 
@@ -505,15 +510,37 @@ def test_on_the_real_king_graph_the_new_collisions_are_the_pinned_ones(graph_ind
     new = rw.new_weak_sign_collisions(graph_index)
     assert new == {
         "brnk": ("leprohon-leprohon-33.03a", "leprohon-leprohon-33.12"),
-        "hntt": rw.DIFFERENT_NAMES["hntt"]["members"],
+        "hntt": ("dodson_hilton:Henttawy A", "dodson_hilton:Henttawy B", "dodson_hilton:Henttawy C",
+                 "dodson_hilton:Henttawy D", "dodson_hilton:Henttawy Q", "dodson_hilton:Henutwati"),
         "clptr": ("leprohon-leprohon-33.05a", "leprohon-leprohon-33.08a", "pharaoh_se-Cleopatra-VII"),
-        "nbt": rw.DIFFERENT_NAMES["nbt"]["members"],
-        "nfr": rw.DIFFERENT_NAMES["nfr"]["members"],
+        "nbt": ("dodson_hilton:Nebetia", "dodson_hilton:Nebtit", "dodson_hilton:Nebtu"),
+        "nfr": ("dodson_hilton:Neferet B", "dodson_hilton:Neferet I", "dodson_hilton:Neferet II", "dodson_hilton:Neferet Q",
+                "dodson_hilton:Neferet R", "dodson_hilton:Neferu A", "dodson_hilton:Neferu B", "dodson_hilton:Neferu I",
+                "dodson_hilton:Neferu II", "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"),
         "nfrsbk": ("dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu"),
         "tntmn": ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun"),
     }
     assert graph_index.weak_sign_numerals["clptr"] == {
         "leprohon-leprohon-33.05a": {"I"}, "leprohon-leprohon-33.08a": {"II"}, "pharaoh_se-Cleopatra-VII": {"VII"}}
+
+
+def test_on_the_real_king_graph_the_differently_spelt_keys_are_the_pinned_ones(graph_index) -> None:
+    """The keys the resolver withholds, derived from the authority's spellings alone: four
+    D&H groups and female-rulers.json's "Neferusobek" beside D&H's "Neferusobk". A single
+    target's own spellings (Tawosret / Tausret; "Meryetre(-Hatshepsut)" and its alt name) do
+    not count; the Ptolemaic clptr and brnk are one spelling each."""
+    assert rw.different_spellings(graph_index) == DIFFERENT_SPELLINGS
+    assert graph_index.weak_sign_spellings["tsr"] == {"dodson_hilton:Tawosret": {"tawosret", "tausret"}}
+    assert not rw.spelled_differently(graph_index, "tsr") and not rw.spelled_differently(graph_index, "clptr")
+
+
+DIFFERENT_SPELLINGS = {
+    "hntt": ("henttawy", "henutwati"),
+    "nbt": ("nebetia", "nebtit", "nebtu"),
+    "nfr": ("neferet", "neferu"),
+    "nfrsbk": ("neferusobek", "neferusobk"),
+    "tntmn": ("tentamun", "tintamun"),
+}
 
 
 # --- No museum or evaluation data ------------------------------------------------------------

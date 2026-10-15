@@ -26,6 +26,7 @@ class Kings:
         "king:ramesses-ii": (["Ramesses II"], (19,)),
         "king:ramesses-v": (["Ramesses V"], (20,)),
         "king:sety-i": (["Sety I"], (19,)),
+        "king:sety-ii": (["Sety II"], (19,)),
         "king:thutmose-i": (["Thutmose I"], (18,)),
         "king:thutmose-iv": (["Thutmose IV"], (18,)),
         "king:shoshenq-i": (["Shoshenq I"], (22,)),
@@ -316,12 +317,39 @@ def test_a_three_consonant_key_takes_a_named_family_king_only(index) -> None:
     assert found(index, "Nubhotpet", dynasty=12) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nubhotepet"], None)
 
 
-def test_a_different_name_group_never_resolves(index) -> None:
-    """A key in DIFFERENT_NAMES cannot tell its names apart, so nothing in the record may
-    pick: not a dynasty, and not a family king either, who would pick the woman linked to
-    him whatever her name. The mention is ambiguous, `weak_sign_different_names`, before
-    any narrowing (egyptologist review of the weak-sign key, P1)."""
-    withheld = ("ambiguous", "weak_sign_skeleton", list(rw.DIFFERENT_NAMES["nfr"]["members"]), "weak_sign_different_names")
+NFR = ["dodson_hilton:Neferet B", "dodson_hilton:Neferet I", "dodson_hilton:Neferet II", "dodson_hilton:Neferet Q",
+       "dodson_hilton:Neferet R", "dodson_hilton:Neferu A", "dodson_hilton:Neferu B", "dodson_hilton:Neferu I",
+       "dodson_hilton:Neferu II", "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"]
+HNTT = ["dodson_hilton:Henttawy A", "dodson_hilton:Henttawy B", "dodson_hilton:Henttawy C", "dodson_hilton:Henttawy D",
+        "dodson_hilton:Henttawy Q", "dodson_hilton:Henutwati"]
+
+
+def test_the_differently_spelt_keys_are_derived_from_the_authority_alone(index) -> None:
+    """Derived from the authority's own spellings, pinned: the base spellings of every label
+    keyed under a key, per target; a key two of whose targets share no spelling is withheld.
+    A single target's own spellings (Tawosret, whom the king lists call Tausret) are one name."""
+    assert rw.different_spellings(index) == {
+        "hntt": ("henttawy", "henutwati"),
+        "nbt": ("nebetia", "nebtit", "nebtu"),
+        "nfr": ("neferet", "neferu"),
+        # female-rulers.json's king_name "Neferusobek" (the king Sobkneferu) beside D&H's princess.
+        "nfrsbk": ("neferusobek", "neferusobk"),
+        "tntmn": ("tentamun", "tintamun"),
+    }
+    assert index.weak_sign_spellings["nfr"]["dodson_hilton:Neferu II"] == {"neferu"}
+    assert index.weak_sign_spellings["tsr"] == {"dodson_hilton:Tawosret": {"tawosret", "tausret"}}
+    assert index.weak_sign_spellings["mrtrhtšps"] == {
+        "dodson_hilton:Meryetre(-Hatshepsut)": {"meryetre(-hatshepsut)", "meryetre-hatshepsut"}}
+    assert not rw.spelled_differently(index, "tsr") and rw.spelled_differently(index, "nfr")
+
+
+def test_a_differently_spelt_key_never_resolves(index) -> None:
+    """A key the authority reaches under several spellings for different women cannot tell
+    whether those are one name, so nothing in the record may pick: not a dynasty, and not a
+    family king either, who would pick the woman linked to him whatever her name. The mention
+    is ambiguous, `weak_sign_different_spellings`, before any narrowing (egyptologist review
+    of the weak-sign key, P1)."""
+    withheld = ("ambiguous", "weak_sign_skeleton", NFR, "weak_sign_different_spellings")
     # The P1 case: "Nofret" (nfr) on a record naming Amenemhat I reached Neferu III, his
     # daughter, through the family filter, though Nofret is nfrt, Neferet, not nfrw.
     assert index.family_king_ids["dodson_hilton:Neferu III"] == {"king:amenemhat-i"}
@@ -330,13 +358,20 @@ def test_a_different_name_group_never_resolves(index) -> None:
     assert found(index, "Nefru", kings={"king:mentuhotep-ii"}) == withheld
     assert found(index, "Nefru", dynasty=11) == withheld
     # hntt: Henttawy A-Q and Henutwati (wife of Ramesses V); no king, no dynasty picks.
-    hntt = ("ambiguous", "weak_sign_skeleton", list(rw.DIFFERENT_NAMES["hntt"]["members"]), "weak_sign_different_names")
+    hntt = ("ambiguous", "weak_sign_skeleton", HNTT, "weak_sign_different_spellings")
     assert found(index, "Henttaui") == found(index, "Henttaui", dynasty=19) == found(index, "Henttaui", dynasty=21) == hntt
     assert found(index, "Henttaui", kings={"king:ramesses-ii"}) == found(index, "Henutwaty", kings={"king:ramesses-v"}) == hntt
-    # tntmn is one name (Tentamun / Tintamun), not listed: a dynasty narrows and confirms.
-    assert found(index, "Tentamon", dynasty=18) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Tintamun"], "dynasty")
-    assert found(index, "Tentamon", dynasty=20) == ("ambiguous", "weak_sign_skeleton", [
-        "dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun"], None)
+    # tntmn: the authority spells Tentamun and Tintamun, so the rule withholds them too, where
+    # a hand-written list once called them one name; a dynasty no longer picks Tintamun.
+    tntmn = ("ambiguous", "weak_sign_skeleton", ["dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B",
+                                                 "dodson_hilton:Tintamun"], "weak_sign_different_spellings")
+    assert found(index, "Tentamon", dynasty=18) == found(index, "Tentamon", dynasty=20) == tntmn
+    assert found(index, "Tentamon", kings={"king:thutmose-iv"}) == tntmn
+    # nfrsbk: "Neferusobek" (king_name) and D&H's princess "Neferusobk", both Dynasty 12.
+    assert found(index, "Nefrusobk", dynasty=12) == ("ambiguous", "weak_sign_skeleton", [
+        "dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu"], "weak_sign_different_spellings")
+    # One woman's own spellings are not two: Tawosret / Tausret still reaches the king.
+    assert found(index, "Tawosre", kings={"king:sety-ii"}) == ("resolved", "weak_sign_skeleton", ["king:tausret"], None)
 
 
 def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
@@ -363,12 +398,12 @@ def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
         "II", "II", "VII", "III", None, None, None, None]
     assert found(index, "Ahhotp I", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotep I"], None)
     assert found(index, "Ahhotp II") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
-    # "II" leaves Neferu II and Neferet II, "III" Neferu III alone; nfr is a DIFFERENT_NAMES
+    # "II" leaves Neferu II and Neferet II, "III" Neferu III alone; nfr is a differently spelt
     # key, so even then no king picks (the numeral narrows the candidates, nothing more).
     assert found(index, "Nefru II", kings={"king:mentuhotep-ii"}) == ("ambiguous", "weak_sign_skeleton", [
-        "dodson_hilton:Neferet II", "dodson_hilton:Neferu II"], "weak_sign_different_names")
+        "dodson_hilton:Neferet II", "dodson_hilton:Neferu II"], "weak_sign_different_spellings")
     assert found(index, "Nefru III", kings={"king:mentuhotep-ii"}) == ("ambiguous", "weak_sign_skeleton", [
-        "dodson_hilton:Neferu III"], "weak_sign_different_names")
+        "dodson_hilton:Neferu III"], "weak_sign_different_spellings")
 
 
 def test_a_named_family_king_overrides_the_records_dynasty_on_every_tier(index) -> None:
@@ -437,7 +472,7 @@ def test_the_weak_sign_tier_never_reaches_a_king_and_never_matches_below_the_min
 def test_the_collision_helpers_agree_with_the_index(index) -> None:
     collisions = rw.weak_sign_collisions(index)
     new = rw.new_weak_sign_collisions(index)
-    assert collisions["hntt"] == new["hntt"] == rw.DIFFERENT_NAMES["hntt"]["members"]
+    assert collisions["hntt"] == new["hntt"] == tuple(HNTT)
     assert new["tntmn"] == ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun")
     # Same-named women are the exact tier's collisions, not new ones.
     assert collisions["stmḫb"] == tuple(sorted(index.exact["isetemkheb"])) and "stmḫb" not in new
@@ -460,8 +495,8 @@ def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:
 
 
 def test_a_different_name_outside_dodson_and_hilton_can_still_meet_a_womans_key(index) -> None:
-    """A known limit, pinned (egyptologist review of the climb): DIFFERENT_NAMES holds only
-    collisions among D&H's own women. "Isetweret" (ꜣst-wrt, an Iset name) and D&H's Sitre A
+    """A known limit, pinned (egyptologist review of the climb): the spelling rule sees only
+    the authority's own spellings. "Isetweret" (ꜣst-wrt, an Iset name) and D&H's Sitre A
     (zꜣt-rꜥ) both key `str`, so a record naming Sitre's family king Sety I reaches Sitre A.
     The gates bound it: a three-consonant key needs a named family king, and a contradicting
     dynasty is refused."""

@@ -53,12 +53,17 @@ The rule, which is deterministic and fixed here:
   neither (Tetisherit, whose entry names only her non-royal father) is not reachable on
   this tier. A key of exactly `MIN_WEAK_SIGN_CONSONANTS` consonants takes a named family
   king only, never a dynasty: three consonants merge names that differ in a weak sign
-  alone. A key in `DIFFERENT_NAMES`, the committed list of keys that several *different*
-  names share (Henttawy / Henutwati, Neferu / Neferet, Nebetia / Nebtit / Nebtu), never
-  resolves at all: the mention is ambiguous (`weak_sign_different_names`) before any
-  narrowing, because the key cannot tell the names apart and a family king would then pick
-  whichever woman is linked to him whatever her name ("Nofret" on a record naming Amenemhat
-  I would have reached Neferu III). Known limitation: the record's dynasty is the object's,
+  alone. A key that the authority's own spellings reach in more than one form for different
+  women (`different_spellings`: D&H's Henttawy / Henutwati, Neferu / Neferet, Nebetia /
+  Nebtit / Nebtu, Tentamun / Tintamun, and `female-rulers.json`'s "Neferusobek" for the king
+  Sobkneferu beside D&H's princess Neferusobk) never resolves at all; one woman's own
+  alternative spellings (Tawosret / Tausret) are one name. The mention is ambiguous
+  (`weak_sign_different_spellings`) before any narrowing, because the key cannot tell whether
+  those spellings are one name, and a family king would then pick whichever woman is linked
+  to him, whatever her name ("Nofret" on a record naming Amenemhat I would have reached
+  Neferu III). The rule rests on the authority's own spellings, not on anyone's reading of
+  the names; it replaced a hand-written list whose readings had no source on disk (Codex
+  review). Known limitation: the record's dynasty is the object's,
   not her lifetime's, so a Ramesside stela of the deified Ahmes-Nefertiry (Dynasty 19–20)
   is not confirmed by its dynasty; only a named family king would do.
 * A woman is never chosen against the record's own single dynasty: D&H is transcribed for
@@ -157,6 +162,10 @@ class RoyalWomenIndex:
     exact: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
     normalized: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
     weak_sign: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
+    # Per weak-sign key and target: the base spellings (`base_spelling`) of the labels keyed
+    # under it, so that one woman's own alternative spellings never count as two names.
+    weak_sign_spellings: dict[str, dict[str, set[str]]] = field(
+        default_factory=lambda: collections.defaultdict(lambda: collections.defaultdict(set)))
     # Per weak-sign key and target: the regnal numerals of the labels keyed under it.
     weak_sign_numerals: dict[str, dict[str, set[str]]] = field(
         default_factory=lambda: collections.defaultdict(lambda: collections.defaultdict(set)))
@@ -165,42 +174,6 @@ class RoyalWomenIndex:
     family_dynasties: dict[str, frozenset[int]] = field(default_factory=dict)
 
 
-# Weak-sign keys that several DIFFERENT names share among the D&H women. A mention on one of
-# these keys never resolves: it is returned ambiguous (`weak_sign_different_names`) before
-# the family or dynasty narrowing. Like the claim graph's homonym list
-# (matcher._HOMONYM_SPELLINGS), this is the committed record of what the key cannot tell
-# apart. `build_index` checks that each key's members are exactly these, so a new D&H
-# chapter that joins a group is reviewed here.
-# Basis, stated plainly: the "reading" of each group is an LLM reviewer's judgement (the
-# egyptologist-reviewer for hntt, the implementing agent for nfr and nbt, 2026-10-15) of
-# the names' Egyptian consonants. No on-disk source gives these readings: D&H print no
-# transliterations, and the standard reference, Ranke, *Die ägyptischen Personennamen*, is
-# not on disk. That is why the list can only ever withhold a match, never make one: being
-# listed costs recall on a key the readings may have got wrong, and nothing else. The women
-# and their pages are D&H's (sources/dodson-hilton-queens/reconciled.jsonl).
-DIFFERENT_NAMES: dict[str, dict] = {
-    "hntt": {
-        "members": ("dodson_hilton:Henttawy A", "dodson_hilton:Henttawy B", "dodson_hilton:Henttawy C",
-                    "dodson_hilton:Henttawy D", "dodson_hilton:Henttawy Q", "dodson_hilton:Henutwati"),
-        "reading": "Henttawy is ḥnwt-tꜣwy, 'mistress of the Two Lands' (D&H pp. 157-162, 190-194); Henutwati, "
-                   "wife of Ramesses V (D&H pp. 178-180), has a root w in its second element, which the key "
-                   "drops as a weak sign.",
-    },
-    "nfr": {
-        "members": ("dodson_hilton:Neferet B", "dodson_hilton:Neferet I", "dodson_hilton:Neferet II",
-                    "dodson_hilton:Neferet Q", "dodson_hilton:Neferet R", "dodson_hilton:Neferu A",
-                    "dodson_hilton:Neferu B", "dodson_hilton:Neferu I", "dodson_hilton:Neferu II",
-                    "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"),
-        "reading": "Neferu is nfrw (D&H pp. 81-82, 88-91, 98-103, 118-119) and Neferet nfrt (pp. 88-91, 98-103): "
-                   "the same stem with a plural w and with the feminine t, both of which the key drops.",
-    },
-    "nbt": {
-        "members": ("dodson_hilton:Nebetia", "dodson_hilton:Nebtit", "dodson_hilton:Nebtu"),
-        "reading": "Nebetia (D&H pp. 126-130) and Nebtu (pp. 126-130), both Dynasty 18, and Nebtit (Dynasty 13, "
-                   "pp. 98-103) share nbt, 'mistress', and differ in what follows it: ꞽ/ꜥ, w, or a second t, "
-                   "all of which the key drops.",
-    },
-}
 
 
 def surface_key(text: str) -> str:
@@ -314,12 +287,34 @@ def weak_sign_entry(label: str) -> tuple[str, frozenset[str]]:
     return key, frozenset(n for t in tokens if (n := numeral_of(t)))
 
 
+def base_spelling(label: str) -> str:
+    """A label as a spelling of the name: D&H's letter and any numeral left out, case-folded."""
+    return " ".join(t for t in label.split() if not (DISAMBIGUATOR.match(t) or numeral_of(t))).casefold()
+
+
 def _add_weak_sign(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
     for label in labels:
         key, numerals = weak_sign_entry(label)
         if key:
             index.weak_sign[key].add(target_id)
             index.weak_sign_numerals[key][target_id] |= numerals
+            index.weak_sign_spellings[key][target_id].add(base_spelling(label))
+
+
+def spelled_differently(index: RoyalWomenIndex, key: str) -> bool:
+    """Whether two targets of the key are reached under no common spelling: D&H's Neferet and
+    Neferu both key nfr. One target's own alternative spellings (Tawosret, whom the king lists
+    call Tausret; "Meryetre(-Hatshepsut)" and its alt name) are one name, not two."""
+    spellings = list(index.weak_sign_spellings[key].values())
+    return any(not (a & b) for i, a in enumerate(spellings) for b in spellings[i + 1:])
+
+
+def different_spellings(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
+    """The weak-sign keys that the authority's own spellings reach in more than one form for
+    different targets (`spelled_differently`), with every spelling: the key cannot tell whether
+    those spellings are one name, so a match on such a key resolves nothing."""
+    return {key: tuple(sorted(set().union(*by_target.values())))
+            for key, by_target in sorted(index.weak_sign_spellings.items()) if spelled_differently(index, key)}
 
 
 def weak_sign_collisions(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
@@ -382,13 +377,6 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
             index.king_ids[woman.target_id] = king_id
             _add(index, woman.target_id, names)
             _add_weak_sign(index, woman.target_id, names[:1])
-    for key, group in DIFFERENT_NAMES.items():
-        # Checked whenever the index holds any of the group (the tests also build partial
-        # indexes): the key's members must be exactly the listed ones.
-        if any(member in index.women for member in group["members"]) and \
-                tuple(sorted(index.weak_sign.get(key, ()))) != group["members"]:
-            raise ValueError(f"DIFFERENT_NAMES[{key!r}] lists {group['members']} but the index keys "
-                             f"{sorted(index.weak_sign.get(key, ()))} under it: review the group")
     return index
 
 
@@ -438,11 +426,12 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
                                 if numerals <= index.weak_sign_numerals[skeleton][t])
             method = "weak_sign_skeleton" if candidates else None
     base = {"resolution_method": method, "candidate_ids": candidates, "context_rule": None}
-    if method == "weak_sign_skeleton" and skeleton in DIFFERENT_NAMES:
-        # The key cannot tell these names apart, so nothing in the record can: a family king
-        # would pick the woman linked to it whatever her name ("Nofret" and a record naming
-        # Amenemhat I would reach Neferu III). Egyptologist review of the weak-sign key, P1.
-        return {**base, "status": "ambiguous", "target_ids": candidates, "context_rule": "weak_sign_different_names"}
+    if method == "weak_sign_skeleton" and spelled_differently(index, skeleton):
+        # The authority spells the women of this key differently, and the key cannot tell
+        # whether those spellings are one name, so nothing in the record can: a family king would
+        # pick the woman linked to it whatever her name ("Nofret" and a record naming Amenemhat
+        # I would reach Neferu III).
+        return {**base, "status": "ambiguous", "target_ids": candidates, "context_rule": "weak_sign_different_spellings"}
     chosen, rule = None, None
     if len(candidates) == 1:
         chosen = candidates[0]
@@ -477,8 +466,8 @@ def _weak_sign_confirmed(index: RoyalWomenIndex, chosen: str, skeleton: str, fam
     """A weak-sign match is only a shared consonant skeleton, and a queen has no throne name
     or reign to corroborate it, so the record must: it names one of her family kings, or its
     single dynasty is one of hers or her family kings'. A key of the minimum length takes the
-    named king only. (A key in `DIFFERENT_NAMES` never gets here: it is ambiguous before any
-    narrowing.)"""
+    named king only. (A key the authority spells in several forms never gets here: it is
+    ambiguous before any narrowing.)"""
     if family_named:
         return True
     if consonant_count(skeleton) == MIN_WEAK_SIGN_CONSONANTS:
