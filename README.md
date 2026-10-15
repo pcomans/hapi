@@ -115,7 +115,7 @@ CLAUDE.md      working agreement + the constitutional rules the project runs on
 
 First-party code and documentation are licensed under the **Apache License 2.0** — see [`LICENSE`](LICENSE).
 
-This project incorporates third-party data and specifications under their own terms (CIDOC CRM, the iDAI gazetteer, and pharaoh.se under CC BY 4.0; museum data under each museum's terms). Attributions are recorded in [`NOTICE`](NOTICE) and must be preserved. Copyrighted scholarly works are cited but **not** redistributed here.
+This project incorporates third-party data and specifications under their own terms (CIDOC CRM, the iDAI gazetteer, and pharaoh.se under CC BY 4.0; the Thesaurus Linguae Aegyptiae's 2018 lemma list under CC BY-SA 4.0, whose extract and anything adapted from it stay under that licence; museum data under each museum's terms). Attributions are recorded in [`NOTICE`](NOTICE) and must be preserved. Copyrighted scholarly works are cited but **not** redistributed here.
 
 ---
 
