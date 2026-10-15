@@ -1,0 +1,250 @@
+{
+ "inputs": {
+  "private_answer_key_sha256": "4e1d126ca19fa3c8da7e0d8bd1ffcf699f8dd1b224f4c2d89ffcf41c241d697e",
+  "stage_1_queue_sha256": "de5260e7dd57d8febb698955079f63a11c32c2706e24f0c2fd638828ce1d56a3",
+  "stage_2_queue_sha256": "00880f6ae6aaa6c78dfdaa155d4484d178732a5007a43774cc8df5fa40635cc6"
+ },
+ "max_class_deviation_percentage_points": 5,
+ "passed": true,
+ "schema_version": "hapi-337-page-load-gate/11",
+ "stages": {
+  "1": {
+   "all_opens": {
+    "loaded": 154,
+    "opened": 154
+   },
+   "all_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 16,
+     "opened": 16
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 17,
+     "opened": 17
+    },
+    "ruler/retained_control": {
+     "loaded": 121,
+     "opened": 121
+    }
+   },
+   "all_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": 0.0,
+    "ruler/literal_only_transition": 0.0,
+    "ruler/retained_control": 0.0
+   },
+   "calls_without_a_loaded_page": 0,
+   "citable_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 16,
+     "opened": 16
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 17,
+     "opened": 17
+    },
+    "ruler/retained_control": {
+     "loaded": 121,
+     "opened": 121
+    }
+   },
+   "citable_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": 0.0,
+    "ruler/literal_only_transition": 0.0,
+    "ruler/retained_control": 0.0
+   },
+   "citations_by_transition_class_and_role": {
+    "ruler/authority_only_transition": {
+     "case_input": 13,
+     "independent": 3
+    },
+    "ruler/literal_only_transition": {
+     "case_input": 17
+    },
+    "ruler/retained_control": {
+     "case_input": 122,
+     "independent": 2
+    }
+   },
+   "citations_by_transition_class_and_source": {
+    "ruler/authority_only_transition": {
+     "brooklynmuseum.org": 4,
+     "metmuseum.org": 9,
+     "thebanmappingproject.com": 1,
+     "ucl.ac.uk/museums-static/digitalegypt": 2
+    },
+    "ruler/literal_only_transition": {
+     "brooklynmuseum.org": 4,
+     "metmuseum.org": 13
+    },
+    "ruler/retained_control": {
+     "brooklynmuseum.org": 33,
+     "fitzmuseum.cam.ac.uk": 1,
+     "harvardartmuseums.org": 12,
+     "metmuseum.org": 77,
+     "ucl.ac.uk/museums-static/digitalegypt": 1
+    }
+   },
+   "classes_without_citable_opens": [],
+   "deciding_reconciler_calls": 1,
+   "deciding_reviewer_calls": 42,
+   "loaded_without_load_event_by_host": {
+    "metmuseum.org": 1
+   },
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 308
+   },
+   "not_loaded_opens_by_host": {},
+   "opens_by_browser": {
+    "browserbase": {
+     "loaded": 3,
+     "opened": 3
+    },
+    "local": {
+     "loaded": 151,
+     "opened": 151
+    }
+   },
+   "opens_by_citation_role": {
+    "case_input": {
+     "loaded": 149,
+     "opened": 149
+    },
+    "independent": {
+     "loaded": 5,
+     "opened": 5
+    }
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 42,
+     "opened": 42
+    },
+    "harvard": {
+     "loaded": 11,
+     "opened": 11
+    },
+    "met": {
+     "loaded": 96,
+     "opened": 96
+    },
+    "other": {
+     "loaded": 5,
+     "opened": 5
+    }
+   },
+   "passed": true,
+   "retried_after_local_failure_by_host": {},
+   "retried_after_local_failure_by_transition_class": {}
+  },
+  "2": {
+   "all_opens": {
+    "loaded": 117,
+    "opened": 117
+   },
+   "all_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 14,
+     "opened": 14
+    },
+    "ruler/retained_control": {
+     "loaded": 103,
+     "opened": 103
+    }
+   },
+   "all_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": 0.0,
+    "ruler/retained_control": 0.0
+   },
+   "calls_without_a_loaded_page": 0,
+   "citable_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 14,
+     "opened": 14
+    },
+    "ruler/retained_control": {
+     "loaded": 103,
+     "opened": 103
+    }
+   },
+   "citable_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": 0.0,
+    "ruler/retained_control": 0.0
+   },
+   "citations_by_transition_class_and_role": {
+    "ruler/authority_only_transition": {
+     "case_input": 12,
+     "independent": 2
+    },
+    "ruler/retained_control": {
+     "case_input": 93,
+     "independent": 5
+    }
+   },
+   "citations_by_transition_class_and_source": {
+    "ruler/authority_only_transition": {
+     "brooklynmuseum.org": 4,
+     "metmuseum.org": 8,
+     "ucl.ac.uk/museums-static/digitalegypt": 2
+    },
+    "ruler/retained_control": {
+     "brooklynmuseum.org": 32,
+     "fitzmuseum.cam.ac.uk": 1,
+     "harvardartmuseums.org": 8,
+     "metmuseum.org": 53,
+     "ucl.ac.uk/museums-static/digitalegypt": 4
+    }
+   },
+   "classes_without_citable_opens": [],
+   "deciding_reconciler_calls": 0,
+   "deciding_reviewer_calls": 34,
+   "loaded_without_load_event_by_host": {},
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 252
+   },
+   "not_loaded_opens_by_host": {},
+   "opens_by_browser": {
+    "browserbase": {
+     "loaded": 6,
+     "opened": 6
+    },
+    "local": {
+     "loaded": 111,
+     "opened": 111
+    }
+   },
+   "opens_by_citation_role": {
+    "case_input": {
+     "loaded": 110,
+     "opened": 110
+    },
+    "independent": {
+     "loaded": 7,
+     "opened": 7
+    }
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 40,
+     "opened": 40
+    },
+    "harvard": {
+     "loaded": 9,
+     "opened": 9
+    },
+    "met": {
+     "loaded": 61,
+     "opened": 61
+    },
+    "other": {
+     "loaded": 7,
+     "opened": 7
+    }
+   },
+   "passed": true,
+   "retried_after_local_failure_by_host": {},
+   "retried_after_local_failure_by_transition_class": {}
+  }
+ }
+}

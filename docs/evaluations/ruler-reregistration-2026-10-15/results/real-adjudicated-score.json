@@ -1,0 +1,301 @@
+{
+  "adjudicated_arm_outcomes": {
+    "by_entity_type": {
+      "ruler": {
+        "authority_treatment": 17,
+        "literal_baseline": 14,
+        "net_treatment_minus_baseline": 3
+      }
+    },
+    "by_museum_pair": {
+      "brooklyn__harvard": {
+        "by_entity_type": {
+          "ruler": {
+            "museum_side_record_sets": {
+              "brooklyn": {
+                "authority_only": 0,
+                "authority_treatment": 6,
+                "both": 6,
+                "literal_baseline": 6,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 0
+              },
+              "harvard": {
+                "authority_only": 0,
+                "authority_treatment": 2,
+                "both": 2,
+                "literal_baseline": 2,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 0
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 2,
+              "literal_baseline": 2,
+              "net_treatment_minus_baseline": 0
+            }
+          }
+        },
+        "museum_side_record_sets": {
+          "brooklyn": {
+            "authority_only": 0,
+            "authority_treatment": 6,
+            "both": 6,
+            "literal_baseline": 6,
+            "literal_only": 0,
+            "net_treatment_minus_baseline": 0
+          },
+          "harvard": {
+            "authority_only": 0,
+            "authority_treatment": 2,
+            "both": 2,
+            "literal_baseline": 2,
+            "literal_only": 0,
+            "net_treatment_minus_baseline": 0
+          }
+        },
+        "useful_nodes_by_arm": {
+          "authority_treatment": 2,
+          "literal_baseline": 2,
+          "net_treatment_minus_baseline": 0
+        }
+      },
+      "met__brooklyn": {
+        "by_entity_type": {
+          "ruler": {
+            "museum_side_record_sets": {
+              "brooklyn": {
+                "authority_only": 3,
+                "authority_treatment": 19,
+                "both": 16,
+                "literal_baseline": 17,
+                "literal_only": 1,
+                "net_treatment_minus_baseline": 2
+              },
+              "met": {
+                "authority_only": 36,
+                "authority_treatment": 1955,
+                "both": 1919,
+                "literal_baseline": 1946,
+                "literal_only": 27,
+                "net_treatment_minus_baseline": 9
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 13,
+              "literal_baseline": 11,
+              "net_treatment_minus_baseline": 2
+            }
+          }
+        },
+        "museum_side_record_sets": {
+          "brooklyn": {
+            "authority_only": 3,
+            "authority_treatment": 19,
+            "both": 16,
+            "literal_baseline": 17,
+            "literal_only": 1,
+            "net_treatment_minus_baseline": 2
+          },
+          "met": {
+            "authority_only": 36,
+            "authority_treatment": 1955,
+            "both": 1919,
+            "literal_baseline": 1946,
+            "literal_only": 27,
+            "net_treatment_minus_baseline": 9
+          }
+        },
+        "useful_nodes_by_arm": {
+          "authority_treatment": 13,
+          "literal_baseline": 11,
+          "net_treatment_minus_baseline": 2
+        }
+      },
+      "met__harvard": {
+        "by_entity_type": {
+          "ruler": {
+            "museum_side_record_sets": {
+              "harvard": {
+                "authority_only": 1,
+                "authority_treatment": 2,
+                "both": 1,
+                "literal_baseline": 1,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 1
+              },
+              "met": {
+                "authority_only": 3,
+                "authority_treatment": 920,
+                "both": 917,
+                "literal_baseline": 917,
+                "literal_only": 0,
+                "net_treatment_minus_baseline": 3
+              }
+            },
+            "useful_nodes_by_arm": {
+              "authority_treatment": 2,
+              "literal_baseline": 1,
+              "net_treatment_minus_baseline": 1
+            }
+          }
+        },
+        "museum_side_record_sets": {
+          "harvard": {
+            "authority_only": 1,
+            "authority_treatment": 2,
+            "both": 1,
+            "literal_baseline": 1,
+            "literal_only": 0,
+            "net_treatment_minus_baseline": 1
+          },
+          "met": {
+            "authority_only": 3,
+            "authority_treatment": 920,
+            "both": 917,
+            "literal_baseline": 917,
+            "literal_only": 0,
+            "net_treatment_minus_baseline": 3
+          }
+        },
+        "useful_nodes_by_arm": {
+          "authority_treatment": 2,
+          "literal_baseline": 1,
+          "net_treatment_minus_baseline": 1
+        }
+      }
+    },
+    "per_museum_any_other_museum_record_union": {
+      "brooklyn": {
+        "authority_only": 2,
+        "authority_treatment": 19,
+        "both": 17,
+        "by_entity_type": {
+          "ruler": {
+            "authority_only": 2,
+            "authority_treatment": 19,
+            "both": 17,
+            "literal_baseline": 18,
+            "literal_only": 1,
+            "net_treatment_minus_baseline": 1
+          }
+        },
+        "literal_baseline": 18,
+        "literal_only": 1,
+        "net_treatment_minus_baseline": 1
+      },
+      "harvard": {
+        "authority_only": 0,
+        "authority_treatment": 2,
+        "both": 2,
+        "by_entity_type": {
+          "ruler": {
+            "authority_only": 0,
+            "authority_treatment": 2,
+            "both": 2,
+            "literal_baseline": 2,
+            "literal_only": 0,
+            "net_treatment_minus_baseline": 0
+          }
+        },
+        "literal_baseline": 2,
+        "literal_only": 0,
+        "net_treatment_minus_baseline": 0
+      },
+      "met": {
+        "authority_only": 36,
+        "authority_treatment": 1955,
+        "both": 1919,
+        "by_entity_type": {
+          "ruler": {
+            "authority_only": 36,
+            "authority_treatment": 1955,
+            "both": 1919,
+            "literal_baseline": 1946,
+            "literal_only": 27,
+            "net_treatment_minus_baseline": 9
+          }
+        },
+        "literal_baseline": 1946,
+        "literal_only": 27,
+        "net_treatment_minus_baseline": 9
+      }
+    },
+    "record_figures_note": "Record figures count every record on a judged node (node membership). A node is judged from at most five of its records per side, so they are not record-by-record judgments; the decision rule counts cases, one label per node.",
+    "useful_nodes_by_arm": {
+      "authority_treatment": 17,
+      "literal_baseline": 14,
+      "net_treatment_minus_baseline": 3
+    }
+  },
+  "calibration_control_counts": {
+    "calibration_control_false_or_not_useful": 0,
+    "calibration_control_same_useful_exact_target": 15,
+    "calibration_control_uncertainty": 0,
+    "calibration_control_useful_but_wrong_or_nonidentity": 0
+  },
+  "decision_rule": {
+    "calibration": {
+      "passed": true,
+      "retained_controls": 15,
+      "uncertain_or_wrong": 0
+    },
+    "qualifying_scopes": [
+      "ruler__met__brooklyn"
+    ],
+    "safety": {
+      "authority_gains": 2,
+      "b": 0,
+      "passed": true,
+      "unsafe_scopes": []
+    },
+    "scopes": {
+      "ruler__met__brooklyn": {
+        "a": 2,
+        "b": 0,
+        "c": 0,
+        "changed": 4,
+        "d": 1,
+        "decided": 4,
+        "e": 1,
+        "f": 0,
+        "qualifies": true
+      }
+    },
+    "totals": {
+      "a": 2,
+      "b": 0,
+      "c": 0,
+      "d": 1,
+      "e": 1,
+      "f": 0
+    },
+    "verdict": "CONTINUE"
+  },
+  "evaluation_date": "2026-10-15",
+  "input_hashes": {
+    "private_answer_key": "4e1d126ca19fa3c8da7e0d8bd1ffcf699f8dd1b224f4c2d89ffcf41c241d697e",
+    "review_population_digest": "373b9460e2ba4ebb8bd0e7c25fe3575965a8aded8741fa12f0b231c1f605878b",
+    "stage_1_consensus": "bc20656db90011d439a2dc91f6ffccc578da6b9f3ac88c78053e492b8697e2a8",
+    "stage_1_queue": "de5260e7dd57d8febb698955079f63a11c32c2706e24f0c2fd638828ce1d56a3",
+    "stage_2_consensus": "6a4fb920004d0b74c1e5faed498811dab975ed4ac1d78ecbcb8dc60fdc94615b",
+    "stage_2_custodian": "bd80f99dc16243629f2dd23b1d30f4af0265ef6ff2a6c8f022cb6dacdaec19fa",
+    "stage_2_queue": "00880f6ae6aaa6c78dfdaa155d4484d178732a5007a43774cc8df5fa40635cc6"
+  },
+  "page_load_gate": {
+    "passed": true,
+    "sha256": "691036db8c80da978ef01ee7fd461555f97f04bf14919c2806e0f60e86320d44"
+  },
+  "primary_decision_counts": {
+    "a_authority_only_same_useful_exact_target": 2,
+    "b_authority_only_useful_but_wrong_or_nonidentity": 0,
+    "c_authority_only_false_or_not_useful_gain": 0,
+    "d_literal_only_same_useful_connection_lost": 1,
+    "e_literal_only_false_or_not_useful_removal": 1,
+    "f_transition_uncertainty": 0
+  },
+  "private_join_sha256": "57e973283f993ae3495c311aba7bdf38d5cbb827a6804a2d80fdc2978b118459",
+  "review_status": "COMPLETE_TRACEABLE",
+  "schema_version": "hapi-authority-control-adjudicated-score/4",
+  "scorer_sha256": "4384ccacf258d75b6700f3aafd1493e93bd3df47ee7140b212278e8cfb747b69"
+}

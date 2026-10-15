@@ -1,0 +1,79 @@
+{
+  "base_commit": "9fa4953a1fb9b61da628afed06ba0d376caae42f",
+  "identical_mentions_proof": {
+    "all_mention_spans_revalidated": true,
+    "arm_ordered_mention_ids_equal": true,
+    "arm_row_counts_equal": true,
+    "current_authority_arm": {
+      "canonical_uncompressed_sha256": "beee00397e79702c116f1f616512e1918f2f53ae065f17ad001b94ab28ae141e",
+      "gzip_sha256": "457cf9648124cb0b7c0896934148e7c1091c58527453134c73c7462c8cfa9742",
+      "ordered_mention_ids_sha256": "e268e87977dd605d782e581de2088bd1ffd723d585ba96b22864824b36c0f3e5",
+      "rows": 148964
+    },
+    "identical_ordered_mentions": true,
+    "mention_ledger": {
+      "canonical_uncompressed_sha256": "d07e57423666e71e36864d9a3b45a210add84e2800bdfbdefc4c09190ae0ad6a",
+      "gzip_sha256": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
+      "ordered_mention_ids_sha256": "e268e87977dd605d782e581de2088bd1ffd723d585ba96b22864824b36c0f3e5",
+      "rows": 148964
+    },
+    "typed_literal_arm": {
+      "canonical_uncompressed_sha256": "6043969c2e871e3fd9d8d0c9c6eae8d450ed2e17667ba29a451500f9321eb2e0",
+      "gzip_sha256": "938a5fd1fe3a64a41257a0dad7d1b7627b79f04868143b573aca793b7f49aced",
+      "ordered_mention_ids_sha256": "e268e87977dd605d782e581de2088bd1ffd723d585ba96b22864824b36c0f3e5",
+      "rows": 148964
+    }
+  },
+  "inputs": {
+    "compare_arms_sha256": "64ed42eeb1639afc259ee536cd09af6203a2b30f57d41681027ae9150df19fd7",
+    "corpus_archive": {
+      "canonical_counts": {
+        "brooklyn": 7554,
+        "harvard": 722,
+        "met": 27969
+      },
+      "member_sha256": {
+        "data/artifacts.ndjson.gz": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
+        "data/raw_brooklyn.ndjson.gz": "b68ee05e1f86a664730933ee38b8178c3bcf789a32c017135877f17abf306b31",
+        "data/raw_harvard.ndjson.gz": "1ac4e06ce7b3859fefdd43039c8ddbee42c6e3a80311d916db7751be79b8178f",
+        "data/raw_met.ndjson.gz": "cc81d0f676e63137fbe8575982fbb20b2b997686536d6f2a6a634d924da3394e"
+      },
+      "raw_counts": {
+        "brooklyn": 8832,
+        "harvard": 722,
+        "met": 27969
+      },
+      "sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+      "snapshot_date": "2026-08-27"
+    },
+    "current_resolver_inputs_sha256": {
+      "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py": "3efeb6fab54f2f10b70cccb26eaf24759fc0af1215d1aaaefb6d1c70e00b3e0b",
+      "pipeline/pipeline/authority/claimgraph/normalize.py": "ca59b734db3f67511c9e58f16eaf8769e998c5e480d18c8be49a575390b16939",
+      "pipeline/pipeline/authority/graph_kings.py": "884530e30e113c7d8c7cbaa847e9e2d49ff269677708e7fc6ac202d8cc25e811",
+      "pipeline/pipeline/authority/royal_women.py": "8d6343c5547720a1e91647b58e3ae355b3b795d4d5d3780f9a0bebde2bc7912c",
+      "pipeline/pipeline/authority/sources/dodson-hilton-queens/female-rulers.json": "c2927337d0370082c5cd375ea10df7b162974555d1b252343a3a6eda3dc3157d",
+      "pipeline/pipeline/authority/sources/dodson-hilton-queens/reconciled.jsonl": "0daa6e20a9ff2a754de665524941727125a19d8402cff22ee1031f7162b15da6",
+      "pipeline/pipeline/authority/sources/dodson-hilton-queens/same-woman-across-sub-periods.json": "f21be005cd2b9147bbb46042d432b9b50b334be18751b5505154da3a5d3f9492",
+      "pipeline/pipeline/authority/sources/tla-2018-names/links/decisions.jsonl": "4430d6491f5d6585459795c2a164272bcd499876088f17e3bb08b6477ff64b48",
+      "pipeline/pipeline/authority/sources/tla-2018-names/reconciled.jsonl": "fbfedbf6adb996dff680b2cc3e44f2f9814adfbc83b7694ab3b3fb16f31c2c22",
+      "pipeline/pipeline/authority/tla_links.py": "49d5ede5a547337fb6d96f3207b00eb71257a7dc272c24cd0b88e05ab41c38af",
+      "pipeline/pipeline/authority/weak_sign_skeleton.py": "2f4066c9af7ce8a89c24c8b3ca77e89215d086f645084f84f816bd69cf126ac9",
+      "web-claimgraph/data/claim-graph.json": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66"
+    },
+    "extraction_manifest_sha256": "84aaa334922debc3a3cf24eb31252412961cb55f1e1b3b7dacf6a35a188daa0c",
+    "mention_ledger": {
+      "canonical_uncompressed_sha256": "d07e57423666e71e36864d9a3b45a210add84e2800bdfbdefc4c09190ae0ad6a",
+      "gzip_sha256": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
+      "ordered_mention_ids_sha256": "e268e87977dd605d782e581de2088bd1ffd723d585ba96b22864824b36c0f3e5",
+      "rows": 148964
+    }
+  },
+  "outputs_sha256": {
+    "current-authority-arm.ndjson.gz": "457cf9648124cb0b7c0896934148e7c1091c58527453134c73c7462c8cfa9742",
+    "current-authority-links.ndjson.gz": "894f01f0dee4867d94090acc3b45c4513c0f56ed27064b71477893601f268695",
+    "report.json": "fbf2d3536b0065ce5b879093b38fb8619c92dd6bc2842817fecdcd82b7ead7ee",
+    "typed-literal-arm.ndjson.gz": "938a5fd1fe3a64a41257a0dad7d1b7627b79f04868143b573aca793b7f49aced",
+    "typed-literal-links.ndjson.gz": "c8f3535fae5ddd668966a83627e07f65969be2cd3b39970cdb33c709f175503c"
+  },
+  "schema_version": "hapi-authority-independent-control-run/1"
+}

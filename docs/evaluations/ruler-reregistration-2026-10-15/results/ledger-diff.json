@@ -1,0 +1,25 @@
+{
+  "added": 93,
+  "added_by_royal_woman_cue": {
+    "divine adoratrice": 1,
+    "god's wife": 48,
+    "god's wife of amun": 1,
+    "great royal wife": 1,
+    "king's daughter": 3,
+    "king's mother": 1,
+    "king's wife": 3,
+    "princess": 34,
+    "queen mother": 1
+  },
+  "changed_ignoring_record_dynasty": 0,
+  "extractor_sha256": "3efd8d13544189eb5122c30ade5f96b7283df82dc823c7d65e20180ffd0fa51b",
+  "ledger_gzip_sha256": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
+  "lost": 0,
+  "new_mentions": 148964,
+  "royal_woman_cued_mentions": 239,
+  "royal_woman_cued_mentions_the_resolver_does_not_read_as_cued": 0,
+  "schema_version": "hapi-361-ledger-diff/2",
+  "v10_extractor_sha256": "18f27a2968fa0b7f2555500ff654b146776ccfadc13c5daf1143e1b7e0536221",
+  "v10_ledger_gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+  "v10_mentions": 148871
+}
