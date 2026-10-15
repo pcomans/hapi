@@ -1818,3 +1818,6 @@ def test_the_readme_states_the_scored_result_and_arm_outcomes() -> None:
             for pair, o in outcomes["by_museum_pair"].items()} == {
         "brooklyn__harvard": 0, "met__brooklyn": 2, "met__harvard": 1}
     assert "the authority has 17 against the literal arm's 14" in readme
+    calibration, safety = score["decision_rule"]["calibration"], score["decision_rule"]["safety"]
+    assert f"{calibration['uncertain_or_wrong']} of {calibration['retained_controls']} retained controls uncertain or wrong" in readme
+    assert f"b = {safety['b']} of {safety['authority_gains']} authority gains" in readme

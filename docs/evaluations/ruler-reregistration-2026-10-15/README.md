@@ -51,7 +51,8 @@ protocol and decision rule?
      rulers (`royal_women.resolve_royal_woman`), never among the other kings. Its context is
      the record's own kings (what the record's uncued ruler mentions resolve to) and the
      record's dynasty (`royal_women.single_dynasty`).
-   - **Every other ruler mention** resolves among the kings exactly as in v10.
+   - **Every other ruler mention** resolves among the kings by v10's method, on the current
+     claim graph (item 7).
    - **The royal women are:**
      - Dodson & Hilton's women (#360, #363), resolved through the claim-graph kings
        (`pipeline.authority.graph_kings`, #367);
@@ -82,6 +83,12 @@ protocol and decision rule?
    It does not show her other spellings or the local PDF's pages (prompt audit,
    `prompt-audit-2026-10-15.md`).
 6. **New seeds** for the opaque orders, the reconciliation order and the preflight sample.
+7. **The king data is today's, not v10's.** v10 froze the claim graph at 1d35337. Since then:
+   - #357 merged duplicate king entries from the ruler escalation queue;
+   - #362 changed only how `run_linkability.py` finds its repository.
+
+   Both are in `CURRENT_INPUTS`. The kings' method is unchanged; their data is not (see the
+   Result).
 
 The four prompts, the system prompt and the citable-source list are v10's bytes, unchanged. The
 `open_page` tool description the model reads is v10's too (tested).
@@ -222,8 +229,10 @@ node IDs are stable on the frozen corpus, so the cases can be followed:
   each judged correct.
   - Nefertiti (v10 case-020) and Tiye (case-083) now link through the royal women
     (`dodson_hilton:Nefertiti`, `dodson_hilton:Tiye A`).
-  - Apries (case-096) and Userkaf (case-098) now link among the kings: their mentions are not
-    queen-cued, so the change is in the king authority since v10, not the royal women.
+  - Apries (case-096) and Userkaf (case-098) now link among the kings through #357's merges.
+    On v10's claim graph each name is ambiguous between two duplicate entries
+    (`cluster-beckerath-26.04` / `kitchen-26.04`; `leprohon-leprohon-5.01` /
+    `pharaoh_se-Userkaf`). On today's graph each resolves to one cluster.
 - **The fifth d, Neferu, is d again.**
 - **v10's f is gone.** It was case-067, Brooklyn's "Shabty of Queen Maatkare" merged with
   Hatshepsut, a false merge that this registration's rule labels b. This run sends the
@@ -245,8 +254,13 @@ node (`classify_case`).
   (`adjudicated_arm_outcomes`).
 
 **Caveat.** This is a small census of the selected population (4 changed cases, 15 controls),
-not a sample estimate, and it carries the weight of four cases. Its margin rests on one case
-(Ahmose, above).
+not a sample estimate, and it carries the weight of four cases. Its margin is narrow and rests on
+both changes since v10:
+- **The royal women alone** (Nefertiti, Tiye, Maatkare) would leave d = 3 (Neferu, Apries,
+  Userkaf) against a + e = 3, which does not qualify.
+- **The king merges alone** would leave v10's Maatkare false merge, a b under this rule, which
+  makes the scope unsafe.
+- **Read the Ahmose case as a loss**, and the scope does not qualify either.
 
 **Review.** All calls ran on Claude Code (Claude Sonnet 5.5), on the subscription.
 - **Stage 1:** 21 units; the two reviewers agreed on both questions in 20. The reconciler
