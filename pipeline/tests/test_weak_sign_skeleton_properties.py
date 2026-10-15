@@ -21,6 +21,7 @@ from pathlib import Path
 import pytest
 
 from pipeline.authority import royal_women as rw
+from pipeline.authority.graph_kings import GraphKings
 from pipeline.authority import weak_sign_skeleton as module
 from pipeline.authority.claimgraph.normalize import translit_key
 from pipeline.authority.royal_women import DISAMBIGUATOR
@@ -425,44 +426,6 @@ KING_ONLY_FEMALE_RULERS_REACHED = {
     "leprohon-leprohon-33.02a", "leprohon-leprohon-33.03a", "leprohon-leprohon-33.05a", "leprohon-leprohon-33.08a",
     "leprohon-leprohon-33.12", "leprohon-leprohon-33.14", "leprohon-leprohon-6.07", "pharaoh_se-Cleopatra-VII"}
 DH_WOMEN_WHO_REIGNED = ["cluster-beckerath-12.08", "cluster-beckerath-18.05", "cluster-leprohon-leprohon-19.08"]
-
-
-class GraphKings:
-    """The claim graph's ruler resolver (the linkability resolver the evaluations load) as a
-    royal_women.KingAuthority, over the committed graph."""
-
-    def __init__(self) -> None:
-        import importlib.util
-        path = REPO / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
-        spec = importlib.util.spec_from_file_location("_weak_sign_run_linkability", path)
-        mod = importlib.util.module_from_spec(spec)
-        sys.modules[spec.name] = mod
-        spec.loader.exec_module(mod)
-        graph = json.loads(mod.GRAPH.read_text(encoding="utf-8"))
-        self._resolver, self._catalog = mod.build_ruler_resolver(graph)
-        self._norm = mod.ruler_norm
-        self._node = {r["id"]: r for r in graph["rulers"]}
-        names: dict[str, set[str]] = collections.defaultdict(set)
-        by_subject = collections.defaultdict(list)
-        for claim in graph["claims"]:
-            if claim["predicate"] in mod.NAME_PREDICATES:
-                by_subject[claim["subject_id"]].append(claim)
-        for target, info in self._catalog.items():
-            for member in info["member_ids"]:
-                names[target].add(self._node[member]["display_name"])
-                for claim in by_subject[member]:
-                    names[target].update(v for v in (claim.get("value_text"), claim.get("value_translit")) if v)
-        self._names = names
-
-    def resolve(self, name: str) -> dict:
-        return self._resolver.resolve(name, self._norm)
-
-    def labels(self, target_id: str) -> list[str]:
-        return sorted(self._names[target_id])
-
-    def dynasties(self, target_id: str) -> tuple[int, ...]:
-        return tuple(sorted({self._node[m]["dynasty"] for m in self._catalog[target_id]["member_ids"]
-                             if self._node[m]["dynasty"] is not None}))
 
 
 @pytest.fixture(scope="module")
