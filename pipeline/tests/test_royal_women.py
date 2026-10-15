@@ -555,6 +555,13 @@ def test_the_resolvers_numeral_reader_agrees_with_the_matchers() -> None:
     # tier ("Ahmes-[Nefertiry]" is Ahmes-Nefertiry, not Ahmes).
     ("Ahhotep (perhaps)", ("unmatched", None, [], "unreadable_mention")),
     ("Ahhotep [perhaps]", ("unmatched", None, [], "unreadable_mention")),
+    # A lacuna or a truncation is no name (code review): "Henut[...]" is D&H's own unnamed woman.
+    ("Henut[...]", ("unmatched", None, [], "unreadable_mention")),
+    ("Henut [...]", ("unmatched", None, [], "unreadable_mention")),
+    ("Henut...", ("unmatched", None, [], "unreadable_mention")),
+    ("Henut-…", ("unmatched", None, [], "unreadable_mention")),
+    ("Henut[ ]", ("unmatched", None, [], "unreadable_mention")),
+    ("[Ahmes]-[Nefertiry]", ("resolved", "raw_exact", ["dodson_hilton:Ahmes-Nefertiry"], None)),
     ("Ahmes-[Nefertiry]", ("resolved", "raw_exact", ["dodson_hilton:Ahmes-Nefertiry"], None)),
     ("[Ahmes]-Nefertiry", ("resolved", "raw_exact", ["dodson_hilton:Ahmes-Nefertiry"], None)),
     # A capital I, V or X ending a longer segment may be a run-on numeral, after any letter.

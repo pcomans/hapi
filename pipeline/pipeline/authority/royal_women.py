@@ -18,14 +18,14 @@ The rule, which is deterministic and fixed here:
   that lands on her resolves to the king.
 * A mention is read before any tier (`read_mention`), and what cannot be read is refused, not
   guessed. Every token must be a regnal numeral, bare or in one matching bracket pair, or a
-  name token (letters of any script, ʿ ʾ ', - . = ⸗, a restoration in brackets inside the
-  word; read as letters). At most one numeral is allowed. A whole-word parenthesis with a
-  space inside is a description and is dropped, unless it doubts or holds a numeral, which is
+  name token (letters of any script, ʿ ʾ ', - . = ⸗, a restoration in brackets inside the word;
+  read as letters). At most one numeral is allowed. A whole-word parenthesis with a space
+  inside is a description and is dropped, unless it doubts or holds a numeral, which is
   refused: whose numeral it is cannot be told ("Tiye (wife of Amenhotep III)" is refused too).
   A lowercase numeral run on to a name ("Ahhotpii") reads as the name's own vowels: it cannot
-  be told from a name ending in -i, a known limit. Refusals are `unreadable_numeral` (a lowercase, broken,
-  run-on, all-caps-final or second numeral; any numeric character, superscripts included),
-  `doubted_mention` (a "?") and `unreadable_mention` (any other mark).
+  be told from a name ending in -i, a known limit. Refusals are `unreadable_numeral` (a
+  lowercase, broken, run-on, all-caps-final or second numeral; any numeric character,
+  superscripts included), `doubted_mention` (a "?") and `unreadable_mention` (any other mark).
 * A woman's alternative name that is itself a king's name is not one of her names: such an
   identity (Meryetaten as the king Neferneferuaten) is disputed, and the king lists decide it.
 * D&H tells same-named women apart by a letter or numeral ("Tiye A", "Neferu II"); museum
@@ -286,7 +286,8 @@ ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])(?!\w)")
 # A name token: letters (any script), combining marks, ʿ ʾ ' ’, the separators - . = ⸗, and
 # a restoration in brackets inside the word ("Mer[i]taten").
 NAME_LETTERS = r"[^\W\d_]|[\u0300-\u036f'’]"
-NAME_TOKEN = re.compile(rf"(?:{NAME_LETTERS}|[-.=⸗]|\[(?:{NAME_LETTERS}|[-.=⸗])+\]|\((?:{NAME_LETTERS}|[-.=⸗])+\))+[,;:]?")
+_RESTORED = rf"(?:{NAME_LETTERS}|[-.=⸗])+"
+NAME_TOKEN = re.compile(rf"(?:{NAME_LETTERS}|[-.=⸗]|\[{_RESTORED}\]|\({_RESTORED}\))+[,;:]?")
 SEGMENT = re.compile(r"[-.=⸗]")
 NUMERAL_LETTERS = set("IVXivx")
 
@@ -308,9 +309,13 @@ def _refusal(token: str) -> str | None:
         return "unreadable_numeral" if numeral_like else "doubted_mention"
     if not NAME_TOKEN.fullmatch(token):
         return "unreadable_numeral" if numeral_like else "unreadable_mention"
+    # A truncation or a lacuna is no name: "Henut...", "Henut[...]" would key as "henut".
+    groups = re.findall(r"[\[(]([^\[\]()]*)[\])]", token)
+    if ".." in token or "…" in token or any(not any(c.isalpha() for c in group) for group in groups):
+        return "unreadable_mention"
     core = token.rstrip(".,;:")
     # A whole-word bracket is no restoration inside a word: "(perhaps)", "[A]", "(Kamose)".
-    if re.fullmatch(r"[\[(].*[\])]", core):
+    if re.fullmatch(r"[\[(][^\[\]()]*[\])]", core):
         return "unreadable_numeral" if numeral_like else "unreadable_mention"
     # A restoration that ends the word and holds only numeral letters cannot be told from a
     # lowercase numeral ("Nefertit[i]" as "Berenike[ii]").
@@ -351,6 +356,8 @@ def read_mention(text: str) -> tuple[str, str | None]:
     so a form nobody foresaw fails loudly (code review of PR #365)."""
     if any(c.isnumeric() for c in text):
         return text, "unreadable_numeral"
+    if LACUNA.search(text):  # as the authority side refuses it (`labels_for`)
+        return text, "unreadable_mention"
     text = BRACKET_SPACE.sub(lambda m: m[1] or m[2], text)
     for description in DESCRIPTION.findall(text):
         if refusal := _description_refusal(description):
