@@ -16,6 +16,16 @@ The rule, which is deterministic and fixed here:
   unmatched. Every other ruler mention resolves among the kings, as before.
 * A D&H woman who later reigned (Hatshepsut D, Sobkneferu, Tawosret) is the king: a mention
   that lands on her resolves to the king.
+* A mention is read before any tier (`read_mention`), and what cannot be read is refused, not
+  guessed. Every token must be a regnal numeral, bare or in one matching bracket pair, or a
+  name token (letters of any script, ʿ ʾ ', - . · = ⸗, a restoration in brackets inside the word;
+  read as letters). At most one numeral is allowed. A whole-word parenthesis with a space
+  inside is a description and is dropped, unless it doubts or holds a numeral, which is
+  refused: whose numeral it is cannot be told ("Tiye (wife of Amenhotep III)" is refused too).
+  A lowercase numeral run on to a name ("Ahhotpii") reads as the name's own vowels: it cannot
+  be told from a name ending in -i, a known limit. Refusals are `unreadable_numeral` (a
+  lowercase, broken, run-on, all-caps-final or second numeral; any numeric character,
+  superscripts included), `doubted_mention` (a "?") and `unreadable_mention` (any other mark).
 * A woman's alternative name that is itself a king's name is not one of her names: such an
   identity (Meryetaten as the king Neferneferuaten) is disputed, and the king lists decide it.
 * D&H tells same-named women apart by a letter or numeral ("Tiye A", "Neferu II"); museum
@@ -27,11 +37,52 @@ The rule, which is deterministic and fixed here:
     2. dynasty: among the family matches if there are several, else among all, the women of
        the record's dynasty (or of no known dynasty), when the record gives exactly one.
   Otherwise the mention stays ambiguous.
+* A name is looked up in three tiers, each tried only when the one before finds no
+  candidate: the exact surface (`raw_exact`), the claim graph's transliteration and phonetic
+  keys (`committed_normalized`), and the weak-sign skeleton (`weak_sign_skeleton`, see
+  `weak_sign_skeleton.py`), which drops the vowels, the weak signs ꞽ/y/w and the feminine
+  -t that modern renderings disagree on. The third tier runs only against this index (the
+  royal women, by their D&H names, and the female rulers, by their `female-rulers.json`
+  king_name only — never by the king lists' whole titulary), never against the kings, and
+  only when the residue has at least `MIN_WEAK_SIGN_CONSONANTS` consonants. On the authority
+  side the D&H letter and the regnal numeral are stripped before keying ("Neferu II" is
+  keyed as Neferu, with its numeral remembered); a numeral the mention carries must be one
+  of the candidate's ("Cleopatra III" reaches no Cleopatra I, II or VII; a bare "Cleopatra"
+  reaches them all). The family and dynasty narrowing above applies to its candidates
+  unchanged. Any D&H label meets the first tier, so the third never changes a name that
+  the first two resolve.
+* A weak-sign match must be confirmed by the record. A shared consonant skeleton is weak
+  evidence, and a queen has no throne name or reign that could corroborate it, as a king's
+  match in the claim graph is corroborated. So the woman it chooses counts only if the
+  record names one of her family kings, or the record's single dynasty is one of hers or
+  of her family kings'. The family kings' dynasties only ever add: for a woman with a
+  dynasty of her own they can confirm one of hers' neighbours (Ahmes-Nefertiry has none of
+  her own, so Taa II's 17 and Ahmose I's 18 are what confirms her); they never rule a
+  dynasty out, which only her own dynasty does (the bullet below). Otherwise the mention
+  stays unmatched (`weak_sign_unconfirmed`), even as the only candidate. A woman with
+  neither (Tetisherit, whose entry names only her non-royal father) is not reachable on
+  this tier. A key of exactly `MIN_WEAK_SIGN_CONSONANTS` consonants takes a named family
+  king only, never a dynasty: three consonants merge names that differ in a weak sign
+  alone. A key that the authority's own spellings reach in more than one form for different
+  women (`different_spellings`: D&H's Henttawy / Henutwati, Neferu / Neferet, Nebetia /
+  Nebtit / Nebtu, Tentamun / Tintamun, and `female-rulers.json`'s "Neferusobek" for the king
+  Sobkneferu beside D&H's princess Neferusobk) never resolves at all; one woman's own
+  alternative spellings (Tawosret / Tausret) are one name. The mention is ambiguous
+  (`weak_sign_different_spellings`) before any narrowing, because the key cannot tell whether
+  those spellings are one name, and a family king would then pick whichever woman is linked
+  to him, whatever her name ("Nofret" on a record naming Amenemhat I would have reached
+  Neferu III). The rule rests on the authority's own spellings, not on anyone's reading of
+  the names; it replaced a hand-written list whose readings had no source on disk (Codex
+  review). Known limitation: the record's dynasty is the object's,
+  not her lifetime's, so a Ramesside stela of the deified Ahmes-Nefertiry (Dynasty 19–20)
+  is not confirmed by its dynasty; only a named family king would do.
 * A woman is never chosen against the record's own single dynasty: D&H is transcribed for
   some dynasties only (none of 4–10, 14 or 22 onward), so a lone name match of another known
   dynasty is another woman, and the mention stays unmatched. A candidate whose dynasty the
   authority does not give is not contradicted: the rows of D&H's two-dynasty sections (16 and
   17; 17 and 18) carry a dynasty only when the entry's own kin kings fall in one of them.
+  A record that names one of her family kings overrides its dynasty: a monument of Shoshenq
+  I (Dynasty 22) naming his mother Tentsepeh A (D&H, Dynasty 21) is hers.
 * The cues are the module's rule; no committed mention extractor emits all of them yet (the
   frozen #337 one knows only Queen/King/reign cues). The first caller is the ruler
   re-registration (#361), whose extractor is to emit them.
@@ -52,6 +103,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .claimgraph.normalize import NameForm, keys_for_form
+from .weak_sign_skeleton import MIN_WEAK_SIGN_CONSONANTS, consonant_count, weak_sign_skeleton
 
 SOURCE_DIR = Path(__file__).resolve().parent / "sources" / "dodson-hilton-queens"
 DODSON_HILTON = SOURCE_DIR / "reconciled.jsonl"
@@ -71,7 +123,9 @@ ROYAL_WOMAN_CUE_BEFORE = re.compile(
 PARENTHETICAL = re.compile(r"\(")
 LACUNA = re.compile(r"\[\s*(?:\.\.\.|…)\s*\]")
 LEADING_QUEEN = re.compile(r"^\s*\(?queen\)?\s+", re.I)
+# A D&H letter or a regnal numeral standing alone as a token.
 DISAMBIGUATOR = re.compile(r"^(?:[A-Z]|[IVX]+)$")
+NUMERAL = re.compile(r"^[IVX]+$")
 # A D&H letter on a kinship name marks one of D&H's own individuals, not a king-list name;
 # I, V and X are left out because they are also regnal numerals.
 DH_LETTER = re.compile(r"^[A-HJ-UWYZ]$")
@@ -117,6 +171,19 @@ class RoyalWomenIndex:
     alt_names_dropped_as_king_names: dict[str, tuple[str, ...]]
     exact: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
     normalized: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
+    weak_sign: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
+    # Per weak-sign key and target: the base spellings (`base_spelling`) of the labels keyed
+    # under it, so that one woman's own alternative spellings never count as two names.
+    weak_sign_spellings: dict[str, dict[str, set[str]]] = field(
+        default_factory=lambda: collections.defaultdict(lambda: collections.defaultdict(set)))
+    # Per weak-sign key and target: the regnal numerals of the labels keyed under it.
+    weak_sign_numerals: dict[str, dict[str, set[str]]] = field(
+        default_factory=lambda: collections.defaultdict(lambda: collections.defaultdict(set)))
+    # The dynasties of the kings a target's family names resolve to: with her own, what
+    # confirms a weak-sign match.
+    family_dynasties: dict[str, frozenset[int]] = field(default_factory=dict)
+
+
 
 
 def surface_key(text: str) -> str:
@@ -206,6 +273,184 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
             index.normalized[key].add(target_id)
 
 
+BRACKET_PAIRS = {"(": ")", "[": "]"}
+# Space inside a bracket is closed up first ("[ II ]" -> "[II]", "( II" -> "(II").
+BRACKET_SPACE = re.compile(r"([(\[])\s+|\s+([)\]])")
+# A whole-word parenthesis with a space inside is a description, dropped unless it doubts or
+# holds a numeral (`_description_refusal`).
+DESCRIPTION = re.compile(r"(?<!\S)\([^()]*\s[^()]*\)(?!\S)")
+# Only a matching pair wraps a numeral: "(II]", "(II" and "II)" are unread, not II, since a
+# broken wrapper may hide a cut numeral ("(II" of "(III)"). An attached pair is split off
+# unless a letter follows: "Mer[I]taten" restores a letter.
+ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])(?!\w)")
+# A name token: letters (any script), combining marks, ʿ ʾ ' ’, the separators - . · = ⸗, and
+# a restoration in brackets inside the word ("Mer[i]taten").
+NAME_LETTERS = r"[^\W\d_]|[\u0300-\u036f'’]"
+_RESTORED = rf"(?:{NAME_LETTERS}|[-.·=⸗])+"
+NAME_TOKEN = re.compile(rf"(?:{NAME_LETTERS}|[-.·=⸗]|\[{_RESTORED}\]|\({_RESTORED}\))+[,;:]?")
+SEGMENT = re.compile(r"[-.·=⸗]")
+NUMERAL_LETTERS = set("IVXivx")
+
+
+def _numeral_like(token: str) -> bool:
+    """Whether a token holds something a numeral may be: a piece of it, between marks, made of
+    numeral letters ("(II]", "[ii?", "Ahhotp-II"), or a capital numeral run on to a lowercase
+    name ("CleopatreII)")."""
+    return any(piece and set(piece) <= NUMERAL_LETTERS for piece in re.split(r"[\W_]+", token)) \
+        or bool(re.search(r"[a-z][IVX]+(?![a-z])", token))
+
+
+def _refusal(token: str) -> str | None:
+    """Why a token that is no readable numeral cannot be read as part of a name, or None. A
+    numeral it may hold is unread, never dropped: the keys would delete it and accept the bare
+    name (Codex reviews of PR #365)."""
+    numeral_like = _numeral_like(token)
+    if "?" in token:
+        return "unreadable_numeral" if numeral_like else "doubted_mention"
+    if not NAME_TOKEN.fullmatch(token):
+        return "unreadable_numeral" if numeral_like else "unreadable_mention"
+    # A truncation or a lacuna is no name: "Henut...", "Henut[...]" would key as "henut".
+    groups = re.findall(r"[\[(]([^\[\]()]*)[\])]", token)
+    if ".." in token or "…" in token or any(not any(c.isalpha() for c in group) for group in groups):
+        return "unreadable_mention"
+    core = token.rstrip(".,;:")
+    # A whole-word bracket is no restoration inside a word: "(perhaps)", "[A]", "(Kamose)".
+    if re.fullmatch(r"[\[(][^\[\]()]*[\])]", core):
+        return "unreadable_numeral" if numeral_like else "unreadable_mention"
+    # A restoration that ends the word and holds only numeral letters cannot be told from a
+    # lowercase numeral ("Nefertit[i]" as "Berenike[ii]").
+    if (end := re.search(r"[\[(]([^\])]*)[\])]$", core)) and set(end[1]) <= NUMERAL_LETTERS:
+        return "unreadable_numeral"
+    whole = re.sub(r"[\[\]()]", "", core)
+    if whole and set(whole) <= NUMERAL_LETTERS:  # "ii", "vi": a lowercase numeral or no name
+        return "unreadable_numeral"
+    for segment in SEGMENT.split(whole):
+        if not segment:
+            continue
+        if set(segment) <= set("IVX") or (len(segment) > 1 and set(segment) <= NUMERAL_LETTERS):
+            return "unreadable_numeral"  # "Ahhotp-II", "Ahhotp-ii"
+        # A name ends in a lowercase letter, so a capital I, V or X ending a longer segment may be
+        # a run-on numeral: "CleopatreII", "Ahhotp'II", "AhhotpʿII", and in all caps "AHHOTPII"
+        # (and so "TETI", where nothing tells the name's own letters from a numeral).
+        if len(segment) > 1 and segment[-1] in "IVX":
+            return "unreadable_numeral"
+    return None
+
+
+def _description_refusal(description: str) -> str | None:
+    """Why a whole-word parenthesis cannot be dropped as a description, or None. A numeral in
+    it may be the mention's own ("Ahhotep (Aahotep II)", "(perhaps II)") or someone else's
+    ("Tiye (wife of Amenhotep III)"), and nothing in the text tells which: it is refused, as a
+    doubt is (code review of PR #365)."""
+    # The token reader's own numeral test, so no numeral shape it refuses is dropped here.
+    if any(numeral_of(word) or _numeral_like(word) or _refusal(word) == "unreadable_numeral"
+           for word in description[1:-1].split()):
+        return "unreadable_numeral"
+    return "doubted_mention" if "?" in description else None
+
+
+def read_mention(text: str) -> tuple[str, str | None]:
+    """The mention with its readable numerals written bare, and why it cannot be read, or None.
+    Every token must be a readable numeral (`numeral_of`) or a name token; at most one numeral;
+    no numeric character (a digit, "Ⅱ"). Anything else is refused, not guessed: an allow-list,
+    so a form nobody foresaw fails loudly (code review of PR #365)."""
+    # Composed first: a decomposed final letter ("é" as e + U+0301) is no \w, and an attached
+    # numeral after it would not be split off (Codex review).
+    text = unicodedata.normalize("NFC", text)
+    if any(c.isnumeric() for c in text):
+        return text, "unreadable_numeral"
+    if LACUNA.search(text):  # as the authority side refuses it (`labels_for`)
+        return text, "unreadable_mention"
+    text = BRACKET_SPACE.sub(lambda m: m[1] or m[2], text)
+    for description in DESCRIPTION.findall(text):
+        if refusal := _description_refusal(description):
+            return text, refusal
+    text = DESCRIPTION.sub(" ", text)
+    text = ATTACHED_NUMERAL.sub(r"\1 \2", text)
+    tokens, numerals = [], 0
+    for token in text.split():
+        if numeral := numeral_of(token):
+            if not tokens:  # "II Berenike": a list marker or stray numeral, not hers (Codex review)
+                return text, "unreadable_numeral"
+            tokens.append(numeral)
+            numerals += 1
+        elif refusal := _refusal(token):
+            return text, refusal
+        else:
+            tokens.append(token)
+    if numerals > 1:  # "Neferu I II": the keys would run them together ("neferuiii")
+        return text, "unreadable_numeral"
+    # A restoration is read as letters, as the authority's labels are (`labels_for`): the
+    # claim-graph keys delete bracketed text, so "Ahmes-[Nefertiry]" would key as "ahmes".
+    return " ".join(t.replace("[", "").replace("]", "") for t in tokens), None
+
+
+def numeral_of(token: str) -> str | None:
+    """The regnal numeral a token writes, bare or wrapped ("II", "(II)", "[II]", "II."), or
+    None. Uppercase only: a lowercase "ii" is no readable numeral (`read_mention` refuses it). A
+    bracket must be one of a pair around the numeral: "(II]", "(II" and "II)" are None."""
+    core = token.rstrip(".,;:")
+    if core[:1] in BRACKET_PAIRS:
+        if core[-1:] != BRACKET_PAIRS[core[0]]:
+            return None
+        core = core[1:-1]
+    elif core[-1:] in ")]":
+        return None
+    return core if NUMERAL.match(core) else None
+
+
+def weak_sign_entry(label: str) -> tuple[str, frozenset[str]]:
+    """How the authority side keys a label: the D&H letter and the regnal numeral stripped
+    before the key is taken, the numerals kept ("Neferu II" -> ("nfr", {"II"}))."""
+    tokens = label.split()
+    key = weak_sign_skeleton(" ".join(t for t in tokens if not (DISAMBIGUATOR.match(t) or numeral_of(t))))
+    return key, frozenset(n for t in tokens if (n := numeral_of(t)))
+
+
+def base_spelling(label: str) -> str:
+    """A label as a spelling of the name: D&H's letter and any numeral left out, case-folded."""
+    return " ".join(t for t in label.split() if not (DISAMBIGUATOR.match(t) or numeral_of(t))).casefold()
+
+
+def _add_weak_sign(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
+    for label in labels:
+        key, numerals = weak_sign_entry(label)
+        if key:
+            index.weak_sign[key].add(target_id)
+            index.weak_sign_numerals[key][target_id] |= numerals
+            index.weak_sign_spellings[key][target_id].add(base_spelling(label))
+
+
+def spelled_differently(index: RoyalWomenIndex, key: str) -> bool:
+    """Whether two targets of the key are reached under no common spelling: D&H's Neferet and
+    Neferu both key nfr. One target's own alternative spellings (Tawosret, whom the king lists
+    call Tausret; "Meryetre(-Hatshepsut)" and its alt name) are one name, not two."""
+    spellings = list(index.weak_sign_spellings[key].values())
+    return any(not (a & b) for i, a in enumerate(spellings) for b in spellings[i + 1:])
+
+
+def different_spellings(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
+    """The weak-sign keys that the authority's own spellings reach in more than one form for
+    different targets (`spelled_differently`), with every spelling: the key cannot tell whether
+    those spellings are one name, so a match on such a key resolves nothing."""
+    return {key: tuple(sorted(set().union(*by_target.values())))
+            for key, by_target in sorted(index.weak_sign_spellings.items()) if spelled_differently(index, key)}
+
+
+def weak_sign_collisions(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
+    """Every weak-sign skeleton that several indexed targets share, with its members; the
+    authority-side collision table of the third tier."""
+    return {key: tuple(sorted(targets)) for key, targets in sorted(index.weak_sign.items()) if len(targets) > 1}
+
+
+def new_weak_sign_collisions(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
+    """The collisions the third tier introduces: the groups that no exact or claim-graph key
+    already holds whole (same-named women, "Tiye A"/"Tiye C", collide on every tier)."""
+    existing = [*index.exact.values(), *index.normalized.values()]
+    return {key: members for key, members in weak_sign_collisions(index).items()
+            if not any(set(members) <= group for group in existing)}
+
+
 def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
                 female_rulers_path: Path = FEMALE_RULERS) -> RoyalWomenIndex:
     """Index the women and the female rulers. Each woman's family names are resolved through
@@ -219,6 +464,7 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
         kept_alt = [a for a in woman.alt_names if kings.resolve(a)["status"] == "unmatched"]
         index.alt_names_dropped_as_king_names[woman.target_id] = tuple(a for a in woman.alt_names if a not in kept_alt)
         _add(index, woman.target_id, [*woman.labels, *kept_alt])
+        _add_weak_sign(index, woman.target_id, [*woman.labels, *kept_alt])
         index.dynasties[woman.target_id] = woman.dynasties
         family, unresolved = set(), []
         for name in woman.family_names:
@@ -228,6 +474,7 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
             else:
                 unresolved.append(name)
         index.family_king_ids[woman.target_id] = frozenset(family)
+        index.family_dynasties[woman.target_id] = frozenset(d for king in family for d in kings.dynasties(king))
         index.family_names_not_resolved[woman.target_id] = tuple(unresolved)
     for entry in json.loads(female_rulers_path.read_text(encoding="utf-8"))["entries"]:
         found = kings.resolve(entry["king_name"])
@@ -235,16 +482,21 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
             raise ValueError(f"female ruler {entry['king_name']!r} is {found['status']} among the kings")
         king_id = found["target_ids"][0]
         names = [LEADING_QUEEN.sub("", label) for label in [entry["king_name"], *kings.labels(king_id)]]
+        # The weak-sign key takes the king_name only: the king lists' other labels are the
+        # whole titulary (Horus names, transliterations), which is not what a queen is called.
         if entry["dh_id"] is None:
             _add(index, king_id, names)
+            _add_weak_sign(index, king_id, names[:1])
             index.dynasties[king_id] = kings.dynasties(king_id)
             index.family_king_ids[king_id] = frozenset()
+            index.family_dynasties[king_id] = frozenset()
         else:
             if entry["dh_id"] not in by_dh_id:
                 raise ValueError(f"{female_rulers_path.name} names {entry['dh_id']}, which is not a D&H woman")
             woman = by_dh_id[entry["dh_id"]]
             index.king_ids[woman.target_id] = king_id
             _add(index, woman.target_id, names)
+            _add_weak_sign(index, woman.target_id, names[:1])
     return index
 
 
@@ -264,13 +516,35 @@ def royal_woman_cued(field_value: str, span_start: int) -> bool:
 
 def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: set[str],
                         record_dynasty: int | None) -> dict:
+    # Readable numerals are written bare before any tier ("Berenike [II]" would otherwise meet
+    # the bare "Berenike" on the claim-graph keys); a mention that cannot be read is refused.
+    text, refusal = read_mention(text)
+    if refusal:
+        return {"resolution_method": None, "candidate_ids": [], "context_rule": refusal,
+                "status": "unmatched", "target_ids": []}
     exact = sorted(index.exact.get(surface_key(text), ()))
     if exact:
         candidates, method = exact, "raw_exact"
     else:
         candidates = sorted({t for key in name_keys(text) for t in index.normalized.get(key, ())})
         method = "committed_normalized" if candidates else None
+    skeleton = ""
+    if not candidates:
+        # The mention's numeral is not keyed; a candidate must carry it.
+        tokens = text.split()
+        numerals = {n for t in tokens if (n := numeral_of(t))}
+        skeleton = weak_sign_skeleton(" ".join(t for t in tokens if not numeral_of(t)))
+        if skeleton:
+            candidates = sorted(t for t in index.weak_sign.get(skeleton, ())
+                                if numerals <= index.weak_sign_numerals[skeleton][t])
+            method = "weak_sign_skeleton" if candidates else None
     base = {"resolution_method": method, "candidate_ids": candidates, "context_rule": None}
+    if method == "weak_sign_skeleton" and spelled_differently(index, skeleton):
+        # The authority spells the women of this key differently, and the key cannot tell
+        # whether those spellings are one name, so nothing in the record can: a family king would
+        # pick the woman linked to it whatever her name ("Nofret" and a record naming Amenemhat
+        # I would reach Neferu III).
+        return {**base, "status": "ambiguous", "target_ids": candidates, "context_rule": "weak_sign_different_spellings"}
     chosen, rule = None, None
     if len(candidates) == 1:
         chosen = candidates[0]
@@ -287,11 +561,31 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
                 chosen, rule = dynasty[0], "dynasty"
     if chosen is None:
         return {**base, "status": "ambiguous" if candidates else "unmatched", "target_ids": candidates}
-    if record_dynasty is not None and index.dynasties[chosen] and record_dynasty not in index.dynasties[chosen]:
+    family_named = bool(index.family_king_ids[chosen] & record_king_ids)
+    # A record naming one of her family kings overrides its own dynasty (Tentsepeh A, Dynasty
+    # 21, on a monument of her son Shoshenq I, Dynasty 22).
+    if (not family_named and record_dynasty is not None and index.dynasties[chosen]
+            and record_dynasty not in index.dynasties[chosen]):
         return {**base, "status": "unmatched", "target_ids": [], "context_rule": "record_dynasty_contradicts"}
+    if method == "weak_sign_skeleton" and not _weak_sign_confirmed(index, chosen, skeleton, family_named, record_dynasty):
+        return {**base, "status": "unmatched", "target_ids": [], "context_rule": "weak_sign_unconfirmed"}
     # A D&H woman who later reigned resolves to the king.
     return {**base, "status": "resolved", "target_ids": [index.king_ids.get(chosen, chosen)], "context_rule": rule,
             "royal_woman_id": chosen}
+
+
+def _weak_sign_confirmed(index: RoyalWomenIndex, chosen: str, skeleton: str, family_named: bool,
+                         record_dynasty: int | None) -> bool:
+    """A weak-sign match is only a shared consonant skeleton, and a queen has no throne name
+    or reign to corroborate it, so the record must: it names one of her family kings, or its
+    single dynasty is one of hers or her family kings'. A key of the minimum length takes the
+    named king only. (A key the authority spells in several forms never gets here: it is
+    ambiguous before any narrowing.)"""
+    if family_named:
+        return True
+    if consonant_count(skeleton) == MIN_WEAK_SIGN_CONSONANTS:
+        return False
+    return record_dynasty is not None and record_dynasty in (set(index.dynasties[chosen]) | index.family_dynasties[chosen])
 
 
 def resolve_ruler_mention(index: RoyalWomenIndex, kings: KingAuthority, text: str, *, royal_woman_cue: bool,

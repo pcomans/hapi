@@ -1,0 +1,545 @@
+{
+ "accepted": false,
+ "against": "v2-1-j-weak-in-transliterations",
+ "fold_aware_merges": {
+  "names": 255
+ },
+ "splits": {
+  "test": {
+   "coverage": 0.7238,
+   "keyed": 1014,
+   "met": 551,
+   "pairs": 628,
+   "recall": 0.8774,
+   "renderings": 1401
+  },
+  "train": {
+   "coverage": 0.7198,
+   "keyed": 2980,
+   "met": 1577,
+   "pairs": 1817,
+   "recall": 0.8679,
+   "renderings": 4140
+  },
+  "validation": {
+   "coverage": 0.7067,
+   "keyed": 1082,
+   "met": 589,
+   "pairs": 678,
+   "recall": 0.8687,
+   "renderings": 1531
+  }
+ },
+ "strong_merges": {
+  "groups": {
+   "bnk": [
+    "bnq",
+    "wbnkꜣ"
+   ],
+   "bnr": [
+    "bnrjt",
+    "bꜣnrꜥw"
+   ],
+   "hbr": [
+    "wꜣḥjbrꜥw",
+    "ḥꜣbwr",
+    "ḥꜥꜥjbrꜥw"
+   ],
+   "hmk": [
+    "whmkꜣ",
+    "ḥꜣmkꜣj",
+    "ḥꜣmwjkꜣj"
+   ],
+   "hnk": [
+    "hnqw",
+    "ḥnkw"
+   ],
+   "hnn": [
+    "hnn",
+    "ḥnnj",
+    "ḥnnjt",
+    "ḥnnw",
+    "ḥnwn"
+   ],
+   "hnt": [
+    "hnjꜣtj",
+    "ḥntj",
+    "ḥnwtj",
+    "ḥnwtꜥꜣt"
+   ],
+   "hnḫ": [
+    "jḥnḫt",
+    "wꜣḥꜥnḫ"
+   ],
+   "hrms": [
+    "ḥrwjmsw",
+    "ḥrwmsw",
+    "ḥrwmzꜣj"
+   ],
+   "hrnfr": [
+    "hrwnfr",
+    "ḥrwnfr"
+   ],
+   "hrnḫt": [
+    "ḥrwnḫtw",
+    "ḥrwnḫtwwr"
+   ],
+   "hthr": [
+    "ḥwtḥrw",
+    "ꜥꜣḥwtḥrw"
+   ],
+   "htpr": [
+    "ḥtpjry",
+    "ḥtprꜥ"
+   ],
+   "kmn": [
+    "kmnj",
+    "kꜣjmnwj",
+    "qꜣimnw"
+   ],
+   "kms": [
+    "kms",
+    "kmsjw",
+    "kwms",
+    "kꜣmsw",
+    "kꜣmswnḫt"
+   ],
+   "knmn": [
+    "knyjmn",
+    "qnjmn"
+   ],
+   "knn": [
+    "knn",
+    "kꜣjjnn",
+    "qjnn",
+    "qnn"
+   ],
+   "kpr": [
+    "kpr",
+    "kꜣjpwrꜥw",
+    "kꜣjꜥprw",
+    "qpr"
+   ],
+   "kpth": [
+    "kꜣwptḥ",
+    "qꜣiptḥ"
+   ],
+   "ksr": [
+    "kwsr",
+    "kysrs",
+    "kꜣjwsrw"
+   ],
+   "kssr": [
+    "kszr",
+    "qjsjwsr"
+   ],
+   "lbsln": [
+    "rbsnn",
+    "rbswr"
+   ],
+   "mnt": [
+    "jmnyjꜥtw",
+    "mnṯwꜥꜣw"
+   ],
+   "mnth": [
+    "jmꜣnjt",
+    "jꜣmnjt",
+    "mnṯwꜥꜣw"
+   ],
+   "mnthhtp": [
+    "mnṯwḥtpw",
+    "mnṯwḥtpwꜥꜣ"
+   ],
+   "mnthtp": [
+    "mnṯwḥtpw",
+    "mnṯwḥtpwꜥꜣ"
+   ],
+   "mnṯhtp": [
+    "mnṯwḥtpw",
+    "mnṯwḥtpwꜥꜣ"
+   ],
+   "mrr": [
+    "mrr",
+    "mrrj",
+    "mrrw",
+    "mrrwy",
+    "mrry",
+    "mrryt",
+    "mrrꜥw",
+    "mryrꜥw"
+   ],
+   "mrḫ": [
+    "mryẖt",
+    "mryꜣḫ"
+   ],
+   "mtnfr": [
+    "mwtnfrt",
+    "mꜣꜥtnfrt"
+   ],
+   "mḫr": [
+    "mḫwjwr",
+    "mꜣꜥḫrw"
+   ],
+   "mṯn": [
+    "mṯn",
+    "mṯnw",
+    "mṯnwj",
+    "mṯnwꜥꜣ"
+   ],
+   "nbmh": [
+    "nbjmjꜥḥ",
+    "nbmht",
+    "nbmḥyt"
+   ],
+   "nbms": [
+    "nbjmsw",
+    "nbwmzꜣw"
+   ],
+   "nbmtr": [
+    "nbmꜣꜥtrꜥw",
+    "nbmꜣꜥtrꜥwmrjmn",
+    "nbmꜣꜥtrꜥwtjtimn"
+   ],
+   "nbr": [
+    "nbjrj",
+    "nbjrt",
+    "nbjrwt",
+    "nbjrꜥw",
+    "nbꜥꜣwwr"
+   ],
+   "nfrh": [
+    "nfrhꜣw",
+    "nfrhꜣy",
+    "nfrjḥy"
+   ],
+   "nfrhtp": [
+    "nfrḥtp",
+    "nfrḥtpw",
+    "nfrḥtpwr"
+   ],
+   "nfrhtpr": [
+    "nfrḥtprꜥw",
+    "nfrḥtpwr"
+   ],
+   "nfrr": [
+    "nfrjrj",
+    "nfrjrt",
+    "nfrjrw",
+    "nfrrw",
+    "nfrwrꜥw"
+   ],
+   "nfrtr": [
+    "nfrtjrj",
+    "nfrtjrjmrytmwt"
+   ],
+   "nfrtt": [
+    "nfrtjytj",
+    "nfrtjytjnfrnfrwjtn",
+    "nfrttw"
+   ],
+   "nfrḫ": [
+    "nfrḫw",
+    "nfrḫwt",
+    "nfrḫww",
+    "nfrḫꜥw"
+   ],
+   "nhtp": [
+    "jniḥtpt",
+    "jnḥtp",
+    "ꜥnḥtpw"
+   ],
+   "nkf": [
+    "jnkꜣf",
+    "wnkꜣf",
+    "ꜥnkf"
+   ],
+   "nnḫ": [
+    "jnꜥnḫw",
+    "jynjꜥnḫ",
+    "ꜥnnḫj",
+    "ꜥnꜥnḫj"
+   ],
+   "nnḫr": [
+    "njꜥnḫrꜥw",
+    "njꜥnḫwr"
+   ],
+   "ntf": [
+    "jnijtjf",
+    "jnijtjfꜥꜣ",
+    "jnijtjfꜥꜣw"
+   ],
+   "ntkrs": [
+    "njtjqrt",
+    "njtjqrtmrtmwt",
+    "njtjqrtmrtnṯr"
+   ],
+   "nḫf": [
+    "nḫf",
+    "ꜥnḫf"
+   ],
+   "nḫms": [
+    "ꜥnḫmswt",
+    "ꜥnḫmꜥs"
+   ],
+   "nḫn": [
+    "jynẖnjt",
+    "nḫn"
+   ],
+   "nḫnm": [
+    "jynḫnmwt",
+    "njwjẖnmw",
+    "njẖnmw"
+   ],
+   "nḫr": [
+    "njẖrt",
+    "ꜥnḫwjrj"
+   ],
+   "nḫt": [
+    "njꜣḫtj",
+    "nḫtj",
+    "nḫtyjd"
+   ],
+   "nṯrḫ": [
+    "nṯrjḫꜥw",
+    "nṯrjẖt"
+   ],
+   "pdltr": [
+    "jpjwrt",
+    "jpjꜥꜣt"
+   ],
+   "phn": [
+    "pḥn",
+    "pꜣhn"
+   ],
+   "pnm": [
+    "pꜣnmꜣꜥt",
+    "zrꜣḫꜥwf",
+    "ṯry",
+    "ẖnj"
+   ],
+   "pth": [
+    "jꜣwptḥ",
+    "ptḥ",
+    "ptḥjw",
+    "ptḥw",
+    "ptḥꜥꜣ"
+   ],
+   "ptlms": [
+    "ptwlmys",
+    "ptwlmysmrptḥmꜣꜥḫrw",
+    "ptwlmysḏdnfꜣlksntrsꜥnḫḏtmrptḥ",
+    "ptwlmysꜥnḫḏtmrptḥ",
+    "ptwlmysꜥnḫḏtmrptḥꜣst",
+    "ptwlmysꜥnḫḏtmrꜣst"
+   ],
+   "rmsss": [
+    "rꜥwmssw",
+    "rꜥwmsswḥqꜣjwnw"
+   ],
+   "rnr": [
+    "jrnrꜥw",
+    "wrnjrꜥw",
+    "wrnry"
+   ],
+   "rns": [
+    "jr⸮w?ns",
+    "rnsj"
+   ],
+   "rsn": [
+    "jrzjnt",
+    "ꜣrsjnt"
+   ],
+   "rss": [
+    "rzzt",
+    "wrzꜣs"
+   ],
+   "rḏf": [
+    "rwḏfrnḥḥ",
+    "rḏif"
+   ],
+   "rḏs": [
+    "rwḏzꜣw",
+    "rḏis"
+   ],
+   "sbkhtp": [
+    "sbkḥtpj",
+    "sbkḥtpw",
+    "sbkḥtpwnḫn"
+   ],
+   "sbkhtpthngr": [
+    "sbkḥtpwnḫn",
+    "sbkḥtpwšrj"
+   ],
+   "sbkt": [
+    "sbktj",
+    "sbꜣqtꜣwj"
+   ],
+   "smn": [
+    "smn",
+    "zꜣjmn"
+   ],
+   "snb": [
+    "jwisnb",
+    "snb",
+    "snbj",
+    "snbt",
+    "snbw",
+    "snbwj",
+    "snꜥꜥjb",
+    "znbt"
+   ],
+   "snfr": [
+    "snfrw",
+    "snfry",
+    "znfr",
+    "zꜣnfr",
+    "zꜣnfrt"
+   ],
+   "snn": [
+    "snn",
+    "snnw",
+    "snnwt",
+    "snny",
+    "zjnjwnw",
+    "znn"
+   ],
+   "snnḫ": [
+    "snfꜥnḫw",
+    "snꜥnḫw"
+   ],
+   "snsr": [
+    "znwsrt",
+    "znwsrtšrjt"
+   ],
+   "snt": [
+    "sntj",
+    "zntj"
+   ],
+   "snḫ": [
+    "jzjꜥnḫw",
+    "sꜥnḫt",
+    "sꜥnḫwj",
+    "sꜥnḫy",
+    "zꜣnḫtw"
+   ],
+   "snṯ": [
+    "sntj",
+    "zntj"
+   ],
+   "srr": [
+    "wsjrwr",
+    "ꜥꜣwsrrꜥw"
+   ],
+   "sthnḫ": [
+    "stẖnḫtmrrjmnmrrꜥw",
+    "stẖꜥnḫ"
+   ],
+   "stk": [
+    "stkꜣj",
+    "zꜣtkꜣ"
+   ],
+   "stmrnpth": [
+    "stymrynptḥ",
+    "stẖymrnptḥ"
+   ],
+   "str": [
+    "zꜣtrꜥw",
+    "ꜣstwrt"
+   ],
+   "stthtp": [
+    "sṯjtḥtp",
+    "sṯjtḥtptj"
+   ],
+   "sḫm": [
+    "sḫm",
+    "sḫꜥmꜣꜥt"
+   ],
+   "sḫmḫ": [
+    "sḫmẖt",
+    "zḫmꜣḫ"
+   ],
+   "sṯf": [
+    "jyzꜣṯf",
+    "sṯf"
+   ],
+   "tbr": [
+    "tbjrj",
+    "ꜣwtjbrꜥw"
+   ],
+   "trr": [
+    "trr",
+    "twrrꜥ"
+   ],
+   "ḏdkrss": [
+    "jzzj",
+    "ḏdkꜣrꜥw"
+   ],
+   "ḏdḫ": [
+    "ḏdḫyw",
+    "ḏdḫꜥw"
+   ],
+   "ḫmn": [
+    "ḫꜥijmn",
+    "ꜣḫmnw"
+   ],
+   "ḫms": [
+    "jꜥḥmsw",
+    "ḫꜥmwꜣst"
+   ],
+   "ḫnm": [
+    "ḫnmt",
+    "ẖnmw",
+    "ẖnmw?ꜥnḫw",
+    "ẖnmy",
+    "ꜣḫnjmwt"
+   ],
+   "ḫnmnḫ": [
+    "ẖnmw?ꜥnḫw",
+    "ẖnmwꜥnḫw"
+   ],
+   "ḫnnḫ": [
+    "ḫnꜥnḫ",
+    "ẖnjꜥnḫw"
+   ],
+   "ḫnr": [
+    "ḫwnrꜥw",
+    "ḫwtnrꜥw"
+   ],
+   "ḫns": [
+    "ḫnsw",
+    "ḫnswy",
+    "ḫwns",
+    "ẖnwjzꜣwj"
+   ],
+   "ḫntn": [
+    "ẖntnj",
+    "ꜣḫnjtn"
+   ],
+   "ḫnḫnm": [
+    "ḫwnḫnmw",
+    "ḫwnẖnmwj"
+   ],
+   "ḫprkr": [
+    "ḫprkꜣrꜥw",
+    "ꜥꜣḫprkꜣrꜥw"
+   ],
+   "ḫps": [
+    "ḫwifwj",
+    "ẖnmwḫwifwj"
+   ],
+   "ṯnr": [
+    "tjjnr",
+    "ṯnry"
+   ],
+   "ṯsm": [
+    "wṯswmꜣ",
+    "ṯzmy"
+   ],
+   "ṯtt": [
+    "jṯjwꜥttꜣwj",
+    "ṯttw"
+   ]
+  },
+  "names": 283
+ }
+}
