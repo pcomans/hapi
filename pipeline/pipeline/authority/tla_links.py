@@ -10,10 +10,13 @@ family and dynasty.
 
 Candidates are generated deterministically (`candidate_pairs`): a D&H name (a label without
 D&H's disambiguating letter or numeral) and a TLA personal-name lemma whose renderings meet
-it on one of the resolver's three tiers. A pair meeting on the exact or the claim-graph keys
-is linked by rule, as the resolver already treats those tiers as one name. A pair meeting on
-the weak-sign key only, which can merge different names, is decided by two independent model
-reviews and a reconciler, every interaction stored (`links/`; Rule 13, Rule 14).
+it on one of the resolver's three tiers. `units` groups the candidates by D&H name and by
+TLA name (`strict_name`: lemmas of one strict transliteration are one name entered twice). Where the exact and the claim-graph keys
+find exactly one TLA name, it is linked by rule, as the resolver already treats those tiers as
+one name. Otherwise, when there is any candidate, the D&H name is one review unit: two
+independent model reviews and a reconciler list the candidate names that are the same name
+(several TLA names can be one name in different orthographies), or none, every interaction
+stored (`links/`; Rule 13, Rule 14).
 
 The linked renderings are TLA data (CC BY-SA 4.0): they live in that source's directory and
 carry its attribution.
@@ -24,6 +27,7 @@ from __future__ import annotations
 import collections
 import json
 import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -33,10 +37,34 @@ from .weak_sign_skeleton import weak_sign_skeleton
 TLA_DIR = Path(__file__).resolve().parent / "sources" / "tla-2018-names"
 TLA = TLA_DIR / "reconciled.jsonl"
 LINKS_DIR = TLA_DIR / "links"
+# A rendering ends at its first gloss: "(Frau des Ahmose)", or a second rendering after ";" or
+# "," ("Ahmose-Nofretari; Nefertari"), which is left out with it.
 GLOSS = re.compile(r"\s*[\(;,].*$")
+STRICT_SEPARATORS = re.compile(r"[.\-=⸗~ʾ\s\[\]()]|\u032f|\u032e")
 
 BY_RULE = ("raw_exact", "committed_normalized")
 BY_REVIEW = "weak_sign_skeleton"
+
+
+def strict_name(transliteration: str) -> str:
+    """A lemma's name: its transliteration lowercased, composed (NFC), with the separators
+    . - = ⸗ ~ ʾ, spaces, brackets and the marks of i̯/u̯ removed (the weak-sign hill-climb's
+    definition, `docs/evaluations/weak-sign-key-hillclimb/PROTOCOL.md`)."""
+    return STRICT_SEPARATORS.sub("", unicodedata.normalize("NFC", transliteration.lower()))
+
+
+@dataclass(frozen=True)
+class Option:
+    name: str  # strict_name
+    tla_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class Unit:
+    dh_name: str
+    dh_target_ids: tuple[str, ...]
+    by_rule: Option | None  # the one TLA name the exact and claim-graph keys find
+    options: tuple[Option, ...]  # to review when there is no such name; else empty
 
 
 @dataclass(frozen=True)
@@ -124,18 +152,44 @@ def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
     return pairs
 
 
+def units(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Unit]:
+    """The candidates grouped by D&H name, each TLA name once with all its lemmas."""
+    by_name = {r["tla_id"]: strict_name(r["transliteration"]) for r in rows}
+    grouped: dict[str, list[Pair]] = collections.defaultdict(list)
+    for pair in candidate_pairs(women, rows):
+        grouped[pair.dh_name].append(pair)
+    out = []
+    for dh_name, pairs in sorted(grouped.items()):
+        def options(tiers: tuple[str, ...]) -> tuple[Option, ...]:
+            names: dict[str, set[str]] = collections.defaultdict(set)
+            for pair in pairs:
+                if pair.tier in tiers:
+                    names[by_name[pair.tla_id]].add(pair.tla_id)
+            return tuple(Option(name, tuple(sorted(ids))) for name, ids in sorted(names.items()))
+        rule = options(BY_RULE)
+        targets = pairs[0].dh_target_ids
+        if len(rule) == 1:
+            out.append(Unit(dh_name, targets, rule[0], ()))
+        else:
+            out.append(Unit(dh_name, targets, None, options((*BY_RULE, BY_REVIEW))))
+    return out
+
+
 def linked_spellings(decisions_path: Path | None = None) -> dict[str, tuple[str, ...]]:
-    """The TLA renderings of every lemma decided to be a D&H woman's name, by her target id,
-    from the committed decisions (`links/decisions.jsonl`)."""
+    """The TLA renderings of the lemmas each D&H name is linked to, by target id, from the
+    committed decisions (`links/decisions.jsonl`)."""
     path = decisions_path or LINKS_DIR / "decisions.jsonl"
     rows = {r["tla_id"]: r for r in tla_rows()}
     out: dict[str, list[str]] = collections.defaultdict(list)
     for line in path.read_text(encoding="utf-8").splitlines():
         decision = json.loads(line)
-        if decision["verdict"] != "same_name":
-            continue
+        # The names a decision records are exactly its lemmas' names: a lemma never rides along
+        # under another name (the v1 failure linked one D&H name to Min- and Amun- names).
+        if sorted({strict_name(rows[t]["transliteration"]) for t in decision["tla_ids"]}) != decision["tla_names"]:
+            raise ValueError(f"{decision['dh_name']}: tla_names {decision['tla_names']} are not its lemmas' names")
         for target in decision["dh_target_ids"]:
-            for form in renderings(rows[decision["tla_id"]]):
-                if form not in out[target]:
-                    out[target].append(form)
+            for tla_id in decision["tla_ids"]:
+                for form in renderings(rows[tla_id]):
+                    if form not in out[target]:
+                        out[target].append(form)
     return {target: tuple(forms) for target, forms in sorted(out.items())}
