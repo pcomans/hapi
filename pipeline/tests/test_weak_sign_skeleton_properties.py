@@ -550,7 +550,9 @@ def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_inde
     assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"])
 
 
-@pytest.mark.parametrize("text", ["Berenike [II?]", "Berenike [ii]", "Berenike[ii]", "Berenike [II?],"])
+@pytest.mark.parametrize("text", [
+    "Berenike [II?]", "Berenike [ii]", "Berenike[ii]", "Berenike [II?],", "Cleopatre(ii)", "Cleopatre (ii)",
+    "Cleopatre(iii)", "Cleopatre(II?)", "Cleopatre (II?)", "Cleopatra (II?)", "CleopatreII.", "CleopatreIII"])
 def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
     """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
     name to match another ruler (scope review of the Codex fix): it is refused."""
@@ -584,3 +586,12 @@ def test_an_attached_numeral_selects_or_refuses_on_the_weak_sign_tier(graph_inde
         return f["status"], f["target_ids"]
     assert found("Cleopatre(II)") == ("resolved", ["leprohon-leprohon-33.08a"])
     assert found("Cleopatre(III)") == ("unmatched", [])
+
+
+def test_no_authority_label_runs_a_numeral_on_to_a_name(graph_index, women) -> None:
+    """The run-on numeral refusal ("CleopatreII.") must never fire on a real name."""
+    labels = [label for w in women for label in (*w.labels, *w.alt_names)]
+    rulers = json.loads(rw.FEMALE_RULERS.read_text(encoding="utf-8"))["entries"]
+    labels += [entry["king_name"] for entry in rulers]
+    assert len(labels) == 504 and "Cleopatra VII Philopator" in labels
+    assert [label for label in labels if rw.UNREAD_NUMERAL.search(label)] == []

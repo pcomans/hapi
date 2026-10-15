@@ -293,7 +293,10 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
 NUMERAL_WRAPPING = "()[].,;:"
 SPACED_NUMERAL = re.compile(r"([(\[])\s*([IVX]+)\s*([)\]])")
 ATTACHED_NUMERAL = re.compile(r"(\w)([(\[]\s*[IVX]+\s*[)\]])")
-UNREAD_NUMERAL = re.compile(r"\[\s*[IVXivx]+\s*\??\s*\]")
+# A numeral left after the readable ones are written bare: wrapped in either bracket, any case,
+# possibly doubted ("(ii)", "[II?]", "Cleopatre(ii)"), or run on to the name ("CleopatreII.").
+# The claim-graph fold and the weak-sign key would each drop it and accept the bare name.
+UNREAD_NUMERAL = re.compile(r"[(\[]\s*[IVXivx]+\s*\??\s*[)\]]|[a-z][IVX]+[.,;:]?(?=\s|$)")
 
 
 def numeral_of(token: str) -> str | None:
