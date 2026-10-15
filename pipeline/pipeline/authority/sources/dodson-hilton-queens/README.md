@@ -133,17 +133,25 @@ re-introduce prose on a re-run); running `fix_rows.py` after `destructure_notes.
 is safe and idempotent.
 
 **One chunk at a time, from dyn15-18 on.** Chunks 1–8's agent outputs were never
-committed (`raw/agent-*.jsonl` is gitignored) and are gone, so `merge.py` can no
-longer rebuild the whole file. A new chunk is merged with `merge.py --carry-forward`:
-- the agents' sub-periods are merged from `raw/agent-{a,b,c}-<chunk>.jsonl`;
+committed (they lay under the gitignored `raw/`) and are gone, so `merge.py` can no
+longer rebuild the whole file. A new chunk is merged with `merge.py <chunk>`:
+- the chunk's sub-periods are merged from the committed `agents/<chunk>/agent-{a,b,c}.jsonl`;
 - every other row is carried forward from `reconciled.jsonl` unchanged;
 - the chunk's disagreements go to `merge-disagreements-<chunk>.txt`.
 
 The steps for dyn15-18:
 1. `slice_source.py dyn15-18` cuts the pinned sub-PDF.
-2. Three agents extract under `prompt-dyn15-18.md`, after a prompt-auditor pass.
-3. `merge.py --carry-forward` merges them.
-4. Then `fix_rows.py` and `destructure_notes.py`, as above.
+2. Three agents extract under `prompt-dyn15-18.md`, after a prompt-auditor pass. Each wrote
+   `raw/agent-<tag>-dyn15-18.jsonl`, as the prompt says.
+3. Those three files were copied byte-identical to `agents/dyn15-18/agent-<tag>.jsonl`, with
+   `provenance.json` (whose hashes a test checks).
+4. `merge.py dyn15-18` merges them.
+5. Then `fix_rows.py` and `destructure_notes.py`, as above.
+
+The prompt is kept exactly as the agents ran it (`provenance.json` pins its hash), so its
+opening still names the raw/ output paths and `merge.py --carry-forward`, the merge's
+interface on the day of extraction. A later chunk's prompt names `agents/<chunk>/` and
+`merge.py <chunk>` directly.
 
 ### ADR-017 deviation
 
