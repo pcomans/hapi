@@ -568,7 +568,9 @@ def literal_loss_cause(authority_support: list[dict], entity_type: str) -> str:
         reasons = {row["reason"] for row in authority_support}
         if all(reason and reason.startswith("authority_unavailable:") for reason in reasons):
             return "unavailable_authority_type"
-        return "expression_abstention"
+        if all(reason and reason.startswith("expression:") for reason in reasons):
+            return "expression_abstention"
+        raise ValueError(f"unclassified abstention reasons on a literal-only node: {sorted(map(str, reasons))}")
     raise ValueError(f"unclassified literal loss statuses: {sorted(statuses)}")
 
 
