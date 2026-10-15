@@ -118,8 +118,10 @@ def _normalise_value(v: object) -> object:
     return v
 
 
-def _majority(values: list) -> tuple[object, int]:
-    """Return (chosen_value, count_of_agreers) from a list of per-agent values."""
+def _majority(values: list, where: str) -> tuple[object, int]:
+    """Return (chosen_value, count_of_agreers) from a list of per-agent values. A value needs
+    a real majority (more than half the agents that produced the row); a tie raises (rule 2:
+    `most_common(1)` on a tie is a pick by agent order)."""
     normalised = [_normalise_value(v) for v in values]
 
     def key(v):
@@ -127,6 +129,8 @@ def _majority(values: list) -> tuple[object, int]:
 
     counts = Counter(key(v) for v in normalised)
     top_key, top_count = counts.most_common(1)[0]
+    if top_count * 2 <= len(normalised):
+        raise ValueError(f"merge.py: no majority for {where}: {sorted(counts)}")
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
@@ -189,10 +193,13 @@ def _sort_key_for(unplaced_keys: frozenset[RowKey]):
 def main(chunk: str, source_dir: Path = SOURCE_DIR) -> None:
     agent_dir = source_dir / "agents" / chunk
     agents = {tag: _load(agent_dir / f"agent-{tag}.jsonl") for tag in "abc"}
-    emitted = {key[1] for a in agents.values() for key in a}
-    if emitted != CHUNK_SUB_PERIODS[chunk]:
-        raise ValueError(f"{chunk}: the agents emitted sub-periods {sorted(emitted)}, "
-                         f"not the chunk's {sorted(CHUNK_SUB_PERIODS[chunk])}")
+    # Each agent on its own must cover exactly the chunk's sub-periods: an empty or partial
+    # agent would leave rows with two versions, where a disagreement has no majority.
+    for tag, rows in agents.items():
+        emitted = {key[1] for key in rows}
+        if emitted != CHUNK_SUB_PERIODS[chunk]:
+            raise ValueError(f"{chunk}: agent {tag} emitted sub-periods {sorted(emitted)}, "
+                             f"not the chunk's {sorted(CHUNK_SUB_PERIODS[chunk])}")
     stray = {f for a in agents.values() for row in a.values() for f in row} - AGENT_FIELDS
     if stray:
         raise ValueError(f"{chunk}: an agent emitted fields outside the extraction schema: {sorted(stray)}")
@@ -253,7 +260,7 @@ def main(chunk: str, source_dir: Path = SOURCE_DIR) -> None:
         row_disagreements: list[str] = []
         for field in all_fields:
             values = [v.get(field) for _, v in present]
-            chosen, count = _majority(values)
+            chosen, count = _majority(values, f"{label}.{field}")
             merged[field] = chosen
             if count < len(present):
                 row_disagreements.append(

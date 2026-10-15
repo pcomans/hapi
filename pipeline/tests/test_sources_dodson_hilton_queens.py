@@ -8838,6 +8838,27 @@ def test_merge_refuses_other_sub_periods_dropped_rows_and_stray_fields(tmp_path:
         merge.main("dyn15-18", _merge_tree(tmp_path / "c", [{**rows[0], "notes": "prose"}, *rows[1:]]))
 
 
+def test_merge_refuses_an_empty_agent_and_a_value_without_a_majority(tmp_path: Path) -> None:
+    """Codex review on #363: an empty agent would leave two-version rows, where a 1-1
+    disagreement used to be settled by agent order (`most_common(1)` on a tie, rule 2)."""
+    merge = _merge_module()
+    rows = _committed_agent_rows()
+    root = _merge_tree(tmp_path / "empty", rows)
+    (root / "agents" / "dyn15-18" / "agent-c.jsonl").write_text("", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"agent c emitted sub-periods \[\]"):
+        merge.main("dyn15-18", root)
+    root = _merge_tree(tmp_path / "tie", rows)
+    for tag, sex in zip("abc", ("male", "female", "unknown")):
+        path = root / "agents" / "dyn15-18" / f"agent-{tag}.jsonl"
+        changed = [{**rows[0], "sex": sex}, *rows[1:]]
+        path.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in changed), encoding="utf-8")
+    with pytest.raises(ValueError, match=rf"no majority for {re.escape(rows[0]['dh_id'])}\.sex"):
+        merge.main("dyn15-18", root)
+    assert merge._majority(["x", "x", "y"], "row.field") == ("x", 2)
+    with pytest.raises(ValueError, match="no majority for row.field"):
+        merge._majority(["x", "y"], "row.field")
+
+
 def test_dyn15_18_agent_outputs_are_the_committed_extraction() -> None:
     import hashlib
     agents = SOURCE_DIR / "agents" / "dyn15-18"
