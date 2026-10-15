@@ -268,15 +268,20 @@ BRACKET_PAIRS = {"(": ")", "[": "]"}
 BRACKET_SPACE = re.compile(r"([(\[])\s+|\s+([)\]])")
 # Only a matching pair wraps a numeral: "(II]", "(II" and "II)" are unread (below), not II, since a
 # broken wrapper may hide a cut numeral ("(II" of "(III)") (Codex review).
-ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])")
+ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])(?!\w)")
 # A numeral left beside a bracket after the readable ones are written bare (`numeral_of`;
 # attached pairs are split off first) is unread: lowercase, doubted, mismatched or with a lone
 # bracket, spaced or attached ("(ii)", "[II?]", "(II]", "(II", "II)", "Cleopatre(II",
-# "CleopatreII)"); so is one run on to the name ("CleopatreII."). The claim-graph fold and the
-# weak-sign key would each drop it and accept the bare name.
-UNREAD_NUMERAL = re.compile(r"[(\[][IVXivx]+\??(?!\w)"
-                            r"|(?:(?<![A-Za-z])[IVXivx]+|(?<=[a-z])[IVX]+)\??[)\]]"
-                            r"|[a-z][IVX]+[.,;:]?(?=\s|$)")
+# "CleopatreII)"). A bracket followed by a letter is a restoration inside a word, not a
+# numeral ("Mer[i]taten", "[I]setneferet"); one that ends a word cannot be told from a
+# lowercase numeral ("Nefertit[i]" as "Berenike[ii]") and is refused (Codex review); so is one run on to the name ("CleopatreII."), and an all-uppercase word that
+# ends in I, V or X ("AHHOTPII", "TETI"), where nothing tells a run-on numeral from the name's
+# own letters (Codex review). The claim-graph fold and the weak-sign key would each drop it
+# and accept the bare name.
+UNREAD_NUMERAL = re.compile(r"[(\[][IVXivx]+\??(?:[)\]](?!\w)|(?![\w)\]]))"
+                            r"|(?:(?<![A-Za-z])[IVXivx]+|(?<=[a-z])[IVX]+)\??[)\]](?!\w)"
+                            r"|[a-z][IVX]+[.,;:]?(?=\s|$)"
+                            r"|(?<!\S)[A-Z]*[A-HJ-UWYZ][IVX]+[.,;:]?(?!\S)")
 
 
 def numeral_of(token: str) -> str | None:
@@ -420,7 +425,9 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     text = " ".join(numeral_of(t) or t for t in text.split())
     # Any bracketed numeral still left (uncertain "[II?]", lowercase "[ii]", "[ II ]",
     # "Berenike[II]") would be deleted by the fold and the bare name accepted: refuse instead.
-    if UNREAD_NUMERAL.search(text):
+    # So is more than one numeral ("Neferu I II"): the keys would read them run together as one
+    # ("neferuiii", Neferu III) (Codex review).
+    if UNREAD_NUMERAL.search(text) or sum(bool(NUMERAL.match(t)) for t in text.split()) > 1:
         return {"resolution_method": None, "candidate_ids": [], "context_rule": "unreadable_numeral",
                 "status": "unmatched", "target_ids": []}
     exact = sorted(index.exact.get(surface_key(text), ()))

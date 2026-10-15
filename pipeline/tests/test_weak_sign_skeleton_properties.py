@@ -577,12 +577,25 @@ def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_inde
     assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"])
 
 
+@pytest.mark.parametrize(("text", "target"), [
+    ("Mer[i]taten", "dodson_hilton:Meryetaten"), ("Meryet[a]ten", "dodson_hilton:Meryetaten"),
+    ("[I]setneferet", None)])
+def test_a_restoration_inside_a_word_is_not_a_numeral(graph_index, text, target) -> None:
+    """A bracket followed by a letter restores letters of the name (Codex review)."""
+    found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=None)
+    assert found["context_rule"] != "unreadable_numeral", found
+    if target is not None:
+        assert target in found["target_ids"] + found["candidate_ids"], found
+
+
 @pytest.mark.parametrize("text", [
     "Berenike [II?]", "Berenike [ii]", "Berenike[ii]", "Berenike [II?],", "Cleopatre(ii)", "Cleopatre (ii)",
     "Cleopatre(iii)", "Cleopatre(II?)", "Cleopatre (II?)", "Cleopatra (II?)", "CleopatreII.", "CleopatreIII",
     "Cleopatre (II]", "Cleopatre [II)", "Cleopatre(II]", "Cleopatre ( II ]", "Berenike[II)",
     "Cleopatre (II", "Cleopatre II]", "Berenike [II", "Berenike II)", "Cleopatre ( II", "Berenike II ].",
-    "Cleopatre(II", "Berenike[II", "CleopatreII)", "BerenikeII]", "Cleopatre(ii", "Berenike[II?", "CleopatreIII)."])
+    "Cleopatre(II", "Berenike[II", "CleopatreII)", "BerenikeII]", "Cleopatre(ii", "Berenike[II?", "CleopatreIII).",
+    "CLEOPATREII", "BERENIKEII.", "AHHOTPII", "TETI", "TETISHERI",  # all-caps: TETI is the deliberate loud miss
+    "Nefertit[i]", "Neferu I II", "Neferu I I", "Cleopatre II (III)"])
 def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
     """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
     name to match another ruler (scope review of the Codex fix): it is refused."""
