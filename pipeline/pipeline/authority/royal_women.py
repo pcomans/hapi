@@ -264,8 +264,10 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
 
 
 NUMERAL_WRAPPING = "()[].,;:"
-SPACED_NUMERAL = re.compile(r"([(\[])\s*([IVX]+)\s*([)\]])")
-ATTACHED_NUMERAL = re.compile(r"(\w)([(\[]\s*[IVX]+\s*[)\]])")
+BRACKET_PAIRS = {"(": ")", "[": "]"}
+# Only a matching pair wraps a numeral: "(II]" is unread (below), not II (Codex review).
+SPACED_NUMERAL = re.compile(r"\(\s*([IVX]+)\s*\)|\[\s*([IVX]+)\s*\]")
+ATTACHED_NUMERAL = re.compile(r"(\w)(\(\s*[IVX]+\s*\)|\[\s*[IVX]+\s*\])")
 # A numeral left after the readable ones are written bare: wrapped in either bracket, any case,
 # possibly doubted ("(ii)", "[II?]", "Cleopatre(ii)"), or run on to the name ("CleopatreII.").
 # The claim-graph fold and the weak-sign key would each drop it and accept the bare name.
@@ -274,7 +276,12 @@ UNREAD_NUMERAL = re.compile(r"[(\[]\s*[IVXivx]+\s*\??\s*[)\]]|[a-z][IVX]+[.,;:]?
 
 def numeral_of(token: str) -> str | None:
     """The regnal numeral a token writes, bare or wrapped ("II", "(II)", "[II]", "II."), or
-    None. Uppercase only: a lowercase "vi" or "ii" can be part of a name."""
+    None. Uppercase only: a lowercase "vi" or "ii" can be part of a name. Brackets on both
+    sides must be a pair: "(II]" is None."""
+    unpunctuated = token.rstrip(".,;:")
+    if unpunctuated[:1] in BRACKET_PAIRS and unpunctuated[-1:] in ")]" \
+            and BRACKET_PAIRS[unpunctuated[0]] != unpunctuated[-1]:
+        return None
     bare = token.strip(NUMERAL_WRAPPING)
     return bare if bare and NUMERAL.match(bare) else None
 
@@ -401,7 +408,7 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     # on the claim-graph keys and resolve to another ruler (Codex review).
     # A wrapped numeral attached to the name ("Cleopatre(II)", "Berenike[II]") is split off
     # first, as the claim-graph matcher reads it (Codex review).
-    text = SPACED_NUMERAL.sub(r"\1\2\3", text)  # "[ II ]" -> "[II]"
+    text = SPACED_NUMERAL.sub(lambda m: f"({m[1]})" if m[1] else f"[{m[2]}]", text)  # "[ II ]" -> "[II]"
     text = ATTACHED_NUMERAL.sub(r"\1 \2", text)
     text = " ".join(numeral_of(t) or t for t in text.split())
     # Any bracketed numeral still left (uncertain "[II?]", lowercase "[ii]", "[ II ]",
