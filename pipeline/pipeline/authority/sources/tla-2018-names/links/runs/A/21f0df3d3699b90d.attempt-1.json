@@ -1,0 +1,513 @@
+{
+ "unit_id": "Ahmes",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "jꜥḥmsw"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Ahmes\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Jꜥḥ-ms.w\n  Lemma 1: German: Iach-mesu | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Ahmes\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "37cb46f9620128f0bf2dfd97adbf1f45d3dbaeecf573eb7ecc1e53212b5bf87e",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "71420e60-263b-4f39-a5df-6692a971fecc",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "0d478c0c-9602-4d3f-b7a5-eebd8e2ae6c7",
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "71420e60-263b-4f39-a5df-6692a971fecc",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "b6ae0159-eb38-48ba-921f-be1ab435e5f8",
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-9a0f5l97",
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "328d24d7-208f-4e74-929f-33580125c8ee",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-9a0f5l97/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1965734.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "251e3ea9-d669-4491-956b-b3088f3fc61f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "8ff8bb88-1d7e-4863-92c7-ede002ce8313"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "385eb843-a096-4b13-998d-bffe1ec7f171"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 4,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "3a3503dd-931b-4df3-b2d2-45753e946ef0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 2,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "0e30c6d0-9fdd-455b-9faf-c9c6bfb89665"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 2,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "ceca7d98-fbfb-43a7-a1e5-87c03f8fbb80"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 3,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "f41a15ca-7c56-4ab0-b24f-a9816194ce6f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 2,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "08c9e009-0cdd-4bac-8d70-57555eec08e4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 3,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "b46f212e-047f-4479-9a8f-41784c3d8f22"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "3950bf70-1806-453b-be7d-5cdf7c18daa9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "994b4889-5d9e-4e96-adda-79ec6b4644c1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "a4a5c850-da28-4f22-af6a-4193f19292c1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "f9648e78-caab-46a2-9385-664236680d8d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 5,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "848fab92-76cd-4e7d-a920-7a86b4ee3efd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "d723ad65-5805-4e73-8c48-ec2ff970bbf2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 3,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "b0b52e1f-bdcf-4337-bf41-55f55e4d1bae"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 6,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "954f8641-7eb9-4bf8-9861-3350098908d0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "8fc27be4-4b49-46eb-afcc-1a16ff2e9c4b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 1,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "e321b4ec-c312-4149-a91f-08890ba8a4cf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 207,
+   "estimated_tokens_delta": 166,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "1e51bb68-b18f-43e9-b145-d6f7eeb60d2b"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LCvdyWcYMRhguztioU",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking \"Ahmes\" against the consonant skeleton confirms it matches Jꜥḥ-ms.w, \"the moon is born\" — Ahmes and Ahmose are the same name.\n\n",
+      "signature": "CAQSsgYKEAgSGAI4AUIIdGhpbmtpbmcSDCqOoOAqv2/WhxJgGRoMy7EXjkqEOT9/YVNvIjA1w5moph6fSgHXOlgj5ZJNOwkdPeD44w9EWUCkMZ59LKeRT4Tk2KT9P+Ga0PcCCgAqzwVqzzmItYzGBES44TotsIVKTQoNhHQzMursL8HxysTyDYrhXe8UmR75Yei8IK+2yNYIwbe7ZFsDrw7uZ/jdp1qsP94iIb8h6ntYKxy/Au7Ww2zpYDDJJM/g4TqX/9v61IStvycsud6XG6xphzf+PGSss5QZpbu08Tj3xXjOvC0ADhQe6oXiq0DsTuTPCLDiuMBfWEfF256hkBNBJ1SyHGlfZzW2dJ/k2yVjBndHpSt9tPqZVRtE7Ly+QwdYFZUUk0fD/7RHsIuUWC0pSdS+8HoGvZyYdFoTTHJKGtc9NAIuVmiz7IteP/UWA1JcgVhRsgehx+/Wb1qgFAZHltdTByKXdKF9QN3plWcVXiVg4I0k3CAJuGwAR9xjEwp33S024MnqAQjcLsE6qHYM/WAhfdm88Ma+W4UHcv7bVNOi4MPsIFvZe4EPQaT640acBONGrrbq77EC2j8I2oYHueOQZXy7XjrCSoyn2a42IOXy6DmkMuQc15UBmcKaetpVImfcW4tQQwUNbdrHf4GELot/+uhCNCvlfSuhy4uQpH9AjrM2q6r61gjQNruenYU6qwXHCeGzHgFphMzHLK40vQbypNML8qdWp/hUVqmWGRrukz17P0rnfMbbF8wW9mK0q4WQSVmR3KVFqLbXXuYhutkzaCNlx8PI5780xRzm87z69deTmhGeojfrI6kSAI0r29VTeaX6HkZ6zeWuC9E7KMxImRq5DS/xs4MOXvfGJyiFv0OMSfsKmyEW2vNq3FM558D9bBdoQTnH/clTVZ/YINX2wIwqM90AaikwSoCtqz38inO04tB6yVpjzJUe7HX7ciV7VJZ7nkYgr/80IgoiuOvl1YzfoYF8z1hFz6uhmtJQIorv781t60HAWj5STAHMPwamsCwu3+PzQomFbx/0JH1KertASTOw4a+ZF8DGpkt+kMYiDsJG1PJxLUsjbt1u61tEmxgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1550,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1550
+     },
+     "output_tokens": 9,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "999e9061-7893-4a20-9a98-f99e6649bd85",
+   "timestamp": "2026-10-15T16:23:34.642Z",
+   "request_id": "req_011Cg4LCvS4YYQ4VFTkgGT8h",
+   "thinking_duration_ms": 2722,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LCvdyWcYMRhguztioU",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Ahmes\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Jꜥḥ-ms.w, 'Iah-mesu' (the Moon is born), made of the words Jꜥḥ (moon god) and ms.w (born). Read 'Ahmes' as A-h-m-s. The initial 'A' stands for j and ꜥ, which are weak or vowel signs. 'h' is ḥ, 'm' is m, and 's' is s. The final w is a weak consonant and may be left unwritten. No consonant is added or missing, and 'Ahmes' is the usual modern spelling of Iah-mesu (Ahmose), so it renders the same words. C1 matches.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1550,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1550
+     },
+     "output_tokens": 9,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "uuid": "af0a1892-5099-4f57-af78-4067fddc2df8",
+   "timestamp": "2026-10-15T16:23:34.790Z",
+   "request_id": "req_011Cg4LCvS4YYQ4VFTkgGT8h"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.11,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "6991086f-f4ea-4f4d-84c4-79fbb67bedb1",
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d"
+  },
+  {
+   "duration_api_ms": 3557,
+   "stop_reason": "end_turn",
+   "session_id": "80364565-15f7-43b9-a503-e4f339d39c7d",
+   "total_cost_usd": 0.009984,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1550,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 378,
+    "output_tokens_details": {
+     "thinking_tokens": 135
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1550,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 378,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1550,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1550
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 378,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1550,
+     "webSearchRequests": 0,
+     "costUSD": 0.009984,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 135,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Ahmes\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Jꜥḥ-ms.w, 'Iah-mesu' (the Moon is born), made of the words Jꜥḥ (moon god) and ms.w (born). Read 'Ahmes' as A-h-m-s. The initial 'A' stands for j and ꜥ, which are weak or vowel signs. 'h' is ḥ, 'm' is m, and 's' is s. The final w is a weak consonant and may be left unwritten. No consonant is added or missing, and 'Ahmes' is the usual modern spelling of Iah-mesu (Ahmose), so it renders the same words. C1 matches.\"}",
+   "ttft_ms": 3440,
+   "type": "result",
+   "duration_ms": 3648,
+   "uuid": "d9936dba-b877-4aa1-ac5f-c1b32f8dcc92",
+   "ttft_stream_ms": 717,
+   "time_to_request_ms": 39,
+   "first_content_frame_ms": 717,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Ahmes",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is Jꜥḥ-ms.w, 'Iah-mesu' (the Moon is born), made of the words Jꜥḥ (moon god) and ms.w (born). Read 'Ahmes' as A-h-m-s. The initial 'A' stands for j and ꜥ, which are weak or vowel signs. 'h' is ḥ, 'm' is m, and 's' is s. The final w is a weak consonant and may be left unwritten. No consonant is added or missing, and 'Ahmes' is the usual modern spelling of Iah-mesu (Ahmose), so it renders the same words. C1 matches."
+  }
+ }
+}

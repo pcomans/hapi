@@ -1,0 +1,601 @@
+{
+ "unit_id": "Dedetanuq",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ddtꜥnqt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Dedetanuq\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Dd.t-Ꜥnq.t\n  Lemma 1: German: Dedet-Anqet | English: Dedet-Anukis\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Dedetanuq\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "a59a6a3b8ff8d796bfa01bda089a6e75c14c684c15e715de4ec0ec1081b07c92",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "f2f50023-fd3b-48cc-8ab0-2202055f2292",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "259bd7fc-0968-4275-a115-104691791b63",
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "f2f50023-fd3b-48cc-8ab0-2202055f2292",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "d7f75b98-f645-4522-9292-ad5d1b184775",
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-fxkbl610",
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "b4269e98-a7c8-43ee-b7cf-120f1688b74e",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-fxkbl610/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1989711.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 2,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "c39d3b91-8d53-4f68-81f7-7cd88d4f7c05"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 5,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "7e264a9e-8bc9-412b-b13c-ca795f42ab39"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 3,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "78f2dd0f-227a-4fff-a697-a3bc2c8cfcfc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "1478b3e3-9858-4098-b8a3-4a7ed157ca14"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "4dc13c0e-0a73-40e0-af5a-7ad2432cf255"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "2f06428a-d9cb-4b87-a727-0f9c15797d62"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 5,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "47cec153-c978-4ccf-8dc3-5e272bfc9931"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "1bcf2358-3349-4429-bb04-6799fae8ebc1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "27f21b75-2960-402e-b263-13951eb3ca57"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "a845bf7a-9214-44e6-863f-081da21cddc1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "755ad3f7-1548-4896-8acd-015db338da1d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "cd31ae80-d5b1-4e6e-8dcb-7644b4bcaaba"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 4,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "3b26fe58-3bf8-467d-bbb4-533d39234c3d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "a84e1596-9923-405a-ac53-4e11644e38e7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 3,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "cb9a6cd8-08c0-44be-a71f-83f77a46c91e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 4,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "93a28ce2-285b-4bfd-b20b-32e7853362b7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "15b463c3-59ef-4acc-95a4-5117a654f6d6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "a401c816-f292-489d-b870-ff94cde57c0d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "be95606d-628d-4bb3-bf92-903430493bf4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 4,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "b07da28a-4bb4-40e6-ab55-ee1e27cdb042"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "5662b382-5e2e-40e9-8c8a-bebb5c25c816"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 4,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "e85a017d-a537-417b-9251-2026e6c65bbc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "e205ff57-2a3e-4b78-adc5-ce6f8171c86c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 58,
+   "estimated_tokens_delta": 3,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "3eb0dc34-8fb3-4ff0-8fa0-4a31b264bdef"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 61,
+   "estimated_tokens_delta": 3,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "d03cc023-0dc2-4e9a-8a92-75949b300f43"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 63,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "00f8cd25-bbb3-4c8b-8ffa-a4bfb00a9047"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 66,
+   "estimated_tokens_delta": 3,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "49209fb9-8310-4aee-9703-ec2de2c22d06"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 68,
+   "estimated_tokens_delta": 2,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "0da0721e-f35b-44e1-8bc6-03d2302c41ed"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 71,
+   "estimated_tokens_delta": 3,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "1f7ec870-2183-42f3-a8c7-0c1b7e9e4d46"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 72,
+   "estimated_tokens_delta": 1,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "56ae30ab-3c0e-4a04-ab23-25a887209c11"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 246,
+   "estimated_tokens_delta": 174,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "4ed8ffc4-4bb7-4078-9f43-4d8956d58ec4"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MnA4tVZy3gCyyDvAuk",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Working through the transliteration, Dedetanuq breaks down as Dd.t plus Anuq, with the feminine ending t dropped as permitted — so Anuq here likely represents the goddess Anukis/Anqet, giving \"Dedetanuq\" as Dodson & Hilton's rendering.\n\n",
+      "signature": "CAQS0QcKEAgSGAI4AUIIdGhpbmtpbmcSDPxdiM026TN55dt3tBoMep/SKr7nkn+VBkmxIjDIJz6o5ao5czyKYbOKyZzfvf4YGwIVhHImYm6ns4QK50W4bJRdYcKvnVFBuD6kct4q7gZNCL6Nia8/pEobFZ8D6w8ozwU3WeD6jDrN1nRMOED3McGA+T3kNjME/akWoq1uxUMvIA6g4RtLuL/0PyRuHMqnbfKPJKIxR0Q9hsxqCAObhbm4ErPfkSEcROmq26/UcdH7FfofAbS2RizxDJ+DKqJd4C7S0POj0Ol7+SJ/MkhHOGxqZgyQ8S9gjIX9Gkl6vzecfW92mF1YRTH2MWJc2eG3ONxRqblPEDxrg9Jo0M/o+UTF+ZaE3YhSIsUG5C4FilwO+e/c+lTscGpG9cLu0dcZ3fMo88zFn3Y02vgY3YMLoLYyn9ziTCNkZ14Wgq9H93xKXVYQiS7/YgzkelaLU0sFgKSJWY05Dd/q0niwLCG4kIXPJimNUUAPTH9iB4nSOxnkkmeTDMZ0JJcCQKBI5jHWUmgYUn9SopCJuPryGwyJ5qtDscBfi81Wn3XGJRjp/ofGMdafeynvo0B4zLzeaiygil9Ucns/ul3V7ADv+adpmD0HI+slSeGRnHKecn8ZBQPK1RbHwTEiZjy1atlTAb3aa3WkM5wUfZtRAYdk8RaXKfPXEgNbkILRm2gY1oY67RpgvvwwE9DfKkbTQfvxMpI2AFnf1Yv3F0O2CxR9neiy8MT4M1nj0QglQPu89s55j4jZNF+N/nW7GQhx4l/K+97+mJ3QiCa74Mao1UNhjLwchTX329BIvwizbsV54vwuWd+btCNjgFbn0uRBFrpfVdiYtk3gCZETXcg8SxMbpIsAG5moNnR34Fo5PARHgqDlmFUAx58xPPk+9AkWHcRiSwNTI+OgibP7miKIj5RN12tF2u5l8b1JhzMLqzDzmNB/wWo5YfrmTwLaamGOj8O1U1gQAfxDJYfvqOUzUjVxADNOG3dpmucCMhAXM0NLYfFgUfx5fOrPBgJoc8b7IKbn3p4WpPf8OQ72PH4W79TuNIrZ4in2T6V7dvoIZyFwPamevPf2muogB+c1cj1vI1+Dtzzcn8EVkvq3HZwJtijG9zgTYrCjjUsYQk5U6IhFh3mShERge1IYUR/l5lYm+7UZFYegG5GUIFCa3dgklqfVAsqP3TypTqKUGSe6nbaWy3tW9JKTR+MyyAFV7SCab8ZGrqMQR2LePoUVqUPyaauGD+FzbFHgtDGHdJvC8y8kpUjh1YXWkiTDbwOnCxFrtSY9GhgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 344,
+     "cache_read_input_tokens": 1215,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 344
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "ce12818d-331b-47dd-a703-07db8346eb8a",
+   "timestamp": "2026-10-15T16:44:14.704Z",
+   "request_id": "req_011Cg4Mn9rVi7vZN1AZgrYPc",
+   "thinking_duration_ms": 4860,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MnA4tVZy3gCyyDvAuk",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Dedetanuq\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Dd.t-Ꜥnq.t is 'Dedet-Anqet', 'Dedet-Anukis': the word dd.t (given, feminine) followed by the goddess name Ꜥnq.t (Anuket/Anukis). Record 1 reads Ded-et = Dd.t, with d for D and d for d plus added vowels, keeping its feminine t. It then has a = Ꜥ (rendered as a vowel), n = n, u = an added vowel, and q = q. The feminine t of Ꜥnq.t is left out, which is the one omission the rules allow. 'Anuq' is a recognised modern spelling of the goddess Anuket/Anukis, so record 1 renders the same two words in the same order: 'Dedet-Anuq(et)'. Same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 344,
+     "cache_read_input_tokens": 1215,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 344
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "uuid": "fa905937-8210-4a6a-b1fc-817d3ed4d122",
+   "timestamp": "2026-10-15T16:44:14.939Z",
+   "request_id": "req_011Cg4Mn9rVi7vZN1AZgrYPc"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "f49e3fbc-2e3d-4e3e-96d9-a8fe3d99ce31",
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0"
+  },
+  {
+   "duration_api_ms": 6096,
+   "stop_reason": "end_turn",
+   "session_id": "1e54594d-e734-4609-8ec1-2f016c9563f0",
+   "total_cost_usd": 0.013242999999999998,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 344,
+    "cache_read_input_tokens": 1215,
+    "output_tokens": 512,
+    "output_tokens_details": {
+     "thinking_tokens": 212
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 344,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 512,
+      "cache_read_input_tokens": 1215,
+      "cache_creation_input_tokens": 344,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 344
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 512,
+     "cacheReadInputTokens": 1215,
+     "cacheCreationInputTokens": 344,
+     "webSearchRequests": 0,
+     "costUSD": 0.013242999999999998,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 212,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Dedetanuq\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Dd.t-Ꜥnq.t is 'Dedet-Anqet', 'Dedet-Anukis': the word dd.t (given, feminine) followed by the goddess name Ꜥnq.t (Anuket/Anukis). Record 1 reads Ded-et = Dd.t, with d for D and d for d plus added vowels, keeping its feminine t. It then has a = Ꜥ (rendered as a vowel), n = n, u = an added vowel, and q = q. The feminine t of Ꜥnq.t is left out, which is the one omission the rules allow. 'Anuq' is a recognised modern spelling of the goddess Anuket/Anukis, so record 1 renders the same two words in the same order: 'Dedet-Anuq(et)'. Same name.\"}",
+   "ttft_ms": 5873,
+   "type": "result",
+   "duration_ms": 6180,
+   "uuid": "63f37381-a99e-4f09-93a3-4c3a6572b4f2",
+   "ttft_stream_ms": 1013,
+   "time_to_request_ms": 38,
+   "first_content_frame_ms": 1013,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Dedetanuq",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Dd.t-Ꜥnq.t is 'Dedet-Anqet', 'Dedet-Anukis': the word dd.t (given, feminine) followed by the goddess name Ꜥnq.t (Anuket/Anukis). Record 1 reads Ded-et = Dd.t, with d for D and d for d plus added vowels, keeping its feminine t. It then has a = Ꜥ (rendered as a vowel), n = n, u = an added vowel, and q = q. The feminine t of Ꜥnq.t is left out, which is the one omission the rules allow. 'Anuq' is a recognised modern spelling of the goddess Anuket/Anukis, so record 1 renders the same two words in the same order: 'Dedet-Anuq(et)'. Same name."
+  }
+ }
+}

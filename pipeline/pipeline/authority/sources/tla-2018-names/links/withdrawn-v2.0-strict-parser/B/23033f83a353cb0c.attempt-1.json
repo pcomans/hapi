@@ -1,0 +1,737 @@
+{
+ "unit_id": "Djedmutesankh",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ḏdmwtjwsꜥnḫ"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Djedmutesankh\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ḏd-Mw.t-jw=s-ꜥnḫ\n  Lemma 1: German: Djed-Mut-iues-anch | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Djedmutesankh\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "97d3e48aef95a7bb89b89db59671bd6c145197b38df5335fcdcd1abab4cfed55",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "ceea5400-933c-473f-b439-853a1669d276",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "007ccdb6-b210-402f-80d3-3b0fb734dff0",
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "ceea5400-933c-473f-b439-853a1669d276",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "7a399aa1-cf8c-4704-8c2d-ea8c54857892",
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-ysbyz50m",
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "fd517a7f-21d5-4534-8de2-eb09510f4692",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-ysbyz50m/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1967681.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "5855a6e3-b094-4f32-8110-76c599ac38c4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "207224fb-4441-4400-8ddd-fedf94e77fc5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "aa300102-0f7b-4e53-8c05-0fe13dc7c1e6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "05659b39-ee79-4988-9174-aa0dbd2aba7d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "5002f33a-db5a-4520-bd2a-19711a07053e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "61e72c31-ac47-4556-82b6-d50c2277799c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "134a072f-a920-48e9-8c89-7d1f355ee2aa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "5b0fb8d0-b6dd-40e5-b705-75a6ba6bfa3f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "485de9e5-032f-40f9-937e-f2d332729829"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "ac6859d3-53c0-4fbb-96de-8e09644c62fd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "b5a1a46d-7e44-4955-9d5a-52c1d5ba8a91"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "02cc4258-8ebd-49b5-ac64-acc478051f29"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "cc26e7f0-280a-4be5-8328-db403d043e30"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "050b377a-99a1-422e-a329-bc7f8859266d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "0c70f9eb-5ebc-41e7-a526-7a4172bb5cdd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "884386a9-5076-4bd6-bbd7-f566385cb31b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "17cbb401-41ab-4b82-a40b-59f249ddc73e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "b4d45f68-0d10-45a1-9dd0-86f222583992"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "7f6522ac-5f77-4e7e-8488-5f3ee87a0327"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "97b15d8d-25b0-4ae0-a1f0-becd4bf2dd77"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "a923a1bf-8e48-482d-8faa-5f55e37de768"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "af56455e-0c38-4b6c-b473-7f2a0bd42e85"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "93437e95-89b5-43d7-913c-5d3a375d1d68"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "f9792ab5-d774-4404-9dcb-2f83a0394039"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "548286e0-513b-4d73-a36a-8dad93ff2ee4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "902f39d8-7373-4a73-80d7-ceb7ab4d612c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "68754533-de46-422d-be70-d0933c413b9a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "c64d7c48-1aad-4acf-9b21-3e59e01b9680"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "67182625-113b-4370-8274-f4882f144e3a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "6a9f1907-995a-47d5-b9c4-dfc2eaef82ca"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "7e99cc03-5e62-4dfa-86fe-b4860270beed"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "65751e4d-6f35-43e0-a57f-91f3d407c28d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 3,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "394154e7-606f-4c41-9377-cec15cf480e9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 3,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "a3b53ef1-82f9-4d70-a9bb-baf300667c1a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "84fa7a5c-f136-4990-a09f-aa5ad4fd456f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 50,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "6281cc72-b03c-4252-8eb3-bae3c5d732b3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "a42070d3-c3ab-4328-8935-5c65dc153069"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "6cf83ef1-ad59-43a3-b145-9abb6807ee74"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 3,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "d4168fca-7f59-4fa8-a2de-de764d6b7b8f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "327d9fd8-e37b-4593-9ab9-836781554492"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 60,
+   "estimated_tokens_delta": 3,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "30718f13-0d6f-4804-b26d-e3783e46f628"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 64,
+   "estimated_tokens_delta": 4,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "b037d924-4632-4187-8f1e-ecedb316fc2b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 65,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "686d2e06-36db-4d8f-99ee-90aa74ab291e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 69,
+   "estimated_tokens_delta": 4,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "ecbf4077-218d-43b5-8bce-209b10cf34b6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 71,
+   "estimated_tokens_delta": 2,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "6f4cb0ba-7229-48b2-83b8-f4e4db01b50a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 76,
+   "estimated_tokens_delta": 5,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "d084ecda-5ce1-4b40-b27a-36a0393aac61"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 77,
+   "estimated_tokens_delta": 1,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "2f823b71-2b3a-4f13-9328-bbcace95ad64"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 219,
+   "estimated_tokens_delta": 142,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "3b33ef29-0809-4a10-ac60-be2e89e62e3c"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LHRH1iDBsoZe4xu1nD",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down Djedmutesankh as Djed-Mut-es-ankh in Egyptian: ḏd (said) - Mw.t (Mut) - jw=s (she/weak consonants dropped giving \"es\") - ꜥnḫ (will live). So the name parses as \"Mut said: she will live\" — confirming the match.\n\n",
+      "signature": "CAQS5QYKEAgSGAI4AUIIdGhpbmtpbmcSDGgtYLzKUT2kt9V/xRoMrhNQ+mogMEZpGUoYIjDpolmsA7suyWnQlPPOOQ2xMXWDLjs9did7bdB9i8XDO2yqAAvuTPALXoTI4fq073Yqggb8W+xeByrWjYQuUM0PyPEj8wFS0U4ICi2QRiitT6OdWBbOnpwXTNtYQ/RTzE5nli093wnqAX2RVJRuddAUvj88kyjbX46VJPKHd93taWCWEP5DG1QSSeCHpAXub30x3XeKPhI/7nW/t87YwPXF7krBYTV0t4eeSmmh4Dw0POmWT9frLcGmLNhtttNUVPujBJWOfa9ysT1p/hgpR6V6NpVSUs4T9Uj5eqP1TDhzhYQH97BI6xNb2sECRdzbynV5p1LqSPSFcjbV9m5Q4v/Dnulx/K7o1J7DnjgARV9jtpHqwCdpc4JU/CcZcfTwdcXe3DBG5liTG/VU7h4QaLC7jQUlPvnt832sfng+p+4OAyn/DDS4tmzOEKD1yBotZwXmJXUbtIEAV8C5MhuNkjZZj2xG4dgKhL30mcMR2UPjYQ2CX2kwH78U75VZ707T0nkNnDDxu5C/BMTBozVxBvbujf6q3P5VHRjwcHYxJnBOFxxY5BddovMZ6raVR9JHRpYqb6fmwSM4ZXT54NDYeB5Q7qw9JPmT1weuhGf/5tBMvILfDGa+ufAtf8Wi6NZTU+bM+HNqFQdcszxv9K4daqb/p1o0jkpO3V0ss0aNcF8iYpASyfNhtV7VCScuPo0QwLwB42/mhKHuyg6SOCRAh/mdtEl8QcgRaWqzlDJTh8QorFoabUIKJstH/CeBVDLQtJEWUD9TS9D+LEgOugNsLj1y5YA0SoN2l9M3rMmaunQERSoWOVmQ8PlLQa3n1zcRN/GJG4HZ0IQfqFzmDsB6KsdlH2rC4p9eCAtkhEGdRhmdn9UEAKQUuy18EMTDwzT9ICZDWG2IRFsdYTQ1B6K1R2G5XExBy8dS2n5TgNKuHxIXgFfdeyux4VtzsLzpdWLZYxIhzyHF7KwDapdHBW30dWP0aNhac5zPfc7zKQR1bffZTe9/jCTHUX+4o7EVeqrrTHU1r37VH60GYxWYIbBKwWIafONVk6sWtP91ySTPsF0i4yWuig6d/4lJ/tJtUgHg3x6fxI5svhgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1570,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1570
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "3cd22dbb-6c11-4faf-86b8-53c32cb98ef6",
+   "timestamp": "2026-10-15T16:24:38.808Z",
+   "request_id": "req_011Cg4LHR4sYqb2WXXt1t2Gb",
+   "thinking_duration_ms": 5580,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LHRH1iDBsoZe4xu1nD",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Djedmutesankh\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ḏd-Mw.t-jw=s-ꜥnḫ is made of four words: ḏd 'said', Mw.t 'Mut', jw=s 'she (will be)' and ꜥnḫ 'live'. The TLA renders it Djed-Mut-iues-anch. Record 1 reads as Djed-Mut-es-ankh. 'Djed' is ḏd. 'Mut' is Mw.t, with w as u. 'es' is jw=s: the weak consonants j and w are left out, as the rules allow, and s is rendered. 'ankh' is ꜥnḫ, with ꜥ as a vowel and ḫ as kh. Every consonant is accounted for, the words come in the same order, and record 1 renders the same words, so it is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1570,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1570
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "uuid": "51fe7276-58af-451b-a745-f059ccf8b021",
+   "timestamp": "2026-10-15T16:24:38.813Z",
+   "request_id": "req_011Cg4LHR4sYqb2WXXt1t2Gb"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "746251d2-831a-4b1c-bc82-17ed9018515c",
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b"
+  },
+  {
+   "duration_api_ms": 6650,
+   "stop_reason": "end_turn",
+   "session_id": "3eafb8a9-fd86-467a-9cc8-d6566116356b",
+   "total_cost_usd": 0.021688,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1570,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 456,
+    "output_tokens_details": {
+     "thinking_tokens": 157
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1570,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 456,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1570,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1570
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 456,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1570,
+     "webSearchRequests": 0,
+     "costUSD": 0.021688,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 157,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Djedmutesankh\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ḏd-Mw.t-jw=s-ꜥnḫ is made of four words: ḏd 'said', Mw.t 'Mut', jw=s 'she (will be)' and ꜥnḫ 'live'. The TLA renders it Djed-Mut-iues-anch. Record 1 reads as Djed-Mut-es-ankh. 'Djed' is ḏd. 'Mut' is Mw.t, with w as u. 'es' is jw=s: the weak consonants j and w are left out, as the rules allow, and s is rendered. 'ankh' is ꜥnḫ, with ꜥ as a vowel and ḫ as kh. Every consonant is accounted for, the words come in the same order, and record 1 renders the same words, so it is the same name.\"}",
+   "ttft_ms": 6662,
+   "type": "result",
+   "duration_ms": 6741,
+   "uuid": "e7a60899-2de9-4b9b-9d25-3d153e8c8005",
+   "ttft_stream_ms": 1081,
+   "time_to_request_ms": 39,
+   "first_content_frame_ms": 1081,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Djedmutesankh",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Ḏd-Mw.t-jw=s-ꜥnḫ is made of four words: ḏd 'said', Mw.t 'Mut', jw=s 'she (will be)' and ꜥnḫ 'live'. The TLA renders it Djed-Mut-iues-anch. Record 1 reads as Djed-Mut-es-ankh. 'Djed' is ḏd. 'Mut' is Mw.t, with w as u. 'es' is jw=s: the weak consonants j and w are left out, as the rules allow, and s is rendered. 'ankh' is ꜥnḫ, with ꜥ as a vowel and ḫ as kh. Every consonant is accounted for, the words come in the same order, and record 1 renders the same words, so it is the same name."
+  }
+ }
+}

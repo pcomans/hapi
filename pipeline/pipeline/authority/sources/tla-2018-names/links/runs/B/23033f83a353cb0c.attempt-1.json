@@ -1,0 +1,593 @@
+{
+ "unit_id": "Djedmutesankh",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ḏdmwtjwsꜥnḫ"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Djedmutesankh\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ḏd-Mw.t-jw=s-ꜥnḫ\n  Lemma 1: German: Djed-Mut-iues-anch | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Djedmutesankh\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "97d3e48aef95a7bb89b89db59671bd6c145197b38df5335fcdcd1abab4cfed55",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "206de375-0cd2-4cf3-975f-46db174025db",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "69eeeb05-4f47-40f7-98b0-e4f64e9b9a4c",
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "206de375-0cd2-4cf3-975f-46db174025db",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "a4fff28a-1e2c-4304-86da-48d87aa54b0f",
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-ossnjc71",
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "3360e203-ad07-432b-b820-4f442950f771",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-ossnjc71/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1989914.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "a238edf0-436c-4b8d-bd80-bedd630df34d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "394bc19a-295e-43cd-903f-a57cfe65430f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "44ff98f2-ef14-43ab-8840-7a4cbb1008ad"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "cf230d3b-7de0-419c-92b6-a7a38eafcabe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "6a3c7b93-af26-42be-a6d0-03994cb1f67b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "da31c623-fb45-4066-8a2c-71cada8670cc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "dd6e9434-e290-444b-a893-5a509f3eab04"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "21b9f6c7-e240-487d-afd3-4c3fade16615"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "aedf671b-5e77-4ece-bb54-3c97b871e31d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "74bbe23e-0f31-4e8f-91bb-89c5036b4826"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "4c06bc7c-d6c8-4150-b30f-883f8ab168f1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "d9cc19d7-6e2a-4a8c-8db7-8da8d3ab2203"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "5b079ae5-1508-4beb-816d-17062d5c5291"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "6bcbac8a-6b51-4b8a-8474-78b31854c4b0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "7793670b-34bb-4fcd-a9b4-3923f7bae810"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "2d5bd8cd-9f00-42f4-89ab-39b27bc044f1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "d1fb67e1-14fb-4699-bffb-e0126174f189"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 4,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "d3579df3-4eb4-4545-8ffd-1c42aadbedd9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 4,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "3b51d868-4b8e-4281-85eb-72bb19b8adc6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "cbff83b0-e249-4708-a563-f6155ebbd429"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "4a232093-bf12-43eb-9222-5745b36f60a4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 3,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "2c345154-ac39-418d-af02-9832daf3dabd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "bd577d73-977e-4bdf-b5fc-6396797a6258"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 2,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "41466525-88c6-4925-ade2-1ad49a96b773"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "acd75175-1322-4d4f-92c8-a268e4e41b69"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 50,
+   "estimated_tokens_delta": 4,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "23f22a6b-61c4-4057-883a-d773c46870f7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "2a27c80b-5921-4944-993c-34ca91c6a233"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 4,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "b2b99118-f050-4956-b088-605dfc20618f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 1,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "dc8ffb3e-548a-4045-ab80-ccacac596754"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 249,
+   "estimated_tokens_delta": 193,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "33d9c402-e5e9-48d9-9482-144635f945d0"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4Mo1dAsMsj5HH2m5wVc",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down Djedmutesankh, I'm testing whether it parses as Djed-Mut-iu-es-ankh, with the weak consonants j and w dropped, giving \"Mut said: she will live\" as the meaning.\n\n",
+      "signature": "CAQS2gcKEAgSGAI4AUIIdGhpbmtpbmcSDGzWKoniO3fXZ4QooxoMqINLeh0+FhuV06m4IjCCcpbi6oaSrVunLtPhWmsWwJlojUU95Xaa9kAQLySY5IkYXZIYSvJEbHyeXiWZjpsq9wYhEilG/OYLNoXenxI1AXayrQBj5+au7wJ594/GCcZ0fkkbf6CATHJzX4d3hENnI9HETkCU1CTN7+jqTLt5cT29LEBZioXL3jsQDPGV6+goIWRp6awwiozrMeBi2QopNnvEYC/FSLR7o5lbFD/A0KdF+zAKINJgWtLZgZ45ZUppV7TuZnjV7quVx4jzlO2d1v7ZCQvhQg/ok/GrBOWaIybiudfl3UMRdfjP6yhdi4wON333XR8Q+3AdYjRXxS9k6DU6BqeUl81B6ZGJpAHdIUzT9SHGlXg9PxpBeHFcATv77TjtFYRmlXetHDgtmUsvUgoHE6wTkn563sEiJ5biDIC3wwUBMIYdMFHfx2NKJD/b/6no4AkxZYQbnLkI9VDyFySgnqLkmKGCIFw+BUz5WvoZQbU4AfLr60fqvvvyrtUvj1zG7IawxaNWlUtUCfJ+xS9npEiZB+j6fN/i9d8s5W1CLd6fiFo5tYZPuRVVFYGBWuGRFnlZEmTV6K1q/UPSD5qi/MTan1A5vwMsAjJjyrhG0l8BABk8fdqa5xhTjkN5dWrMPSyZoP8OBVTqsKRRWoJ+W6gZzwk9EUfrnpkQX7I5PCy5cvgC5axNbGUf4XqdPQ+bCSW+jf9ctpWIvBDJfTKYOfYyl/CgmKnMHw4RQBIsi0Pj1UStHFm1aac1Q0DvcooNErpU/yBMDFBYD+msxxOxvBwd7/iA0nLjuexSh5M8Expqbv1GVpjjqNpRhcfk4wow+aLUgUSaGO9+qhhCv3BI65D2N16LeI5duHwdijhrSgevghIQjhFNOcyNfvyGyhT4b9/iVpvFsI9dDkKJgiCWTf6AH9QrfrpgiYI/VxwTl5Nf3FPfDTnOAyyD03CaPsq3ESCv5E15j8CcThLtiPFtHMa+02iWXoKdbDJfns6aD/NqsifdMUoKCYGxoriQ2cBvRfYanUQulJY9RHgim8cNuxn5bQUKz/UsmVQSxaB7YPeOXQuI7q1nu70dPhj32QRof7aKfA60oj5+9q9kaqcWVtZfN7aiZ3O0erAJdNoLy3/0i+PDJY6lI59qMdmg5T9ATvPohjyS24NwoU6PDXQCRo77n1kj7KaiNn0O+s79QExz+iMtR1ZxqxO3B0ABxgQdqXV58EBjcOpZBw9M4LV2RGGwW6mPlBF5nYl0In0tGI/VmdxzcRgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 344,
+     "cache_read_input_tokens": 1225,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 344
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "84db7edb-10b5-40ae-9fb3-0933e8382971",
+   "timestamp": "2026-10-15T16:44:26.960Z",
+   "request_id": "req_011Cg4Mo1RGJ8wvtPjySoVhx",
+   "thinking_duration_ms": 5523,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4Mo1dAsMsj5HH2m5wVc",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Djedmutesankh\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ḏd-Mw.t-jw=s-ꜥnḫ has the words ḏd 'said', Mw.t 'Mut', jw (particle), =s 'she' and ꜥnḫ 'live': 'Mut said: she will live' (German Djed-Mut-iues-anch). Record 1 reads Djed-mut-es-ankh. Djed renders ḏd. Mut renders Mw.t, with w as u. The particle jw has only weak consonants, so it may go unrendered. 'es' renders the suffix =s with an added vowel. 'ankh' renders ꜥnḫ, with ꜥ as a and ḫ as kh. No consonant is added or missing. Djedmutesankh is the usual modern rendering of this same name, with the same words in the same order, so it matches.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 344,
+     "cache_read_input_tokens": 1225,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 344
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "uuid": "9828fbcf-e1ed-4567-8d32-158429f50fdd",
+   "timestamp": "2026-10-15T16:44:26.965Z",
+   "request_id": "req_011Cg4Mo1RGJ8wvtPjySoVhx"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "38c23309-9b75-41c0-ae20-ab8145f3b052",
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f"
+  },
+  {
+   "duration_api_ms": 6505,
+   "stop_reason": "end_turn",
+   "session_id": "659ad635-0ee0-4f45-abd6-3312d65a641f",
+   "total_cost_usd": 0.013245,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 344,
+    "cache_read_input_tokens": 1225,
+    "output_tokens": 512,
+    "output_tokens_details": {
+     "thinking_tokens": 206
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 344,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 512,
+      "cache_read_input_tokens": 1225,
+      "cache_creation_input_tokens": 344,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 344
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 512,
+     "cacheReadInputTokens": 1225,
+     "cacheCreationInputTokens": 344,
+     "webSearchRequests": 0,
+     "costUSD": 0.013245,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 206,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Djedmutesankh\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ḏd-Mw.t-jw=s-ꜥnḫ has the words ḏd 'said', Mw.t 'Mut', jw (particle), =s 'she' and ꜥnḫ 'live': 'Mut said: she will live' (German Djed-Mut-iues-anch). Record 1 reads Djed-mut-es-ankh. Djed renders ḏd. Mut renders Mw.t, with w as u. The particle jw has only weak consonants, so it may go unrendered. 'es' renders the suffix =s with an added vowel. 'ankh' renders ꜥnḫ, with ꜥ as a and ḫ as kh. No consonant is added or missing. Djedmutesankh is the usual modern rendering of this same name, with the same words in the same order, so it matches.\"}",
+   "ttft_ms": 6521,
+   "type": "result",
+   "duration_ms": 6590,
+   "uuid": "dafbcd99-8fa0-4179-89c0-928158cfd305",
+   "ttft_stream_ms": 998,
+   "time_to_request_ms": 35,
+   "first_content_frame_ms": 999,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Djedmutesankh",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Ḏd-Mw.t-jw=s-ꜥnḫ has the words ḏd 'said', Mw.t 'Mut', jw (particle), =s 'she' and ꜥnḫ 'live': 'Mut said: she will live' (German Djed-Mut-iues-anch). Record 1 reads Djed-mut-es-ankh. Djed renders ḏd. Mut renders Mw.t, with w as u. The particle jw has only weak consonants, so it may go unrendered. 'es' renders the suffix =s with an added vowel. 'ankh' renders ꜥnḫ, with ꜥ as a and ḫ as kh. No consonant is added or missing. Djedmutesankh is the usual modern rendering of this same name, with the same words in the same order, so it matches."
+  }
+ }
+}

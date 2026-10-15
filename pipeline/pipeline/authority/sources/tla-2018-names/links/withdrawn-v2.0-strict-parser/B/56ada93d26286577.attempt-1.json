@@ -1,0 +1,594 @@
+{
+ "unit_id": "Nefertiry",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "nfrtjrj",
+  "C2": "nfrtjrjmrytmwt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Nefertiry\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Nfr.t-jr.j\n  Lemma 1: German: Neferet-iri | English: (none)\n  Lemma 2: German: Nefertari | English: (none)\n\nCandidate C2: Nfr.t-jr.j mr.yt-Mw.t\n  Lemma 1: German: Nefertari-Meryt-Mut | English: Nefertari\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Nefertiry\", \"choices\": [<zero or more of \"C1\", \"C2\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "a27e65a494277dd23d314cde9579e1e48ad9bffe4776e245d5ab2f684bfd5482",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "57cf7737-5454-46c5-8c07-f55ea6a6c3c0",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "8e120b18-2ef7-4089-8578-9b88c41f96cc",
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "57cf7737-5454-46c5-8c07-f55ea6a6c3c0",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "ddf4b924-872d-49bb-848b-ca13191bdb9f",
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-x2k_umun",
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "2afb3411-3eb8-4960-a5b7-365e873ed820",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-x2k-umun/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1977137.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 4,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "6764b422-dd64-4787-a35a-3296691032fa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 4,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "6c8c8253-7461-4ca7-afd0-04f679dc9a4c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 2,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "0355bfca-244e-4be5-92cf-45a88304dca4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 2,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "760ec0d2-9378-4e26-8948-7bd16a2e30cb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "89ae9460-324c-4be2-8456-7f50b462873c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "e1272eb7-cadd-45a0-b48b-8f38512e15a8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 3,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "84444eec-35c2-4875-b687-2246f07ee18b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "e8003385-21f0-4ea7-a50e-7bba58702e5c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "9bef66a8-8100-4082-9928-9a34661b83c1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "7925cb78-0e9c-4fec-8ceb-44f97a4dfc25"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "40468eb0-785c-46d1-92c4-a6538a4c100d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "2ecf3c31-e8df-4559-9e6f-58fa3d3290f1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "42a9b536-5a34-48a0-903a-ffcdbd03fdac"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 3,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "7dea45b4-ba15-448a-9335-1fdb52a11668"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "96a5a645-a037-451d-a1f2-5ae106bb1e5b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 5,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "591959bb-07c0-4253-af16-d1152c252f51"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 4,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "0e73e41d-3c10-4852-9ca3-631e4218e254"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 4,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "6be0697a-bb53-4209-9837-a953116a4850"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "922d8277-fb21-41e8-bb18-36436a659ed5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "7792e4a5-960d-472d-8b3f-f130b048ad5d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "cf738a33-ca7e-4881-9cc2-7b4964a4caaa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "4f483705-aa07-4532-bfe1-118a286b22d9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "14fa844a-4459-4a17-8134-87f1c0ecd961"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "25bfe190-0457-4219-93e3-5877306c6a1c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 50,
+   "estimated_tokens_delta": 2,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "2305815c-af43-4dcb-8d1e-7e5f6660c598"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "8b8415eb-1c41-4d96-bd33-013d193f5897"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 52,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "fdccb18b-26a7-4b7b-aa9f-cd660d33fd3f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 3,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "d26ef4fd-2f0f-4366-813f-16fb3b0920e4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 1,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "8942d442-8f48-4700-ae19-8e26d5dcf60b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 174,
+   "estimated_tokens_delta": 118,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "38f05a8f-3a67-411b-9d1c-80077ca7329a"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4Ljsy6es7REnzw2KoiT",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking the hieroglyphic spelling of Nefertiry against the name N-f-r-t-(i)r-y confirms option C1 matches, while C2 includes the extra element mr.yt-Mut, so that one doesn't fit.\n\n",
+      "signature": "CAQSrAUKEAgSGAI4AUIIdGhpbmtpbmcSDDOFK2JTsIEHSIfd8RoMnjSeZyCyH8MRgzfWIjBEh6wSEuK3EJ1Y1AkpuKzaXEi+BioyoUrrdv5PYZCzRC8S+X+rMLuRw72SNr/MXGMqyQT4mRTyNk4CEtdibi80o8bNfStE+XTfKfawdJ8BMeBkhVUgBm2vLm79GpP8wPdzdd9x159ZQp1YkZooluY8AErwA0uooiLN5YwwIx/JXIwU9USro+Im24PG+ep5mOF5x22P/SPJ7S2zMsdRP5Kbg6CzVPEmpnZyqPzi4ZG6z85xqrqiZ6efa6CjFc8dFoNi1r/KNWLxOJ4C3Q5ZT7Xrt83gMXCbbqiJEVAffIeSUie9qN3j3go/S2sbrhhS7Gj2FXRru9uzPfhocSnZCjhFI0fzbm1S6zfNRPNqr5Xp1qJjNHyOcd780XnDmM0JL315KbeUZw8p4ause1VFsQGcXZ96LJXcNNtZVGX5idAgZYzDr+2ECjTqOWCgOrxsjMFu6BiJSCa3Jr3yV7J69ltkhOErJQpJEhzCzWFToSl7bPS2sB/azOsutgb9CCWdtaHpivLrT1RV1kUCu/Y4u7rGJZmO0xbQLupZml1CYtxBdX6Om2b2EhnBe2Dt8YseRr83bbhKkmBb0v0vj12j1zXtjwB+NiL8S55pRBZB8Znsf1Eqx2V6VJOtZqRhWjZqZ6H8CXLYDOniicQQL4DAO6nIrSMm0pwTyT6bWMzs7+WIvetwrrEb9G1EjTpvbMIubELWQgMiaapq9ArU5TE+NoOWOL1oNtKzbCG6Hn9T8ZWT33jp8SgksQobhw+rzjIzFCz1bxUFycSJtuzq17Jrvse8njpBJ8pnOYb4VrDc9nLGTxZQMJEd1SepozX5tx1FOZTozUcSY88NdDEHRBAYAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1634,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1634
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "042a8647-6727-4822-a9eb-7eeffc102793",
+   "timestamp": "2026-10-15T16:30:35.476Z",
+   "request_id": "req_011Cg4LjsjhaHFz3DUTmJRvU",
+   "thinking_duration_ms": 3240,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4Ljsy6es7REnzw2KoiT",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Nefertiry\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Nfr.t-jr.j is made of the words nfr.t ('beautiful one/good') and jr.j ('belonging to/companion'), rendered by the TLA as Nefertari or Neferet-iri. 'Nefertiry' reads as n-f-r-t + (j)r-(j)y, with vowels added and the weak j rendered as i/y. Those are exactly these words in the same order, so it is the same name. C2 Nfr.t-jr.j mr.yt-Mw.t (Nefertari-Meryt-Mut) adds the epithet mr.yt-Mw.t ('beloved of Mut'). Record 1 renders none of the consonants m-r-m-w-t, so it is not this fuller name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1634,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1634
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "uuid": "6d100e6d-c97a-41e7-9834-36a720f545de",
+   "timestamp": "2026-10-15T16:30:35.749Z",
+   "request_id": "req_011Cg4LjsjhaHFz3DUTmJRvU"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "41220a1a-4a60-434b-8153-64f5d975611b",
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b"
+  },
+  {
+   "duration_api_ms": 4617,
+   "stop_reason": "end_turn",
+   "session_id": "26856790-8a8a-4a42-a32f-ba4b06c7af8b",
+   "total_cost_usd": 0.0199,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1634,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 341,
+    "output_tokens_details": {
+     "thinking_tokens": 63
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1634,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 341,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1634,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1634
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 341,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1634,
+     "webSearchRequests": 0,
+     "costUSD": 0.0199,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 63,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Nefertiry\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Nfr.t-jr.j is made of the words nfr.t ('beautiful one/good') and jr.j ('belonging to/companion'), rendered by the TLA as Nefertari or Neferet-iri. 'Nefertiry' reads as n-f-r-t + (j)r-(j)y, with vowels added and the weak j rendered as i/y. Those are exactly these words in the same order, so it is the same name. C2 Nfr.t-jr.j mr.yt-Mw.t (Nefertari-Meryt-Mut) adds the epithet mr.yt-Mw.t ('beloved of Mut'). Record 1 renders none of the consonants m-r-m-w-t, so it is not this fuller name.\"}",
+   "ttft_ms": 4359,
+   "type": "result",
+   "duration_ms": 4700,
+   "uuid": "94d021be-4c96-4a87-b6e4-3a105441cd66",
+   "ttft_stream_ms": 1118,
+   "time_to_request_ms": 38,
+   "first_content_frame_ms": 1118,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Nefertiry",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Nfr.t-jr.j is made of the words nfr.t ('beautiful one/good') and jr.j ('belonging to/companion'), rendered by the TLA as Nefertari or Neferet-iri. 'Nefertiry' reads as n-f-r-t + (j)r-(j)y, with vowels added and the weak j rendered as i/y. Those are exactly these words in the same order, so it is the same name. C2 Nfr.t-jr.j mr.yt-Mw.t (Nefertari-Meryt-Mut) adds the epithet mr.yt-Mw.t ('beloved of Mut'). Record 1 renders none of the consonants m-r-m-w-t, so it is not this fuller name."
+  }
+ }
+}

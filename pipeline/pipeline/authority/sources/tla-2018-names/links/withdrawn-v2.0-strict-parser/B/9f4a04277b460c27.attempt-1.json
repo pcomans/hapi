@@ -1,0 +1,487 @@
+{
+ "unit_id": "Sitre",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ꜣstwrt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Sitre\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ꜣs.t-wr.t\n  Lemma 1: German: Aset-weret | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Sitre\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "255bbf05cd7e741df88a82e9d0d19defdc6f8542bcfe7c8962b4b9cffe3e402b",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "f6f921b3-06c4-434d-8170-fa04bc11644d",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "0b207e3a-a004-4b24-9a47-d7dbc07ed783",
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "f6f921b3-06c4-434d-8170-fa04bc11644d",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "ec85384b-12d7-4ee5-a854-f2522d6f8c10",
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-w4eqlphi",
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "4c5c8685-b09e-4564-b3d0-1f30ea4d5885",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-w4eqlphi/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1980050.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 6,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "aa25fef8-3ef3-4a03-977e-fb8191caf7a1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 2,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "8386a3a1-db32-4eb7-a7c5-9a989f5e886e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 2,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "d65f46b3-5e51-4e65-b261-b23bdb7bf668"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 4,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "23e739ad-199f-4fcc-9623-cfa9b7be5367"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 5,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "0806698d-372b-48f2-9308-bba0dbdba0e3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 2,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "a11cc0f3-6905-4084-9097-11b303edf762"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 4,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "ffb7fb92-752d-410d-9696-64e4a9c6a491"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 5,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "d4ee2e2b-6448-4e85-bd8d-7c5dda774d52"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 6,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "adc46248-76bc-4e12-aae8-b4a63ec03898"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 4,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "2ac1d9ca-b552-40cc-813e-8ebe09ad8c03"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 6,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "ad2d4bbd-d949-4843-9320-f4110b651a53"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 5,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "ef5b21e4-5ff7-4d4c-922d-ed83d39f1040"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 3,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "84e06020-57c4-4559-b15d-13712734f898"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 2,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "32a3add8-5f02-4fed-b00d-238b2f881947"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 59,
+   "estimated_tokens_delta": 3,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "8f22efe7-57c1-4cf1-af13-809f31f12c61"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 60,
+   "estimated_tokens_delta": 1,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "47ea404a-df23-4d6b-a069-c98784d7ea67"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 240,
+   "estimated_tokens_delta": 180,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "c9cd6139-03f3-4112-9dcf-9992ff019f68"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4M225ho48BETbavC2Tk",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm comparing the consonant skeletons of Sitre (\"daughter of Re\") versus Aset-weret (\"Isis the great\") — they share similar sounds but represent different words and meanings, so the match doesn't quite hold.\n\n",
+      "signature": "CAQStgcKEAgSGAI4AUIIdGhpbmtpbmcSDKKYVkfhYsl2duXDchoMUxr9aG24wtGTCIiKIjAIaaREAv7bcv1AJ5mtepuhr5Oa4rZgU6k80135R4XSckyr9jiCIobBk1Bi5oQ3ZHIq0wbq8eEhRkACxGdcT+8jg1TCVr6daMGW5Foo8wUZXyNsttja6M76aqks2Hfm2el/4MW61W8A0prB8+gZfmZDeAZOCkeA831QKdWOJlg8yDA74u+njGTevSV3dw5unx5ywkcEbiI+B483FCMNnwmevxB32YmScmiknapSCmIBaXQmWRXFzTDVCHEfCFqWdXaBIjuC8WiXpJjdurNyHa3IttPVnxIDUqCOHgYp456QJfafU/Dicq4SAia057FMpvoYQElIniCs/GooZPNEF0G7lDSqJ5w+7CXleQOe+Gj6t7JO/VQzxhcmeEIsktCnPH2qGoDqKLveWbsa6U1veYflOKW+3SSmCrgrqGAcPteVhPI5njna8sxWSlq1jgUSO/rwCz+oyidslJHVnLn7QlgXSJFEqG0fV9r4frznrMzbtOYA19cXcGpu576nCnckxejbkMeBXFpWClBZTh9rE1Q/lGDgnb7NIc7dNq/Rn8ZsR0DrjSecqke2du17jxdS486bptc1jxC2muOCOpEerMHRFG0x8BCb8By3CzFlTa+BpeQ6JCn4vUybdyxZWpGAb7bIvsysOXX3xsls3VSLlCWaxztTJ/Mc3Ry3JIt6r5cnmKTdlgCOaCIh5DsiV/fwEqCsKAFGLu1JEsFmH33t8DOycgDVp2Hr+DQPaILp7EOGlJF2F0bOLssOKkUHJ350N3dNQzhJgyYeGaAiN+Ft0UfavBRXjCOisEyAtv9+zDWSH+5TScKsaN2FEgn8aZtojTVT4Cyb9xBsAdYOIBNWsrsKF+yj6ekkEsVH61mzxHxq/wNBV2nZWX9+80BhGV9moU3XUpRNxP4o56cPp0cZVAdoP2rczFdJ2Li1RvX/+v3JIVGRwKlexHlVvy4vYwslxQt+j95PqMMf2rBq0031ZX8ijVIB5JR8vZLXMvhossS7ZqE5Hy2kkX6rPdD0KsF/lskb3GF+42S4iPBLZMcV9t+c9jvKy/I/J/GrH4zEOF2r8fh/gDZ3WlPSltz7q55TA+XL2zwFjYRx9aYoeLX5BvpqpayeBQg6erdMrcbCLaXDDqqQltDrnW68rvUdLHaq2qP1KdQpAdK9PRxo1yS8J/pzUHxXPOTHoNlAsCLtomoNUWo9FIwaZhgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1543,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1543
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "43ad9e60-6f2e-4a69-ae40-b6aa3fdf191e",
+   "timestamp": "2026-10-15T16:34:14.843Z",
+   "request_id": "req_011Cg4M21soKL6rQJqgaho8e",
+   "thinking_duration_ms": 3658,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4M225ho48BETbavC2Tk",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Sitre\", \"choices\": [], \"reasoning\": \"C1 Ꜣs.t-wr.t is made of the words 'Isis' (Ꜣs.t) and 'great' (wr.t), so it means 'Isis is great' (Aset-weret). On the letters alone, 'Sitre' could be fitted to it: ꜣ is silent, s-t is rendered as 'Sit', w is dropped, r is rendered, and the final feminine t is omitted. But 'Sitre' read as a modern spelling renders different words: Sꜣ.t-Rꜥ, 'daughter of Re', from sꜣ.t 'daughter' and the god's name Rꜥ 'Re'. The consonants overlap only by chance, so C1 is a different name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1543,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1543
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "uuid": "f5bde168-99de-4071-a264-a759912c676a",
+   "timestamp": "2026-10-15T16:34:16.332Z",
+   "request_id": "req_011Cg4M21soKL6rQJqgaho8e"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "54fd7ab9-926b-417e-823d-ca3207054f29",
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e"
+  },
+  {
+   "duration_api_ms": 6244,
+   "stop_reason": "end_turn",
+   "session_id": "940ed1a4-eec4-4035-b6f2-719c300bff5e",
+   "total_cost_usd": 0.021272,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1543,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 446,
+    "output_tokens_details": {
+     "thinking_tokens": 183
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1543,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 446,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1543,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1543
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 446,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1543,
+     "webSearchRequests": 0,
+     "costUSD": 0.021272,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 183,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Sitre\", \"choices\": [], \"reasoning\": \"C1 Ꜣs.t-wr.t is made of the words 'Isis' (Ꜣs.t) and 'great' (wr.t), so it means 'Isis is great' (Aset-weret). On the letters alone, 'Sitre' could be fitted to it: ꜣ is silent, s-t is rendered as 'Sit', w is dropped, r is rendered, and the final feminine t is omitted. But 'Sitre' read as a modern spelling renders different words: Sꜣ.t-Rꜥ, 'daughter of Re', from sꜣ.t 'daughter' and the god's name Rꜥ 'Re'. The consonants overlap only by chance, so C1 is a different name.\"}",
+   "ttft_ms": 4772,
+   "type": "result",
+   "duration_ms": 6328,
+   "uuid": "f60cd2f0-1971-4db9-8373-3ed44fd4cf55",
+   "ttft_stream_ms": 1114,
+   "time_to_request_ms": 38,
+   "first_content_frame_ms": 1114,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Sitre",
+   "choices": [],
+   "reasoning": "C1 Ꜣs.t-wr.t is made of the words 'Isis' (Ꜣs.t) and 'great' (wr.t), so it means 'Isis is great' (Aset-weret). On the letters alone, 'Sitre' could be fitted to it: ꜣ is silent, s-t is rendered as 'Sit', w is dropped, r is rendered, and the final feminine t is omitted. But 'Sitre' read as a modern spelling renders different words: Sꜣ.t-Rꜥ, 'daughter of Re', from sꜣ.t 'daughter' and the god's name Rꜥ 'Re'. The consonants overlap only by chance, so C1 is a different name."
+  }
+ }
+}

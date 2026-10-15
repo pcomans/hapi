@@ -1,0 +1,311 @@
+{
+ "unit_id": "Meryetaten",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "mrytjtn"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Meryetaten\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Mr.yt-Jtn\n  Lemma 1: German: Merit-Aton | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Meryetaten\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "b771b2c33eca480e408c7eddf06d9a0f8a26b1c6a39d718ee62b83ee91f5726e",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "25d4129c-3e61-478d-b1cf-02f2cefdfb5a",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "fe94d6bc-c6d7-4389-9291-6fc2a19c35fb",
+   "session_id": "cc9be7f2-f9f1-4d60-be33-6b891bea1b03"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "25d4129c-3e61-478d-b1cf-02f2cefdfb5a",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "96a2eec5-2e50-4336-b7c0-67f7e99e9089",
+   "session_id": "cc9be7f2-f9f1-4d60-be33-6b891bea1b03"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-1hmugw9x",
+   "session_id": "cc9be7f2-f9f1-4d60-be33-6b891bea1b03",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "9b163d18-7d05-48ae-8735-0b7f6022304a",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-1hmugw9x/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1973577.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LZEhUXBk7GN9LFhEnu",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Meryetaten\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Mr.yt-Jtn is two words: mr.yt 'beloved' (a feminine form) and Jtn 'Aten', translated 'Merit-Aton', i.e. 'beloved of the Aten'. Record 1 Meryetaten reads as M-e-r (mr), y (the weak y), e-t (feminine .t), then a-t-e-n, where a stands for the weak J and t-n are the consonants of Jtn. The consonants match in the same order, with nothing extra and nothing missing, and the words are the same ('beloved' + 'Aten'). It is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1546,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1546
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cc9be7f2-f9f1-4d60-be33-6b891bea1b03",
+   "uuid": "b2d8f20d-b957-4997-b7fd-dfa108a05800",
+   "timestamp": "2026-10-15T16:28:10.591Z",
+   "request_id": "req_011Cg4LZEVZzp1XcJJTxoi8c"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "fa490711-e27f-44b7-93c5-2fbe406cda47",
+   "session_id": "cc9be7f2-f9f1-4d60-be33-6b891bea1b03"
+  },
+  {
+   "duration_api_ms": 3916,
+   "stop_reason": "end_turn",
+   "session_id": "cc9be7f2-f9f1-4d60-be33-6b891bea1b03",
+   "total_cost_usd": 0.017016,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1546,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 232,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1546,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 232,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1546,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1546
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 232,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1546,
+     "webSearchRequests": 0,
+     "costUSD": 0.017016,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 0,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Meryetaten\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Mr.yt-Jtn is two words: mr.yt 'beloved' (a feminine form) and Jtn 'Aten', translated 'Merit-Aton', i.e. 'beloved of the Aten'. Record 1 Meryetaten reads as M-e-r (mr), y (the weak y), e-t (feminine .t), then a-t-e-n, where a stands for the weak J and t-n are the consonants of Jtn. The consonants match in the same order, with nothing extra and nothing missing, and the words are the same ('beloved' + 'Aten'). It is the same name.\"}",
+   "ttft_ms": 3934,
+   "type": "result",
+   "duration_ms": 3998,
+   "uuid": "29786c24-534f-4cd2-9894-9a52e5b32518",
+   "ttft_stream_ms": 1254,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 1254,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Meryetaten",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Mr.yt-Jtn is two words: mr.yt 'beloved' (a feminine form) and Jtn 'Aten', translated 'Merit-Aton', i.e. 'beloved of the Aten'. Record 1 Meryetaten reads as M-e-r (mr), y (the weak y), e-t (feminine .t), then a-t-e-n, where a stands for the weak J and t-n are the consonants of Jtn. The consonants match in the same order, with nothing extra and nothing missing, and the words are the same ('beloved' + 'Aten'). It is the same name."
+  }
+ }
+}

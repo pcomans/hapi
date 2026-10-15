@@ -1,0 +1,575 @@
+{
+ "unit_id": "Sitiah",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "stẖj"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Sitiah\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Stẖ.j\n  Lemma 1: German: Sethi | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Sitiah\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "c69f6dfebcd69f7a83176d75413b5c8e07f545b2365a05c2081423de0e66f0c5",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "7d6310b6-b3b1-45d1-a1ea-8da4997ee1ef",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "06af7d25-7e66-4fe3-98c6-da8439ab59cf",
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "7d6310b6-b3b1-45d1-a1ea-8da4997ee1ef",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "fe9385ce-b5f9-4f77-b0b8-d8d37f41d730",
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-hm06h9pw",
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "177dfd36-13f6-4927-b73e-fde1021311fb",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-hm06h9pw/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1979844.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "f3fd93f1-28fc-4679-aac3-e35c01502c54"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "adbb6c1b-d961-4a15-8cd0-9346106132e7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "61c81ffa-45df-4af0-803a-2e7cfa48d8c2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "d61ed5ac-019a-466f-bbb2-61bf4fcb9ff0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "8fff4a5f-8a52-49fb-acf0-0e1a28eb4806"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "b89b091f-3f28-44fc-83fa-6a9debc3a8cf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "e6245975-625c-45fa-896f-1bc743f47221"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 3,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "cc479339-1443-4b26-acb6-7ba19e8eb1e4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "851fa870-5b2e-4c0a-b30a-f3602a229811"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "c65d5ddd-58b5-42af-aee8-e96cbcd6a7ee"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "9174bcf8-4bd2-4d6e-b1f0-1dc29680f822"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 4,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "d90b44ec-e586-4ce5-8cc0-4604350f770d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "72eae099-6567-4a36-8734-878517cbcb26"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 3,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "4455ba94-fcc7-485d-a230-f6db9deebe4d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "083c0103-a4a4-4cff-b3e3-716637034fda"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "800101f9-e165-4a94-9670-c10c6ab76701"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "a584cc68-82fd-4e68-b8dc-db987e8d8b22"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "6757d355-6bde-4035-8c1e-93467a1c91bf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 6,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "e7e27878-b7ae-4f1b-bd7e-68ec173de93e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "494fc6da-08aa-4de3-932d-440108090b55"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 4,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "2b6cad97-95ea-4c66-a6e6-bff235a64e8a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "fa34a61d-4a60-4b94-9daf-17248de51adc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "71123838-813c-4210-839d-5c1934d08078"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "23036c4b-40a6-471d-a79a-d1f17d93448c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 3,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "6f37829d-0fea-47ab-8126-4946e35adbe7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "a7b66ba5-27de-470e-ba9d-25841542132c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "5b813103-1f52-4e64-9398-1535b96b9bdc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 201,
+   "estimated_tokens_delta": 147,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "89380066-3c28-453e-945e-30b64e28c7c6"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4M18JyYQR7v6ac2ntNU",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking Sitiah against Sethi doesn't work either—Sitiah's consonants are s-t-h while the ẖ in the Egyptian form should be a kh/ch sound, not h, so the match fails there too.\n\n",
+      "signature": "CAQSmQYKEAgSGAI4AUIIdGhpbmtpbmcSDEFSaaFYZe7sMX3VYRoM4QTcEIb95VrAvHbAIjAqZmxndiLss4dhf3WiCzgxEQRnD900FfoR8NvaQdmGIXZZ4FRMyxpH5mZpnXJLzngqtgXSbAG26YQmCWjvR+3Knn0DNg9qpMXG4rTJ1O9EfFczVvlxDwSoIKSJkslQLwa9MWcXR+rvLyM6/IfvnWwjTBqHIpQvOuTEC+n39fskjPNyiC707YkpK2DALYutBhk3xhodPPr7JhVU2ywhuoLZ2TiDZLvJgKxoxynLZ80/fI+k86qpNKbiw5imtuc3G/dfqdw12Iyqi9Jy3AFTurquGUZX23P8TRpEBcS3Dt4PpTp3FcfBIlsl3xQeEGaztP1U6qP6Ddcd57d0vspdSYOSYx2Ku/R81lU0ZUCG/uhqOXoaWoYpTKMo7jWD7/fpI3l2hpoxLB9BKayv4og+K1+SbUFjh8sWUe9dDvUHE8g1XmUuZG6ktiotIob070xBhCDZ+iaLheG9JplsD9R21ngf/jlgTyjctidngXpaxfn1ewSYjLzjVjevDHNdZW8cbNOE+TwgMbVV3DJSAgTGTfzz8W/+4KRISWXEgwlewB/pmKmhDiPzYj62B+lbwI36A9OeBPlPBQNaT779HsZtDoIuvs1jSJpQKhBFt5GvZRYAvlCo9r7tmHaNUV6loQOzqBgEal1DGaDPj9u5gX3xGFhzVbLoWRXL/TWEULOaFGn0KisprJ5EOeE0NZ5i1OyxjWetFcsjNWrKD5megVxmnvJySHPykgJu0Zhl0qMlN0g3x4McnS0kLVL8/5QOTO6pVN3RStxMNZvt4aadWEPstuVx6j9MU6ecXqSONPUbvj814IFfrK42tMz4KLX1j+kr/19bKVKuht9HtH2zpDR3fCzFS0SXZ77LklZ7su7YJsaz0drmugOzAHktJyGeYXRgIp4mkVpsqx/dGJsmZsG07mYnPOF2Z2TFd6rg1rCBEdA0WnJRWS8P6/3fvtsPk6zhmMWCv08+cP07Rs6FuhaEadvVsSofAxMVaueuGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1537,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1537
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "591e23d5-fb2b-4eeb-8ff9-37674bbbbae2",
+   "timestamp": "2026-10-15T16:34:02.547Z",
+   "request_id": "req_011Cg4M17x8uX9ZQUBJPhqvt",
+   "thinking_duration_ms": 3304,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4M18JyYQR7v6ac2ntNU",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Sitiah\", \"choices\": [], \"reasoning\": \"C1 Stẖ.j (Sethi) is the god's name Seth with the adjectival ending .j, meaning 'he of Seth'. Its consonants are s, t, ẖ, and ẖ must be rendered kh or ch. Record 1, Sitiah, ends in a plain h, so it cannot render ẖ. The words also differ: Sitiah is Sat-Iah, z3.t-jꜥḥ, 'daughter of the moon (god Iah)', with ḥ rendered h and the ꜥ of jꜥḥ as a vowel. It is not the Seth name. No match.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1537,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1537
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "uuid": "f40c6446-ee72-4e1e-9c51-bbfd7e0ef3ec",
+   "timestamp": "2026-10-15T16:34:02.555Z",
+   "request_id": "req_011Cg4M17x8uX9ZQUBJPhqvt"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "c818a4a5-41bf-4db0-9a47-4ded10d8c9a9",
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb"
+  },
+  {
+   "duration_api_ms": 4640,
+   "stop_reason": "end_turn",
+   "session_id": "cf22eb6d-f7c0-4bba-9643-0cbcfa921efb",
+   "total_cost_usd": 0.018964,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1537,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 333,
+    "output_tokens_details": {
+     "thinking_tokens": 104
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1537,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 333,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1537,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1537
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 333,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1537,
+     "webSearchRequests": 0,
+     "costUSD": 0.018964,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 104,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Sitiah\", \"choices\": [], \"reasoning\": \"C1 Stẖ.j (Sethi) is the god's name Seth with the adjectival ending .j, meaning 'he of Seth'. Its consonants are s, t, ẖ, and ẖ must be rendered kh or ch. Record 1, Sitiah, ends in a plain h, so it cannot render ẖ. The words also differ: Sitiah is Sat-Iah, z3.t-jꜥḥ, 'daughter of the moon (god Iah)', with ḥ rendered h and the ꜥ of jꜥḥ as a vowel. It is not the Seth name. No match.\"}",
+   "ttft_ms": 4641,
+   "type": "result",
+   "duration_ms": 4721,
+   "uuid": "f15d505d-bd4b-492c-82db-a36c6adc462e",
+   "ttft_stream_ms": 1336,
+   "time_to_request_ms": 36,
+   "first_content_frame_ms": 1336,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Sitiah",
+   "choices": [],
+   "reasoning": "C1 Stẖ.j (Sethi) is the god's name Seth with the adjectival ending .j, meaning 'he of Seth'. Its consonants are s, t, ẖ, and ẖ must be rendered kh or ch. Record 1, Sitiah, ends in a plain h, so it cannot render ẖ. The words also differ: Sitiah is Sat-Iah, z3.t-jꜥḥ, 'daughter of the moon (god Iah)', with ḥ rendered h and the ꜥ of jꜥḥ as a vowel. It is not the Seth name. No match."
+  }
+ }
+}

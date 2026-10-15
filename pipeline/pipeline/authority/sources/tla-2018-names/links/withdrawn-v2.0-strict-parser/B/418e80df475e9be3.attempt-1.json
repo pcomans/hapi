@@ -1,0 +1,487 @@
+{
+ "unit_id": "Mut-Tuy",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "mttj"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Mut-Tuy\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Mttj\n  Lemma 1: German: Meteti | English: Meteti\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Mut-Tuy\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "9f1a090e9b64318e60d2b85ac0c859aee5b230b362534794b8a5ec3294952527",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "c9fd3eb8-944a-453a-abf4-f5893c16b8e6",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "4441cdbc-d515-4419-8810-75b1000d295f",
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "c9fd3eb8-944a-453a-abf4-f5893c16b8e6",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "989835ac-b9f6-433e-b673-8d092646ae79",
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-7k5ixsyi",
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "9871504a-ba5e-4f8f-8a08-3811ab5a298a",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-7k5ixsyi/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1975106.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 5,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "6e69d80d-56ee-4343-9771-470a53b27927"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 4,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "5b0829fc-fee6-4c39-b0d2-d6170a110122"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 4,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "8ab69f3a-d878-47ff-b8a8-9267f1991fac"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "14c2b24f-41e8-44fd-8ffd-9747b39b2dd6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 2,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "1b8f60d6-ef5e-4a5f-b6a1-99d78ea44040"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 6,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "641efe65-03cc-4f89-9e75-1459cb6a4c64"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "d513fb2c-942c-4956-917f-445af73ef68c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 2,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "34178853-bb02-42a7-b698-7e26e98c25c8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 4,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "e96ecceb-f8a0-4f8d-b573-3ea913a474c2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 6,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "ac79488e-fe51-4ffc-9ee1-13d1a6869bfa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 1,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "a715c341-1128-4708-9b01-344f30599275"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 4,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "5a134836-1cd3-4e8c-a7a6-e2a721e23c8a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 4,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "06c23173-9e99-459e-b839-9ac2487ac03a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 8,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "0d2d1cb9-02d0-44d0-a0a0-8087ddba369a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 2,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "9c9dc80f-e979-443e-803b-c49b0f91856c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 1,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "c271587f-6a5e-4de8-aa5b-67ea7f8f96e8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 256,
+   "estimated_tokens_delta": 199,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "c86e3a83-5b41-494b-8a5b-c587ab8662cd"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LeGJ6hP2sBdJSGCyB8",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm comparing the consonant skeleton of Mut-Tuy (m-w-t-t-w-y) against the candidate Mttj, noting the candidate seems to lack the w sound that Mut-Tuy should have, which makes the match imperfect.\n\n",
+      "signature": "CAQS+AcKEAgSGAI4AUIIdGhpbmtpbmcSDF3ljsuTbOFnKS09pxoMARJFB6aEyqtQgQfyIjBCChX38uBliHpcd1aRKvdOfUZB0B/s5lpmG//MBFKPqioYjPTuS2R2AcvZ2mPpJtoqlQcntIjzm18QB7K7U3sTCqemvlnL6ZC3DEtOK362LcO+n4w0Xvbasw0r2+E1wrJyx0xmI7GFQgi+qR7Yjg/guocsLsZJwraatlYm7wT9ZVjwO3lNVABI9U8TGMLYJjlaFWSbqvyyp6CwpGxfZevi71AHiI3yl+TthRum5++CKQ4UVie+V4Vnlr3HpjETJfyFCFkHhPUM5Pki4qlxGmTNF3KjfWPW3+XprHEm5s40L7IUNqRLhzXvNNFsgxllJRXOpjG0gEceM019eR3NXjpcywX9IR1PLOMjdzirpWCpF3VzKTKpwbz8mYagMedp7fZ7HcHK+0094Y0eA6RqqAxyU6FYulJ9uITT5P+ZiOATnf8Rf+eY/X6WhEDuKhaeWCyqJCq6lCAc6U7+0bpLV2/f8dlzD7nMIQiR6+QmiLddHf9OK4sT4otHckb93EcpqOzjXmd4W1QYaFcYZ4U5pnL50DEV/IhFx4IiEYKUEHDkjxIPdMTb/wQjKI9AgQX3sejs2bwF6M1pqebLOVNnGSX0QlOF2z+z5aPwXu4B6swZFsj9JlKTbv+akOMtj1CJkU/sXygpPPhjGOd/82JKfrsXr/a8/Tv9GHySNN6xSl4dM5DypLbaEAvyBEvSNWpsSsBg2w5ESeIZYymmQRx5/MHMcG0MgjYjVsLw3M9FROh5Ak+hhGU3/t8XuKAv2yWSVpcdxZg3r5frO/RMz69hXH/mYv8Dbp2CpwZjAcrcF8b4Jvkw4fMzk8WYgWt70nT1H75mrQwVuk0wYyiLZMYdjpfICK/gwG4H8077mGzsLFKlXB9skkjy0xT1LSruCPF0SGaVCOQzHz/IojqCd7yJxuLc4qkVg9ZNWXUNKVwVE3OWRnmNxUV0vCOYZfH9kqXzfEp9hJ23ABOo6Qp1phMe6nILOJ4ggOW0cmLY74b1ElcwhtEEgBSS1UJQ/oWiH+URCtnG4tCeYItI0WzGkrkNslnJY2syzxpJgkw7X9we1BGhG6+sCwaE6Mf+diQd+7Vp4h9QRynV4ULDKAOQnTTg3HsJTHePeRmCMeuf8s83hCcs1t4hTD22rkPdba17LTQFl15Jv7SV7YbL0t4gBTsGFCaCdEfOs7XGvLsjScErZXD1m6uCRQgRSPaYJ3nzjfTBoTx0bj7P+wKAXkfB0tAupI74+JObJZVDb+DNnsFBfn9s6vEfthDtaZYZMZJbAS2Oe84PtVKGPS69zRgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1542,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1542
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "5ed90fb3-c8fc-43e7-9bcb-9e79b760bc06",
+   "timestamp": "2026-10-15T16:29:19.462Z",
+   "request_id": "req_011Cg4LeG5hjAQC5WitbbTjc",
+   "thinking_duration_ms": 3169,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LeGJ6hP2sBdJSGCyB8",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Mut-Tuy\", \"choices\": [], \"reasoning\": \"Record 1, Mut-Tuy, is two words: the goddess name Mut (Mwt) followed by the name Tuy (Twy). C1, Mttj (Meteti), is a single word with no divine element. Its consonants could be stretched to fit: m, t, t, with the 'u' letters treated as added vowels and final y standing for j. But its translation, Meteti, shows it is not made of the words Mut + Tuy. Record 1 renders different words, so C1 is not the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1542,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1542
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "uuid": "3b3ec7ec-c3c9-44e8-bd53-710f66dbb905",
+   "timestamp": "2026-10-15T16:29:20.485Z",
+   "request_id": "req_011Cg4LeG5hjAQC5WitbbTjc"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "9281eb55-ef87-49a8-94f6-18d70bc9929a",
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001"
+  },
+  {
+   "duration_api_ms": 5522,
+   "stop_reason": "end_turn",
+   "session_id": "2d25b255-4af1-4baf-a1c9-cd6308c28001",
+   "total_cost_usd": 0.020304,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1542,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 398,
+    "output_tokens_details": {
+     "thinking_tokens": 205
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1542,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 398,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1542,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1542
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 398,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1542,
+     "webSearchRequests": 0,
+     "costUSD": 0.020304,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 205,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Mut-Tuy\", \"choices\": [], \"reasoning\": \"Record 1, Mut-Tuy, is two words: the goddess name Mut (Mwt) followed by the name Tuy (Twy). C1, Mttj (Meteti), is a single word with no divine element. Its consonants could be stretched to fit: m, t, t, with the 'u' letters treated as added vowels and final y standing for j. But its translation, Meteti, shows it is not made of the words Mut + Tuy. Record 1 renders different words, so C1 is not the same name.\"}",
+   "ttft_ms": 4522,
+   "type": "result",
+   "duration_ms": 5605,
+   "uuid": "07ec3702-f1e3-41cb-a137-0f7986a7083a",
+   "ttft_stream_ms": 1353,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 1353,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Mut-Tuy",
+   "choices": [],
+   "reasoning": "Record 1, Mut-Tuy, is two words: the goddess name Mut (Mwt) followed by the name Tuy (Twy). C1, Mttj (Meteti), is a single word with no divine element. Its consonants could be stretched to fit: m, t, t, with the 'u' letters treated as added vowels and final y standing for j. But its translation, Meteti, shows it is not made of the words Mut + Tuy. Record 1 renders different words, so C1 is not the same name."
+  }
+ }
+}

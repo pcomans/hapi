@@ -1,0 +1,577 @@
+{
+ "unit_id": "Nefertiry Meryetmut",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "nfrtjrjmrytmwt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Nefertiry Meryetmut\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Nfr.t-jr.j mr.yt-Mw.t\n  Lemma 1: German: Nefertari-Meryt-Mut | English: Nefertari\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Nefertiry Meryetmut\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "7de7795112094e3062cf85e63c2a33eb4375ad6a6655ed16c75d48eda31a694a",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "c74eb4b4-26ac-4db4-a77c-9471f1623c75",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "411303c5-5d20-4730-94cf-5ca51989528f",
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "c74eb4b4-26ac-4db4-a77c-9471f1623c75",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "2c5df5fd-4f75-4fff-9d28-27d60058648e",
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-2d9_bgs_",
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "e28fe56d-dc63-4ee7-87b7-8c47b99b4500",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-2d9-bgs-/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1974083.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "e1dc3bca-34f5-402c-92f6-d6a173cfbb8e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "4e7ec620-9903-4b8c-99b9-6d9c860da6ce"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 4,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "f28acc12-71d6-4ac2-81ae-6d395fc4435b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "2654b765-d70c-49f5-b355-7dd55ddefbe2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 3,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "57d2bb90-ea32-4898-9354-d2761f5960e0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "f08b55cb-0f6e-4f53-a368-29ae3596514e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "828e31b1-e196-4e45-9fd5-144edcb0e174"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "b01975fd-6183-4622-8b9c-25197f57612a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "c210bbf1-62ad-45a2-9ced-27182eaf02ff"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "76d1aff8-df32-496e-82bc-8b12eb69ed56"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "de8735c8-f06d-4d9a-b73b-b1129866f527"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "b8968389-6ee4-44aa-97f3-06570eb46409"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 2,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "1a079ca4-9b4e-41a7-93fc-05674fa0c555"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 3,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "c7164ad9-8c89-4822-ac87-a6995ce16d7e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 3,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "921cbb48-ed7a-4668-a690-fd88382f4fb8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 4,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "cd5ed53f-144e-4be0-a7a3-706ad351c337"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "c787fd80-9f73-4412-bb80-e017bafd6266"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "674256fc-93c1-4df0-b8ad-ba6cd413ad39"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "53cd2455-926d-466d-b9f2-57799c5c29ba"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "c11a09fa-b393-423d-992d-c5886cd676a9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "e2e61fbe-6e6e-4b28-9284-69b25e91d535"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "ccbd2220-2cc7-4bf9-b5a4-80d92af3c252"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 5,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "622e505f-6fde-4011-a097-2b6a50cc0c7e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 7,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "edafb9ec-8707-4073-a072-6ef52e3483de"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 4,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "27a88c09-a77f-4148-a3f8-b17921512582"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "9c652808-131e-482c-aa46-d6f4528e5681"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 1,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "007d90ff-2cb7-4dcf-8773-51f710a14b6d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 231,
+   "estimated_tokens_delta": 174,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "e2beac34-472f-4e6a-8be5-dc41f6510dfa"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LaXhTAJvBxQHqR3ccn",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm comparing the consonant skeletons of Nefertiry and Meryetmut against the candidate transliteration Nfr.t-jr.j mr.yt-Mw.t, checking each sound against the Egyptian name components.\n\n",
+      "signature": "CAQSkgcKEAgSGAI4AUIIdGhpbmtpbmcSDHUWyaAq9iLrdw9eKxoMm4biN/opxAIoZlYlIjCxxwTucwU46zbmRBEWd7IzeEOsbGLhx+NjGFmRJOVXu9+N20CW5yhKu55WVBlfY8sqrwYQ+y/xqMNHa/W1FvHBXlQhQ/UvuTlJWE+oxYxeh1DDmjfk5EnASnpKp7/DlJwz0Tx9VYQe+ulhmIfROkZNCzwkn2Gp0hiH3Mjd9Rlo6AmzhgT9BWSvpI23lRxXPW0yEB1EQqngfB8u4jUJDfEFkhb6JYaQaWnCeHJek4NHBc7CWzYqGjDZcxe/cXIA7LF4PCr7p3BdO0sGfv3lJ1cVW5jsYhZfHcCLi3ku1jocAwQaxwAA7cVpZr3dGxdxxgWwCQZcrgRx3xLyN221LK6/pwPp8y/YLwN0X7e217CiOeo4acMz1sJEb7NmEiMPoc7KEpPbRxhMFo+bkFJTJaF/FwmrQdB54J1OwzY+Zzvv0trXOcRsWlaoQauk+PdZtD8AzBGpERYW8u4pzx+Hn6mZVDMjOiYxFwroQ10tGEpmX4+9GEfRoK2NKMHxPgxq13yKAPnDZkrCqtrdT41gmg8dt3ZZcF857BOS1J1jVevXYpo9ygq+US7cY1vhHFuqaLz+s8Z1+YkXVWf2v/BHYakfrzv2JCOfYstgFC9ZgcCkYxpGh/1LJKglOagBrHm/pIUi9d7nOVtaJGeqmBEMrKYINSgvvGqEIg8yEa2R60IWqH4QrvYo3NU5z4FdTECupcJIn/W4w9bnKM0E5PiqRelRwVzZRd7HUhr+angAdiRJBenBARVAxk3JmOVXADnb4CwYlJhHZ8PHhGNmyCepxBmQs+qnMrr+zBziRIkbTrnDWrOLvZJBy5s3Y0YySGvxNdQKmxcNjHHzhCw7FgviIfFcDwareHJkKuR6r0L+VU5dm6B6dYDnv8kRQ0cbF5K1x79be+eg2FkcLzqnpxMfChzliRvW93gvT+gUwjUiXm1fp49K7InQv+oBjcphboDFyIj3yIH1X/e2j4ij11wxMhucHIMFsMdl3o4DmYOlmtcd3C4kkwQqO+GfQ9Lco0veHG65Bl5ORbZaYfPbYq0gFnlPwKME8TxQLh0uwePDbO/O+UlAyPcvTNkJ8MXVegDcJhJu+NdGMHClNmLqLvt3qPznNH99wy5R3+shiSng+3Wr14bZNvJOc576Qf2jlTpTNsZ0XBgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1583,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1583
+     },
+     "output_tokens": 4,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "3844d6c9-ee95-42f5-a2a6-c4d35281723e",
+   "timestamp": "2026-10-15T16:28:29.709Z",
+   "request_id": "req_011Cg4LaXUoBfbTdqXvjREG4",
+   "thinking_duration_ms": 4348,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LaXhTAJvBxQHqR3ccn",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Nefertiry Meryetmut\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Nfr.t-jr.j mr.yt-Mw.t, made of the words Nfr.t 'beautiful', jr.j 'companion', mr.yt 'beloved' and the god Mut. This is the Nefertari Meryetmut name. Record 1 reads as 'Nefertiry' (n-f-r-t, then j rendered as i, r, and j rendered as y), followed by 'Meryetmut' (m-r-y-t, then m-w-t). The consonants match in the same order with no extra or missing ones, and the words are the same, so C1 is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1583,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1583
+     },
+     "output_tokens": 4,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "uuid": "fbb631e4-126b-4347-96f8-a4c0b88d3c37",
+   "timestamp": "2026-10-15T16:28:29.721Z",
+   "request_id": "req_011Cg4LaXUoBfbTdqXvjREG4"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "3afaefa0-c74c-4fc5-a464-30da856526c6",
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1"
+  },
+  {
+   "duration_api_ms": 5433,
+   "stop_reason": "end_turn",
+   "session_id": "cf1ce67f-da81-4849-971a-6a803a2c4dd1",
+   "total_cost_usd": 0.010636,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1583,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 430,
+    "output_tokens_details": {
+     "thinking_tokens": 195
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1583,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 430,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1583,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1583
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 430,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1583,
+     "webSearchRequests": 0,
+     "costUSD": 0.010636,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 195,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Nefertiry Meryetmut\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Nfr.t-jr.j mr.yt-Mw.t, made of the words Nfr.t 'beautiful', jr.j 'companion', mr.yt 'beloved' and the god Mut. This is the Nefertari Meryetmut name. Record 1 reads as 'Nefertiry' (n-f-r-t, then j rendered as i, r, and j rendered as y), followed by 'Meryetmut' (m-r-y-t, then m-w-t). The consonants match in the same order with no extra or missing ones, and the words are the same, so C1 is the same name.\"}",
+   "ttft_ms": 5432,
+   "type": "result",
+   "duration_ms": 5519,
+   "uuid": "d1672d8b-ad02-42f2-b637-0745fc0805fb",
+   "ttft_stream_ms": 1083,
+   "time_to_request_ms": 42,
+   "first_content_frame_ms": 1084,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Nefertiry Meryetmut",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is Nfr.t-jr.j mr.yt-Mw.t, made of the words Nfr.t 'beautiful', jr.j 'companion', mr.yt 'beloved' and the god Mut. This is the Nefertari Meryetmut name. Record 1 reads as 'Nefertiry' (n-f-r-t, then j rendered as i, r, and j rendered as y), followed by 'Meryetmut' (m-r-y-t, then m-w-t). The consonants match in the same order with no extra or missing ones, and the words are the same, so C1 is the same name."
+  }
+ }
+}

@@ -1,0 +1,505 @@
+{
+ "unit_id": "Intkaes",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "jntkꜣs"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Intkaes\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Jn.t-kꜣ=s\n  Lemma 1: German: Init-kaes | English: Init-kaes\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Intkaes\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "1fccfcf0649db1847a196df0ddbbd7d1855604a5d1d193c94fd6127e7ecc56aa",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "0076ddbe-f03d-4b0f-97ec-250e0b2496f0",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "a1634a6e-3dfb-48f0-8bdf-589e63935d9c",
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "0076ddbe-f03d-4b0f-97ec-250e0b2496f0",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "9cd0f3fc-a5da-4df2-8565-077a5fe99ec2",
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-sfo03bp9",
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "88e65659-c61b-4722-9c14-2cea67c9871c",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-sfo03bp9/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1968656.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "9acdb135-1fc7-40c0-ad13-31cf8a31a5d0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 5,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "8d1c50b2-b354-4953-84f6-c48a32961691"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 3,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "e8b01094-a9bb-4c80-ac20-0a453ed2241a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 4,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "5a92ddf8-0181-408a-8670-def0dd078356"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 3,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "008abde5-e435-44f7-b7fb-e3b6e949c40c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "26516dbc-7b00-47ed-8280-659fbd167125"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "7b1b3dad-251e-4ce4-b2c2-510694b7ffe6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 2,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "a9fcc79d-49f7-40cc-8a9e-9c7560302894"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 6,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "41ddc2c6-e2f7-4bf6-a4a0-d8bcff262011"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "a1df36d1-7511-4561-850b-925a949387a4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "ea106e81-5417-4654-9e9e-a7a4d6879b93"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "8648e57e-147b-43c8-9155-e79a47a1ed1d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 2,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "3ef10578-41d9-4b9f-8fd0-386d811ebd21"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 4,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "e37f29e2-4a18-4d15-bd77-ba06205c7bed"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "79319a48-9635-4f0f-b675-924d2ff4729a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 4,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "2656ea35-77e4-436c-bea9-0a247bb17a35"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 5,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "f8d991ec-89ef-4b36-8100-420eb086f74a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 1,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "9425aced-7699-4566-af30-01d25229dfc2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 222,
+   "estimated_tokens_delta": 176,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "b7e320b3-9486-4d96-8029-6a2dbbff1c79"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LKoFAoffTDGKKTTwxo",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down the transliteration, the consonant pattern n-t-k-s with initial I matches \"Init-kaes\" as recorded in the TLA, confirming it's the same name.\n\n",
+      "signature": "CAQS8AYKEAgSGAI4AUIIdGhpbmtpbmcSDKNb+2lyugHSgYEwJxoMZmIHZA8TeGYacklSIjDxADS9/82wLrSLCwfoJ5zLmZf7n0USRJsgDY9+qo28zeGCpuoz20uWjIE/7Gi/yh8qjQZHMzyvzFy3Rsa3wfvTyPkM0fIDW7RYTXnJqtG01/ygo1JRcwsDmkY2knCVX3ZUKobVOYoAI6HKnhFS54NscVLruDv0eK4b4LfOwPm0l4a8jY4I/mWwnXifLVGyrD23t9TAIjJIjG7NeVzCztglpkaUTDFHffPZKVYnA2N1xEyG2pius2dOjVJbLqDUwHXmXaAnRNYh+TSjfKYbHXLn+auGZVWvicbW34EaAIzuGJEAQ+BH2L009HqtbQc4HYeR5Ie6Am7X4yxQUeeKsHflJ9Pv1l4sT1TrXmz0N9fcmUuZe6yyUe/oI5IzjDiGHfcdN+GfnApSGaBivrCE06gCplya4skPgVFJb8TiT8oHsexsE3uqjCO7qfcQdGglVl9CFrQMbiH9kgYLlh/gU4fVZvHzLmAMk9D1yjX/6bKD5WDk4iQpxxLYarcMkDuSmTwYuH1ZKAwoKWds0ZCa0KzNOCkib85pM1OtCsN01KePZL9E/sKL/ErAz3X4mW83sYYYVzcbLPQw4fpZ8D1AM2iqEvm+wmGR9mTxLCyeujSnsz19wfDIVicN2rUnuOm7zske+japsHCP3saLlihi3e/MoqPjuxg9k+7A1JRWBwMx2oBfVQtYLseCLBo7cYmpi5c6NdoeznxQeGEK+SdcIhFzgUvG09CwiwYK2L2HL159c+CGG/hKcgvuoh7vMyZzmyrKn6T5ZTn9ZwxDcJG+QkKL6KwBqbOmTsc+zKDrqmwKunB03Yau0wOmNOFIgXh48K7DFHdPVs4X90EzyPaan/9reedfWTBRJBYx+FuoBXSLf5aEznVvhAhM977VreTCOs8v8oz/Sdz2I0O7Zy7/mqVqek+V7sLc1pUNMS/mf3ZSoEyCfIADRQQ0oWfDv0u4BnYF7VZrna7X99ciKcrlGpVGFFYAA5eOu4djUya/kBPKU1LK4K8P/dvD/hLrm+2Focul6h3eX7i1PZ5vIXE7iMXpjhESbNkhlDo3LIn1N+7ZTZLIc4hQQYPGgFZEbW5zJw5GdbMBR8HWjJgsPUOn8I7NGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1552,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1552
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "623e3223-f36a-4c14-8581-29d698cd9575",
+   "timestamp": "2026-10-15T16:25:08.888Z",
+   "request_id": "req_011Cg4LKo2GbbWvix7iWmCc8",
+   "thinking_duration_ms": 3209,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LKoFAoffTDGKKTTwxo",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Intkaes\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Jn.t-kꜣ=s, which the TLA renders 'Init-kaes'. Its words are Jn.t, kꜣ and the suffix =s. Record 1, 'Intkaes', reads as I (for j) + n + t + k + a (for ꜣ) + e (an added vowel) + s. Every consonant of the candidate is present: the weak j is written as i, ꜣ as a vowel, and the t is the feminine ending inside the name. Record 1 has no consonant that the candidate lacks. The TLA's own modern spelling 'Init-kaes' is the same name as 'Intkaes' apart from the vowel i after the n, which is a permitted added vowel.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1552,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1552
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "uuid": "11842341-fda4-4e49-8708-b03259726c60",
+   "timestamp": "2026-10-15T16:25:09.064Z",
+   "request_id": "req_011Cg4LKo2GbbWvix7iWmCc8"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "774d0ec2-9fa6-4e9a-bccd-2dbfebb85496",
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7"
+  },
+  {
+   "duration_api_ms": 4627,
+   "stop_reason": "end_turn",
+   "session_id": "dd8b042c-5397-4743-93da-f443b7847fb7",
+   "total_cost_usd": 0.010211999999999999,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1552,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 400,
+    "output_tokens_details": {
+     "thinking_tokens": 136
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1552,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 400,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1552,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1552
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 400,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1552,
+     "webSearchRequests": 0,
+     "costUSD": 0.010211999999999999,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 136,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Intkaes\", \"choices\": [\"C1\"], \"reasoning\": \"C1 is Jn.t-kꜣ=s, which the TLA renders 'Init-kaes'. Its words are Jn.t, kꜣ and the suffix =s. Record 1, 'Intkaes', reads as I (for j) + n + t + k + a (for ꜣ) + e (an added vowel) + s. Every consonant of the candidate is present: the weak j is written as i, ꜣ as a vowel, and the t is the feminine ending inside the name. Record 1 has no consonant that the candidate lacks. The TLA's own modern spelling 'Init-kaes' is the same name as 'Intkaes' apart from the vowel i after the n, which is a permitted added vowel.\"}",
+   "ttft_ms": 4466,
+   "type": "result",
+   "duration_ms": 4715,
+   "uuid": "447de29d-a850-4fbd-ae28-d3be56a8bc33",
+   "ttft_stream_ms": 1257,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 1257,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Intkaes",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 is Jn.t-kꜣ=s, which the TLA renders 'Init-kaes'. Its words are Jn.t, kꜣ and the suffix =s. Record 1, 'Intkaes', reads as I (for j) + n + t + k + a (for ꜣ) + e (an added vowel) + s. Every consonant of the candidate is present: the weak j is written as i, ꜣ as a vowel, and the t is the feminine ending inside the name. Record 1 has no consonant that the candidate lacks. The TLA's own modern spelling 'Init-kaes' is the same name as 'Intkaes' apart from the vowel i after the n, which is a permitted added vowel."
+  }
+ }
+}

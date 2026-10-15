@@ -1,0 +1,22 @@
+Decide whether the name in record 1 and the name in record 2 are the same ancient Egyptian personal name or two different names.
+
+How to compare, in this order:
+1. Read the transliteration in record 2 as a sequence of consonant signs, one letter each: ꜣ, ꞽ or j (also written ı͗ or i̯), y, ꜥ, w, b, p, f, m, n, r, h, ḥ, ḫ, ẖ, z, s, š, q, ḳ, k, g, t, ṯ, d, ḏ. A capital is the same sign as its lowercase. Dots, hyphens, = and spaces only separate elements.
+2. Go through the name in record 1 and match each of those signs, in the same order, to what represents it there. A modern spelling writes:
+   - h for ḥ or h; kh or ch for ḫ or ẖ; sh or sch for š; tj or t for ṯ; dj or d for ḏ; q or k for q or ḳ; s for s or z; every other sign by its own letter; one letter per sign, so a doubled letter stands for two signs;
+   - a vowel letter (a, e, i, o, u) for ꜣ or ꜥ, between the letters that represent its neighbouring signs (at the start or end of the name, a vowel letter next to the one neighbour);
+   - i or y for ꞽ, j or y, and u or w for w, or leaves any of these three out;
+   - extra vowel letters anywhere, which stand for no sign;
+   - and may leave out a t that ends an element (the feminine ending), at the end of the name or before a dot or hyphen.
+3. The two are the same name if every sign of the transliteration is matched this way, in order, and record 1's name has no consonant left over. They are different names if a sign of the transliteration other than ꞽ, j, y, w or an element-final t has nothing in record 1 to represent it (an ꜣ or ꜥ with no vowel letter between its neighbours' letters counts as nothing), if record 1's name has a consonant the transliteration lacks (a y or w with no ꞽ, j, y or w to stand for counts as one), if a letter stands for the wrong sign (a w for a j, an h for a k), or if the elements differ in order or number.
+Decide from the spellings only. Who bore the name, and any person a translation names, are not evidence that two spellings are one name.
+
+Record 1: a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it (without the letter or numeral with which they tell apart women of one name).
+{dh_record}
+
+Record 2: a lemma of the Thesaurus Linguae Aegyptiae lemma list (January 2018): its transliteration and its German and English translations, verbatim.
+{tla_record}
+
+Answer with this JSON object, and nothing after it:
+{{"pair_id": "{pair_id}", "verdict": "same_name" | "different_name" | "insufficient_evidence", "reasoning": "<how each sign of the transliteration is or is not represented in record 1>"}}
+Use "insufficient_evidence" only when the two cannot be compared at all (for example, record 2's transliteration cannot be read as signs), never because you are unsure which way a rule applies.

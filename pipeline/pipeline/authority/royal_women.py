@@ -452,19 +452,28 @@ def new_weak_sign_collisions(index: RoyalWomenIndex) -> dict[str, tuple[str, ...
 
 
 def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
-                female_rulers_path: Path = FEMALE_RULERS) -> RoyalWomenIndex:
+                female_rulers_path: Path = FEMALE_RULERS,
+                linked_spellings: dict[str, tuple[str, ...]] | None = None) -> RoyalWomenIndex:
     """Index the women and the female rulers. Each woman's family names are resolved through
     the king authority; a family name that is not exactly one king is recorded, never
-    guessed. A female ruler's king_name that is not exactly one king raises."""
+    guessed. A female ruler's king_name that is not exactly one king raises.
+
+    `linked_spellings` gives further spellings of a woman's name from another source, keyed by
+    her target id (the TLA renderings `tla_links.linked_spellings` reads from the committed
+    link decisions). They are labels of her name like D&H's own, on every tier."""
     women = list(women)
+    unknown = set(linked_spellings or {}) - {w.target_id for w in women}
+    if unknown:
+        raise ValueError(f"linked spellings for targets that are not D&H women: {sorted(unknown)}")
     by_dh_id = {dh_id: w for w in women for dh_id, _ in w.dh_rows}
     index = RoyalWomenIndex(women={w.target_id: w for w in women}, dynasties={}, family_king_ids={},
                             family_names_not_resolved={}, king_ids={}, alt_names_dropped_as_king_names={})
     for woman in women:
         kept_alt = [a for a in woman.alt_names if kings.resolve(a)["status"] == "unmatched"]
         index.alt_names_dropped_as_king_names[woman.target_id] = tuple(a for a in woman.alt_names if a not in kept_alt)
-        _add(index, woman.target_id, [*woman.labels, *kept_alt])
-        _add_weak_sign(index, woman.target_id, [*woman.labels, *kept_alt])
+        linked = list((linked_spellings or {}).get(woman.target_id, ()))
+        _add(index, woman.target_id, [*woman.labels, *kept_alt, *linked])
+        _add_weak_sign(index, woman.target_id, [*woman.labels, *kept_alt, *linked])
         index.dynasties[woman.target_id] = woman.dynasties
         family, unresolved = set(), []
         for name in woman.family_names:

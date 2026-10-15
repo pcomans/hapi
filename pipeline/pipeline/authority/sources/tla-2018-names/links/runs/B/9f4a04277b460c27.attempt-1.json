@@ -1,0 +1,671 @@
+{
+ "unit_id": "Sitre",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ꜣstwrt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Sitre\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ꜣs.t-wr.t\n  Lemma 1: German: Aset-weret | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Sitre\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "255bbf05cd7e741df88a82e9d0d19defdc6f8542bcfe7c8962b4b9cffe3e402b",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "3ad1b8f7-4907-4b74-a929-53a21f4d0499",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "38fe9a27-6eb2-43b5-af59-5c5df872d865",
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "3ad1b8f7-4907-4b74-a929-53a21f4d0499",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "a58e8529-50db-480f-a23f-76d13de623b8",
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-m2yy2q6x",
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "a051c659-c6af-49e3-a0a8-8ee3732bc850",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-m2yy2q6x/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/2003013.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "dc02ada1-bd52-4fa5-ab5c-4c39e3ca47e2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 4,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "7f84d31e-77a9-474b-aa53-a6fcfd33da5d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 2,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "50d2a08e-dd5d-45d7-8c22-b6013691d215"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "0980b25f-268a-440c-8dfb-eef11ea8bf32"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "3a34e5e8-521c-49fc-90eb-c1aa5204737e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "afda8bd2-87b4-4bad-b5ec-08dd71ba4399"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "cabc8b97-bcac-40df-91cc-8c172e70a47c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "906886cd-4f7a-43fc-967c-9ac7a2cb67f5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "f23da881-00fc-4487-a6e7-fbbe3bd09275"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "c918174c-a2f4-4105-844f-b1130da84141"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "becde81b-d57b-4735-9eed-e64c140ebf89"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "349f101d-5676-44de-b2a9-8198611b7304"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 2,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "16b3139b-682c-47d4-91a5-ea86bf470a19"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "44b89809-adad-4248-be28-5b40f64cef36"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "5332b2aa-6d12-4907-88d7-287a6b7881dc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "0bfc9081-f7f1-4386-a094-e9399bc1d69c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "e08b09a0-9ce9-4364-a05d-7cef7500ff42"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "5d52e530-c099-481c-bc80-cff21632d417"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "180ec9e4-22b3-42ff-8833-c2ae60186bb6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "0d6de49b-d0a1-4047-9bf5-722bcf36e83b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 55,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "f317590e-05f0-4bed-997a-220302c9df45"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "dcc087c5-11e6-410d-84ab-c24142aa8bae"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 58,
+   "estimated_tokens_delta": 2,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "53e07de0-bba1-4cb1-b97d-56223e9290cc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 60,
+   "estimated_tokens_delta": 2,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "058c1675-d838-4d72-8212-480ffe7da721"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 66,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "ba6118bc-ffc8-452f-b1f2-4d3f01e0feed"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 70,
+   "estimated_tokens_delta": 4,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "1a2971c1-e7eb-4a48-97b8-83370bde4b5c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 74,
+   "estimated_tokens_delta": 4,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "e69d786a-79b4-4ac8-ad92-ac9f7409ce09"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 75,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "f10bc20f-19fb-4d69-bceb-d4cf37766ab7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 78,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "4a2ecc26-95fc-4b8a-9e65-a6a57e7560f4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 84,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "278bf3a1-e1d1-4426-b4a4-9a860a121cfc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 86,
+   "estimated_tokens_delta": 2,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "82ef28c3-b16f-4c97-b28e-d931b9cd22d3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 89,
+   "estimated_tokens_delta": 3,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "6989f82f-f986-4fac-b24f-54edd3d992fc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 93,
+   "estimated_tokens_delta": 4,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "42f779f6-2f42-456f-b3b1-c546486929d6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 94,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "7b65643d-f295-41a5-ad04-a8a7a8199a4a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 100,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "6e12b448-95a0-412d-ac13-deef5d1da2eb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 102,
+   "estimated_tokens_delta": 2,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "4dd99127-de0c-4987-b092-fcca40e29e47"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 108,
+   "estimated_tokens_delta": 6,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "2155a6c1-1b35-458e-a5f6-4bfce6d15f26"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 109,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "c242bca2-48e2-4524-90fb-c250fcf1eec5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 110,
+   "estimated_tokens_delta": 1,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "c55da649-4c36-40fd-95cd-1508bbb83bd8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 264,
+   "estimated_tokens_delta": 154,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "a6b4f549-4a07-4bf1-b569-ffea33926f70"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4NM5ZTDEndY3zbyiQ6q",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking whether \"Sitre\" could consonantally correspond to Ꜣs.t-wr.t, considering that the w and final feminine t might drop out, trying to see if the phonetic match holds up.\n\nBut even if the consonants line up loosely, the actual words differ in meaning—Sitre means \"daughter of Re\" while Ꜣs.t-wr.t means \"Isis the great,\" so this identification doesn't work.\n\n",
+      "signature": "CAQSlwgKEAgSGAI4AUIIdGhpbmtpbmcSDP7v3OKO7veQbhPVjRoMLwYCooJXh+V+n+zOIjA2i7kECURhdnV2llcVCSLLXMqMUHBQ9eo9JpihEbhg7uilCJ+UMwqRF3IUuvgKafYqtAdp/DWS2Tiyv9T74D3sX9Xxb3WyT1I2WooGsfhozUzLm1w9A/ifOP8RUq1jo7XNwS04JzxwEKZWyy02xspii2eTtX7snTcDj4V6nn4Rlecxr6bFJ9k1bEuO0B7MjMjRopc3Zs7uSE1Ix8uV0Rv+OnKvkP4ypS0IPEu7csw3qj3cSiPh+2Qmwkya4ckIVvbE4mCa9keB8UxCArDDJtnKmMdeM1Ok9KEqJyahi1HcC5m+Ezbf7+tm72Y8q00RZ60lM5lFWVFLMBFmDdmz23wIRecEjcVM6ZhoDpefx1A/dKen6qibp98eY1Lm4l1hAQiX7JyWhq8mvjXb60g3HkwnHeTyWZQjUiW8K3+CNaK5Ti3XQGmj2/FzySc81XNErl8C9Dv5yiiOsZV+M+qLzq1MTd2M4eGYDzoIl38iu/roNjSDIxVxPI+4Ki0sutQL28YCyjjG+e7pN/GS8THE9TXCVXyMyxSbl8aGqJ6g2N0D1+l6cf32C4Hfp/BDEo/Q3NFfnzmVxUtLstbuLi0WgqZtbVdEBbV18XjvjYnyoMmJLuWfFh55UipRQCcf7NALxa7oidcjEXymLK5MZf7+x5ZVKxImUGfa0ZEdiyMm98954iuUHwOK4lZKBOXcT8p/j/7PjiPbUfcCyPvrIs+4pSjuVJH+f6aXbal7FZGAdskdomUqKve8JDcKcIz3X5gv1puvsBxRXIh2SZsaD3xmU4/wWg13krkTVHZndPNeRbEyrr+Gcld3Wdurf8Gp0rAamBFvm/F84EvqrlwSZtRszVpg8wK2a571nYqZ6J23IrZDaBhJJj8mrEdgdSYgVUVOxquKebRX3g3lbEhIPh4BV/WchpU/lAF7UJJgOfYTisN3BuJL0D9XddJW1XYrIKNtFKDkKrRntIDY82PBKGlOvpAGnYJ4FnSCGxaUeHl/syxRHewsS9ShcfASNm37Ys96KfoBuffMwmY8mFju7jB/R+oJ8NT9IoK0jWhWsgZNWw6UudzQGsx2z/y+6NkDEAPK4Z0BOkxQ3XzYyZHlDHCkMWMniaRLDA4YfK0/IIG/YsyFaObFPfNxDEvSGtxPwvRHQDbM38SNQy6tBMd5UPDzxrHlCF95iYJQMBDbiKkY986PwXQqY9JeVkA85mlJ/vXeBYHT0C72m5Zocy/4JyJwyXMq8EHUM3by9PiwG/KXMEE1tCsTKkq+9CNNrjK33C7pNvGeBffpAEmqji89nBX6k/48LBkr+tml5izE2dwAJ58NlVYl0fE/PZAYAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 346,
+     "cache_read_input_tokens": 1198,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 346
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "c4039cd6-de1e-45dc-8840-9cdd9c950171",
+   "timestamp": "2026-10-15T16:51:42.953Z",
+   "request_id": "req_011Cg4NM5LYm7Z5ryJMrDqZa",
+   "thinking_duration_ms": 6229,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4NM5ZTDEndY3zbyiQ6q",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Sitre\", \"choices\": [], \"reasoning\": \"C1 Ꜣs.t-wr.t is 'Isis (Aset) the Great', made of the goddess name Ꜣs.t followed by the adjective wr.t 'great'. Its consonants can be stretched to fit Sitre: leave out ꜣ and w, take the first t as written, and drop the final feminine t. But Sitre, read as a modern spelling, renders Sꜣ.t-Rꜥ, 'Daughter of Re': sꜣ.t 'daughter' followed by the god Re (Rꜥ). Those are different words that only happen to share consonants, so C1 is a different name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 346,
+     "cache_read_input_tokens": 1198,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 346
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "uuid": "6ea70622-772e-4c40-a1a2-482ae05ff428",
+   "timestamp": "2026-10-15T16:51:42.969Z",
+   "request_id": "req_011Cg4NM5LYm7Z5ryJMrDqZa"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.13,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "0e5b3137-1866-43b8-9a4e-de519b60c6df",
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1"
+  },
+  {
+   "duration_api_ms": 7525,
+   "stop_reason": "end_turn",
+   "session_id": "ef2edbe8-a926-427f-b05b-e0f3da42fea1",
+   "total_cost_usd": 0.012335599999999999,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 346,
+    "cache_read_input_tokens": 1198,
+    "output_tokens": 466,
+    "output_tokens_details": {
+     "thinking_tokens": 234
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 346,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 466,
+      "cache_read_input_tokens": 1198,
+      "cache_creation_input_tokens": 346,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 346
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 466,
+     "cacheReadInputTokens": 1198,
+     "cacheCreationInputTokens": 346,
+     "webSearchRequests": 0,
+     "costUSD": 0.012335599999999999,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 234,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Sitre\", \"choices\": [], \"reasoning\": \"C1 Ꜣs.t-wr.t is 'Isis (Aset) the Great', made of the goddess name Ꜣs.t followed by the adjective wr.t 'great'. Its consonants can be stretched to fit Sitre: leave out ꜣ and w, take the first t as written, and drop the final feminine t. But Sitre, read as a modern spelling, renders Sꜣ.t-Rꜥ, 'Daughter of Re': sꜣ.t 'daughter' followed by the god Re (Rꜥ). Those are different words that only happen to share consonants, so C1 is a different name.\"}",
+   "ttft_ms": 7526,
+   "type": "result",
+   "duration_ms": 7615,
+   "uuid": "be3179ec-625a-455f-a56f-7d56e43d99aa",
+   "ttft_stream_ms": 1296,
+   "time_to_request_ms": 40,
+   "first_content_frame_ms": 1297,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Sitre",
+   "choices": [],
+   "reasoning": "C1 Ꜣs.t-wr.t is 'Isis (Aset) the Great', made of the goddess name Ꜣs.t followed by the adjective wr.t 'great'. Its consonants can be stretched to fit Sitre: leave out ꜣ and w, take the first t as written, and drop the final feminine t. But Sitre, read as a modern spelling, renders Sꜣ.t-Rꜥ, 'Daughter of Re': sꜣ.t 'daughter' followed by the god Re (Rꜥ). Those are different words that only happen to share consonants, so C1 is a different name."
+  }
+ }
+}

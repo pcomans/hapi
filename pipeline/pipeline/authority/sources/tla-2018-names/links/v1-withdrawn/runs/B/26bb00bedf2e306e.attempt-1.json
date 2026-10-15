@@ -1,0 +1,651 @@
+{
+ "pair_id": "Nefertiry|853140",
+ "role": "reviewer",
+ "requested_model": "sonnet",
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Decide whether the name in record 1 and the name in record 2 are the same ancient Egyptian personal name or two different names.\n\nHow to compare, in this order:\n1. Read the transliteration in record 2 as a sequence of consonant signs, one letter each: ꜣ, ꞽ or j (also written ı͗ or i̯), y, ꜥ, w, b, p, f, m, n, r, h, ḥ, ḫ, ẖ, z, s, š, q, ḳ, k, g, t, ṯ, d, ḏ. A capital is the same sign as its lowercase. Dots, hyphens, = and spaces only separate elements.\n2. Go through the name in record 1 and match each of those signs, in the same order, to what represents it there. A modern spelling writes:\n   - h for ḥ or h; kh or ch for ḫ or ẖ; sh or sch for š; tj or t for ṯ; dj or d for ḏ; q or k for q or ḳ; s for s or z; every other sign by its own letter; one letter per sign, so a doubled letter stands for two signs;\n   - a vowel letter (a, e, i, o, u) for ꜣ or ꜥ, between the letters that represent its neighbouring signs (at the start or end of the name, a vowel letter next to the one neighbour);\n   - i or y for ꞽ, j or y, and u or w for w, or leaves any of these three out;\n   - extra vowel letters anywhere, which stand for no sign;\n   - and may leave out a t that ends an element (the feminine ending), at the end of the name or before a dot or hyphen.\n3. The two are the same name if every sign of the transliteration is matched this way, in order, and record 1's name has no consonant left over. They are different names if a sign of the transliteration other than ꞽ, j, y, w or an element-final t has nothing in record 1 to represent it (an ꜣ or ꜥ with no vowel letter between its neighbours' letters counts as nothing), if record 1's name has a consonant the transliteration lacks (a y or w with no ꞽ, j, y or w to stand for counts as one), if a letter stands for the wrong sign (a w for a j, an h for a k), or if the elements differ in order or number.\nDecide from the spellings only. Who bore the name, and any person a translation names, are not evidence that two spellings are one name.\n\nRecord 1: a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it (without the letter or numeral with which they tell apart women of one name).\nName: Nefertiry\n\nRecord 2: a lemma of the Thesaurus Linguae Aegyptiae lemma list (January 2018): its transliteration and its German and English translations, verbatim.\nLemma: 853140 (person_name)\nTransliteration: Nfr.t-jr.j\nTranslations: de: \"Nefertari (Kurzform zu Achmes-Nefertari)\"\n\nAnswer with this JSON object, and nothing after it:\n{\"pair_id\": \"Nefertiry|853140\", \"verdict\": \"same_name\" | \"different_name\" | \"insufficient_evidence\", \"reasoning\": \"<how each sign of the transliteration is or is not represented in record 1>\"}\nUse \"insufficient_evidence\" only when the two cannot be compared at all (for example, record 2's transliteration cannot be read as signs), never because you are unsure which way a rule applies.\n",
+ "user_content_sha256": "43bc89d9807ebdffd9b01b0137699375c8a9dccaab752dc356386dab38558c07",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "24f4ce2f-0961-4e1a-8338-3e0fc1bb1f38",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "023b963a-2e38-4d40-9139-3b8e43819519",
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "24f4ce2f-0961-4e1a-8338-3e0fc1bb1f38",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "6e2df692-a736-423f-bb3e-c262f4effdd6",
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-420nz4ay",
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:rescue",
+    "codex:result",
+    "codex:review",
+    "codex:setup",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "advisor",
+    "agents",
+    "auto-mode-setup",
+    "autocompact",
+    "clear",
+    "color",
+    "compact",
+    "config",
+    "output-style",
+    "context",
+    "effort",
+    "fast",
+    "focus",
+    "heapdump",
+    "init",
+    "mcp",
+    "import",
+    "model",
+    "__remote-workflow",
+    "workflow-launch-exec",
+    "reload-plugins",
+    "reload-skills",
+    "rename",
+    "ultrareview",
+    "security-review",
+    "usage-credits",
+    "extra-usage",
+    "usage",
+    "insights",
+    "recap",
+    "skill-doctor",
+    "goal",
+    "design-consent",
+    "design-revoke",
+    "list-agents",
+    "team-onboarding",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "terminal_slash_commands": [
+    "doctor",
+    "color",
+    "focus",
+    "reload-plugins"
+   ],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:result",
+    "codex:review",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "3bbb025d-be53-4687-a90d-6bef29983064",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-420nz4ay/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1887055.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "b952bb1e-e8a8-46b6-8d3c-957612071ad4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "7c3b6f6f-6075-4ff9-bb37-f3e0efab8969"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 3,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "191b29ab-e8df-4849-af8a-db61147c918c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "23cee86d-9651-4bf1-8e4d-45918166ca03"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "5185af44-12b4-40de-9ef6-217e147be166"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "9961a16c-0449-45d3-a6cd-35c44216017a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 3,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "d641ea42-93b6-4f84-8510-4c2ae7a22745"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 7,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "90c5f69d-69c9-448e-af2b-cd47195aca16"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 3,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "151d7c1d-d0a1-40da-979f-e2b05a8cf26e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "38d06cfb-51ec-45bf-96cd-e58ef172adf9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "5551a8d9-83eb-48fc-aa41-b4b9381a1b7a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 3,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "671d2f0b-cb75-4992-8670-2d8bcca3dc68"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 3,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "bf1c6983-afa1-4e6f-840b-2d6f8d2c58c0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "5bd86993-6b34-4890-b568-7b775ee7f063"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "9a2af9c4-7f28-4453-ac85-0a81c43909f9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 7,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "e0b46e8e-b6e6-4645-bc7f-17653e7f05d3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 3,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "e01d7d52-7393-4bc8-aa6f-9c836f53c6e0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 52,
+   "estimated_tokens_delta": 5,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "c572d111-b335-48d1-921e-aeea4a6373cd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 5,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "64219e02-e030-42b9-ae84-6058ce25248d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 59,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "1d7acb9c-766f-45ad-9fc6-0f6aa26de895"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 61,
+   "estimated_tokens_delta": 2,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "b47b66d4-893b-4db9-a05e-d847edc9f11b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 65,
+   "estimated_tokens_delta": 4,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "ff71df97-3276-4560-bc51-c9f6143bdda9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 66,
+   "estimated_tokens_delta": 1,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "8b7c3197-fbf4-436d-bca6-8b237adebd75"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 242,
+   "estimated_tokens_delta": 176,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "44fc2e97-4702-4694-a99e-29ef261175d7"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4EXZq9ybNnjtiksxbpa",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm transliterating Nfr.t-jr.j into its component sounds and checking that they align with the name \"Nefertiry\" letter by letter, confirming the consonants match while the vowels are just added for pronunciation.\n\n",
+      "signature": "CAQSvgcKEAgSGAI4AUIIdGhpbmtpbmcSDEiY9qIo0HyqoIoayhoMYPJHUbKlAn7E0VcGIjACEzXufx3HwREWZvCjFme6snf6r7XySpFO4IPBpFfIUwtnXeo7DHGYYJ62LUWg2lcq2wbuHqOdFMme+jUfkbIUnAxsMoJghJ/05XcK42Lq7TdPCgAwCfxBklez07qM58DCIKuzn6cfYeLJuhWSHXvLnkqOBx47hQDxcpqjqWM7ryz13rD6cZhkQdtKu+/zPVyKJULVwB3ZybyL1fms9/EIk/L9poQZ6aVHHB/dJjqU53NcIwtjlkTsaavCvOKpOHhhqP0nFwOd0XrDss8Wd94bCR8gXs+/bvN4AIdiKRDHK1hpspL8QbVHHdWAYiFjnXAnwby98CvVaGxf2mIqP3swYd/s4sPrlK3Q2l2H+D3AbPbG391qs+J6B/ZHj/Trfxy1MLCxfNfEXkZIdF0qH/vMAIKzoplQRf2u6E3YLOA4jtvzT30DCzB52ikc+nYAEOuePQx4JaOdiFXlzfLALBm+bpFB8VegJqgSjObZnqfv0pME0N3K3WPy5XF0dDBul992b7OveTR83zjygv+XHyLiwi4Jc2zGVMpVFVAKVpiDljNEla/WGJ9JlbtXyuTNqZe6ybktPalFkN8HlrlsUuVhtK9FnW863XTGCSzLB37Fep8FmlgW6fckfXSIQw9ulFx/d9IA75wb1IvTDDjK5ncpuUqblG2UxMtO3GDalWwbVGp8jtEWAglRQlAWZN+8aGSnw+r0Y3C1lXxk80rYF12ZPHVOrNUiuGeBDhhTKxZhFWW7TUGYnvUQqeevfrJ4DMlEN2n+vl+OAXNMNdFBZ51C6bmjxAqBf2cULCXZa5w972yhGYnfU9hqVZnUbtdaI6mkwXgIxHcOBb/aJ27Ezk+kICXHXWjb7BF3Gsn0WFBbsfCoT5Oqg5FyA36+tN+9sARG/smW098q2sm/AorC4ZWPiQT3tifbZUvydeiEGyp+81OoumDEE9S3Do2JVshfNg3Dct8GIA5ZqQKE0RamLWCAcw7J/V7j5yEx19UWWtoKnYtlrMDyJeYEQ3B3+fKyRCVPj+V8IxjDM2yn29WdHmLma2/yt5Px5XDvx0T72M54nm+cX5ioUdKaG2Na+XF3I7oU2zuo2xvuJaR03MYVDF3PiPo/AFwz/wEbkdpU7GDV1I8emIG3BrRX52/FRVPQK0uxKYu0J3qApLKpgb9gz1Zjiv0eDu6aY2TMYGMadKRZCJfAQAWzInAFQyYGGhQ6GAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 348,
+     "cache_read_input_tokens": 1407,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 348
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "8d59e8c8-5918-4806-b620-a6da1bb577b7",
+   "timestamp": "2026-10-15T15:09:08.555Z",
+   "request_id": "req_011Cg4EXZdG2E46aWFNZC8nW",
+   "thinking_duration_ms": 4208,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4EXZq9ybNnjtiksxbpa",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"pair_id\": \"Nefertiry|853140\", \"verdict\": \"same_name\", \"reasoning\": \"Record 2's Nfr.t-jr.j reads as the signs n, f, r, t, j, r, j. In 'Nefertiry', N matches n, f matches f, r matches r, t matches the t that ends the first element (Nfr.t), i matches j, the second r matches r, and y matches the final j. The two e's are extra vowel letters that stand for no sign. No consonant is left over in record 1 and no sign in record 2 is unrepresented. The element order and count agree: Nefert + iry corresponds to Nfr.t + jr.j. The spellings are the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 348,
+     "cache_read_input_tokens": 1407,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 348
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "uuid": "31b94193-0fd0-49e3-8f88-c3f7a0bc4358",
+   "timestamp": "2026-10-15T15:09:08.559Z",
+   "request_id": "req_011Cg4EXZdG2E46aWFNZC8nW"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.04,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.1,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "2434b42b-5604-4128-a862-201624ff0f48",
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b"
+  },
+  {
+   "duration_api_ms": 5393,
+   "stop_reason": "end_turn",
+   "session_id": "e4071f63-423e-475b-9eee-0019cae3495b",
+   "total_cost_usd": 0.0057266999999999995,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 348,
+    "cache_read_input_tokens": 1407,
+    "output_tokens": 419,
+    "output_tokens_details": {
+     "thinking_tokens": 192
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 348,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 419,
+      "cache_read_input_tokens": 1407,
+      "cache_creation_input_tokens": 348,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 348
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 419,
+     "cacheReadInputTokens": 1407,
+     "cacheCreationInputTokens": 348,
+     "webSearchRequests": 0,
+     "costUSD": 0.0057266999999999995,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 192,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"pair_id\": \"Nefertiry|853140\", \"verdict\": \"same_name\", \"reasoning\": \"Record 2's Nfr.t-jr.j reads as the signs n, f, r, t, j, r, j. In 'Nefertiry', N matches n, f matches f, r matches r, t matches the t that ends the first element (Nfr.t), i matches j, the second r matches r, and y matches the final j. The two e's are extra vowel letters that stand for no sign. No consonant is left over in record 1 and no sign in record 2 is unrepresented. The element order and count agree: Nefert + iry corresponds to Nfr.t + jr.j. The spellings are the same name.\"}",
+   "ttft_ms": 5414,
+   "type": "result",
+   "duration_ms": 5480,
+   "uuid": "949bc864-60ea-4f86-ab93-804a745c7c92",
+   "ttft_stream_ms": 1206,
+   "time_to_request_ms": 41,
+   "first_content_frame_ms": 1206,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "pair_id": "Nefertiry|853140",
+   "verdict": "same_name",
+   "reasoning": "Record 2's Nfr.t-jr.j reads as the signs n, f, r, t, j, r, j. In 'Nefertiry', N matches n, f matches f, r matches r, t matches the t that ends the first element (Nfr.t), i matches j, the second r matches r, and y matches the final j. The two e's are extra vowel letters that stand for no sign. No consonant is left over in record 1 and no sign in record 2 is unrepresented. The element order and count agree: Nefert + iry corresponds to Nfr.t + jr.j. The spellings are the same name."
+  }
+ }
+}

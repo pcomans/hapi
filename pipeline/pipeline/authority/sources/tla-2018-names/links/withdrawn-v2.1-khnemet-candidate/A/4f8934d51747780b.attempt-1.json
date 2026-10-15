@@ -1,0 +1,989 @@
+{
+ "unit_id": "Khnemet",
+ "role": "A",
+ "requested_model": "sonnet",
+ "labels": {
+  "C1": "ꜣḫnjmwt",
+  "C2": "ẖnmy",
+  "C3": "ḫnmt",
+  "C4": "ẖnmw?ꜥnḫw",
+  "C5": "ẖnmw"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Khnemet\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ꜣḫ-n=j-mw.t\n  Lemma 1: German: Ach-eni-mut | English: (none)\n\nCandidate C2: H̱nmy\n  Lemma 1: German: Chenemy | English: Khenemy\n\nCandidate C3: Ḫnm.t\n  Lemma 1: German: Chenemet | English: Khenemet\n\nCandidate C4: H̱nm.w(?)-ꜥnḫ.w\n  Lemma 1: German: Chnum-anchu | English: (none)\n\nCandidate C5: H̱nm.w\n  Lemma 1: German: Chnum | English: Khnum\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Khnemet\", \"choices\": [<zero or more of \"C1\", \"C2\", \"C3\", \"C4\", \"C5\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "be1cdf8bd26a1f48e1e140cddbf86a16fa9cef9af709870537198e886ae4d260",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "c6815c8a-ff0c-457c-94b0-bdfb11429dfd",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "00e0662b-f548-44e5-b5ae-923160e07c27",
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "c6815c8a-ff0c-457c-94b0-bdfb11429dfd",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "574ba66c-d5d0-455b-bf82-7b35ff84a39a",
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-fhv43v49",
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "fc55b26b-c518-41d4-b02e-6aef65132835",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-fhv43v49/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1969869.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "00bba316-0122-4be1-8bdf-d1ce3cdb7446"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 2,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "8ca58899-37a2-4633-a9f1-2d2eb3086138"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "cde44100-2445-4a2b-b475-53b26ac5ec71"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "c3447482-3692-4a18-962e-b14a51e6beec"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "e6f7ed03-c357-4853-90ff-b6b69212e6db"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "a3ada4bf-84ec-4b01-8cee-5e8bc6a4889b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b733f9ba-c58b-4b20-aa4e-42e585e905e8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "a63e4856-0052-48b6-92e8-0313a866ed44"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "2694d92f-05f1-4af6-8cc2-dd1319abdc5b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "82b08640-2dd1-44b3-8d04-2c102cdfd795"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "8db256a0-09f2-4a34-a825-4317140f648a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "19860558-c4d9-472f-8d66-c7ac19cc3e3b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "82b0b12d-2fa3-45be-bce8-a5a753f9efe1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "7b4fa20f-12fc-41db-ac9a-6a36dee92544"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "5fa4b6f6-b222-498f-a79f-4a4a53355d6a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "dc30d2f3-af3d-468f-bcec-cb5a4b324ee0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "a856f48d-4592-4203-8476-74396dceedc5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "d57ae802-2f22-4cf2-a522-15a4c8aa1662"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "bb1c03c6-dbee-40b5-880c-4b50d2029206"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "0b90b30a-cfb7-4a7d-943f-66afa197d16c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "6d3a9934-caf9-4604-afd9-bb97d4710acb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 39,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "4947fc02-f6c0-40af-a0c1-019291f3e10a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "c840b130-3ac6-4a4f-a7f4-a7642b681c39"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "24fd6505-8a78-4aac-bde8-eda449655d6f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "73e0d134-a2ab-4266-9cf3-d91172e0530f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "8ef3d723-09ac-4056-a394-97fb96291fb7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b3ceee4f-1bd2-4766-8cc6-49fcb2c4c9b3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 8,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "6787eb12-4f0c-424c-b081-c6e22ecb8fd7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 59,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "62c2fc4a-8a27-41e1-9343-6a7d4fd7ab4f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 64,
+   "estimated_tokens_delta": 5,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "748faefe-2ee0-481a-a195-52a421c2dd05"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 66,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "acf608a2-9c6a-4a5e-8078-c2747ee49c74"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 68,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "32788054-ceb8-4432-981f-ca2e01e522ab"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 69,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "206b9240-49d2-4156-aa41-31b6427f4ebb"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 70,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "f78abeda-e8ee-4f0c-8c71-001f98310964"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 71,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "7b814397-c4cc-4539-b8a6-c14298bb3941"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 72,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "5f3d06cf-2901-48d2-af37-596a08676f4f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 73,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "a0111481-1aa3-401a-9407-c5fa4922cfdf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 74,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "25981ab4-2d7d-48fd-a964-f8078904fe34"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 75,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b6263398-59d2-400d-992d-7a227ed55918"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 78,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "0173f196-e462-4ca7-846c-b219ac392990"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 80,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "14e64c15-f2b8-4b2b-8493-066b8328e9f9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 82,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "3f24f3f2-6a49-458e-82f7-eb11d45da7d2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 84,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "d91a4cd8-2f0e-490e-8913-b3db03b749ed"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 87,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "908adff1-a27f-4886-92da-6ab8fb891a16"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 88,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "4fd62b54-8666-4a22-a7f9-c0f4270f1991"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 91,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "3b0ea529-22ac-41b0-afb2-ae62cd603d76"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 95,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "eaca06d4-66b0-452f-bf9a-ac014e63d558"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 97,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "ef714405-c41b-473f-8178-d72afe5786ee"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 99,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "3c6f99a7-61ba-400c-aa28-1725504fff27"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 100,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "252d0267-de47-4108-85af-0673705a44c0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 101,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "3adc7f42-5b19-4633-aa8c-39168d226c19"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 102,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "a6eec698-5f20-4137-b99b-528108f84ffc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 106,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "0334a3c2-df00-44a0-8a5b-97dd9fe716a6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 110,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "5aa987a8-5486-45cc-ad0f-00c602422d47"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 112,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "f6b0528f-76bd-4408-a2de-b6e3d76ffcd3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 113,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "38e7bb7b-130d-4226-af7e-fd9fed808b2d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 114,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "cc4617c5-3583-4a63-985e-118cb1e84468"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 117,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "3f551284-9705-49a0-8daa-6b5cba80b561"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 120,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "515203ea-921e-4857-9458-9677aac9984f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 123,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "d25d0cfa-9861-4599-9cec-97231c201523"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 125,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "7a19fcee-ce0a-4d8a-8b28-68851137aed5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 127,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "6818e302-2eff-4efb-b7ec-3d833206efa9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 131,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "5b16fb89-85cd-40e4-b969-464feee93b96"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 132,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "ff96638c-bf91-47a2-94b6-6632e38d6d54"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 133,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "ce6d854c-6e50-40bf-8f8d-ddc33a28a1b0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 134,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "16c3047f-33a3-42ca-9b46-07458733fd8f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 136,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "9e6118c0-10f9-4675-acef-61b838af4a92"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 139,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "99d3c7d4-2ebb-4bf7-903e-1ba5a3038380"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 143,
+   "estimated_tokens_delta": 4,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b6b95106-ad90-4d7b-ab07-8d5ddf762879"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 145,
+   "estimated_tokens_delta": 2,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "bdc471d7-efcc-4d6f-ba9c-c3a70c4b7d7c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 148,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "5d38561d-787d-477e-931b-94c4f89ee663"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 149,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b3505ecc-5edc-4166-88a6-d94064763e2d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 150,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "c578089a-e409-4648-b5b9-555cf0a75a89"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 153,
+   "estimated_tokens_delta": 3,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b533c879-eb69-46b3-b1ba-d825db5934fc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 161,
+   "estimated_tokens_delta": 8,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "840ac309-e69e-47f8-825f-5c1c539e0c51"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 162,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "17aa5cfe-d8f2-4460-8087-c8ef03767b7c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 169,
+   "estimated_tokens_delta": 7,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "546c8f27-b5dc-4ccb-8a97-fffb71c7b457"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 170,
+   "estimated_tokens_delta": 1,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "b26bdbc3-8130-4cf3-a422-49a4e7906a1c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 385,
+   "estimated_tokens_delta": 215,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "58e0474f-ce45-40fc-a723-59cb0537fd12"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LP3t5EPkpYQPa7yR5j",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking Khnemet against candidate consonant skeletons like Akhenimut — the weak consonants (ꜣ, j, w) can drop out, leaving ḫ-n-m-t, which matches, but I need to verify the actual words align, not just the consonant pattern.\n\nC2 (H̱nmy) has kh-n-m-y with no t, while the record shows a t that the candidate lacks, so that's a mismatch and gets rejected. C3 (Ḫnm.t, Khenemet) lines up cleanly and is a match, while C4 (Khnum-ankhu) and C5 (Khnum) both fail — one adds an extra ꜥnḫ element and the other is missing the t that the record requires.\n\n",
+      "signature": "CAQS+wsKEAgSGAI4AUIIdGhpbmtpbmcSDBdn8GbmlqewimHiHxoMzavQ7Mz6/4d6Sd/aIjDyP6bbDmOEETI8NFMXMYNe6tkbAcLidUZ/7RfpWrvZCQPEze4OhqNwxDWdcDB+QDIqmAvxeb+EmzMivK/OEbEUr6XBQbhLnLaCFb7PFYSlUsuuk7GbU0zBLq3bPlRalwEpEnaFFyqwEuj+MTXi7zNwiT150JZKSwg9l3WkUQbgqm4UYQw2lgTnvFyghFUJvcbykZ2bC075+UgEJO6IV1yOtnsJtlxvMWtHwrDIGQnEbh8/yxDkOLe8Y5JCnQP/Y3vfcMhfmnBtWHh+9ZRn/I9ZcrEpH0O+/DBP1Wk7msRGVUZRwCl/tul3v3s32qAiwWT47p255GAox7IQfnZFJ5rxQ/ShvnC6OlvEwWCqhWGPLOHJnSAoqcpYZac6ATpFQowE14kjTQKCnQTpIjWr/TVs4P+uB3Gjoqgi0oEVgRngnVO033dk0evGUbRmYqgRzzGbxiG6miUPmjKvRXlpy6A4wwFJDlK16US25kgnIIRaHVqIq5yI5fz2bATTJwNXtZIjA8sv+bevQVMd7LmFSCGQRTxd5gouIBMaR8wTSMYmhTn7z5hU0eEo5Prs0QFbSynuh6DXneztRFfIxebYD43x7qGaJSDn6nwXBxWtZGd5zxpN32OeZSBShCrceN5zuRsUmDFCkrRPb4v63xB3zXnhVzLz5lJlSARDnRhb5Apc8MC1X+k8fff3bF86r84gq4ZhEAWFnjIG5DoA1AfWhauiog71ec1X3YN36lcdOnLHnnk8+z86IHF9JZlz230hh8n0dCNaag7sPpbRC7C3Qz/1TwhaSdnf2QxS1qHGSbir1GFsT7nd822AQOrRrfi9l0zbGxiZyzX0g4Jd4EhAl5EHJIFrqW4KatgISlbQbjmmSmIkr16As8qbjUn9LObl3xAZiiCgu3hsPit9x4Eco8TOFrYtAo7SVk2GOOBe2v3svX681V0yyym3+UVVA42P6OHBvJVQMVeVlHJWxlMRrZTP39TrgdGSgWReyaFMVixIzOo9LWDvUxV/ipFw2SuaMa5YpYCTNMKHgMNmiipMyP0eaRtofH81eQ/3NtYOVguKTS6oozjapBDIArWfR29JVCfGQltoDZyB0rkoIqeBnqXM2fCx8aPnxI75QdOvy2r94DWzJN5VEyWUtcYT7WN05rvWDzRoOFtiTEzY8NNMNTLkqBm9V8jaDhgumfJghYsEGWCF6D3SsqVmJrnfEGMEqt5wXzj1YND0WKMYbJyhhbgSZXj8Ao/H1yiNwJr7HotWulDSWVzrdTbzag2Io3mupdBU/aX3xcewAKKhakE5XDFkUmNVRPk8K7+UBA0oIJ41+BFpfNm4uHw8KTwwzD+q1EcgOFsj5b/WliOSiVvjdhjjOFVUHmbeo7xo9Lq69N/EUfkQ/h9hH+sPn5R2Ey3TSUVXh6UnEI5yGqekzfMvxCS96Idk1Iard6HlEi3JQBTmui1KA3mMCKCb/BndOs/LV6dBsawjFJar0KAxBJoMTk/4Uyp1foTdACvcdIPFZhujO9wqZXGCmshG9c2kgtT125hLUoUwdGJy9uFqVvL7+BnzxlozVIsf204k+bcfVvB5woJmkgK1pvNbph1Yjg1f4dQkpIkOJL0RYZpaTw7HoU82uY7bM0z8dtJfYgUjN39FD9g3+I5mhCd7QyPHXYmTBOqJFj270llFw2qva05gvKA/cpES1trTNilTm5CZmkaJdZlHW94fSigREH9si2Z5Bi6jovMoo5jL3TWCA5lYQCSmXOuVxziGuxc1Bi6xFxpNrjMKUoGfE05Jwm/rREgb3KIOPSdwpLo/udl+MwaANBN5mBXkt8m1viFGXD3aBle7PY5H6AayIYezuP7DhVLYJK3BZIIZZpPyPhAs2M7Uf2BqHzK2iY4J1Z0/5GZVliNr/TRO+iBV8eS2Ei62cxgAwGI21mTfLROcmibWGN7wHY1GZYZJPy8lp694UAwsfLEFGoMEhjRzv/iHOc+5GAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1740,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1740
+     },
+     "output_tokens": 4,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "7965136b-5476-4e99-a193-beb45de908cb",
+   "timestamp": "2026-10-15T16:25:57.105Z",
+   "request_id": "req_011Cg4LP3ffd5xhkWL3pnY9w",
+   "thinking_duration_ms": 7418,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4LP3t5EPkpYQPa7yR5j",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Khnemet\", \"choices\": [\"C3\"], \"reasoning\": \"Record 1 'Khnemet' has the consonants kh-n-m-t. C1 Ꜣḫ-n=j-mw.t (Akh-eni-mut): the consonants could fit, since ꜣ, j and w may be left out and the final t is present, but the words are different. It is 'Akh ... Mut' with the noun mw.t 'mother' or the goddess Mut, not the name Khenemet, so it is rejected. C2 H̱nmy (Khenemy): the consonants are ẖ-n-m-y with no t. Record 1 would render a consonant the candidate lacks, and the allowance covers only a feminine t that is a genuine ending, so it is rejected. C3 Ḫnm.t (Khenemet): ḫ-n-m plus the feminine ending .t matches Khnemet exactly, with an added vowel e, so it is the same name. C4 H̱nm.w(?)-ꜥnḫ.w (Khnum-ankhu): it contains an extra word with ꜥ-n-ḫ, which record 1 lacks, so it is rejected. C5 H̱nm.w (Khnum): the consonants are ẖ-n-m (w optional), and record 1 has an extra t that the candidate lacks, so it is rejected.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1740,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1740
+     },
+     "output_tokens": 4,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "uuid": "36c45328-0cc0-4a8b-982e-a23169bd6b44",
+   "timestamp": "2026-10-15T16:25:57.131Z",
+   "request_id": "req_011Cg4LP3ffd5xhkWL3pnY9w"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "5ef57107-4f5e-439f-87a1-57aaad052fa4",
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836"
+  },
+  {
+   "duration_api_ms": 8577,
+   "stop_reason": "end_turn",
+   "session_id": "a560c9d6-5548-45a3-8e8c-dd17619e6836",
+   "total_cost_usd": 0.016024,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1740,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 906,
+    "output_tokens_details": {
+     "thinking_tokens": 452
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1740,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 906,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1740,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1740
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 906,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1740,
+     "webSearchRequests": 0,
+     "costUSD": 0.016024,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 452,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Khnemet\", \"choices\": [\"C3\"], \"reasoning\": \"Record 1 'Khnemet' has the consonants kh-n-m-t. C1 Ꜣḫ-n=j-mw.t (Akh-eni-mut): the consonants could fit, since ꜣ, j and w may be left out and the final t is present, but the words are different. It is 'Akh ... Mut' with the noun mw.t 'mother' or the goddess Mut, not the name Khenemet, so it is rejected. C2 H̱nmy (Khenemy): the consonants are ẖ-n-m-y with no t. Record 1 would render a consonant the candidate lacks, and the allowance covers only a feminine t that is a genuine ending, so it is rejected. C3 Ḫnm.t (Khenemet): ḫ-n-m plus the feminine ending .t matches Khnemet exactly, with an added vowel e, so it is the same name. C4 H̱nm.w(?)-ꜥnḫ.w (Khnum-ankhu): it contains an extra word with ꜥ-n-ḫ, which record 1 lacks, so it is rejected. C5 H̱nm.w (Khnum): the consonants are ẖ-n-m (w optional), and record 1 has an extra t that the candidate lacks, so it is rejected.\"}",
+   "ttft_ms": 8569,
+   "type": "result",
+   "duration_ms": 8668,
+   "uuid": "6ad55391-8445-4f4a-9ae4-547e779f7bde",
+   "ttft_stream_ms": 1151,
+   "time_to_request_ms": 45,
+   "first_content_frame_ms": 1151,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Khnemet",
+   "choices": [
+    "C3"
+   ],
+   "reasoning": "Record 1 'Khnemet' has the consonants kh-n-m-t. C1 Ꜣḫ-n=j-mw.t (Akh-eni-mut): the consonants could fit, since ꜣ, j and w may be left out and the final t is present, but the words are different. It is 'Akh ... Mut' with the noun mw.t 'mother' or the goddess Mut, not the name Khenemet, so it is rejected. C2 H̱nmy (Khenemy): the consonants are ẖ-n-m-y with no t. Record 1 would render a consonant the candidate lacks, and the allowance covers only a feminine t that is a genuine ending, so it is rejected. C3 Ḫnm.t (Khenemet): ḫ-n-m plus the feminine ending .t matches Khnemet exactly, with an added vowel e, so it is the same name. C4 H̱nm.w(?)-ꜥnḫ.w (Khnum-ankhu): it contains an extra word with ꜥ-n-ḫ, which record 1 lacks, so it is rejected. C5 H̱nm.w (Khnum): the consonants are ẖ-n-m (w optional), and record 1 has an extra t that the candidate lacks, so it is rejected."
+  }
+ }
+}

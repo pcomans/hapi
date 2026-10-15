@@ -1,0 +1,449 @@
+{
+ "unit_id": "Hetepti",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ḥtptj"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Hetepti\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ḥtp.t-j\n  Lemma 1: German: Hetepet-i | English: Hetepet-i\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Hetepti\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "720cb515e623c532bf8451b2bc12bcc40bd7852c48779b78c7d5a7bfd21ca94e",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "cc34c22b-e73f-4ddf-89ce-016d56ed9523",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "e6db700e-72a9-4877-9d59-e907df512333",
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "cc34c22b-e73f-4ddf-89ce-016d56ed9523",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "4fb7a508-8b37-4e00-94b3-44f93bca6559",
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-q_9jru70",
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "1e691006-1e2a-4970-9343-9e47d604158c",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-q-9jru70/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1968136.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 4,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "04e91ccc-445a-421d-85d9-4efec8b0777f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 3,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "48ce4b81-e331-4dd1-90ad-5ac1eac2619f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 4,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "00c7219a-df16-4d41-9745-01a76ac9a3c6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 2,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "ca54e88d-c872-45c3-a16f-80dcdef90ade"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 4,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "2615bbcc-7c78-4907-a47a-754b5e56bd36"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 5,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "9a8bac3a-8b67-49b6-9fc9-7d964d8182a6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 5,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "bcdb9797-4fab-417b-93cb-cb0a4f2acc1a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 28,
+   "estimated_tokens_delta": 1,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "78c931f7-306c-4ed9-9c7c-a61f0f48ae4b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 6,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "f1e8112b-d273-4225-849e-3910016b99cf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 1,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "077d4866-deb4-42aa-b065-b7d97da0b636"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 1,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "96658b5f-7802-4672-95a1-4390a3ab7d21"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 208,
+   "estimated_tokens_delta": 172,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "e5a9c898-2ff0-4479-a399-503444a8a11d"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LJnwY2mcL72LFd9aYs",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking Hetepti against the consonants h-t-p-t-i, matching ḥtp.t (offering/peace, feminine) plus the j suffix—this fits well.\n\n",
+      "signature": "CAQStwYKEAgSGAI4AUIIdGhpbmtpbmcSDJg5AFvKbOHQCt3oGBoMClMAHNupW9eTtKy/IjAD24KR8g+Z7+gkMYd1kX6zwPnSkkGr1hKvBiiH4KaGGVjhf9c2RWcRvVFTyu76opIq1AWdGdQaHc0JkvagZ+4mUFwC7Lt5KjkuHuo6MhdYLfIQj4HLllLt8qFUs9yQ1GLC94g/T3cDDiL9frQYChwP9isJGGPFf9F4eohGBFR4uCNfh81lb9r3EBcdMyWN2SZdA4bL6AysKZvip1AeVxKay009wVYnj4Thsngz7z7DQ81Um/xqhyAWpwb5JtsjOi4zyjNRH+smdjdGmd8B6havYzzS6BIrusbUfdgvj4Fha670lfI9VthbioMrUsDC/Lxovg9CHKuH/b8Ja8Z6IDpe1YhcoNYHDIMkBuzYZ4jhQ8jw6iy4EADYmBdQk0/Nd7ociiDw2Kzs+CCB8MSbxfEQkVokPoCrEbmIXwZoJXO5yA4T1sR3yGRABl+WMoU8BzVjtZGiEhVTsnv/ZmxVz4Qf0bBQGesjQ4iOaQRynwsR8LVs0OnkiWHDo30GBmXJo4qfhc/MlmoITIpnsTzlpmXxGWeoEq76uk1y3fqzmO+4cP1jSJFC91uiX7ynT4yFfkMb68RofOmZhYO7ink87ySTzyirLY/Mako020v1gGCpdOYua0OVGa3yWXQhJ8jtDYpIZsvML7QPtLlVwlWXEFmIISbMnqy36FtO/r/dsV+FQtKbZt+1Xd71X0Lndr8VipSdp3MEfEl9EQMTjyzT3jQTML4aBHWbqkIiR0XTOcStT8PbahgJ76iSHyBRhdV4AycwR9Vhl7gZU6LHg+FYN14ddV4si2HaLhyCkEHb/x3kWOMPSk/1VkOz+eoFtEht2BWzlgF6X37uDbRN6f8pfnuAUI/sompZCy9+bsb2m0aoOkZy9+Y/0IF1xchRekyKtww7qQCYbX9CyFNp/MV5V34OXzCV8Jf7yjyApj/CMaUwwYk138uuf+H/D2GQE6xKE751CtMRhZZZcpDtq2i1veNV9IXZC78ZS4K4++/bzmRk7usxe8mYqv3RGVZqG1ohps9MUKeGMci2GAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1546,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1546
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "876932f5-91d3-45fe-9bff-17381a9e7eb1",
+   "timestamp": "2026-10-15T16:24:55.162Z",
+   "request_id": "req_011Cg4LJnidyR6crKgJsaFAh",
+   "thinking_duration_ms": 2327,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LJnwY2mcL72LFd9aYs",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Hetepti\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ḥtp.t-j ('Hetepet-i') is the feminine word ḥtp.t followed by the element j. Hetepti reads it consonant for consonant: h for ḥ, t, p, the feminine t, and final i for the weak consonant j. The e vowels are added by convention. No consonant is missing or added, and nothing suggests Hetepti renders any other words, so it is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1546,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1546
+     },
+     "output_tokens": 3,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "uuid": "c5cce58a-c131-4aa5-979e-ae060d0cca64",
+   "timestamp": "2026-10-15T16:24:56.051Z",
+   "request_id": "req_011Cg4LJnidyR6crKgJsaFAh"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "aef01dd8-c483-4085-9d86-f12a2a67ea9a",
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149"
+  },
+  {
+   "duration_api_ms": 5264,
+   "stop_reason": "end_turn",
+   "session_id": "7d3c3c1c-7a4a-4ff8-8331-108c3effc149",
+   "total_cost_usd": 0.018216,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1546,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 292,
+    "output_tokens_details": {
+     "thinking_tokens": 124
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1546,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 292,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1546,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1546
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 292,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1546,
+     "webSearchRequests": 0,
+     "costUSD": 0.018216,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 124,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Hetepti\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ḥtp.t-j ('Hetepet-i') is the feminine word ḥtp.t followed by the element j. Hetepti reads it consonant for consonant: h for ḥ, t, p, the feminine t, and final i for the weak consonant j. The e vowels are added by convention. No consonant is missing or added, and nothing suggests Hetepti renders any other words, so it is the same name.\"}",
+   "ttft_ms": 4388,
+   "type": "result",
+   "duration_ms": 5351,
+   "uuid": "e81b5afa-27de-4a22-871e-19fae7e6b928",
+   "ttft_stream_ms": 2061,
+   "time_to_request_ms": 35,
+   "first_content_frame_ms": 2061,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Hetepti",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Ḥtp.t-j ('Hetepet-i') is the feminine word ḥtp.t followed by the element j. Hetepti reads it consonant for consonant: h for ḥ, t, p, the feminine t, and final i for the weak consonant j. The e vowels are added by convention. No consonant is missing or added, and nothing suggests Hetepti renders any other words, so it is the same name."
+  }
+ }
+}

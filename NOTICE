@@ -41,6 +41,9 @@ Thesaurus Linguae Aegyptiae (TLA) — lemma list of January 2018 (personal and r
   https://creativecommons.org/licenses/by-sa/4.0/
   Committed at pipeline/pipeline/authority/sources/tla-2018-names/: the archive unchanged,
   and an extract (Adapted Material) shared under CC BY-SA 4.0, not under Apache-2.0.
+  Its links/ directory (spelling links to Dodson & Hilton's names: the stored model calls,
+  which quote TLA rows, and the decisions) is shared under CC BY-SA 4.0 with the same
+  attribution; see links/README.md.
 
 --------------------------------------------------------------------------------
 Museum data accessed via public APIs (not redistributed in bulk here)

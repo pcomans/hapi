@@ -1,0 +1,478 @@
+{
+ "unit_id": "Kemsit",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "kꜣmsw",
+  "C2": "kmsjw",
+  "C3": "kwms",
+  "C4": "kms"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Kemsit\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Kꜣ-ms.w\n  Lemma 1: German: Ka-mesu | English: Ka-mesu\n\nCandidate C2: Kms=j-w\n  Lemma 1: German: Kemesi-u | English: Kemesi-u\n\nCandidate C3: Kwms\n  Lemma 1: German: Kumes | English: (none)\n\nCandidate C4: Kms\n  Lemma 1: German: Kemes | English: Kemes\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Kemsit\", \"choices\": [<zero or more of \"C1\", \"C2\", \"C3\", \"C4\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "1edd399d7c5bc10f2552963998030815fd4adfb14536df924dfe38c44bb09dc1",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "fc42b46b-4d3f-4937-8197-d4e8e244870e",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "7c95295b-017c-407f-a490-91f133e8562b",
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "fc42b46b-4d3f-4937-8197-d4e8e244870e",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "5e0d309c-70e2-4fd9-af4e-724302889409",
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-jk0oavrd",
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "14a4ed94-0e9e-4843-88f8-c401b9b344aa",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-jk0oavrd/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1970733.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 4,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "bd5e499c-3a35-4d97-91d6-e0e61fcbcbd3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 4,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "0821d522-af2f-47bc-bbda-a436b5673870"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 6,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "076eb4fd-4653-4a4c-a489-9eb9d2219b61"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 2,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "b640cec9-5774-4e61-a2d0-1b44c36e63f4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 4,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "dddc679f-e01a-4c72-b785-7d797a94ce2f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "c36190a1-ed70-45e6-a0e4-8e1eedf7be66"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 2,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "da8081d4-0a6f-4081-91e1-6b91b3191bca"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "479f8331-656a-45d8-a7ce-e1d928fb8744"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 6,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "1c8023d3-4562-4212-9274-99925bd9cab4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 35,
+   "estimated_tokens_delta": 4,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "e76b7a52-debe-4acf-afd7-68ce6b3dad96"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 6,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "4732d275-4ccc-46d9-b36b-110a189ede10"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 43,
+   "estimated_tokens_delta": 2,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "085f918c-6e82-4fbf-982b-21fe4fc2e0fe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 2,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "5b6b73c7-f2f6-4fa9-8822-4077faedebcf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 48,
+   "estimated_tokens_delta": 3,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "fe510071-db5d-435c-bd98-1e751755d455"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 1,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "6ca96c56-75de-4490-99c7-e097f47ddce4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 277,
+   "estimated_tokens_delta": 228,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "a3b69ed5-4cda-4edd-a613-5dfeec857bbb"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LR9mLhAT4gcKcqfNMf",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking Kemsit against Kms: the candidate lacks the needed feminine t to match Kmsjt, so that rendering fails strictly. Moving on to check Kms=jw as another candidate.\n\n",
+      "signature": "CAQSyggKEAgSGAI4AUIIdGhpbmtpbmcSDKcwWfAw4tH1G/GG6BoMLz6He1qidPbBINNYIjBrDaewxIPXZDgqPEKmKjLzYzBoKD7pr9GBDQ7oczOJLPWMaYMVOkJe+dcV4jIr5U8q5wcaVrK1Bnb2ZoA1cJAPZ/8frYI8D8RFw/e7LqtIoAfDCogfwvHMjShFtrtoIEKJ9oElAzQuBxj+uBzr5QZpW/vtCngpOh0n91atv4aamHyXEeU0XF5M7ArGmF8r3MX+ssfpUfcA36I+4WAHJ4bSOnQcFgFLM9HOqc1fZ0OPa0cDfet4mmt6jgZpLgt9sZdX0haGykfCGitFoHV+sj/SA39zqxBM3fJaOXzkGeug4TuOLcl/9c5bkZHmUcJhNaiT640H72TXEdFGmeXv+sAzyKOatW216hWr9FI+4chJ/E4GffsE58e3OQB7UQ4RTgS9ClUEceS98CVc5Te0F4PM2fYwOjwkt4braYqbi0tGtSaQ/GO+dSYF3hcoH8pXXh/D0/9avUC+MXlNDJIMcNTRkmibewQienDwF4Z9zFyH0znN+43s6NVHxpiizo42EtCcXbjhW054RA3mqQhwweHpATeECrTc4lGyzOPjXsv3USh2jjnWp5S7nOA1BlaAA97vg8nHE720Wmc0slNKyIRQGx/QxBR2l6rh2fiafw6JchEOg9JtYhtwx3oYxXqc7ccU1jg63RiWu1FxuVphw2if+8OpuMD2ZuN/34+PRvtP/C+k2Go3Tflek+K03joDICgYj812l52mEATPAXoNl5WsSWbsxtaNidGf7G7Ebu0yIH6IBwKKA94TrnfjStHp0oMcHb67NBC2OvWyB77HK+NCxCMLx2KmBRjTjgUdBlwlXXQueJjrc6Pbzc0Nec0DCkX9Qe9oNLBs3d6hbFIFHPzcu3aVkYc3oikY5hElQXVccblztRSU+LUs7Oo8GniFku/aeEiwqiX8DEXFmxMbwVjdB9egupWDwUaSB1uRkVD8NrV2Dv64ifiUZyffi13Wxj21SQGLq3sDCAWlqRTHny8Me3K4sag+F/NDSdL5RofHaV6G7PFa8AHO6s/KyYeTppue8xslskG/e1pqQ0kI8acjv4Gik/FkxuxmTkk5t90kYS/rXn5DRLf6+Nc3hCqgUTL6Y179HC8UJrlUCi4WCRrOLDDpxv1t+VIwVORIfx09ifI6mdVt67QkC68tylbB/uPYSUbjtDFu7IDCJpuux0V929hVtAF4xy/mBh4IESi34Hd1deHUbMfdQpzr7ZdOfcOP34hKmoTVkz5imDij8qe4Cf3svt7FRwPHDQ+iXRtkiiWdyEH4xUdFapl6aSgAENrLF4N1NGlTLrVpKXz11cX52xe5i05POO3D5dMDV7+tPApcwIcIxajcJ3v9ZmTezhOV3CiBU8TcfxZfD+ts1kuyzGcsmBFx6jvTdp0qvE6bOKZADSukEfmpLv0YAQ=="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1669,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1669
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "94acb7b0-51bd-448c-88d2-df576c6f70ce",
+   "timestamp": "2026-10-15T16:26:21.230Z",
+   "request_id": "req_011Cg4LR9YwRt6x17bQBZd1x",
+   "thinking_duration_ms": 3174,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4LR9mLhAT4gcKcqfNMf",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "```json\n{\"unit_id\": \"Kemsit\", \"choices\": [], \"reasoning\": \"Record 1 'Kemsit' renders the consonants k-m-s-t, ending in a final t. The rules let a feminine t be omitted from record 1, but record 1 may not add a t the candidate lacks. None of the candidates has a t. C1 Ka-mesu: the god-name/noun kꜣ plus ms.w. The ꜣ and plural .w could be dropped, giving k-m-s, but Kemsit's final t is not in the candidate, so no match. C2 Kemesi-u (Kms=j-w): the word kms with suffix =j and w. Those weak consonants could vanish, but the t of Kemsit is still unaccounted for, so no match. C3 Kumes (Kwms): k-w-m-s with no t, so no match. C4 Kemes (Kms): the consonants agree with Kems-, but the candidate has no feminine .t. Kemsit would need a lemma Kms.t (Kemsit), and adding a t the candidate lacks is not allowed. So no match.\"}\n```"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 1669,
+     "cache_read_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1669
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "uuid": "2ef58e9c-5c80-4414-be49-439ab69baed9",
+   "timestamp": "2026-10-15T16:26:24.343Z",
+   "request_id": "req_011Cg4LR9YwRt6x17bQBZd1x"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.11,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "44b13c5c-f110-40e3-999f-2d5745e3f900",
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a"
+  },
+  {
+   "duration_api_ms": 7276,
+   "stop_reason": "end_turn",
+   "session_id": "c31ef614-6809-4a12-925a-edbb431da52a",
+   "total_cost_usd": 0.02556,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1669,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 610,
+    "output_tokens_details": {
+     "thinking_tokens": 244
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 1669,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 610,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 1669,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 1669
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 610,
+     "cacheReadInputTokens": 0,
+     "cacheCreationInputTokens": 1669,
+     "webSearchRequests": 0,
+     "costUSD": 0.02556,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 244,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "```json\n{\"unit_id\": \"Kemsit\", \"choices\": [], \"reasoning\": \"Record 1 'Kemsit' renders the consonants k-m-s-t, ending in a final t. The rules let a feminine t be omitted from record 1, but record 1 may not add a t the candidate lacks. None of the candidates has a t. C1 Ka-mesu: the god-name/noun kꜣ plus ms.w. The ꜣ and plural .w could be dropped, giving k-m-s, but Kemsit's final t is not in the candidate, so no match. C2 Kemesi-u (Kms=j-w): the word kms with suffix =j and w. Those weak consonants could vanish, but the t of Kemsit is still unaccounted for, so no match. C3 Kumes (Kwms): k-w-m-s with no t, so no match. C4 Kemes (Kms): the consonants agree with Kems-, but the candidate has no feminine .t. Kemsit would need a lemma Kms.t (Kemsit), and adding a t the candidate lacks is not allowed. So no match.\"}\n```",
+   "ttft_ms": 4178,
+   "type": "result",
+   "duration_ms": 7361,
+   "uuid": "a5084c5d-7c8c-4cc0-af6d-417ccadcaab7",
+   "ttft_stream_ms": 1004,
+   "time_to_request_ms": 37,
+   "first_content_frame_ms": 1004,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "failure": "answer is not a JSON object at the end of the message"
+ }
+}

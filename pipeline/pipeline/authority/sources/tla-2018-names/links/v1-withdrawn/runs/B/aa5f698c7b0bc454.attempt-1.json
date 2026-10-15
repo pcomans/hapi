@@ -1,0 +1,627 @@
+{
+ "pair_id": "Nubemhat|703087",
+ "role": "reviewer",
+ "requested_model": "sonnet",
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "sonnet",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding whether two scholarly spellings are the same ancient Egyptian personal name. You have no tools: decide only from the two records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Decide whether the name in record 1 and the name in record 2 are the same ancient Egyptian personal name or two different names.\n\nHow to compare, in this order:\n1. Read the transliteration in record 2 as a sequence of consonant signs, one letter each: ꜣ, ꞽ or j (also written ı͗ or i̯), y, ꜥ, w, b, p, f, m, n, r, h, ḥ, ḫ, ẖ, z, s, š, q, ḳ, k, g, t, ṯ, d, ḏ. A capital is the same sign as its lowercase. Dots, hyphens, = and spaces only separate elements.\n2. Go through the name in record 1 and match each of those signs, in the same order, to what represents it there. A modern spelling writes:\n   - h for ḥ or h; kh or ch for ḫ or ẖ; sh or sch for š; tj or t for ṯ; dj or d for ḏ; q or k for q or ḳ; s for s or z; every other sign by its own letter; one letter per sign, so a doubled letter stands for two signs;\n   - a vowel letter (a, e, i, o, u) for ꜣ or ꜥ, between the letters that represent its neighbouring signs (at the start or end of the name, a vowel letter next to the one neighbour);\n   - i or y for ꞽ, j or y, and u or w for w, or leaves any of these three out;\n   - extra vowel letters anywhere, which stand for no sign;\n   - and may leave out a t that ends an element (the feminine ending), at the end of the name or before a dot or hyphen.\n3. The two are the same name if every sign of the transliteration is matched this way, in order, and record 1's name has no consonant left over. They are different names if a sign of the transliteration other than ꞽ, j, y, w or an element-final t has nothing in record 1 to represent it (an ꜣ or ꜥ with no vowel letter between its neighbours' letters counts as nothing), if record 1's name has a consonant the transliteration lacks (a y or w with no ꞽ, j, y or w to stand for counts as one), if a letter stands for the wrong sign (a w for a j, an h for a k), or if the elements differ in order or number.\nDecide from the spellings only. Who bore the name, and any person a translation names, are not evidence that two spellings are one name.\n\nRecord 1: a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it (without the letter or numeral with which they tell apart women of one name).\nName: Nubemhat\n\nRecord 2: a lemma of the Thesaurus Linguae Aegyptiae lemma list (January 2018): its transliteration and its German and English translations, verbatim.\nLemma: 703087 (person_name)\nTransliteration: Nb-mḥy.t\nTranslations: de: \"Neb-mehyt\"\n\nAnswer with this JSON object, and nothing after it:\n{\"pair_id\": \"Nubemhat|703087\", \"verdict\": \"same_name\" | \"different_name\" | \"insufficient_evidence\", \"reasoning\": \"<how each sign of the transliteration is or is not represented in record 1>\"}\nUse \"insufficient_evidence\" only when the two cannot be compared at all (for example, record 2's transliteration cannot be read as signs), never because you are unsure which way a rule applies.\n",
+ "user_content_sha256": "f0f3e766d1e7254fe89bf02e2548ff93ee090a8798af756c8348768293d4e9e4",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "5bdd378e-0790-4abc-ac17-9163cc772b08",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "f57eba8a-e390-435a-b8b9-a9a3c5e66e66",
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "5bdd378e-0790-4abc-ac17-9163cc772b08",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "21e2baf8-3fc0-4dd6-8a6c-823e81e074cf",
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-mgcbcuzn",
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-sonnet-5-5",
+   "permissionMode": "default",
+   "slash_commands": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:rescue",
+    "codex:result",
+    "codex:review",
+    "codex:setup",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "advisor",
+    "agents",
+    "auto-mode-setup",
+    "autocompact",
+    "clear",
+    "color",
+    "compact",
+    "config",
+    "output-style",
+    "context",
+    "effort",
+    "fast",
+    "focus",
+    "heapdump",
+    "init",
+    "mcp",
+    "import",
+    "model",
+    "__remote-workflow",
+    "workflow-launch-exec",
+    "reload-plugins",
+    "reload-skills",
+    "rename",
+    "ultrareview",
+    "security-review",
+    "usage-credits",
+    "extra-usage",
+    "usage",
+    "insights",
+    "recap",
+    "skill-doctor",
+    "goal",
+    "design-consent",
+    "design-revoke",
+    "list-agents",
+    "team-onboarding",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "terminal_slash_commands": [
+    "doctor",
+    "color",
+    "focus",
+    "reload-plugins"
+   ],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [
+    "codex:adversarial-review",
+    "codex:cancel",
+    "codex:result",
+    "codex:review",
+    "codex:status",
+    "codex:transfer",
+    "git-credentials:git-credentials",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring",
+    "anthropic-skills:docs",
+    "anthropic-skills:docx",
+    "anthropic-skills:google-workspace",
+    "anthropic-skills:import-memory",
+    "anthropic-skills:morning",
+    "anthropic-skills:pdf",
+    "anthropic-skills:pptx",
+    "anthropic-skills:skill-creator",
+    "anthropic-skills:xlsx"
+   ],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "dbd0ea57-ceab-4f36-99d0-a1b2db6fe184",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-mgcbcuzn/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1891036.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "115d7a12-57c9-4eaa-9874-4f1749b1c337"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 6,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "61352ec7-22bc-4bc6-b838-21787155830a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 4,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "8ebc37eb-ad20-45c7-b373-542e2d61dd0f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 18,
+   "estimated_tokens_delta": 7,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "d599f123-38fb-4149-a65f-54f35c601801"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 3,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "663b1577-ae92-4de0-b2a0-c4629156d141"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "1565a971-1f4a-4d6c-8357-7b9d28154932"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "7f15824e-da2a-42c7-a316-7be64e1f43d1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "915e0296-8407-4136-9461-a152f71c3577"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 4,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "d8d6b49b-673b-4eb2-9828-84c412342d48"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 7,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "cc54a230-a503-4521-a753-96d7a5b3a19c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 5,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "bdd0edc0-fa67-44e8-bbf5-ff3d473e285b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 4,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "c5c86961-0b97-47a6-9663-1b949d54bd77"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 2,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "4a6d1ae3-1da9-48b5-837e-85d279c32103"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 2,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "02dbbdd1-5b28-4a63-a419-761c64ba3908"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 50,
+   "estimated_tokens_delta": 1,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "f2fd9828-5d37-4888-a686-a22980d7706b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 3,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "de7aae87-da9d-44d0-91d9-a6b197803abe"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 4,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "45b52939-7cbd-4b2c-b3c0-9bf167b5a024"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 61,
+   "estimated_tokens_delta": 4,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "48f5071e-19de-4feb-8138-4831e0825e5b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 62,
+   "estimated_tokens_delta": 1,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "c59a5205-0bac-4529-a075-6465e66da1d3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 63,
+   "estimated_tokens_delta": 1,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "c7371c54-f4a6-4417-9d9c-72ed2a7b12c4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 272,
+   "estimated_tokens_delta": 209,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "f4ed6c82-4c27-4388-90bc-ddcf6772844b"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4Ei3wsb9XuFaVsRQpDx",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm checking whether \"Nubemhat\" can be derived from the transliterated signs n-b-ḥ-y-t by matching consonants while allowing extra vowels, and it looks like each sign lines up—n to N, b to b, ḥ to h, and t at the end to t.\n\n",
+      "signature": "CAQStwgKEAgSGAI4AUIIdGhpbmtpbmcSDF0U0UMz00zKV7k1DhoMSmnckMdKpCAC8ujNIjAsC6auqncXQTLSkHVTY9ShzmNeLKIFA3/fUuozanoPE3hNv3DMpa3uLjyY8jAnXO8q1AfzLiI1UvvPu5Bq7KD0hl1RLuDyLLtxmo+JnHqkhmBnULVGgnG0Y4xf3g0leBUy9S++7M4uCJ+sGFZFuIguO9LxKBpyVSFj7v7zC/R4yGiaTzPtc+KXechHssW4owklglRavNz/xe5w4VIdBHQY7l5t77/c3F7Hel3s5GZLI7Ai0m3XadyEpkHOKxPdEUIcClx4s8hnb7SNMNXrmGvv9xVBQTN+3gQWlhOEc4V2qOYr4cjQFSAHV1hMpnHougsOUKJOxJBC7NJ9BDKzZ1dbiZxgbzCxqHjfrlmU6UPHsi3IqLW0ZxMrFubroB7RDI7ZnZ13Jq6LWOAYqQ01wOco0ScSq2V1CJjs5r6L9UFZq9VgygFHoOm9lye4tooaWv9saNzC8fM42gVfVyGwzJU/RUIhspQU8k7mVLGASaI95M+4Sqz+v8/UJBheLjxnX1iA/GSoZswskpXaoMDSSlSS1kVN0hfqG7qjJqBAuVjF0YPTIIogGmQymfGlVitLuLM98qLouJ90XD1zjzRwF9FDb/6taidZ1nxEpdXjbO3Km+zmpwIvWAoZACSpinYr+yuRFD6uWzx6otjDn1SYciCr84Y9OUQdYawhgtoXyEWR8giYKTfEy4CM2bAxyJ8i6r+dgYKRRpx+CuYMweAXWM/hgMiOr1B7mMEqlOA52Vuc5bW8sh+asqaVPOeQwyrw+4OVrDaMp/gM+W1V453Mr/45PeoP+UFYFXKL4fxqH5QaiAfMpeTiJa2fOBS+MjnzxDRTqse+FeiTkYXKDCfOwY59uNOwyYsEp6eUbiGC8agWkokchDZSH1RqCRZuc0qzG9sYQ/QGRPZlBtK3Pb9ZmXCgF53CkUPYRcHLt6y34zQ4INf0TpUtFqIps93Rp0puoTM0li1kvMGVczditVL1FzRAXhPIpod85IdHOCs5M6OWoQQsnd82FzfIgBw5TQtgHQqhQR692UWKFQ3nk7XZRez49GkMhInmeotLF9akDGy1lqi+cV2kthG66GyHGQQm9ly28JVCJ59Apl6xjj4plNy0EuprAcr04XULcS3wNlfU75ZimZluh7qebyUAq99QaWf9/2t761JCNf+U86KjVe1etRo8L4inchQmQs93LekolJdWNlI/4wj8MMH02R0tBldFnxVq/3RvYK1qGLg+GiyAmOzrAJkRu4sAo68D/T/5qbeEhCohbUrvRQCntAn8Oze4pR3r341JzTOBxa8no5VkAkgNTLVejnUeL65MzEtbDgXImh66XtbzRuUKi+EMK/tyizbmHvpQkAX+S3sNlUGp0qmWi2zXFBgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 350,
+     "cache_read_input_tokens": 1390,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 350
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "e1f97e42-1454-42d2-aa38-3487b6b2ea57",
+   "timestamp": "2026-10-15T15:11:29.164Z",
+   "request_id": "req_011Cg4Ei3jDRv3UcRgu5X8bY",
+   "thinking_duration_ms": 2883,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-sonnet-5-5",
+    "id": "msg_011Cg4Ei3wsb9XuFaVsRQpDx",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"pair_id\": \"Nubemhat|703087\", \"verdict\": \"same_name\", \"reasoning\": \"Record 2 reads as the signs n, b, m, ḥ, y, t (Nb-mḥy.t). In Nubemhat, n is N and b is b, with the u between them an extra vowel letter standing for no sign. m is m, with the e before it again extra. ḥ is h. The sign y may be left out, so its omission is allowed. The a is an extra vowel letter. The final t matches the t of the feminine ending. Every sign is matched in order, and Nubemhat has no consonant left over (its consonants are n, b, m, h, t), so these are the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 350,
+     "cache_read_input_tokens": 1390,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 350
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "uuid": "915155a3-4ee5-4e8b-8317-8678817db41f",
+   "timestamp": "2026-10-15T15:11:29.711Z",
+   "request_id": "req_011Cg4Ei3jDRv3UcRgu5X8bY"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.04,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.1,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "e6a84d0e-99ec-404c-9970-342cfaf0fcc7",
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd"
+  },
+  {
+   "duration_api_ms": 4315,
+   "stop_reason": "end_turn",
+   "session_id": "b87d280e-6d8b-480e-a7a9-0f1f28694fbd",
+   "total_cost_usd": 0.006063,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 350,
+    "cache_read_input_tokens": 1390,
+    "output_tokens": 452,
+    "output_tokens_details": {
+     "thinking_tokens": 229
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 350,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 452,
+      "cache_read_input_tokens": 1390,
+      "cache_creation_input_tokens": 350,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 350
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-sonnet-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 452,
+     "cacheReadInputTokens": 1390,
+     "cacheCreationInputTokens": 350,
+     "webSearchRequests": 0,
+     "costUSD": 0.006063,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 229,
+     "canonicalModel": "claude-sonnet-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"pair_id\": \"Nubemhat|703087\", \"verdict\": \"same_name\", \"reasoning\": \"Record 2 reads as the signs n, b, m, ḥ, y, t (Nb-mḥy.t). In Nubemhat, n is N and b is b, with the u between them an extra vowel letter standing for no sign. m is m, with the e before it again extra. ḥ is h. The sign y may be left out, so its omission is allowed. The a is an extra vowel letter. The final t matches the t of the feminine ending. Every sign is matched in order, and Nubemhat has no consonant left over (its consonants are n, b, m, h, t), so these are the same name.\"}",
+   "ttft_ms": 3786,
+   "type": "result",
+   "duration_ms": 4404,
+   "uuid": "57cb7df6-5d19-439e-9833-4bcbaa8d0a72",
+   "ttft_stream_ms": 902,
+   "time_to_request_ms": 41,
+   "first_content_frame_ms": 903,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "pair_id": "Nubemhat|703087",
+   "verdict": "same_name",
+   "reasoning": "Record 2 reads as the signs n, b, m, ḥ, y, t (Nb-mḥy.t). In Nubemhat, n is N and b is b, with the u between them an extra vowel letter standing for no sign. m is m, with the e before it again extra. ḥ is h. The sign y may be left out, so its omission is allowed. The a is an extra vowel letter. The final t matches the t of the feminine ending. Every sign is matched in order, and Nubemhat has no consonant left over (its consonants are n, b, m, h, t), so these are the same name."
+  }
+ }
+}
