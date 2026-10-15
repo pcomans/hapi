@@ -33,7 +33,11 @@ The rule, which is deterministic and fixed here:
   context chooses, and only if exactly one woman remains:
     1. family: the women whose husband, father, mother or child, as D&H names them without
        any parenthetical hedge, is a king the same record names and the king authority
-       resolves;
+       resolves. A king the mention's own field names as her kin counts as named by the
+       record (`stated_kin_names`, #369): "Queen Ahmose, Mother of Hatshepsut", "Hatshepsut's
+       Mother, Queen Ahmose", "Queen Inhapi, wife of Tao II, daughter of Tao I". Only the
+       appositive forms are read, the kin word being mother, wife, daughter, sister, widow or
+       consort; which kin D&H gives is not compared, as for any other king the record names;
     2. dynasty: among the family matches if there are several, else among all, the women of
        the record's dynasty (or of no known dynasty), when the record gives exactly one.
   Otherwise the mention stays ambiguous.
@@ -129,9 +133,17 @@ NUMERAL = re.compile(r"^[IVX]+$")
 # A D&H letter on a kinship name marks one of D&H's own individuals, not a king-list name;
 # I, V and X are left out because they are also regnal numerals.
 DH_LETTER = re.compile(r"^[A-HJ-UWYZ]$")
+# A king her field names as her kin (`stated_kin_names`).
+KIN_WORD = r"(?:mother|wife|daughter|sister|widow|consort)"
+KIN_AFTER = re.compile(rf"\s*,\s*(?:the\s+)?{KIN_WORD}\s+of\s+(?P<name>[^,;()\[\]]*[^\s,;()\[\]])\s*(?=[,;]|$)", re.I)
+KIN_BEFORE = re.compile(rf"(?:^|[,;:]\s*)(?P<name>[^,;:()\[\]]*[^\s,;:()\[\]])['’]s\s+{KIN_WORD}\s*,\s*$", re.I)
+# A phase of one dynasty, or a span of two phases of it ("early-mid", "mid to late"), as the
+# museums write them (#369: read from every dynasty value in the 2026-08-27 corpus).
+DYNASTY_PHASE = r"(?:early|late|middle|mid|end|beginning|(?:first|second)\s+(?:half|part))"
+DYNASTY_PHASES = rf"{DYNASTY_PHASE}(?:\s*(?:-|–|—|\bto\b)\s*{DYNASTY_PHASE})?"
 SINGLE_DYNASTY = re.compile(
-    r"^\s*(?:(?:early|late|middle|mid)\s+)?(?:Dynasty\s+(\d+)|(\d+)(?:st|nd|rd|th)\s+Dynasty)"
-    r"\s*(?:,\s*(?:early|late|middle|mid))?\s*$",
+    rf"^\s*(?:{DYNASTY_PHASES}(?:\s+of)?(?:\s+|-))?(?:Dynasty\s*(\d+)|(\d+)(?:st|nd|rd|th)?\s+Dynasty)"
+    rf"\s*(?:,\s*{DYNASTY_PHASES})?\s*$",
     re.I,
 )
 
@@ -510,8 +522,10 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
 
 
 def single_dynasty(value: str | None) -> int | None:
-    """The record's dynasty when it gives exactly one ("Dynasty 18", "late Dynasty 18",
-    "18th Dynasty"); a range ("Dynasty 19–20") or "or later" gives none."""
+    """The record's dynasty when it gives exactly one, with or without a phase of it ("Dynasty
+    18", "late Dynasty 18", "18th Dynasty", "second part of Dynasty 11", "Dynasty 12, mid–late");
+    a range ("Dynasty 19–20", "late Dynasty 12–13"), "or later", a doubt, a style ("in the style
+    of Dynasty 18") or an approximation ("ca. Dynasty 30") gives none."""
     if not value:
         return None
     m = SINGLE_DYNASTY.match(value)
@@ -597,11 +611,33 @@ def _weak_sign_confirmed(index: RoyalWomenIndex, chosen: str, skeleton: str, fam
     return record_dynasty is not None and record_dynasty in (set(index.dynasties[chosen]) | index.family_dynasties[chosen])
 
 
-def resolve_ruler_mention(index: RoyalWomenIndex, kings: KingAuthority, text: str, *, royal_woman_cue: bool,
-                          record_king_ids: set[str], record_dynasty: int | None) -> dict:
-    """One ruler mention by the module's rule. `record_king_ids` are the kings the record's
-    other (not cued) ruler mentions resolve to."""
-    if royal_woman_cue:
-        found = resolve_royal_woman(index, text, record_king_ids=record_king_ids, record_dynasty=record_dynasty)
-        return {**found, "authority": "royal_women"}
+def stated_kin_names(field_value: str, span_start: int, span_end: int) -> tuple[str, ...]:
+    """The names the cued mention's own field gives as her kin: after the mention, a chain of
+    ", <kin> of <Name>"; before her cue, "<Name>'s <kin>, ". A name runs to the next comma,
+    semicolon or bracket."""
+    cue = ROYAL_WOMAN_CUE_BEFORE.search(field_value[:span_start])
+    if cue is None:
+        raise ValueError(f"no royal-woman cue before the mention at {span_start}: {field_value!r}")
+    names = []
+    before = KIN_BEFORE.search(field_value[:cue.start()])
+    if before:
+        names.append(before["name"])
+    rest, pos = field_value[span_end:], 0
+    while m := KIN_AFTER.match(rest, pos):
+        names.append(m["name"])
+        pos = m.end()
+    return tuple(names)
+
+
+def resolve_ruler_mention(index: RoyalWomenIndex, kings: KingAuthority, field_value: str, span_start: int,
+                          span_end: int, *, record_king_ids: set[str], record_dynasty: int | None) -> dict:
+    """The ruler mention at `field_value[span_start:span_end]` by the module's rule.
+    `record_king_ids` are the kings the record's other (not cued) ruler mentions resolve to; a
+    cued mention adds the kings its field names as her kin."""
+    text = field_value[span_start:span_end]
+    if royal_woman_cued(field_value, span_start):
+        kin = {t for name in stated_kin_names(field_value, span_start, span_end)
+               if (found := kings.resolve(name))["status"] == "resolved" for t in found["target_ids"]}
+        found = resolve_royal_woman(index, text, record_king_ids=record_king_ids | kin, record_dynasty=record_dynasty)
+        return {**found, "authority": "royal_women", "stated_kin_king_ids": sorted(kin)}
     return {**kings.resolve(text), "context_rule": None, "authority": "kings"}
