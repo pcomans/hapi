@@ -431,8 +431,10 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     # ("neferuiii", Neferu III) (Codex review).
     # And any token still holding a numeral with a mark the readable forms lack ("II?", "?II",
     # "II!"): the keys would drop the mark and read a numeral the source doubts (Codex review).
+    # A digit is never part of a name: an Arabic numeral ("Ahhotp 2") or an OCR misreading of a
+    # Roman one ("Ahhotp 11") that every key would drop (Codex review).
     if UNREAD_NUMERAL.search(text) or sum(bool(NUMERAL.match(t)) for t in text.split()) > 1 \
-            or any(QUALIFIED_NUMERAL.fullmatch(t) for t in text.split()):
+            or any(QUALIFIED_NUMERAL.fullmatch(t) for t in text.split()) or any(c.isdigit() for c in text):
         return {"resolution_method": None, "candidate_ids": [], "context_rule": "unreadable_numeral",
                 "status": "unmatched", "target_ids": []}
     # A doubt mark anywhere ("Berenike II (?)", "Berenike II ?", "Ahhotep?") questions the
