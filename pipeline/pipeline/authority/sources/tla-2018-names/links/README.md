@@ -71,7 +71,9 @@ The linked renderings are read from here and are not copied into Apache-licensed
 call. A probe measured it: 602 input tokens for a 15-token prompt, with slash commands on or
 off. The probe's event logs are in `probe-hidden-context/`, and a test reads the figure. No subscription-auth flag
 removes it (`--bare` requires an API key), so it is not in the stored input. That is a limit
-of harness runs.
+of harness runs, accepted as the #337 evaluation's harness reviews were: the record is the
+stored event log with the exact command, system prompt and user content (project owner's
+decision, 2026-10-15).
 
 **Khnemet re-asked.** The first candidate reader cut "Chnum(?)-anchu" to "Chnum", which
 proposed lemma 705752 to Khnemet. With one reader, it is no candidate, so Khnemet's prompt
@@ -86,28 +88,46 @@ asked again. It is the only unit whose prompt changed (checked).
   calls, 55 of B's 65 and all 6 of the reconciler's: thinking is adaptive.
 - One call failed format and was retried: A on Meketaten, with no JSON object in the answer.
 
-## Overrides (`overrides.jsonl`)
+## Expert calls (`runs/expert/`)
 
-- **What an override is.** A per-row decision with a cited rationale (Constitutional Rules 2
-  and 6), applied by `decide` over the model decision. The decision keeps the model's basis
-  and lemmas beside it (`model_basis`, `model_tla_ids`).
-- **Its provenance.** Each override names its reviewer and is marked "LLM-applied override,
-  not human-validated", as the D&H source's overrides are. The reviewer is the
-  egyptologist-reviewer subagent of this branch's review. Its session transcript holds
-  session-private context and is not committed; the rationale and sources are recorded in full
-  in each row.
-- **Unstable units must be overridden.** `unstable_units` finds units on which one reviewer's
-  valid answers differ between this run and its earlier run. The earlier run is the withdrawn
+Three units are decided by one stored expert call each: claude-opus-5-5, headless, no tools,
+recorded like the reviewer calls. Its answer decides the unit, whatever it is, and the model
+decision is kept beside it (`model_basis`, `model_tla_ids`).
+
+**Which units.** They were fixed before the calls (`EXPERT_UNITS`):
+- **Neferuni and Meryetyotes.** These are the unstable units. `unstable_units` finds units on
+  which one reviewer's valid answers differ between this run and its earlier run, the withdrawn
   v2.0 B, read by today's parser. Agreement on such a unit is luck, not consensus, so `decide`
-  refuses it without an override.
-  - Exactly two units are unstable, Neferuni and Meryetyotes. Every other unit, B answered the
-    same in both runs (tested).
+  refuses an unstable unit that is not an expert unit. Exactly these two are unstable. On every
+  other unit, B answered the same in both runs (tested).
+- **Minemaes.** The egyptologist review of this PR (a Claude Code subagent) judged the
+  reconciler's link to `Mnw-ms.w` wrong. Its argument: D&H write the preposition m as "em" and
+  ꜣ + =s as "aes", so "Min-em-aes" would be a Min-em-… name.
+  - Its transcript holds session-private context and is not committed. So it selected the unit
+    but decides nothing.
 
-| D&H name | Model decision | Override | Why (in short; full rationale and sources in the row) |
+**What the expert sees** (`prompts/expert-v1.txt`, audited in two rounds):
+- the unit as the reviewers saw it;
+- how D&H write every other name decided by rule or by agreement, including the names decided
+  to have no TLA name, as evidence of their conventions.
+
+It does not see this unit's decision, the reviewers' split, or why the unit was sent.
+
+**What it answered:**
+
+| D&H name | Model decision | Expert | Expert's stated reasoning, in short |
 |---|---|---|---|
-| Minemaes | reconciler: `Mnw-ms.w` | none | D&H write m as "em" and ꜣ + =s as "aes": "Min-em-aes" is a Min-em-… name, not Min-mesu |
-| Neferuni | agreement: `Nfr.w-Nj.t` | none | unstable; D&H write Neith in full ("-neith"), so "-ni" is not Neith |
-| Meryetyotes | agreement: `Mr.t-jtj=s`, `Mr.yt-jtj=s` | both | unstable; one name in two TLA orthographies, as D&H's other "Meryet-" names show |
+| Meryetyotes | agreement: `Mr.t-jtj=s`, `Mr.yt-jtj=s` | both | one name in two orthographies; D&H write Mr.t as "Meryet" (Meryetamun) |
+| Minemaes | reconciler: `Mnw-ms.w` | `Mnw-ms.w` | Min + ms.w, as in Ahmes; "not certain: the 'ae' is unusual" |
+| Neferuni | agreement: `Nfr.w-Nj.t` | `Nfr.w-Nj.t` | Neferu + Ni(t), with the feminine t dropped as in Dedetanuq; "with some uncertainty, since D&H might be expected to print 'Neith' in full" |
+
+**The expert and the egyptologist review disagree** on Minemaes and Neferuni.
+- Both are model readings of a D&H spelling, and the expert states its uncertainty.
+- Under the rule fixed before the calls, the expert's stored answer decides.
+- The resolver reads these spellings only for a mention after a royal-woman cue (Queen,
+  Princess, King's Daughter …). A Min-mesu or Neferu-Neith is therefore reached only when a
+  record calls her a royal woman, and the record's family and dynasty still have to confirm
+  which woman.
 
 ## Result (`decisions.jsonl`)
 
@@ -116,16 +136,16 @@ asked again. It is the only unit whose prompt changed (checked).
 | rule | — | 32 | — |
 | reviewers agree | 15 | 40 | 2 |
 | reconciler | 3 | 2 | — |
-| override | 2 | — | 1 |
+| expert | — | 2 | 1 |
 
 - **Two names.** The decisions on two TLA names are Iaret (`Jꜥr.t`, `Jꜣrt`), Ti (`Tj`, `Ty`)
-  and Meryetyotes (`Mr.t-jtj=s`, `Mr.yt-jtj=s`, by override): one name in two TLA
+  and Meryetyotes (`Mr.t-jtj=s`, `Mr.yt-jtj=s`, by the expert): one name in two TLA
   orthographies. This is the documented policy: every candidate that is the same name is
   linked.
 - **Rebuilt from the calls.** `decisions.jsonl` is rebuilt from the stored calls by
   `uv run python -m pipeline.authority.tla_link_review decide`, and a test checks that the
   rebuild equals the committed file.
-- **Effect on the resolver.** The links give 119 women 259 further spellings.
+- **Effect on the resolver.** The links give 121 women 263 further spellings.
   - They add no weak-sign collision and change no withheld key (tested).
   - The new exact and claim-graph keys are shared only by women of one D&H name, as their D&H
     labels already are, with one exception: the claim-graph key `tj` now reaches Ti and
@@ -155,7 +175,7 @@ asked again. It is the only unit whose prompt changed (checked).
   against the TLA's transliteration and translations. The egyptologist review of this PR
   checks the linked names.
 - **Sampling variance.** Reviewer B answered two units differently on different runs. Those
-  units are decided by override, but a unit can be unstable without our having sampled it
+  units are decided by the expert, but a unit can be unstable without our having sampled it
   twice.
 - **Missed links.** The egyptologist review found two misses, which cost recall only: Sitre /
   `Zꜣ.t-Rꜥw` and Bakmut / `Bꜣk.t-Mw.t`. The candidate keys did not propose them (z/s and the

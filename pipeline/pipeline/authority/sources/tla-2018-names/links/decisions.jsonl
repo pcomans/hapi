@@ -45,8 +45,8 @@
 {"basis": "agreement", "dh_name": "Meryetaten", "dh_target_ids": ["dodson_hilton:Meryetaten"], "tla_ids": ["702312"], "tla_names": ["mrytjtn"]}
 {"basis": "reconciler", "dh_name": "Meryetneith", "dh_target_ids": ["dodson_hilton:Meryetneith A"], "tla_ids": ["864920"], "tla_names": ["mrytnjt"]}
 {"basis": "agreement", "dh_name": "Meryetptah", "dh_target_ids": ["dodson_hilton:Meryetptah A", "dodson_hilton:Meryetptah B"], "tla_ids": ["702201"], "tla_names": ["mrtptḥ"]}
-{"basis": "override", "dh_name": "Meryetyotes", "dh_target_ids": ["dodson_hilton:Meryetyotes B"], "model_basis": "agreement", "model_tla_ids": ["702196", "702311"], "tla_ids": ["702196", "702311"], "tla_names": ["mrtjtjs", "mrytjtjs"]}
-{"basis": "override", "dh_name": "Minemaes", "dh_target_ids": ["dodson_hilton:Minemaes"], "model_basis": "reconciler", "model_tla_ids": ["550286"], "tla_ids": [], "tla_names": []}
+{"basis": "expert", "dh_name": "Meryetyotes", "dh_target_ids": ["dodson_hilton:Meryetyotes B"], "model_basis": "agreement", "model_tla_ids": ["702196", "702311"], "tla_ids": ["702196", "702311"], "tla_names": ["mrtjtjs", "mrytjtjs"]}
+{"basis": "expert", "dh_name": "Minemaes", "dh_target_ids": ["dodson_hilton:Minemaes"], "model_basis": "reconciler", "model_tla_ids": ["550286"], "tla_ids": ["550286"], "tla_names": ["mnwmsw"]}
 {"basis": "agreement", "dh_name": "Mut-Tuy", "dh_target_ids": ["dodson_hilton:Mut-Tuy B"], "tla_ids": [], "tla_names": []}
 {"basis": "rule", "dh_name": "Mutemwia", "dh_target_ids": ["dodson_hilton:Mutemwia"], "tla_ids": ["701857"], "tla_names": ["mwtmwjꜣ"]}
 {"basis": "rule", "dh_name": "Mutneferet", "dh_target_ids": ["dodson_hilton:Mutneferet A"], "tla_ids": ["701894"], "tla_names": ["mwtnfrt"]}
@@ -64,7 +64,7 @@
 {"basis": "agreement", "dh_name": "Nefertiry Meryetmut", "dh_target_ids": ["dodson_hilton:Nefertiry D Meryetmut"], "tla_ids": ["600564"], "tla_names": ["nfrtjrjmrytmwt"]}
 {"basis": "agreement", "dh_name": "Nefertiti", "dh_target_ids": ["dodson_hilton:Nefertiti"], "tla_ids": ["703575"], "tla_names": ["nfrtjytj"]}
 {"basis": "rule", "dh_name": "Neferu", "dh_target_ids": ["dodson_hilton:Neferu A", "dodson_hilton:Neferu B", "dodson_hilton:Neferu I", "dodson_hilton:Neferu II", "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"], "tla_ids": ["400495", "400676", "703631"], "tla_names": ["nfrw"]}
-{"basis": "override", "dh_name": "Neferuni", "dh_target_ids": ["dodson_hilton:Neferuni"], "model_basis": "agreement", "model_tla_ids": ["703639"], "tla_ids": [], "tla_names": []}
+{"basis": "expert", "dh_name": "Neferuni", "dh_target_ids": ["dodson_hilton:Neferuni"], "model_basis": "agreement", "model_tla_ids": ["703639"], "tla_ids": ["703639"], "tla_names": ["nfrwnjt"]}
 {"basis": "rule", "dh_name": "Neferuptah", "dh_target_ids": ["dodson_hilton:Neferuptah A", "dodson_hilton:Neferuptah B"], "tla_ids": ["703638"], "tla_names": ["nfrwptḥ"]}
 {"basis": "rule", "dh_name": "Neferure", "dh_target_ids": ["dodson_hilton:Neferure A", "dodson_hilton:Neferure B"], "tla_ids": ["400800"], "tla_names": ["nfrwrꜥw"]}
 {"basis": "rule", "dh_name": "Neni", "dh_target_ids": ["dodson_hilton:Neni"], "tla_ids": ["400717", "854719"], "tla_names": ["nnj"]}

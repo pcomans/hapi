@@ -252,7 +252,7 @@ def test_the_prompts_are_the_audited_ones() -> None:
 
 def _stored_calls() -> dict[str, list[dict]]:
     return {role: [json.loads(p.read_text(encoding="utf-8")) for p in sorted((review.RUNS / role).glob("*.json"))]
-            for role in ("A", "B", "reconciler")}
+            for role in ("A", "B", "reconciler", "expert")}
 
 
 def _thought(record: dict) -> bool:
@@ -262,7 +262,7 @@ def _thought(record: dict) -> bool:
 
 def test_every_stored_call_reads_as_stored_and_passes_the_protocol() -> None:
     calls = _stored_calls()
-    assert {role: len(records) for role, records in calls.items()} == {"A": 66, "B": 65, "reconciler": 6}
+    assert {role: len(records) for role, records in calls.items()} == {"A": 66, "B": 65, "reconciler": 6, "expert": 3}
     for role, records in calls.items():
         for record in records:
             assert record["role"] == role and record["requested_model"] == review.MODELS[role][0]
@@ -272,7 +272,7 @@ def test_every_stored_call_reads_as_stored_and_passes_the_protocol() -> None:
     assert failures == [("A", "Meketaten")]
     # Every answer states its reasoning; not every call holds a thinking block (adaptive thinking).
     assert {role: sum(_thought(r) for r in records if "answer" in r["result"]) for role, records in calls.items()} == {
-        "A": 49, "B": 55, "reconciler": 6}
+        "A": 49, "B": 55, "reconciler": 6, "expert": 3}
 
 
 def test_the_committed_decisions_are_rebuilt_from_the_stored_calls() -> None:
@@ -281,25 +281,27 @@ def test_the_committed_decisions_are_rebuilt_from_the_stored_calls() -> None:
     assert committed == [json.loads(json.dumps(d, sort_keys=True)) for d in review.decide(data)]
     assert collections.Counter((d["basis"], len(d["tla_names"])) for d in committed) == {
         ("rule", 1): 32, ("agreement", 0): 15, ("agreement", 1): 40, ("agreement", 2): 2,
-        ("reconciler", 0): 3, ("reconciler", 1): 2, ("override", 0): 2, ("override", 2): 1}
+        ("reconciler", 0): 3, ("reconciler", 1): 2, ("expert", 1): 2, ("expert", 2): 1}
     assert [u.dh_name for u in review.disputed(data)] == [
         "Meryetneith", "Minemaes", "Nubemhat", "Nubemiunu", "Reniseneb", "Werenro"]
     by_name = {d["dh_name"]: d for d in committed}
     # The names v1 linked wrongly (v1-withdrawn/README.md) are not linked to those lemmas now.
     assert by_name["Mut-Tuy"]["tla_ids"] == [] and by_name["Nubemiunu"]["tla_ids"] == []
     assert by_name["Neferure"]["basis"] == "rule" and by_name["Neferure"]["tla_names"] == ["nfrwrꜥw"]
-    # The cited overrides (overrides.jsonl): Minemaes and Neferuni unlinked, Meryetyotes kept;
-    # Neferuni and Meryetyotes are the units reviewer B answered differently across runs.
-    assert {n: (d["model_tla_ids"], d["tla_ids"]) for n, d in by_name.items() if d["basis"] == "override"} == {
-        "Minemaes": (["550286"], []), "Neferuni": (["703639"], []), "Meryetyotes": (["702196", "702311"], ["702196", "702311"])}
+    # The expert units (EXPERT_UNITS), decided by the stored expert call whatever it answered:
+    # it confirmed all three model decisions (the egyptologist review had flagged Minemaes).
+    assert {n: (d["model_tla_ids"], d["tla_ids"]) for n, d in by_name.items() if d["basis"] == "expert"} == {
+        "Minemaes": (["550286"], ["550286"]), "Neferuni": (["703639"], ["703639"]),
+        "Meryetyotes": (["702196", "702311"], ["702196", "702311"])}
     assert review.unstable_units(data) == ["Meryetyotes", "Neferuni"]
+    assert set(review.unstable_units(data)) <= set(review.EXPERT_UNITS)
     # A fragmentary lemma ("Jpw-...") is no candidate.
     assert by_name["Ipu"]["tla_ids"] == ["400482"]
 
 
 def test_the_links_add_spellings_without_new_collisions_or_unwithheld_keys(women) -> None:
     linked = tl.linked_spellings()
-    assert (len(linked), sum(map(len, linked.values()))) == (119, 259)
+    assert (len(linked), sum(map(len, linked.values()))) == (121, 263)
     before = rw.build_index(women, KINGS)
     after = rw.build_index(women, KINGS, linked_spellings=linked)
     assert rw.different_spellings(after).keys() == rw.different_spellings(before).keys() == {
