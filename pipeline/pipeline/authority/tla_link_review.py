@@ -220,11 +220,18 @@ def run_role(data: dict, units: list[tl.Unit], role: str, compose_for) -> None:
     role_dir = RUNS / role
     role_dir.mkdir(parents=True, exist_ok=True)
     for unit in units:
-        records = stored(role_dir, unit)
+        records, user = stored(role_dir, unit), compose_for(unit)
+        # A stored call asked another prompt (the unit's candidates or the prompts changed) is
+        # neither an answer nor an attempt at this one: stop, so it is withdrawn by hand and kept
+        # (Rule 13), as Khnemet's were (Codex review of PR #366).
+        stale = [r for r in records if (r["system_prompt"], r["user_content"]) != (data["system"], user)]
+        if stale:
+            raise ValueError(f"{unit.dh_name}: {len(stale)} stored {role} call(s) asked another prompt; "
+                             f"move them to a withdrawn folder before asking again")
         while valid_answer(records) is None:
             if len(records) >= MAX_ATTEMPTS:
                 raise ProtocolFailure(f"{unit.dh_name}: no valid answer in {MAX_ATTEMPTS} attempts")
-            record = call(unit, role, data["system"], compose_for(unit))
+            record = call(unit, role, data["system"], user)
             path = role_dir / f"{file_id(unit.dh_name)}.attempt-{len(records) + 1}.json"
             # Stored before it is judged: a call that stops the run is kept too (Rule 13).
             try:

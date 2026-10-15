@@ -341,3 +341,19 @@ def test_the_withdrawn_runs_and_the_probe_stay_on_disk() -> None:
                   if line.startswith("{")]
         usage = events[-1]["usage"]
         assert usage["input_tokens"] + usage["cache_creation_input_tokens"] + usage["cache_read_input_tokens"] == 602
+
+
+def test_a_stored_call_for_another_prompt_stops_the_run_before_any_call(tmp_path, monkeypatch) -> None:
+    """Codex review of PR #366: a unit whose prompt changed must not count a stale stored answer
+    as done, nor ask a new call beside it."""
+    unit = tl.Unit("X", ("dodson_hilton:X",), None, (tl.Option("nfr", ("1",)),))
+    monkeypatch.setattr(review, "RUNS", tmp_path)
+    (tmp_path / "A").mkdir()
+    record = _record("X", _answer())
+    record |= {"system_prompt": "S", "user_content": "old prompt", "result": review.validate(record)}
+    (tmp_path / "A" / f"{review.file_id('X')}.attempt-1.json").write_text(json.dumps(record), encoding="utf-8")
+    monkeypatch.setattr(review, "call", lambda *a: pytest.fail("no call may be made"))
+    with pytest.raises(ValueError, match="asked another prompt"):
+        review.run_role({"system": "S"}, [unit], "A", lambda u: "new prompt")
+    # The same stored call for the current prompt is the unit's answer, and nothing is asked.
+    review.run_role({"system": "S"}, [unit], "A", lambda u: "old prompt")
