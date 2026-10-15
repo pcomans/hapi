@@ -8848,11 +8848,19 @@ def test_merge_refuses_an_empty_agent_and_a_value_without_a_majority(tmp_path: P
     with pytest.raises(ValueError, match=r"agent c emitted sub-periods \[\]"):
         merge.main("dyn15-18", root)
     root = _merge_tree(tmp_path / "tie", rows)
-    for tag, sex in zip("abc", ("male", "female", "unknown")):
+    for tag, sex in zip("abc", ("male", "female", None)):
         path = root / "agents" / "dyn15-18" / f"agent-{tag}.jsonl"
         changed = [{**rows[0], "sex": sex}, *rows[1:]]
         path.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in changed), encoding="utf-8")
     with pytest.raises(ValueError, match=rf"no majority for {re.escape(rows[0]['dh_id'])}\.sex"):
+        merge.main("dyn15-18", root)
+    # An agent that drops one row leaves it with two versions; a disagreement there raises.
+    root = _merge_tree(tmp_path / "two", rows)
+    agents = root / "agents" / "dyn15-18"
+    for tag, changed in (("a", rows), ("b", [{**rows[0], "roles": ["X"]}, *rows[1:]]), ("c", rows[1:])):
+        (agents / f"agent-{tag}.jsonl").write_text(
+            "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in changed), encoding="utf-8")
+    with pytest.raises(ValueError, match=rf"no majority for {re.escape(rows[0]['dh_id'])}\.roles"):
         merge.main("dyn15-18", root)
     assert merge._majority(["x", "x", "y"], "row.field") == ("x", 2)
     with pytest.raises(ValueError, match="no majority for row.field"):
