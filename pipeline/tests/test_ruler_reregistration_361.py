@@ -51,13 +51,6 @@ RUNTIME_PYPROJECT_SHA256 = "8c584c759b96f174115106336231535fc4b0fe10ae09e1612c57
 HASH_2 = "2" * 64
 
 
-# The review run's results (score, records, page-load gate) are committed after the run; the
-# tests that read them run as soon as they are.
-AFTER_THE_RUN = pytest.mark.skipif(
-    not (EVALUATION / "results" / "real-adjudicated-score.json").exists(),
-    reason="reads the review run's committed results, which follow the run")
-
-
 def stage_1_case(case_id: str, evidence_sha256: str) -> dict:
     return {
         "case_id": case_id,
@@ -548,7 +541,6 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
         protocol.decided_record(tmp_path, case, role, inputs)
 
 
-@AFTER_THE_RUN
 def test_committed_score_verdict_follows_from_its_own_counts() -> None:
     score = json.loads((EVALUATION / "results" / "real-adjudicated-score.json").read_text())
     rule = score["decision_rule"]
@@ -564,20 +556,23 @@ def test_committed_score_verdict_follows_from_its_own_counts() -> None:
             joined += [joined_case(transition, category, entity, pair)] * row[letter]
     assert scorer.decision_rule(joined) == rule
     assert rule["verdict"] == "CONTINUE"
-    assert rule["qualifying_scopes"] == ["site__brooklyn__harvard", "site__met__brooklyn", "site__met__harvard"]
+    # #361: rulers qualify in Met–Brooklyn (a 2 + e 1 > d 1, four decided cases, no b).
+    assert rule["qualifying_scopes"] == ["ruler__met__brooklyn"]
+    assert rule["scopes"] == {"ruler__met__brooklyn": {"a": 2, "b": 0, "c": 0, "changed": 4, "d": 1, "decided": 4,
+                                                        "e": 1, "f": 0, "qualifies": True}}
     assert score["primary_decision_counts"] == {
-        "a_authority_only_same_useful_exact_target": 13,
+        "a_authority_only_same_useful_exact_target": 2,
         "b_authority_only_useful_but_wrong_or_nonidentity": 0,
         "c_authority_only_false_or_not_useful_gain": 0,
-        "d_literal_only_same_useful_connection_lost": 17,
-        "e_literal_only_false_or_not_useful_removal": 16,
-        "f_transition_uncertainty": 2,
+        "d_literal_only_same_useful_connection_lost": 1,
+        "e_literal_only_false_or_not_useful_removal": 1,
+        "f_transition_uncertainty": 0,
     }
     assert score["calibration_control_counts"] == {
-        "calibration_control_same_useful_exact_target": 47,
+        "calibration_control_same_useful_exact_target": 15,
         "calibration_control_useful_but_wrong_or_nonidentity": 0,
-        "calibration_control_false_or_not_useful": 1,
-        "calibration_control_uncertainty": 2,
+        "calibration_control_false_or_not_useful": 0,
+        "calibration_control_uncertainty": 0,
     }
     assert score["scorer_sha256"] == protocol.sha256_path(SCRIPTS / "score_review.py")
     assert score["review_status"] == "COMPLETE_TRACEABLE"
@@ -754,7 +749,6 @@ def test_decision_rule_refuses_an_empty_control_set() -> None:
         scorer.decision_rule([joined_case(GAIN, A)])
 
 
-@AFTER_THE_RUN
 def test_committed_results_bind_each_other() -> None:
     results = EVALUATION / "results"
     digest = json.loads((results / "real-review-population-digest.json").read_text())
@@ -935,7 +929,6 @@ def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(t
     assert disputed["field_resolutions"]["useful_granularity"]["citations"] == []
 
 
-@AFTER_THE_RUN
 def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() -> None:
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
@@ -947,33 +940,29 @@ def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() 
     assert gate["max_class_deviation_percentage_points"] == 5
     stages = gate["stages"]
     assert [(stages[s]["deciding_reviewer_calls"], stages[s]["deciding_reconciler_calls"],
-             stages[s]["calls_without_a_loaded_page"]) for s in "12"] == [(216, 1, 0), (130, 3, 0)]
+             stages[s]["calls_without_a_loaded_page"]) for s in "12"] == [(42, 1, 0), (34, 0, 0)]
+    # Every citable open loaded, in every class.
     assert stages["1"]["citable_opens_class_deviation_percentage_points"] == {
-        "ruler/authority_only_transition": -3.14, "ruler/literal_only_transition": 0.86,
-        "ruler/retained_control": 0.86, "site/authority_only_transition": -1.57,
-        "site/literal_only_transition": 0.38, "site/retained_control": 0.17,
-    }
+        "ruler/authority_only_transition": 0.0, "ruler/literal_only_transition": 0.0, "ruler/retained_control": 0.0}
     assert stages["2"]["citable_opens_class_deviation_percentage_points"] == {
-        "ruler/authority_only_transition": -4.74, "ruler/retained_control": 2.22,
-        "site/authority_only_transition": -0.28, "site/retained_control": 0.08,
-    }
+        "ruler/authority_only_transition": 0.0, "ruler/retained_control": 0.0}
     assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
     scans = [stages[s]["local_host_opens_in_any_stored_call"] for s in "12"]
     assert [scan["local"] for scan in scans] == [[], []]
-    assert [scan["urls_scanned"] for scan in scans] == [1850, 1218]
-    # The v7 failure: the target records Stage 2 judges must load.
-    assert stages["2"]["opens_by_citation_role"]["target_record"] == {"loaded": 115, "opened": 115}
+    assert [scan["urls_scanned"] for scan in scans] == [308, 252]
+    # A ruler target has no openable authority record (D&H and the king lists are print), so
+    # Stage 2 cites the museums' records and independent sources only.
+    assert [stages[s]["opens_by_citation_role"] for s in "12"] == [
+        {"case_input": {"loaded": 149, "opened": 149}, "independent": {"loaded": 5, "opened": 5}},
+        {"case_input": {"loaded": 110, "opened": 110}, "independent": {"loaded": 7, "opened": 7}}]
     # The scorer recomputes the gate from the same records and refuses to score a failed one;
     # the score names the gate result it recomputed, which is the committed one.
     assert score["page_load_gate"] == {"passed": True, "sha256": scorer.canonical_sha256(gate)}
     assert [stages[s]["opens_by_browser"] for s in "12"] == [
-        {"browserbase": {"loaded": 10, "opened": 13}, "local": {"loaded": 903, "opened": 912}},
-        {"browserbase": {"loaded": 5, "opened": 7}, "local": {"loaded": 599, "opened": 602}},
+        {"browserbase": {"loaded": 3, "opened": 3}, "local": {"loaded": 151, "opened": 151}},
+        {"browserbase": {"loaded": 6, "opened": 6}, "local": {"loaded": 111, "opened": 111}},
     ]
-    assert [stages[s]["retried_after_local_failure_by_host"] for s in "12"] == [
-        {"harvardartmuseums.org": 2, "brooklynmuseum.org": 1, "ifao.egnet.net": 1, "mfaboston6.emuseum.com": 1},
-        {"brooklynmuseum.org": 1},
-    ]
+    assert [stages[s]["retried_after_local_failure_by_host"] for s in "12"] == [{}, {}]  # no page failed locally
     assert all(abs(d) <= gate["max_class_deviation_percentage_points"]
                for s in "12" for d in stages[s]["citable_opens_class_deviation_percentage_points"].values())
     assert [stages[s]["passed"] for s in "12"] == [True, True] and gate["passed"] is True
@@ -1148,7 +1137,6 @@ def test_the_model_never_sees_or_echoes_the_evidence_hash() -> None:
         assert '"case_id": "review-unit-001"' in content
 
 
-@AFTER_THE_RUN
 def test_the_scorer_refuses_a_digest_that_binds_another_browser_tool_or_source_list() -> None:
     digest = json.loads((EVALUATION / "results" / "real-review-population-digest.json").read_text())
     scorer.verify_protocol_bindings(ROOT, digest)
@@ -1160,7 +1148,6 @@ def test_the_scorer_refuses_a_digest_that_binds_another_browser_tool_or_source_l
             scorer.verify_protocol_bindings(ROOT, changed)
 
 
-@AFTER_THE_RUN
 def test_the_scorer_refuses_a_run_that_failed_the_page_load_gate() -> None:
     gate = json.loads((EVALUATION / "results" / "real-page-load-gate.json").read_text())
     scorer.require_page_load_gate(gate)
@@ -1357,7 +1344,6 @@ def test_local_host_shorthands_count_as_local() -> None:
         True, True, True, True, True, False, False]
 
 
-@AFTER_THE_RUN
 def test_the_committed_rerun_proof_binds_the_scored_digest_and_population() -> None:
     results = EVALUATION / "results"
     proof = json.loads((results / "real-rerun-proof.json").read_text())
@@ -1428,11 +1414,10 @@ def test_the_page_load_gate_counts_the_reconcilers_pages(tmp_path: Path) -> None
         "site/authority_only_transition": {"loaded": 3, "opened": 4}}
 
 
-@AFTER_THE_RUN
 def test_the_scorer_accepts_only_the_committed_records(tmp_path: Path) -> None:
     committed = json.loads((EVALUATION / "results" / "real-review-records.json").read_text())
     stages = committed["stages"]
-    assert [sum(".attempt-" in name for name in stages[s]) for s in "12"] == [217, 133]
+    assert [sum(".attempt-" in name for name in stages[s]) for s in "12"] == [43, 35]
     score = json.loads((EVALUATION / "results" / "real-adjudicated-score.json").read_text())
     assert stages["1"]["consensus.json"] == score["input_hashes"]["stage_1_consensus"]
     assert stages["2"]["consensus.json"] == score["input_hashes"]["stage_2_consensus"]

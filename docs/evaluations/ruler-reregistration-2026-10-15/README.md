@@ -177,6 +177,52 @@ earlier runs had tried, with the fixed tool and no model (`results/preflight-pag
   - surface text correlating with case type;
   - an unequal sourcing burden.
 
-## Results
+## Result (2026-10-15): CONTINUE, rulers Met–Brooklyn
 
-Pending: the review run follows this registration.
+`results/real-adjudicated-score.json`, from `decision-rule.md` applied in code:
+
+| Step | Numbers | Outcome |
+|---|---|---|
+| Calibration | 0 of 15 retained controls uncertain or wrong (limit 20%) | passed |
+| Safety | b = 0 of 2 authority gains | passed |
+| Utility | ruler, Met–Brooklyn: a 2, b 0, c 0, d 1, e 1, f 0 (a + e = 3 > d = 1; 4 decided) | qualifies |
+
+**The four changed cases:**
+- **Two gains (a).** The authority links two spellings of one king that plain text keeps apart:
+  - the Met's "Haremhab" with Brooklyn's "Horemheb";
+  - the Met's "Niuserre" with Brooklyn's "Ni-user-re".
+
+  Stage 2 found the proposed king the exact identity in both.
+- **A false link removed (e).** The Met's "reign of Ahmose" (the king) and Brooklyn's "Queen
+  Ahmose, Mother of Hatshepsut" share a string. The reviewers found them different entities.
+  Plain text links them; the authority, sending the queen-cued mention to the royal women, does
+  not.
+- **A correct link lost (d).** The Met's Queen Neferu records (her tomb at Deir el-Bahri) and
+  Brooklyn's "Sunk Relief of Queen Neferu" are one queen. The Met records resolve to Neferu II
+  through their king, Mentuhotep II. Brooklyn's record gives no king and a dynasty the resolver
+  does not read ("second part of Dynasty 11"), so it stays ambiguous among the Neferus. This is
+  the gap found after the population was built and left unfixed (limitations).
+
+**Against #337 v10's rulers** (Met–Brooklyn: a 2, d 5, e 1, f 1):
+- correct links lost fall from 5 to 1;
+- one false string match is still removed (e 1);
+- the verdict moves from "does not qualify" to CONTINUE.
+
+The two registrations use different extractors and authorities, so the counts compare outcomes,
+not the same cases.
+
+**Caveat.** This is a small census of the selected population (4 changed cases, 15 controls),
+not a sample estimate, and it carries the weight of four cases.
+
+**Review.** All calls ran on Claude Code (Claude Sonnet 5.5), on the subscription.
+- **Stage 1:** 21 units; the two reviewers agreed on both questions in 20. The reconciler
+  settled the 21st with two cited overrides (a control's literal node, different entities and
+  too broad).
+- **Stage 2:** 17 proposed targets, 5 of them royal women; the reviewers agreed on all.
+- **Calls:** every one valid on its first attempt but one, a Stage 2 format retry. No call hit a
+  session limit or exited unsuccessfully.
+- **Pages:** every citable page opened loaded, local or in Browserbase (gate deviations 0.0 in
+  every class, `results/real-page-load-gate.json`). No page needed a Browserbase re-read after a
+  local failure.
+- **Records:** private, bound by `results/real-review-records.json`: 43 Stage 1 and 35 Stage 2
+  stored calls. The reason is #337's: they carry museum text verbatim.
