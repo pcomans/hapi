@@ -1802,3 +1802,19 @@ def test_record_figures_carry_the_note_that_they_are_node_membership() -> None:
     outcomes = scorer.arm_outcomes([])
     assert outcomes["record_figures_note"] == scorer.RECORD_FIGURES_NOTE
     assert "node membership" in scorer.RECORD_FIGURES_NOTE and "at most five" in scorer.RECORD_FIGURES_NOTE
+
+
+def test_the_readme_states_the_scored_result_and_arm_outcomes() -> None:
+    """The README's result is the committed score's, not a retelling of it."""
+    score = json.loads((EVALUATION / "results" / "real-adjudicated-score.json").read_text())
+    readme = (EVALUATION / "README.md").read_text()
+    row = score["decision_rule"]["scopes"]["ruler__met__brooklyn"]
+    assert f"ruler, Met–Brooklyn: a {row['a']}, b {row['b']}, c {row['c']}, d {row['d']}, e {row['e']}, f {row['f']}" in readme
+    assert score["decision_rule"]["verdict"] == "CONTINUE" and "## Result (2026-10-15): CONTINUE" in readme
+    outcomes = score["adjudicated_arm_outcomes"]
+    assert outcomes["useful_nodes_by_arm"] == {"authority_treatment": 17, "literal_baseline": 14,
+                                               "net_treatment_minus_baseline": 3}
+    assert {pair: o["useful_nodes_by_arm"]["net_treatment_minus_baseline"]
+            for pair, o in outcomes["by_museum_pair"].items()} == {
+        "brooklyn__harvard": 0, "met__brooklyn": 2, "met__harvard": 1}
+    assert "the authority has 17 against the literal arm's 14" in readme

@@ -187,42 +187,78 @@ earlier runs had tried, with the fixed tool and no model (`results/preflight-pag
 | Safety | b = 0 of 2 authority gains | passed |
 | Utility | ruler, Met–Brooklyn: a 2, b 0, c 0, d 1, e 1, f 0 (a + e = 3 > d = 1; 4 decided) | qualifies |
 
-**The four changed cases:**
+**The four changed cases** (case and Stage 1 unit IDs as in the private records):
 - **Two gains (a).** The authority links two spellings of one king that plain text keeps apart:
-  - the Met's "Haremhab" with Brooklyn's "Horemheb";
-  - the Met's "Niuserre" with Brooklyn's "Ni-user-re".
+  - case-010, unit-016: the Met's "Haremhab" with Brooklyn's "Horemheb";
+  - case-013, unit-005: the Met's "Niuserre" with Brooklyn's "Ni-user-re".
 
-  Stage 2 found the proposed king the exact identity in both.
-- **A false link removed (e).** The Met's "reign of Ahmose" (the king) and Brooklyn's "Queen
-  Ahmose, Mother of Hatshepsut" share a string. The reviewers found them different entities.
-  Plain text links them; the authority, sending the queen-cued mention to the royal women, does
-  not.
-- **A correct link lost (d).** The Met's Queen Neferu records (her tomb at Deir el-Bahri) and
-  Brooklyn's "Sunk Relief of Queen Neferu" are one queen. The Met records resolve to Neferu II
-  through their king, Mentuhotep II. Brooklyn's record gives no king and a dynasty the resolver
-  does not read ("second part of Dynasty 11"), so it stays ambiguous among the Neferus. This is
-  the gap found after the population was built and left unfixed (limitations).
+  Stage 2 found the proposed king the exact identity in both. Both were v10's a's too (case-069
+  and case-062).
+- **A false link removed (e)**, case-016, unit-008: plain text's "Ahmose" node. It is v10's e,
+  unchanged (case-008, the same literal node).
+  - The Met side is mostly "reign of Ahmose" (the king) but includes "Hatshepsut's Mother, Queen
+    Ahmose" (met-566763). Brooklyn's side is "Queen Ahmose, Mother of Hatshepsut". The reviewers
+    found the node joins different entities.
+  - **The authority also missed a real queen-to-queen link here.** Both "Queen Ahmose" records
+    are queen-cued, but "Ahmose" meets D&H's "Ahmes" only on the weak-sign key. Its
+    three-consonant key needs a named family king, and neither record gives one as a ruler
+    mention: the Met's reign field is unparsed, and Brooklyn's "Mother of Hatshepsut" is no cue.
+    Both stay unconfirmed.
+  - **The verdict hangs on this case.** Read as a loss (d), the scope would not qualify (a + e
+    = 2 against d = 2).
+- **A correct link lost (d)**, case-009, unit-021: Queen Neferu.
+  - The Met's Queen Neferu records (her tomb at Deir el-Bahri) and Brooklyn's "Sunk Relief of
+    Queen Neferu" are one queen.
+  - The Met records resolve to Neferu II through their king, Mentuhotep II. Brooklyn's record
+    gives no king and a dynasty the resolver does not read ("second part of Dynasty 11"), so it
+    stays ambiguous among the Neferus.
+  - This is the gap found after the population was built and left unfixed (limitations). It was
+    v10's case-095, also d.
 
-**Against #337 v10's rulers** (Met–Brooklyn: a 2, d 5, e 1, f 1):
-- correct links lost fall from 5 to 1;
-- one false string match is still removed (e 1);
-- the verdict moves from "does not qualify" to CONTINUE.
+**Against #337 v10's rulers, case by case** (Met–Brooklyn; v10: a 2, d 5, e 1, f 1). The literal
+node IDs are stable on the frozen corpus, so the cases can be followed:
+- **v10's two a's are a again**, and its e (Ahmose) is e again.
+- **Four of v10's five d's are no longer losses**; this run reviewed them as retained controls,
+  each judged correct.
+  - Nefertiti (v10 case-020) and Tiye (case-083) now link through the royal women
+    (`dodson_hilton:Nefertiti`, `dodson_hilton:Tiye A`).
+  - Apries (case-096) and Userkaf (case-098) now link among the kings: their mentions are not
+    queen-cued, so the change is in the king authority since v10, not the royal women.
+- **The fifth d, Neferu, is d again.**
+- **v10's f is gone.** It was case-067, Brooklyn's "Shabty of Queen Maatkare" merged with
+  Hatshepsut, a false merge that this registration's rule labels b. This run sends the
+  queen-cued Maatkare to `dodson_hilton:Maatkare A`, which Stage 2 judged the exact identity
+  (control case-011).
+- **The result:** rulers in Met–Brooklyn, which did not qualify in v10 (and were unsafe under
+  this registration's rule), now qualify.
 
-The two registrations use different extractors and authorities, so the counts compare outcomes,
-not the same cases.
+**What the controls judge.** "0 of 15 controls uncertain or wrong" judges each control's authority
+node (`classify_case`).
+- Two controls' literal nodes were judged wrong: plain text's "Maatkare" joins the 21st-dynasty
+  God's Wife with Hatshepsut (Maatkare is her throne name).
+  - In unit-003 (Met–Brooklyn, case-011) the reviewers agreed on "different entities, too
+    broad".
+  - In unit-014 (Met–Harvard, case-004) the reconciler settled it the same way.
+- In both, the authority's node (Maatkare A) was judged exact.
+- In useful nodes over the whole population, the authority has 17 against the literal arm's 14
+  (+3): +2 in Met–Brooklyn and +1 in Met–Harvard, where no case changed
+  (`adjudicated_arm_outcomes`).
 
 **Caveat.** This is a small census of the selected population (4 changed cases, 15 controls),
-not a sample estimate, and it carries the weight of four cases.
+not a sample estimate, and it carries the weight of four cases. Its margin rests on one case
+(Ahmose, above).
 
 **Review.** All calls ran on Claude Code (Claude Sonnet 5.5), on the subscription.
 - **Stage 1:** 21 units; the two reviewers agreed on both questions in 20. The reconciler
-  settled the 21st with two cited overrides (a control's literal node, different entities and
-  too broad).
+  settled unit-014 with two cited overrides.
 - **Stage 2:** 17 proposed targets, 5 of them royal women; the reviewers agreed on all.
-- **Calls:** every one valid on its first attempt but one, a Stage 2 format retry. No call hit a
-  session limit or exited unsuccessfully.
-- **Pages:** every citable page opened loaded, local or in Browserbase (gate deviations 0.0 in
-  every class, `results/real-page-load-gate.json`). No page needed a Browserbase re-read after a
-  local failure.
-- **Records:** private, bound by `results/real-review-records.json`: 43 Stage 1 and 35 Stage 2
-  stored calls. The reason is #337's: they carry museum text verbatim.
+- **Calls:** every call valid on its first attempt but one. Reviewer A's first Stage 2 call on
+  case-011 (Maatkare A) opened a blocked domain (Wikidata), which fails a call, and the case was
+  asked again.
+- **Pages:** in the deciding calls every citable page opened loaded, locally or in Browserbase
+  (gate deviations 0.0 in every class, `results/real-page-load-gate.json`). No page needed a
+  Browserbase re-read after a local failure, and one Met page was read before its load event
+  fired.
+- **Records:** private, in `dropbox/hapi-361-review-2026-10-15/`, bound by
+  `results/real-review-records.json`: 43 Stage 1 and 35 Stage 2 stored calls. The reason is
+  #337's: they carry museum text verbatim.
