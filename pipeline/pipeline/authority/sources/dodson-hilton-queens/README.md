@@ -150,7 +150,7 @@ The steps for dyn15-18:
 
 The prompt is kept exactly as the agents ran it (`provenance.json` pins its hash), so its
 opening still names the raw/ output paths and `merge.py --carry-forward`, the merge's
-interface on the day of extraction. A later chunk's prompt names `agents/<chunk>/` and
+interface on the day of extraction. A later chunk's prompt must name `agents/<chunk>/` and
 `merge.py <chunk>` directly.
 
 ### ADR-017 deviation
