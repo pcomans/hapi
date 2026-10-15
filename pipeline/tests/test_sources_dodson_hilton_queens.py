@@ -8749,6 +8749,9 @@ def test_two_dynasty_sections_follow_the_royal_succession_box() -> None:
 # relation left out ([Sobk]emsaf A), a refuted one (Meryetamun B), alt_names,
 # a cross-section stub (Mutneferet A) and the Unplaced rows.
 DYN15_18_FULL_ROWS = [
+    # Two named parents (Ahmes A), and a named mother beside a hedged father (Ameni).
+    {"dh_id": 'Ahmes A', "name": 'Ahmes A', "alt_names": [], "roles": ['KD', 'KSis'], "sex": 'female', "spouse_names": [], "father_name": 'Taa II', "mother_name": 'Sitdjehuty', "children_names": [], "dynasty": 17, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Ameni', "name": 'Ameni', "alt_names": [], "roles": ['KSon'], "sex": 'male', "spouse_names": [], "father_name": 'Inyotef VII (perhaps)', "mother_name": 'Haankhes', "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": False, "source_citation": CITATION_SOUTHERN},
     {"dh_id": 'Apepi B', "name": 'Apepi B', "alt_names": [], "roles": ['KSon'], "sex": 'male', "spouse_names": [], "father_name": 'Apepi (probably)', "mother_name": None, "children_names": [], "dynasty": 15, "sub_period": SUB_PERIOD_RFC, "unplaced": False, "source_citation": CITATION_RFC},
     {"dh_id": 'Yanassi', "name": 'Yanassi', "alt_names": [], "roles": ['EKS'], "sex": 'male', "spouse_names": [], "father_name": 'Khyan', "mother_name": None, "children_names": [], "dynasty": 15, "sub_period": SUB_PERIOD_RFC, "unplaced": False, "source_citation": CITATION_RFC},
     {"dh_id": 'Mentuhotep C', "name": 'Mentuhotep C', "alt_names": [], "roles": ['KGW', 'UWC'], "sex": 'female', "spouse_names": ['Djehuty'], "father_name": None, "mother_name": None, "children_names": [], "dynasty": 16, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": False, "source_citation": CITATION_SOUTHERN},
@@ -8774,3 +8777,75 @@ DYN15_18_FULL_ROWS = [
 @pytest.mark.parametrize("expected", DYN15_18_FULL_ROWS, ids=lambda e: f"{e['dh_id']} [{e['sub_period']}]")
 def test_dyn15_18_full_row(expected: dict) -> None:
     _assert_full_row(expected["dh_id"], expected, sub_period=expected["sub_period"])
+
+
+# ---------------------------------------------------------------------------
+# merge.py: one chunk per run, the others carried forward (dyn15-18 on)
+# ---------------------------------------------------------------------------
+
+
+@lru_cache(maxsize=1)
+def _merge_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("dh_merge", SOURCE_DIR / "merge.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _merge_tree(tmp_path: Path, agent_rows: list[dict]) -> Path:
+    """A source dir holding the committed reconciled.jsonl and three agents' rows."""
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    (tmp_path / "reconciled.jsonl").write_bytes(JSONL.read_bytes())
+    agents = tmp_path / "agents" / "dyn15-18"
+    agents.mkdir(parents=True)
+    for tag in "abc":
+        (agents / f"agent-{tag}.jsonl").write_text(
+            "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in agent_rows), encoding="utf-8")
+    return tmp_path
+
+
+def _committed_agent_rows() -> list[dict]:
+    path = SOURCE_DIR / "agents" / "dyn15-18" / "agent-a.jsonl"
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+
+
+def test_merge_rebuilds_its_chunk_and_carries_every_other_row_unchanged(tmp_path: Path) -> None:
+    rows = _committed_agent_rows()
+    rows[0] = {**rows[0], "roles": ["X"]}  # a changed extraction must replace the row, not add one
+    root = _merge_tree(tmp_path, rows)
+    _merge_module().main("dyn15-18", root)
+    merged = [json.loads(line) for line in (root / "reconciled.jsonl").read_text(encoding="utf-8").splitlines()]
+    committed = _rows()
+    chunk = _merge_module().CHUNK_SUB_PERIODS["dyn15-18"]
+    assert len(merged) == len(committed) == 609
+    assert [r for r in merged if r["sub_period"] not in chunk] == [r for r in committed if r["sub_period"] not in chunk]
+    assert [r["roles"] for r in merged if (r["dh_id"], r["sub_period"]) == (rows[0]["dh_id"], rows[0]["sub_period"])] == [["X"]]
+    assert [(r["dh_id"], r["sub_period"]) for r in merged] == [(r["dh_id"], r["sub_period"]) for r in committed]
+    assert (root / "merge-disagreements-dyn15-18.txt").read_text(encoding="utf-8") == "No field-level disagreements.\n"
+    assert not (root / "merge-disagreements.txt").exists()
+
+
+def test_merge_refuses_other_sub_periods_dropped_rows_and_stray_fields(tmp_path: Path) -> None:
+    merge = _merge_module()
+    rows = _committed_agent_rows()
+    relabelled = [{**r, "sub_period": SUB_PERIOD_POWER} if r["sub_period"] == SUB_PERIOD_TAOSIDS else r for r in rows]
+    with pytest.raises(ValueError, match="emitted sub-periods"):
+        merge.main("dyn15-18", _merge_tree(tmp_path / "a", relabelled))
+    with pytest.raises(ValueError, match=r"would be dropped: \[\('Ahhotep I', 'The Taosids'\)\]"):
+        merge.main("dyn15-18", _merge_tree(tmp_path / "b", [r for r in rows if r["dh_id"] != "Ahhotep I"]))
+    with pytest.raises(ValueError, match=r"outside the extraction schema: \['notes'\]"):
+        merge.main("dyn15-18", _merge_tree(tmp_path / "c", [{**rows[0], "notes": "prose"}, *rows[1:]]))
+
+
+def test_dyn15_18_agent_outputs_are_the_committed_extraction() -> None:
+    import hashlib
+    agents = SOURCE_DIR / "agents" / "dyn15-18"
+    provenance = json.loads((agents / "provenance.json").read_text(encoding="utf-8"))
+    assert provenance["model"] == "claude-opus-5-5"
+    assert provenance["prompt"]["sha256"] == hashlib.sha256((SOURCE_DIR / "prompt-dyn15-18.md").read_bytes()).hexdigest()
+    for tag, agent in provenance["agents"].items():
+        assert agent["sha256"] == hashlib.sha256((agents / agent["file"]).read_bytes()).hexdigest()
+        assert agent["final_report"].startswith(f"agent-{tag}-dyn15-18: 60 rows")
+    slicer = (SOURCE_DIR / "slice_source.py").read_text(encoding="utf-8")
+    assert provenance["source"]["sha256"] in slicer

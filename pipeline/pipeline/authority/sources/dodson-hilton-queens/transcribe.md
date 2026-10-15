@@ -1,10 +1,10 @@
 # Transcription method — Dodson & Hilton 2004
 
-Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Eight chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks, Head of the South, Seizers of the Two Lands, Kings and Commoners, The Founders, Of Kings and Priests); further chunks (remaining chapters 1 OK, 2 SIP Dyn 14-17, 4 3IP sub-sections 2–5, 5 LP/Ptolemaic) follow the same method.
+Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Nine chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks, Head of the South, Seizers of the Two Lands, Kings and Commoners, The Founders, Of Kings and Priests, and dyn15-18: Rulers of Foreign Countries, The Southern Kingdom, The Taosids); further chunks (Ch 1 Old Kingdom and 1st Intermediate Period, Ch 4 sub-sections 2–5, Ch 5) follow the dyn15-18 method below.
 
 ## Inputs
 
-1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, ~151 MB. Not committed.
+1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, 158,047,437 bytes (158 MB, ~151 MiB). Not committed.
 2. Scope:
    - **Chunk 1 (PR #37, merged):** chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130 (offset +11). `pdf_pages: "126-130"` on every row.
    - **Chunk 2 (PR #38, merged):** chapter 3 *The New Kingdom* → section *The Amarna Interlude* → *Brief Lives* sub-block. Printed pp. 154–157, physical PDF pp. 142–145 (offset +12). `pdf_pages: "142-145"` on every row. Narrative prose pp. 142–153 NOT extracted.
@@ -24,7 +24,7 @@ Per ADR-017: Claude Code subagent OCR of the target range, three parallel Claude
 
 ### PDF-split preamble (new, not in Ryholt / Kitchen)
 
-The source PDF is ~151 MB — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`. For chunk 3 the three sub-blocks are non-contiguous (pp. 157–162, 169–170, 178–180), so three separate sub-PDFs are extracted:
+The source PDF is 158 MB (~151 MiB) — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`. For chunk 3 the three sub-blocks are non-contiguous (pp. 157–162, 169–170, 178–180), so three separate sub-PDFs are extracted:
 
 ```bash
 # Run from <repo>/pipeline; path is repo-relative.
@@ -100,6 +100,9 @@ Each chunk's OCR markdown is fed to three independent extraction subagents runni
 | Power and Glory (p126–p130) | `prompt.md` | `agent-{a,b,c}-power.jsonl` | 59 |
 | Amarna Interlude (p142–p145) | `prompt-amarna.md` | `agent-{a,b,c}-amarna.jsonl` | 41 |
 | Ramesside (p157–p162 + p169–p170 + p178–p180) | `prompt-ramesside.md` | `agent-{a,b,c}-ramesside.jsonl` | 170 |
+| dyn15-18 (physical p104–p119, 7 pages) | `prompt-dyn15-18.md` | `agents/dyn15-18/agent-{a,b,c}.jsonl` (committed) | 60 |
+
+**From dyn15-18 on** (2026-10-14), the earlier agent outputs (gitignored under `raw/`) are gone, so `merge.py <chunk>` merges one chunk from its committed `agents/<chunk>/` outputs and carries every other row forward (see `merge.py`'s docstring); the paragraphs below describe the earlier whole-file merge, which no longer exists.
 
 `merge.py` discovers all `agent-{tag}-*.jsonl` files per agent tag, unions their rows, then majority-votes per-field across the three agents' unified dicts. The primary key is the composite `(dh_id, sub_period)` — `dh_id` alone is not unique across the full reconciled file because D&H occasionally lists the same individual under two Brief Lives sub-sections (chunk 3 introduced this case with `Takhat A` and `Isetneferet C`; see README § Schema). Adding a future chunk (earlier chapters) is still just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
 
@@ -108,8 +111,9 @@ Each chunk's OCR markdown is fed to three independent extraction subagents runni
 ### Merge + fix_rows
 
 ```
-cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py
+cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py dyn15-18
 cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/fix_rows.py
+cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/destructure_notes.py
 ```
 
 `merge.py` is structurally the Kitchen merge (Ryholt's lineage), adapted only by:

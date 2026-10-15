@@ -1,11 +1,11 @@
 """Cut a chunk's pages from the Dodson & Hilton PDF into the sub-PDF its extraction agents read.
 
-The book (~151 MB) is over the Read tool's limit, so each chunk's agents read a small sub-PDF
+The book (158 MB) is over the Read tool's limit, so each chunk's agents read a small sub-PDF
 under `raw/` (gitignored, like the book under `proprietary/`). The book and every sub-PDF are
 pinned by SHA-256, so the agents' input is reproducible. From the dyn15-18 chunk on, the slice
 is this script rather than an inline snippet (see `transcribe.md`).
 
-    cd pipeline && uv run --with pypdf python pipeline/authority/sources/dodson-hilton-queens/slice_source.py dyn15-18 \\
+    cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/slice_source.py dyn15-18 \\
         [--book <path to the book PDF, if not under this checkout's proprietary/books/>]
 """
 
