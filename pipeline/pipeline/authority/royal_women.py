@@ -304,7 +304,7 @@ def weak_sign_entry(label: str) -> tuple[str, frozenset[str]]:
     """How the authority side keys a label: the D&H letter and the regnal numeral stripped
     before the key is taken, the numerals kept ("Neferu II" -> ("nfr", {"II"}))."""
     tokens = label.split()
-    key = weak_sign_skeleton(" ".join(t for t in tokens if not DISAMBIGUATOR.match(t)))
+    key = weak_sign_skeleton(" ".join(t for t in tokens if not (DISAMBIGUATOR.match(t) or numeral_of(t))))
     return key, frozenset(n for t in tokens if (n := numeral_of(t)))
 
 

@@ -343,6 +343,10 @@ def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
     assert rw.weak_sign_entry("Neferu II") == ("nfr", frozenset({"II"}))
     assert rw.weak_sign_entry("Tiye B Mereniset") == ("tmrns", frozenset())
     assert rw.weak_sign_entry("Cleopatra VII Philopator") == ("clptrphlptr", frozenset({"VII"}))
+    # A wrapped numeral is stripped from the authority's key too (Codex review): with V or X in
+    # it, a "VII." left in the label would key as "clptrv".
+    for label in ("Cleopatra VII.", "Cleopatra (VII)", "Cleopatra [VII]", "Cleopatra VII"):
+        assert rw.weak_sign_entry(label) == ("clptr", frozenset({"VII"})), label
     assert found(index, "Cleopatra III") == ("unmatched", None, [], None)
     assert found(index, "Ahhotep III") == ("unmatched", None, [], None)
     # A vowel variant meets on the weak-sign tier and the numeral picks; the Greek K does not
