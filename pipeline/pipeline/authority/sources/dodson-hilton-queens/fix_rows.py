@@ -564,6 +564,10 @@ KNOWN_ROLE_TOKENS: set[str] = {
     "PMut",                      # Priest of Mut (Ankhefenmut B)
     "PSeth",                     # Priest of Seth (Hori C)
     "Sem-Priest at Medinet Habu",
+    # dyn15-18 chunk (2026-10-14), verbatim on the page per the egyptologist review:
+    "EKS",                       # Yanassi (p. 115): D&H print EKS, not EKSon; kept as printed
+    "Chief of Archers",          # Nakht (p. 120)
+    "Commander of Koptos",       # Qinen (p. 120)
 }
 
 _OVERRIDES_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
@@ -623,7 +627,7 @@ def main() -> None:
     # `is_group_entry` field BEFORE SPOT_CORRECTIONS runs. Patterned
     # after the leprohon `backfill_*` passes (PR #185) which solve the
     # same Rule-4 schema-uniformity problem.
-    backfill_log = backfill_is_group_entry(rows)
+    backfill_is_group_entry(rows)  # its delta log is not written; see the state log below
 
     # The log must describe the *state* of reconciled.jsonl, not the *delta*
     # from the previous run. On a second run every `old_val == new_val`, so a
@@ -698,9 +702,8 @@ def main() -> None:
         f"    (all {sum(1 for r in rows if not r['is_group_entry'])} "
         f"other rows: False)",
     ]
-    if backfill_log:
-        backfill_state_lines.append("  This-run delta:")
-        backfill_state_lines.extend(f"  {line}" for line in backfill_log)
+    # No this-run delta either: it would make the first run after a merge differ from every
+    # later one, and merge -> fix_rows -> destructure_notes must be a fixed point.
 
     body_sections: list[str] = [
         "Schema backfills:\n" + "\n".join(backfill_state_lines),

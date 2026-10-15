@@ -27,10 +27,11 @@ The rule, which is deterministic and fixed here:
     2. dynasty: among the family matches if there are several, else among all, the women of
        the record's dynasty (or of no known dynasty), when the record gives exactly one.
   Otherwise the mention stays ambiguous.
-* A woman is never chosen against the record's own single dynasty: D&H covers some dynasties
-  only (none of 4–10, 14–17 or 22 onward), so a lone name match of another known dynasty is
-  another woman, and the mention stays unmatched. A candidate whose dynasty the authority
-  does not give is not contradicted.
+* A woman is never chosen against the record's own single dynasty: D&H is transcribed for
+  some dynasties only (none of 4–10, 14 or 22 onward), so a lone name match of another known
+  dynasty is another woman, and the mention stays unmatched. A candidate whose dynasty the
+  authority does not give is not contradicted: the rows of D&H's two-dynasty sections (16 and
+  17; 17 and 18) carry a dynasty only when the entry's own kin kings fall in one of them.
 * The cues are the module's rule; no committed mention extractor emits all of them yet (the
   frozen #337 one knows only Queen/King/reign cues). The first caller is the ruler
   re-registration (#361), whose extractor is to emit them.

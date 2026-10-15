@@ -12,6 +12,8 @@
   {"dh_id": "Tentamun B", "same_woman": true, "sub_periods": ["The Decline of the Ramessides", "Of Kings and Priests"],
    "basis": "Both rows: father Ramesses XI, spouse Nesibanebdjedet I."},
   {"dh_id": "Hetepti", "same_woman": true, "sub_periods": ["Seizers of the Two Lands", "Kings and Commoners"],
-   "basis": "Identical role codes on both rows (KM, M2L, UWC: King's Mother, mother of Amenemhat IV per the Seizers row, pp. 88-91); the Kings and Commoners row (pp. 98-103) carries no family fields, a cross-reference to the same king's mother."}
+   "basis": "Identical role codes on both rows (KM, M2L, UWC: King's Mother, mother of Amenemhat IV per the Seizers row, pp. 88-91); the Kings and Commoners row (pp. 98-103) carries no family fields, a cross-reference to the same king's mother."},
+  {"dh_id": "Mutneferet A", "same_woman": true, "sub_periods": ["The Taosids", "The Power and the Glory"],
+   "basis": "Both rows: roles KM, KW, KSis, KD in that order, father Ahmose I (probable). The Taosids row (pp. 118-119) carries nothing else, a stub (D&H print 'see next section'); The Power and the Glory row (pp. 126-130) is the full entry (wife of Thutmose I, mother of Thutmose II). Added 2026-10-14 with the dyn15-18 chunk; egyptologist review confirmed."}
  ]
 }

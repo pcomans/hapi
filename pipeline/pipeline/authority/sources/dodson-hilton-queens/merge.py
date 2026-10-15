@@ -32,29 +32,46 @@ lineage). Adaptations:
 See Kitchen's merge.py and `docs/playbook-phase-0-ocr-transcription.md`
 for rationale.
 
-Usage:
-    cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py
-    DH_AGENT_DIR=/some/path uv run python \\
-        pipeline/authority/sources/dodson-hilton-queens/merge.py
+Usage (one chunk at a time, from the dyn15-18 chunk on):
+    cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py dyn15-18
+
+Inputs: `agents/<chunk>/agent-{a,b,c}.jsonl`, the three extraction agents' outputs, committed
+(with `agents/<chunk>/provenance.json`) so the merge can be re-run and audited.
 
 Outputs:
-    reconciled.jsonl                 (this source dir)
-    merge-disagreements.txt          (this source dir; committed for audit)
+    reconciled.jsonl                       (this source dir)
+    merge-disagreements-<chunk>.txt        (this source dir; committed for audit)
+
+**One chunk per run** (2026-10-14). Chunks 1-8's agent outputs were never committed (they lay
+under the gitignored `raw/`) and are gone, so the whole file can no longer be re-merged, and
+the old whole-file mode, which would now overwrite every earlier row, is removed (rule 10).
+A run merges the named chunk's sub-periods (`CHUNK_SUB_PERIODS`) from its agents and carries
+every other `reconciled.jsonl` row forward unchanged: for those rows `reconciled.jsonl` itself
+is the source of truth, `fix_rows.py`'s corrections included (removing a correction no longer
+reverts its value). It raises if the agents' sub-periods are not exactly the chunk's, if a row
+already in `reconciled.jsonl` for those sub-periods would be dropped, or if an agent emits a
+field outside the extraction schema. Then run `fix_rows.py` and `destructure_notes.py`.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
-import sys
 from collections import Counter
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
-DEFAULT_AGENT_DIR = SOURCE_DIR / "raw"
-OUT = SOURCE_DIR / "reconciled.jsonl"
-DIFF = SOURCE_DIR / "merge-disagreements.txt"
+
+# The sub-periods each chunk's agents extract; a run must produce exactly these.
+CHUNK_SUB_PERIODS = {
+    "dyn15-18": frozenset({"Rulers of Foreign Countries", "The Southern Kingdom", "The Taosids"}),
+}
+# The fields an extraction agent emits (`prompt-dyn15-18.md`); `is_group_entry` is
+# fix_rows.py's, and prose (`notes`) is never extracted.
+AGENT_FIELDS = frozenset({
+    "dh_id", "name", "alt_names", "roles", "sex", "spouse_names", "father_name", "mother_name",
+    "children_names", "dynasty", "sub_period", "unplaced", "source_citation",
+})
 
 
 RowKey = tuple[str, str]  # (dh_id, sub_period)
@@ -84,41 +101,6 @@ def _load(p: Path) -> dict[RowKey, dict]:
     return rows
 
 
-def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[RowKey, dict]:
-    """Load every chunk file for one agent tag, union the rows across chunks.
-
-    Matches `agent-{tag}-<chunk>.jsonl` (e.g. `agent-a-power.jsonl`,
-    `agent-a-amarna.jsonl`, `agent-a-ramesside.jsonl`). Every agent
-    output must carry a chunk suffix — the legacy unsuffixed
-    `agent-{tag}.jsonl` form (used by Pre-Amarna before chunk 2)
-    was retired in the Ramesside PR. PR #38 (Amarna) deferred the
-    rename to reduce review surface-area; this PR collected it
-    alongside the composite-key change.
-
-    Raises on duplicate `(dh_id, sub_period)` across chunk files —
-    a composite-key collision means two extractions produced the
-    same logical row, so it's a bug. A `dh_id` that appears with
-    distinct `sub_period`s is legitimate (D&H cross-section duplicates).
-    """
-    files = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
-    if not files:
-        return {}
-
-    combined: dict[RowKey, dict] = {}
-    source_of: dict[RowKey, Path] = {}
-    for p in files:
-        rows = _load(p)
-        for key, row in rows.items():
-            if key in combined:
-                raise ValueError(
-                    f"Duplicate (dh_id, sub_period)={key!r} across chunk files: "
-                    f"first in {source_of[key]}, again in {p}"
-                )
-            combined[key] = row
-            source_of[key] = p
-    return combined
-
-
 SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
 
 
@@ -136,8 +118,10 @@ def _normalise_value(v: object) -> object:
     return v
 
 
-def _majority(values: list) -> tuple[object, int]:
-    """Return (chosen_value, count_of_agreers) from a list of per-agent values."""
+def _majority(values: list, where: str) -> tuple[object, int]:
+    """Return (chosen_value, count_of_agreers) from a list of per-agent values. A value needs
+    a real majority (more than half the agents that produced the row); a tie raises (rule 2:
+    `most_common(1)` on a tie is a pick by agent order)."""
     normalised = [_normalise_value(v) for v in values]
 
     def key(v):
@@ -145,6 +129,8 @@ def _majority(values: list) -> tuple[object, int]:
 
     counts = Counter(key(v) for v in normalised)
     top_key, top_count = counts.most_common(1)[0]
+    if top_count * 2 <= len(normalised):
+        raise ValueError(f"merge.py: no majority for {where}: {sorted(counts)}")
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
@@ -204,15 +190,19 @@ def _sort_key_for(unplaced_keys: frozenset[RowKey]):
     return _sort_key
 
 
-def main(agent_dir: Path) -> None:
-    agents = {tag: _load_agent_chunks(agent_dir, tag) for tag in "abc"}
-    empty = [tag for tag, a in agents.items() if not a]
-    if empty:
-        sys.exit(
-            f"ERROR: agent(s) {', '.join(empty)} produced no rows in {agent_dir}. "
-            f"Expected at least one `agent-{{tag}}-<chunk>.jsonl` per agent. "
-            f"See transcribe.md."
-        )
+def main(chunk: str, source_dir: Path = SOURCE_DIR) -> None:
+    agent_dir = source_dir / "agents" / chunk
+    agents = {tag: _load(agent_dir / f"agent-{tag}.jsonl") for tag in "abc"}
+    # Each agent on its own must cover exactly the chunk's sub-periods: an empty or partial
+    # agent would leave rows with two versions, where a disagreement has no majority.
+    for tag, rows in agents.items():
+        emitted = {key[1] for key in rows}
+        if emitted != CHUNK_SUB_PERIODS[chunk]:
+            raise ValueError(f"{chunk}: agent {tag} emitted sub-periods {sorted(emitted)}, "
+                             f"not the chunk's {sorted(CHUNK_SUB_PERIODS[chunk])}")
+    stray = {f for a in agents.values() for row in a.values() for f in row} - AGENT_FIELDS
+    if stray:
+        raise ValueError(f"{chunk}: an agent emitted fields outside the extraction schema: {sorted(stray)}")
 
     # Compute the set of unplaced composite keys once, by majority-vote of the
     # three agents' `unplaced` fields per row. This lets _sort_key_for() bin
@@ -270,7 +260,7 @@ def main(agent_dir: Path) -> None:
         row_disagreements: list[str] = []
         for field in all_fields:
             values = [v.get(field) for _, v in present]
-            chosen, count = _majority(values)
+            chosen, count = _majority(values, f"{label}.{field}")
             merged[field] = chosen
             if count < len(present):
                 row_disagreements.append(
@@ -289,29 +279,39 @@ def main(agent_dir: Path) -> None:
             )
         final.append(merged)
 
-    OUT.write_text(
+    out = source_dir / "reconciled.jsonl"
+    prior = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines() if line.strip()]
+    rebuilt = CHUNK_SUB_PERIODS[chunk]
+    dropped = sorted({_row_key(r) for r in prior if r["sub_period"] in rebuilt} - set(all_keys))
+    if dropped:
+        raise ValueError(f"{chunk}: reviewed rows the agents no longer produce would be dropped: {dropped}")
+    carried = [r for r in prior if r["sub_period"] not in rebuilt]
+    print(f"Carried forward {len(carried)} rows of other sub-periods; "
+          f"rebuilt {len(prior) - len(carried)} rows of {sorted(rebuilt)}")
+    final = carried + final
+    keys = [_row_key(r) for r in final]
+    unplaced = frozenset(k for k, r in zip(keys, final) if r["unplaced"])
+    final = [r for _, r in sorted(zip(keys, final), key=lambda kr: _sort_key_for(unplaced)(kr[0]))]
+    diff_path = source_dir / f"merge-disagreements-{chunk}.txt"
+
+    out.write_text(
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in final
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
-    DIFF.write_text("\n".join(report) if report else "No field-level disagreements.\n")
+    diff_path.write_text("\n".join(report) if report else "No field-level disagreements.\n", encoding="utf-8")
 
     print("Agents: " + ", ".join(f"{t}={len(a)}" for t, a in agents.items()))
     print(f"Merged rows: {len(final)}")
     rows_with_disagreement = sum(1 for r in report if r.strip())
     print(f"Rows with ≥1 field disagreement: {rows_with_disagreement}")
-    print(f"Wrote {OUT.relative_to(OUT.parents[4])}")
-    print(f"Wrote {DIFF.relative_to(DIFF.parents[4])}")
+    print(f"Wrote {out}")
+    print(f"Wrote {diff_path}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--agent-dir",
-        type=Path,
-        default=Path(os.environ.get("DH_AGENT_DIR", DEFAULT_AGENT_DIR)),
-        help=f"Directory containing agent-a/b/c.jsonl (default: {DEFAULT_AGENT_DIR}).",
-    )
-    args = parser.parse_args()
-    main(args.agent_dir)
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    parser.add_argument("chunk", choices=sorted(CHUNK_SUB_PERIODS))
+    main(parser.parse_args().chunk)

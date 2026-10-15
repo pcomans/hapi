@@ -1,10 +1,10 @@
 # Transcription method — Dodson & Hilton 2004
 
-Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Eight chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks, Head of the South, Seizers of the Two Lands, Kings and Commoners, The Founders, Of Kings and Priests); further chunks (remaining chapters 1 OK, 2 SIP Dyn 14-17, 4 3IP sub-sections 2–5, 5 LP/Ptolemaic) follow the same method.
+Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Nine chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks, Head of the South, Seizers of the Two Lands, Kings and Commoners, The Founders, Of Kings and Priests, and dyn15-18: Rulers of Foreign Countries, The Southern Kingdom, The Taosids); further chunks (Ch 1 Old Kingdom and 1st Intermediate Period, Ch 4 sub-sections 2–5, Ch 5) follow the dyn15-18 method below.
 
 ## Inputs
 
-1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, ~151 MB. Not committed.
+1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, 158,047,437 bytes (158 MB, ~151 MiB). Not committed.
 2. Scope:
    - **Chunk 1 (PR #37, merged):** chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130 (offset +11). `pdf_pages: "126-130"` on every row.
    - **Chunk 2 (PR #38, merged):** chapter 3 *The New Kingdom* → section *The Amarna Interlude* → *Brief Lives* sub-block. Printed pp. 154–157, physical PDF pp. 142–145 (offset +12). `pdf_pages: "142-145"` on every row. Narrative prose pp. 142–153 NOT extracted.
@@ -24,7 +24,7 @@ Per ADR-017: Claude Code subagent OCR of the target range, three parallel Claude
 
 ### PDF-split preamble (new, not in Ryholt / Kitchen)
 
-The source PDF is ~151 MB — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`. For chunk 3 the three sub-blocks are non-contiguous (pp. 157–162, 169–170, 178–180), so three separate sub-PDFs are extracted:
+The source PDF is 158 MB (~151 MiB) — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`. For chunk 3 the three sub-blocks are non-contiguous (pp. 157–162, 169–170, 178–180), so three separate sub-PDFs are extracted:
 
 ```bash
 # Run from <repo>/pipeline; path is repo-relative.
@@ -46,6 +46,8 @@ for out_name, phys_range in [
         w.write(f)
 PY
 ```
+
+From the dyn15-18 chunk (2026-10-14) on, the slice is `slice_source.py <chunk>`, which pins the book's and the sub-PDF's SHA-256 (dyn15-18: `7e92f81d1ea9ef0c45a115757095a00c11f3bab849ccc392183f5a87a80b796f`, physical pp. 104, 105, 106, 110, 112, 118, 119).
 
 The sub-PDFs are gitignored (`raw/*`). The source PDF lives under `proprietary/` (repo-level gitignored). Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"157-162"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
 
@@ -98,6 +100,9 @@ Each chunk's OCR markdown is fed to three independent extraction subagents runni
 | Power and Glory (p126–p130) | `prompt.md` | `agent-{a,b,c}-power.jsonl` | 59 |
 | Amarna Interlude (p142–p145) | `prompt-amarna.md` | `agent-{a,b,c}-amarna.jsonl` | 41 |
 | Ramesside (p157–p162 + p169–p170 + p178–p180) | `prompt-ramesside.md` | `agent-{a,b,c}-ramesside.jsonl` | 170 |
+| dyn15-18 (physical p104–p119, 7 pages) | `prompt-dyn15-18.md` | `agents/dyn15-18/agent-{a,b,c}.jsonl` (committed) | 60 |
+
+**From dyn15-18 on** (2026-10-14), the earlier agent outputs (gitignored under `raw/`) are gone, so `merge.py <chunk>` merges one chunk from its committed `agents/<chunk>/` outputs and carries every other row forward (see `merge.py`'s docstring); the paragraphs below describe the earlier whole-file merge, which no longer exists.
 
 `merge.py` discovers all `agent-{tag}-*.jsonl` files per agent tag, unions their rows, then majority-votes per-field across the three agents' unified dicts. The primary key is the composite `(dh_id, sub_period)` — `dh_id` alone is not unique across the full reconciled file because D&H occasionally lists the same individual under two Brief Lives sub-sections (chunk 3 introduced this case with `Takhat A` and `Isetneferet C`; see README § Schema). Adding a future chunk (earlier chapters) is still just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
 
@@ -106,8 +111,9 @@ Each chunk's OCR markdown is fed to three independent extraction subagents runni
 ### Merge + fix_rows
 
 ```
-cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py
+cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py dyn15-18
 cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/fix_rows.py
+cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/destructure_notes.py
 ```
 
 `merge.py` is structurally the Kitchen merge (Ryholt's lineage), adapted only by:
@@ -127,7 +133,16 @@ Source PDF SHA-256: `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07
 
 ## Physical vs printed page offset
 
-Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 110 — offset +11 (physical = printed − 11). Verified at printed 136 / physical 125 (chapter opening photo) and printed 141 / physical 130 (end of Power and Glory Brief Lives).
+Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 111: offset +10 (physical = printed − 10). Until 2026-10-14 this note gave physical p. 110, an off-by-one; physical p. 110 is printed p. 120, the last page of Ch 2's *The Southern Kingdom* (dyn15-18 chunk). By printed 136 / physical 125 (chapter opening photo) and printed 141 / physical 130 (end of Power and Glory Brief Lives) the offset is +11. The one-page jump lies between printed 129 and 136 and was not located.
+
+**dyn15-18 chunk verification points** (read on the page images, 2026-10-14):
+- Physical p. 104 = printed p. 114: *Rulers of Foreign Countries* opening, Royal Succession box.
+- Physical p. 105 = printed p. 115: its Brief Lives.
+- Physical p. 106 = printed p. 116: *The Southern Kingdom* opening, box.
+- Physical p. 110 = printed p. 120: its Brief Lives and Unplaced.
+- Physical p. 111 = printed p. 121: Ch 3 opening photo and contents.
+- Physical p. 112 = printed p. 122: *The Taosids* opening, box.
+- Physical pp. 118–119 = printed pp. 128–129: its Brief Lives and Unplaced.
 
 **Amarna chunk offset drift.** The offset is `+11` through printed pp. 142–143 (physical 131–132) but changes to `+12` from printed p. 147 onwards. The cause is a two-page genealogical-chart spread at printed pp. 144–145 that the original scanner captured as a **single** PDF page (physical 134), while placing printed p. 146 before it (physical 133). This is a one-time scan-artifact jump, not a repeat drift — the `+12` offset holds stably from physical 135 through at least physical 146 (printed 158, start of "House of Ramesses"). For the Amarna Brief Lives sub-block specifically (printed pp. 154–157 / physical pp. 142–145), the `+12` offset is uniform. Every follow-up PR must re-verify the offset at both the chunk's first and last printed pages.
 

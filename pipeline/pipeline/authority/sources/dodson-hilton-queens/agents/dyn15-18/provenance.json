@@ -1,0 +1,34 @@
+{
+ "schema_version": "hapi-dodson-hilton-agent-provenance/1",
+ "chunk": "dyn15-18",
+ "extracted": "2026-10-14",
+ "model": "claude-opus-5-5",
+ "harness": "Claude Code general-purpose subagents, three independent runs in parallel, each reading only the prompt and the sub-PDF and writing only its own file; each wrote raw/agent-<tag>-dyn15-18.jsonl as the prompt says, and the files were copied byte-identical here",
+ "prompt": {
+  "path": "prompt-dyn15-18.md",
+  "sha256": "5bf0d6869cc00038566cbee0a94df0f042b8b3bf5eba5996c2cad7a51d7db51c"
+ },
+ "source": {
+  "path": "raw/source-dyn15-18.pdf (gitignored; cut by slice_source.py dyn15-18)",
+  "sha256": "7e92f81d1ea9ef0c45a115757095a00c11f3bab849ccc392183f5a87a80b796f"
+ },
+ "prompt_audit": "prompt-auditor, three rounds, no leaks; the last two clarifications are its round-3 suggestions",
+ "note": "The three outputs are byte-identical. They come from one model on clear pages, and the prompt's generic examples were sharpened on this chunk's constructions in the audit rounds, so their agreement is not independent corroboration; the egyptologist review against the pages is.",
+ "agents": {
+  "a": {
+   "file": "agent-a.jsonl",
+   "sha256": "06160acdebead10b13999fbdd984d6e4a62ea115f22f6ac32e6e6e219abd26a2",
+   "final_report": "agent-a-dyn15-18: 60 rows (Rulers of Foreign Countries 6, Southern Kingdom 27, Taosids 27); 24/36 male/female. Anomalies: (1) Sobkemsaf C: the entry does not show the sex of the parent \"Sobkemsaf B\", so I left both parent fields null. (2) [...]17C: the headword looks bold upright, so male, but \"Child\" is sex-neutral. (3) Ahmose-Sipairi: I recorded \"may have been the father of Thutmose I\" as a hedge, children \"Thutmose I (may have been)\"."
+  },
+  "b": {
+   "file": "agent-b.jsonl",
+   "sha256": "06160acdebead10b13999fbdd984d6e4a62ea115f22f6ac32e6e6e219abd26a2",
+   "final_report": "agent-b-dyn15-18: 60 rows (Rulers of Foreign Countries 6, Southern Kingdom 27, Taosids 27); 24/36 male/female; Sobkemsaf C: the text never gives parent Sobkemsaf B's sex, so I left her in neither parent field. Ahmose-Sipairi: put the child as \"Thutmose I (may have been)\", using the modal as the hedge. I took a king listed in the box as male. With two parents, the non-king is the mother. File: /workspaces/hapi-taosids/pipeline/pipeline/authority/sources/dodson-hilton-queens/raw/agent-b-dyn15-18.jsonl"
+  },
+  "c": {
+   "file": "agent-c.jsonl",
+   "sha256": "06160acdebead10b13999fbdd984d6e4a62ea115f22f6ac32e6e6e219abd26a2",
+   "final_report": "agent-c-dyn15-18: 60 rows (Rulers of Foreign Countries 6, Southern Kingdom 27, Taosids 27); 24/36 male/female; anomalies: Sobkemsaf C's parent \"Sobkemsaf B\" is not marked as male or female in that entry, so neither parent field is set. Box-listed kings counted as male parents; unlabelled co-parents (Haankhes, Sitmut, Nubemhat, Sitdjehuty, Ahmes-Nefertiry) set as mother. Ahmose-Sipairi child given as \"Thutmose I (may have been)\". \"[...]\" written with ASCII dots (no text layer)."
+  }
+ }
+}
