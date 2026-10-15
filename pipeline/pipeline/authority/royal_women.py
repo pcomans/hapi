@@ -402,6 +402,10 @@ def royal_woman_cued(field_value: str, span_start: int) -> bool:
 
 def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: set[str],
                         record_dynasty: int | None) -> dict:
+    # A wrapped regnal numeral ("[II]", "(II)", "II.") is written bare before any tier: the
+    # fold deletes bracketed text, so "Berenike [II]" would otherwise meet the bare "Berenike"
+    # on the claim-graph keys and resolve to another ruler (Codex review).
+    text = " ".join(numeral_of(t) or t for t in text.split())
     exact = sorted(index.exact.get(surface_key(text), ()))
     if exact:
         candidates, method = exact, "raw_exact"

@@ -528,3 +528,23 @@ def test_the_key_reads_no_museum_or_evaluation_data() -> None:
     code = ast.unparse([n for n in tree.body if not (isinstance(n, ast.Expr) and isinstance(n.value, ast.Constant))])
     for forbidden in ("open(", "read_text", "Path(", "ndjson", "dropbox", "corpus", "evaluations"):
         assert forbidden not in code, forbidden
+
+
+def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_index) -> None:
+    """Every indexed label with a regnal numeral: written "[II]", "(II)" or "II." it resolves as
+    written bare, on every tier (Codex review: "Berenike [II]" had met the bare Berenike)."""
+    checked = 0
+    for key in graph_index.exact:  # case-folded labels; the numeral is written back in capitals
+        tokens = key.split()
+        if len(tokens) < 2 or not rw.NUMERAL.match(tokens[-1].upper()):
+            continue
+        tokens[-1] = tokens[-1].upper()
+        bare = rw.resolve_royal_woman(graph_index, " ".join(tokens), record_king_ids=set(), record_dynasty=None)
+        for wrapped in (f"[{tokens[-1]}]", f"({tokens[-1]})", f"{tokens[-1]}."):
+            text = " ".join([*tokens[:-1], wrapped])
+            found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=None)
+            assert (found["status"], found["target_ids"]) == (bare["status"], bare["target_ids"]), text
+            checked += 1
+    assert checked == 36  # 12 numbered labels, three wrappings each
+    found = rw.resolve_royal_woman(graph_index, "Berenike [II]", record_king_ids=set(), record_dynasty=33)
+    assert (found["status"], found["target_ids"]) == ("resolved", ["leprohon-leprohon-33.03a"])
