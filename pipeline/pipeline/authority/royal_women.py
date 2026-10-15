@@ -27,6 +27,15 @@ The rule, which is deterministic and fixed here:
     2. dynasty: among the family matches if there are several, else among all, the women of
        the record's dynasty (or of no known dynasty), when the record gives exactly one.
   Otherwise the mention stays ambiguous.
+* A name is looked up in three tiers, each tried only when the one before finds no
+  candidate: the exact surface (`raw_exact`), the claim graph's transliteration and phonetic
+  keys (`committed_normalized`), and the weak-sign skeleton (`weak_sign_skeleton`, see
+  `weak_sign_skeleton.py`), which drops the vowels, the weak signs ꞽ/y/w and the feminine
+  -t that modern renderings disagree on. The third tier runs only against this index (the
+  royal women and the female rulers), never against the kings, and only when the residue
+  has at least `MIN_WEAK_SIGN_SKELETON_LEN` consonants. The family and dynasty narrowing
+  above applies to its candidates unchanged. Any D&H label meets the first tier, so the
+  third never changes a name that the first two resolve.
 * A woman is never chosen against the record's own single dynasty: D&H is transcribed for
   some dynasties only (none of 4–10, 14 or 22 onward), so a lone name match of another known
   dynasty is another woman, and the mention stays unmatched. A candidate whose dynasty the
@@ -52,6 +61,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .claimgraph.normalize import NameForm, keys_for_form
+from .weak_sign_skeleton import DISAMBIGUATOR, weak_sign_skeleton
 
 SOURCE_DIR = Path(__file__).resolve().parent / "sources" / "dodson-hilton-queens"
 DODSON_HILTON = SOURCE_DIR / "reconciled.jsonl"
@@ -71,7 +81,6 @@ ROYAL_WOMAN_CUE_BEFORE = re.compile(
 PARENTHETICAL = re.compile(r"\(")
 LACUNA = re.compile(r"\[\s*(?:\.\.\.|…)\s*\]")
 LEADING_QUEEN = re.compile(r"^\s*\(?queen\)?\s+", re.I)
-DISAMBIGUATOR = re.compile(r"^(?:[A-Z]|[IVX]+)$")
 # A D&H letter on a kinship name marks one of D&H's own individuals, not a king-list name;
 # I, V and X are left out because they are also regnal numerals.
 DH_LETTER = re.compile(r"^[A-HJ-UWYZ]$")
@@ -117,6 +126,7 @@ class RoyalWomenIndex:
     alt_names_dropped_as_king_names: dict[str, tuple[str, ...]]
     exact: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
     normalized: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
+    weak_sign: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
 
 
 def surface_key(text: str) -> str:
@@ -204,6 +214,22 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
         index.exact[surface_key(label)].add(target_id)
         for key in name_keys(label):
             index.normalized[key].add(target_id)
+        if skeleton := weak_sign_skeleton(label):
+            index.weak_sign[skeleton].add(target_id)
+
+
+def weak_sign_collisions(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
+    """Every weak-sign skeleton that several indexed targets share, with its members; the
+    authority-side collision table of the third tier."""
+    return {key: tuple(sorted(targets)) for key, targets in sorted(index.weak_sign.items()) if len(targets) > 1}
+
+
+def new_weak_sign_collisions(index: RoyalWomenIndex) -> dict[str, tuple[str, ...]]:
+    """The collisions the third tier introduces: the groups that no exact or claim-graph key
+    already holds whole (same-named women, "Tiye A"/"Tiye C", collide on every tier)."""
+    existing = [*index.exact.values(), *index.normalized.values()]
+    return {key: members for key, members in weak_sign_collisions(index).items()
+            if not any(set(members) <= group for group in existing)}
 
 
 def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
@@ -270,6 +296,9 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     else:
         candidates = sorted({t for key in name_keys(text) for t in index.normalized.get(key, ())})
         method = "committed_normalized" if candidates else None
+    if not candidates and (skeleton := weak_sign_skeleton(text)):
+        candidates = sorted(index.weak_sign.get(skeleton, ()))
+        method = "weak_sign_skeleton" if candidates else None
     base = {"resolution_method": method, "candidate_ids": candidates, "context_rule": None}
     chosen, rule = None, None
     if len(candidates) == 1:
