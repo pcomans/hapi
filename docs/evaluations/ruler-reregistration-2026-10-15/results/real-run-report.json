@@ -1792,11 +1792,13 @@
     "literal_loss_attribution": {
       "expression_abstention_mentions": {
         "brooklyn|ruler": 15,
+        "harvard|ruler": 7,
+        "met|ruler": 2230
+      },
+      "not_in_this_registration_mentions": {
         "brooklyn|site": 5072,
         "brooklyn|tomb_monument": 22,
-        "harvard|ruler": 7,
         "harvard|site": 1702,
-        "met|ruler": 2230,
         "met|site": 106964,
         "met|tomb_monument": 4841
       },

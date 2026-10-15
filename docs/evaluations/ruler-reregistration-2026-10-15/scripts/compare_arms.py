@@ -639,6 +639,7 @@ def literal_loss_attribution(
         }
     unavailable = collections.Counter()
     expression_abstentions = collections.Counter()
+    not_registered = collections.Counter()
     for row in authority_rows:
         reason = row["reason"]
         if row["status"] != "abstained" or reason is None:
@@ -646,12 +647,17 @@ def literal_loss_attribution(
         key = f"{row['museum']}|{row['entity_type']}"
         if reason.startswith("authority_unavailable:"):
             unavailable[key] += 1
-        else:
+        elif reason.startswith("expression:"):
             expression_abstentions[key] += 1
+        elif reason.startswith("not_in_this_registration:"):  # Codex review: not an expression abstention
+            not_registered[key] += 1
+        else:
+            raise ValueError(f"unclassified abstention reason: {reason}")
     return {
         "per_pair": per_pair,
         "unavailable_authority_type_mentions": dict(sorted(unavailable.items())),
         "expression_abstention_mentions": dict(sorted(expression_abstentions.items())),
+        "not_in_this_registration_mentions": dict(sorted(not_registered.items())),
         "notes": [
             "Node causes are mutually exclusive and sum to literal-only shared nodes for each pair.",
             "Actual lost-record cause memberships are nonexclusive because one record can support more than one lost node.",

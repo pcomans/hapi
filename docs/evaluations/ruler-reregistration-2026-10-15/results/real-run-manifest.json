@@ -25,7 +25,7 @@
     }
   },
   "inputs": {
-    "compare_arms_sha256": "5ede67fb21f3f0910b896efe5e3b64ec20e575d32f610d51ef2a7f28c2107b74",
+    "compare_arms_sha256": "506145e179f37af5aff19d38a7dc289d63e51bf94e4a3bc13d51241382f14fcb",
     "corpus_archive": {
       "canonical_counts": {
         "brooklyn": 7554,
@@ -71,7 +71,7 @@
   "outputs_sha256": {
     "current-authority-arm.ndjson.gz": "457cf9648124cb0b7c0896934148e7c1091c58527453134c73c7462c8cfa9742",
     "current-authority-links.ndjson.gz": "894f01f0dee4867d94090acc3b45c4513c0f56ed27064b71477893601f268695",
-    "report.json": "7959881188656dc396a022ff1a3eb5d5ad359a044e590ab2902ea7c484911047",
+    "report.json": "fbf2d3536b0065ce5b879093b38fb8619c92dd6bc2842817fecdcd82b7ead7ee",
     "typed-literal-arm.ndjson.gz": "938a5fd1fe3a64a41257a0dad7d1b7627b79f04868143b573aca793b7f49aced",
     "typed-literal-links.ndjson.gz": "c8f3535fae5ddd668966a83627e07f65969be2cd3b39970cdb33c709f175503c"
   },
