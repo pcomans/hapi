@@ -113,8 +113,8 @@ Measured and not adopted (hill-climb protocol v2, `docs/evaluations/weak-sign-ke
 --------------------------------------------------------------------------------------------
 * z as s (TLA 400051 and 400058 `Z-n-wsr.t` "Senwosret") and ṯ as t (TLA 400020
   `Mnṯ.w-ḥtp.w` "Mentuhotep") are attested rendering conventions. Measured against the TLA
-  names, each raised recall but merged more distinct names (strict strong merges 252 → 293 for
-  z/s, 252 → 270 for ṯ/t), so neither is adopted. In English museum text z more often writes
+  names, each raised recall but merged more distinct names (strict strong merges 244 → 283 for
+  z/s, 244 → 263 for ṯ/t), so neither is adopted. In English museum text z more often writes
   ḏ: PM I.1, 69 "Zeserkaraʿsonb" (row TT38) is ḏsr-kꜣ-rꜥ-snb, and PM I.2, 751 "Tanezem(t)" is
   tꜣ-nḏmt. z as ḏ outside a transliteration is a candidate for a later protocol, untested here.
 * c and q as k, the key's former rule 2, dropped on 2026-10-15 by the project owner's
@@ -125,8 +125,8 @@ Measured and not adopted (hill-climb protocol v2, `docs/evaluations/weak-sign-ke
   - D&H write the goddess ꜥnqt "Anuket-" in Anuketemheb (dh_id Anuketemheb, pp. 178–180) but
     "Anuq-" in Anuqneferetweben and Dedetanuq (pp. 98–103).
   
-  But as a letter rule it merged 18 more names in the TLA set (strict strong merges 234 →
-  252) for half a point of recall. Measured as an addition to the key without it, it fails
+  But as a letter rule it merged 18 more names in the TLA set (strict strong merges 226 →
+  244) for half a point of recall. Measured as an addition to the key without it, it fails
   the protocol's acceptance rule as z/s and ṯ/t do. (Run as the removal C4, the protocol could
   not have accepted it, since removing a fold never raises recall; the code review of the
   climb pointed this out.) The Ptolemaic queens' Greek and Latin spellings belong in cited

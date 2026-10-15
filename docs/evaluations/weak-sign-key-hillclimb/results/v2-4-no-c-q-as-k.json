@@ -2,7 +2,7 @@
  "accepted": false,
  "against": "v2-1-j-weak-in-transliterations",
  "fold_aware_merges": {
-  "names": 206
+  "names": 198
  },
  "splits": {
   "test": {
@@ -437,6 +437,6 @@
     "ṯttw"
    ]
   },
-  "names": 234
+  "names": 226
  }
 }

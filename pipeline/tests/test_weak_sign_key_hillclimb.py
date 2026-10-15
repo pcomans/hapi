@@ -67,7 +67,7 @@ def test_the_order_and_the_decisions() -> None:
         "v2-3-tj-as-t": ("v2-1-j-weak-in-transliterations", False),
         "v2-4-no-c-q-as-k": ("v2-1-j-weak-in-transliterations", False),
     }
-    assert [result(n)["strong_merges"]["names"] for n in ("v2-0-baseline", *CANDIDATES)] == [260, 252, 293, 270, 234]
+    assert [result(n)["strong_merges"]["names"] for n in ("v2-0-baseline", *CANDIDATES)] == [246, 244, 283, 263, 226]
 
 
 def test_the_held_out_check_and_the_spent_test_split() -> None:
@@ -98,7 +98,7 @@ def test_the_committed_key_is_v2_4_by_the_project_owners_decision() -> None:
         r.pop("against"), r.pop("accepted")
     # c/q → k as an addition to v2-4 is v2-1, and the acceptance rule rejects it.
     assert harness().accepted(v2_4, v2_1) is False
-    assert (v2_4["strong_merges"]["names"], v2_1["strong_merges"]["names"]) == (234, 252)
+    assert (v2_4["strong_merges"]["names"], v2_1["strong_merges"]["names"]) == (226, 244)
 
 
 def test_the_live_normalizer_is_the_frozen_one() -> None:

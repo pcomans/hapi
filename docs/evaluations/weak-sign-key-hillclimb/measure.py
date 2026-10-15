@@ -109,8 +109,10 @@ def measure(key, rows: list[dict]) -> dict:
     return {
         "splits": {s: {**v, "recall": round(v["met"] / v["pairs"], 4), "coverage": round(v["keyed"] / v["renderings"], 4)}
                    for s, v in per_split.items()},
-        "strong_merges": {"names": sum(len(v) for v in strict.values()), "groups": strict},
-        "fold_aware_merges": {"names": sum(len(v) for v in fold_aware.values())},
+        # Distinct names: one name can sit in several groups when its renderings key apart
+        # (corrected after the run on Codex review, README).
+        "strong_merges": {"names": len({n for v in strict.values() for n in v}), "groups": strict},
+        "fold_aware_merges": {"names": len({n for v in fold_aware.values() for n in v})},
     }
 
 

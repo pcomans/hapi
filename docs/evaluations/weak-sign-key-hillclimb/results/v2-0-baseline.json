@@ -1,6 +1,6 @@
 {
  "fold_aware_merges": {
-  "names": 229
+  "names": 218
  },
  "splits": {
   "test": {
@@ -481,6 +481,6 @@
     "ṯttw"
    ]
   },
-  "names": 260
+  "names": 246
  }
 }

@@ -12,17 +12,17 @@ Recall and coverage by split, and strict strong merges over the whole set (names
 
 | Key | Train recall | Val recall | Train cov. | Val cov. | Strict merges | Fold-aware | Decision |
 |---|---|---|---|---|---|---|---|
-| v2-0 baseline | 80.64% | 82.89% | 72.00% | 70.67% | 260 | 229 | — |
-| v2-1 C1: j weak in transliterations | 85.48% | 86.14% | 72.00% | 70.67% | 252 | 224 | **accepted** |
-| v2-2 C2: z as s | 86.79% | 86.87% | 71.98% | 70.67% | 293 | 265 | rejected: merges rise |
-| v2-3 C3: ṯ as t | 88.06% | 88.79% | 72.00% | 70.67% | 270 | 242 | rejected: merges rise |
-| v2-4 C4: no c/q as k | 84.93% | 85.99% | 72.00% | 70.67% | 234 | 206 | rejected: recall falls |
+| v2-0 baseline | 80.64% | 82.89% | 72.00% | 70.67% | 246 | 218 | — |
+| v2-1 C1: j weak in transliterations | 85.48% | 86.14% | 72.00% | 70.67% | 244 | 216 | **accepted** |
+| v2-2 C2: z as s | 86.79% | 86.87% | 71.98% | 70.67% | 283 | 255 | rejected: merges rise |
+| v2-3 C3: ṯ as t | 88.06% | 88.79% | 72.00% | 70.67% | 263 | 235 | rejected: merges rise |
+| v2-4 C4: no c/q as k | 84.93% | 85.99% | 72.00% | 70.67% | 226 | 198 | rejected: recall falls |
 
 **The protocol accepted v2-1. The committed key is v2-4, by the project owner's decision
 (2026-10-15).**
 - **Why.** The code review of the climb showed that C4, the removal of c/q → k, could not pass
   the acceptance rule, since removing a fold never raises recall. Read the other way, as an
-  addition to v2-4, c/q → k fails the rule as z/s and ṯ/t do: strict merges rise 234 → 252
+  addition to v2-4, c/q → k fails the rule as z/s and ṯ/t do: strict merges rise 226 → 244
   for half a point of recall. The owner dropped it. The Ptolemaic queens' Greek and Latin
   spellings (Kleopatra, Berenice) are to meet through cited alternative names instead.
 - **A test checks this.** v2-4's code is the committed key's, and the acceptance rule rejects
@@ -39,6 +39,23 @@ Recall and coverage by split, and strict strong merges over the whole set (names
 
 **TLA test split** (spent by v1, so not held-out figures): 82.64% for v2-0, 86.46% for v2-1,
 85.83% for v2-4.
+
+**Correction after the run (Codex review of PR #365).**
+- **The bug.** The harness counted group memberships, not distinct names. A name can sit in
+  several groups when its renderings key apart; `mnṯwḥtpw` sat in three. So the strict and
+  fold-aware merge counts were inflated.
+- **The fix.** `measure.py` now counts distinct names, as PROTOCOL.md defines the metric, and
+  every result was regenerated. The table above shows the corrected counts.
+- **The effect.** No decision changed: the acceptance rule gives the same verdict for every
+  candidate under both counts, and a test re-applies it. The counts as first reported were:
+
+  | Key | Strict | Fold-aware |
+  |---|---|---|
+  | v2-0 | 260 | 229 |
+  | v2-1 | 252 | 224 |
+  | v2-2 | 293 | 265 |
+  | v2-3 | 270 | 242 |
+  | v2-4 | 234 | 206 |
 
 ## Limits of this climb (from its code and egyptologist reviews)
 

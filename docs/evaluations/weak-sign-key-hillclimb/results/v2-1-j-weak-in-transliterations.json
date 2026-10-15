@@ -2,7 +2,7 @@
  "accepted": true,
  "against": "v2-0-baseline",
  "fold_aware_merges": {
-  "names": 224
+  "names": 216
  },
  "splits": {
   "test": {
@@ -469,6 +469,6 @@
     "ṯttw"
    ]
   },
-  "names": 252
+  "names": 244
  }
 }
