@@ -580,7 +580,9 @@ def test_a_wrapped_numeral_resolves_as_the_bare_one_on_the_real_graph(graph_inde
 @pytest.mark.parametrize("text", [
     "Berenike [II?]", "Berenike [ii]", "Berenike[ii]", "Berenike [II?],", "Cleopatre(ii)", "Cleopatre (ii)",
     "Cleopatre(iii)", "Cleopatre(II?)", "Cleopatre (II?)", "Cleopatra (II?)", "CleopatreII.", "CleopatreIII",
-    "Cleopatre (II]", "Cleopatre [II)", "Cleopatre(II]", "Cleopatre ( II ]", "Berenike[II)"])
+    "Cleopatre (II]", "Cleopatre [II)", "Cleopatre(II]", "Cleopatre ( II ]", "Berenike[II)",
+    "Cleopatre (II", "Cleopatre II]", "Berenike [II", "Berenike II)", "Cleopatre ( II", "Berenike II ].",
+    "Cleopatre(II", "Berenike[II", "CleopatreII)", "BerenikeII]", "Cleopatre(ii", "Berenike[II?", "CleopatreIII)."])
 def test_a_bracketed_numeral_that_cannot_be_read_refuses_rather_than_drops(graph_index, text) -> None:
     """The fold deletes any bracketed text, so an unread bracketed numeral would leave the bare
     name to match another ruler (scope review of the Codex fix): it is refused."""

@@ -263,27 +263,34 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
             index.normalized[key].add(target_id)
 
 
-NUMERAL_WRAPPING = "()[].,;:"
 BRACKET_PAIRS = {"(": ")", "[": "]"}
-# Only a matching pair wraps a numeral: "(II]" is unread (below), not II (Codex review).
-SPACED_NUMERAL = re.compile(r"\(\s*([IVX]+)\s*\)|\[\s*([IVX]+)\s*\]")
-ATTACHED_NUMERAL = re.compile(r"(\w)(\(\s*[IVX]+\s*\)|\[\s*[IVX]+\s*\])")
-# A numeral left after the readable ones are written bare: wrapped in either bracket, any case,
-# possibly doubted ("(ii)", "[II?]", "Cleopatre(ii)"), or run on to the name ("CleopatreII.").
-# The claim-graph fold and the weak-sign key would each drop it and accept the bare name.
-UNREAD_NUMERAL = re.compile(r"[(\[]\s*[IVXivx]+\s*\??\s*[)\]]|[a-z][IVX]+[.,;:]?(?=\s|$)")
+# Space inside a bracket is closed up first ("[ II ]" -> "[II]", "( II" -> "(II").
+BRACKET_SPACE = re.compile(r"([(\[])\s+|\s+([)\]])")
+# Only a matching pair wraps a numeral: "(II]", "(II" and "II)" are unread (below), not II, since a
+# broken wrapper may hide a cut numeral ("(II" of "(III)") (Codex review).
+ATTACHED_NUMERAL = re.compile(r"(\w)(\([IVX]+\)|\[[IVX]+\])")
+# A numeral left beside a bracket after the readable ones are written bare (`numeral_of`;
+# attached pairs are split off first) is unread: lowercase, doubted, mismatched or with a lone
+# bracket, spaced or attached ("(ii)", "[II?]", "(II]", "(II", "II)", "Cleopatre(II",
+# "CleopatreII)"); so is one run on to the name ("CleopatreII."). The claim-graph fold and the
+# weak-sign key would each drop it and accept the bare name.
+UNREAD_NUMERAL = re.compile(r"[(\[][IVXivx]+\??(?!\w)"
+                            r"|(?:(?<![A-Za-z])[IVXivx]+|(?<=[a-z])[IVX]+)\??[)\]]"
+                            r"|[a-z][IVX]+[.,;:]?(?=\s|$)")
 
 
 def numeral_of(token: str) -> str | None:
     """The regnal numeral a token writes, bare or wrapped ("II", "(II)", "[II]", "II."), or
-    None. Uppercase only: a lowercase "vi" or "ii" can be part of a name. Brackets on both
-    sides must be a pair: "(II]" is None."""
-    unpunctuated = token.rstrip(".,;:")
-    if unpunctuated[:1] in BRACKET_PAIRS and unpunctuated[-1:] in ")]" \
-            and BRACKET_PAIRS[unpunctuated[0]] != unpunctuated[-1]:
+    None. Uppercase only: a lowercase "vi" or "ii" can be part of a name. A bracket must be one
+    of a pair around the numeral: "(II]", "(II" and "II)" are None."""
+    core = token.rstrip(".,;:")
+    if core[:1] in BRACKET_PAIRS:
+        if core[-1:] != BRACKET_PAIRS[core[0]]:
+            return None
+        core = core[1:-1]
+    elif core[-1:] in ")]":
         return None
-    bare = token.strip(NUMERAL_WRAPPING)
-    return bare if bare and NUMERAL.match(bare) else None
+    return core if NUMERAL.match(core) else None
 
 
 def weak_sign_entry(label: str) -> tuple[str, frozenset[str]]:
@@ -408,7 +415,7 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     # on the claim-graph keys and resolve to another ruler (Codex review).
     # A wrapped numeral attached to the name ("Cleopatre(II)", "Berenike[II]") is split off
     # first, as the claim-graph matcher reads it (Codex review).
-    text = SPACED_NUMERAL.sub(lambda m: f"({m[1]})" if m[1] else f"[{m[2]}]", text)  # "[ II ]" -> "[II]"
+    text = BRACKET_SPACE.sub(lambda m: m[1] or m[2], text)
     text = ATTACHED_NUMERAL.sub(r"\1 \2", text)
     text = " ".join(numeral_of(t) or t for t in text.split())
     # Any bracketed numeral still left (uncertain "[II?]", lowercase "[ii]", "[ II ]",
