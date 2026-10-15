@@ -21,6 +21,7 @@ from pathlib import Path
 import pytest
 
 from pipeline.authority import royal_women as rw
+from pipeline.authority.graph_kings import GraphKings
 from pipeline.authority import weak_sign_skeleton as module
 from pipeline.authority.claimgraph.normalize import translit_key
 from pipeline.authority.royal_women import DISAMBIGUATOR
@@ -427,44 +428,6 @@ KING_ONLY_FEMALE_RULERS_REACHED = {
 DH_WOMEN_WHO_REIGNED = ["cluster-beckerath-12.08", "cluster-beckerath-18.05", "cluster-leprohon-leprohon-19.08"]
 
 
-class GraphKings:
-    """The claim graph's ruler resolver (the linkability resolver the evaluations load) as a
-    royal_women.KingAuthority, over the committed graph."""
-
-    def __init__(self) -> None:
-        import importlib.util
-        path = REPO / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
-        spec = importlib.util.spec_from_file_location("_weak_sign_run_linkability", path)
-        mod = importlib.util.module_from_spec(spec)
-        sys.modules[spec.name] = mod
-        spec.loader.exec_module(mod)
-        graph = json.loads(mod.GRAPH.read_text(encoding="utf-8"))
-        self._resolver, self._catalog = mod.build_ruler_resolver(graph)
-        self._norm = mod.ruler_norm
-        self._node = {r["id"]: r for r in graph["rulers"]}
-        names: dict[str, set[str]] = collections.defaultdict(set)
-        by_subject = collections.defaultdict(list)
-        for claim in graph["claims"]:
-            if claim["predicate"] in mod.NAME_PREDICATES:
-                by_subject[claim["subject_id"]].append(claim)
-        for target, info in self._catalog.items():
-            for member in info["member_ids"]:
-                names[target].add(self._node[member]["display_name"])
-                for claim in by_subject[member]:
-                    names[target].update(v for v in (claim.get("value_text"), claim.get("value_translit")) if v)
-        self._names = names
-
-    def resolve(self, name: str) -> dict:
-        return self._resolver.resolve(name, self._norm)
-
-    def labels(self, target_id: str) -> list[str]:
-        return sorted(self._names[target_id])
-
-    def dynasties(self, target_id: str) -> tuple[int, ...]:
-        return tuple(sorted({self._node[m]["dynasty"] for m in self._catalog[target_id]["member_ids"]
-                             if self._node[m]["dynasty"] is not None}))
-
-
 @pytest.fixture(scope="module")
 def graph_index(women) -> rw.RoyalWomenIndex:
     return rw.build_index(women, GraphKings())
@@ -659,3 +622,16 @@ def test_the_mention_reader_refuses_no_authority_label(graph_index, women) -> No
     assert "Cleopatra VII Philopator" in labels
     refused = sorted({label for label in labels if rw.read_mention(label)[1]})
     assert refused == ["–18P", "–18Q"]
+
+
+def test_graph_kings_built_from_a_given_module_and_graph_is_the_default_one() -> None:
+    """The injection point the #361 evaluation uses (a frozen tree's linkability module and
+    graph) gives the same kings as the default construction."""
+    from pipeline.authority.graph_kings import load_linkability
+    default = GraphKings()
+    module = load_linkability()
+    given = GraphKings(module, json.loads(module.GRAPH.read_text(encoding="utf-8")))
+    assert given.catalog.keys() == default.catalog.keys() and len(given.catalog) > 800
+    for target in ("cluster-beckerath-18.05", "cluster-beckerath-18.15", "cluster-leprohon-leprohon-19.08"):
+        assert (given.labels(target), given.dynasties(target)) == (default.labels(target), default.dynasties(target))
+    assert default.dynasties("cluster-beckerath-18.05") == (18,)
