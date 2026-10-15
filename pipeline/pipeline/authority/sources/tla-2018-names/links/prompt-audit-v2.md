@@ -25,3 +25,14 @@ Final SHA-256s (checked by `pipeline/tests/test_tla_links.py`):
 - `rules-v2.txt`: `bfb07dfec7556fdee6361a167eefe5f2200ed4c9e31b76158e4b26748982d97c`
 - `reviewer-v2.txt`: `01508d0dd415949bdf5413c418d57b2b7b74c9cedecefbe8c2cb6e54818e5534`
 - `reconciler-v2.txt`: `8a3edabf73bf6895d1a9bcafb3ecb8eebce4d8dccd7ba9124f9df57455add82f`
+
+## Expert prompt (`prompts/expert-v1.txt`), 2026-10-15
+
+Audited before any expert call in two rounds; the full reports are
+`prompt-audit-expert-v1-round1.md` and `prompt-audit-expert-v1-round2.md`.
+- **Round 1: no leak, four P2s.** The conventions block now holds only rule- and
+  agreement-decided units, including those decided to no TLA name. It is called earlier
+  decisions, not ground truth, the rules alone decide, and the wording is neutral.
+- **Round 2: fine to run.**
+
+- `expert-v1.txt`: `34ac0b94a6915ed62d30a09c77bbae5ff10f601eacc6cea3659b2f20ceaeedab`

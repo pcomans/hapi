@@ -241,11 +241,11 @@ def test_every_rendered_candidate_spelling_is_a_name_without_description() -> No
 def test_the_prompts_are_the_audited_ones() -> None:
     import hashlib
     audit = (tl.LINKS_DIR / "prompt-audit-v2.md").read_text(encoding="utf-8")
-    for name in ("system-v2.txt", "rules-v2.txt", "reviewer-v2.txt", "reconciler-v2.txt"):
+    for name in ("system-v2.txt", "rules-v2.txt", "reviewer-v2.txt", "reconciler-v2.txt", "expert-v1.txt"):
         digest = hashlib.sha256((review.PROMPTS / name).read_bytes()).hexdigest()
         assert f"`{name}`: `{digest}`" in audit, name
     assert sorted(p.name for p in review.PROMPTS.iterdir()) == [
-        "reconciler-v2.txt", "reviewer-v2.txt", "rules-v2.txt", "system-v2.txt"]
+        "expert-v1.txt", "reconciler-v2.txt", "reviewer-v2.txt", "rules-v2.txt", "system-v2.txt"]
 
 
 # --- The committed run (protocol v2.1): its calls and its decisions -------------------------

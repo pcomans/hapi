@@ -35,7 +35,7 @@ from . import tla_links as tl
 
 # Role -> (model alias requested, model the session must serve).
 MODELS = {"A": ("sonnet", "claude-sonnet-5-5"), "B": ("opus", "claude-opus-5-5"),
-          "reconciler": ("opus", "claude-opus-5-5")}
+          "reconciler": ("opus", "claude-opus-5-5"), "expert": ("opus", "claude-opus-5-5")}
 EFFORT = "high"
 # Format retries only: a call whose answer cannot be read is stored and retried; the first valid
 # answer counts.
@@ -44,13 +44,20 @@ FENCED_ANSWER = re.compile(r"```(?:json)?\s*(\{.*\})\s*```$", re.S)
 PROMPTS = tl.LINKS_DIR / "prompts"
 RUNS = tl.LINKS_DIR / "runs"
 DECISIONS = tl.LINKS_DIR / "decisions.jsonl"
-OVERRIDES = tl.LINKS_DIR / "overrides.jsonl"
-OVERRIDE_VALIDATION = "LLM-applied override, not human-validated"
+# The units an expert call decides, chosen before it was asked, with why: the two units a
+# reviewer answered differently across runs (`unstable_units`), and the one link the
+# egyptologist review of PR #366 found wrong.
+EXPERT_UNITS = {
+    "Meryetyotes": "unstable: reviewer B answered it differently across runs",
+    "Neferuni": "unstable: reviewer B answered it differently across runs",
+    "Minemaes": "the egyptologist review of PR #366 found the reconciler's link to Mnw-ms.w wrong",
+}
 # Earlier runs of a reviewer on the same units, read by today's parser: a unit whose answers
 # differ across them is unstable, and agreement on it is luck, not consensus.
 EARLIER_RUNS = {"B": tl.LINKS_DIR / "withdrawn-v2.0-strict-parser" / "B"}
 SHUFFLE_SALT = "tla-links-v2/"
 RULES = (PROMPTS / "rules-v2.txt").read_text(encoding="utf-8").strip()
+EXPERT_TEMPLATE = (PROMPTS / "expert-v1.txt").read_text(encoding="utf-8")
 
 
 class ProtocolFailure(RuntimeError):
@@ -85,14 +92,15 @@ def spellings(row: dict) -> str:
     return " | ".join(out)
 
 
-def compose(template: str, unit: tl.Unit, tla: dict, reviews: str = "") -> str:
+def compose(template: str, unit: tl.Unit, tla: dict, reviews: str = "", conventions: str = "") -> str:
     labels = labelled(unit)
     candidates = "\n\n".join(
         f"Candidate {label}: {tla[option.tla_ids[0]]['transliteration']}\n"
         + "\n".join(f"  Lemma {i}: {spellings(tla[t])}" for i, t in enumerate(option.tla_ids, 1))
         for label, option in labels.items())
     return template.format(dh_record=f"Name: {unit.dh_name}", candidates=candidates, unit_id=unit.dh_name,
-                           labels=", ".join(json.dumps(c) for c in labels), rules=RULES, reviews=reviews)
+                           labels=", ".join(json.dumps(c) for c in labels), rules=RULES, reviews=reviews,
+                           conventions=conventions)
 
 
 def command(role: str, system_prompt: str, user_content: str) -> list[str]:
@@ -279,60 +287,62 @@ def unstable_units(data: dict) -> list[str]:
     return out
 
 
-def overrides() -> dict[str, dict]:
-    """Per-row decisions with a cited rationale (Constitutional Rules 2 and 6). Each names the
-    review it comes from and says that it is an LLM-applied override, not human-validated, as
-    the D&H source's overrides do (`dodson-hilton-queens/README.md`)."""
-    rows = [json.loads(line) for line in OVERRIDES.read_text(encoding="utf-8").splitlines()] \
-        if OVERRIDES.exists() else []
-    for row in rows:
-        if set(row) != {"dh_name", "tla_ids", "rationale", "sources", "reviewer", "validation"} \
-                or not row["rationale"].strip() or not row["sources"] or not row["reviewer"].strip() \
-                or row["validation"] != OVERRIDE_VALIDATION:
-            raise ValueError(f"override {row.get('dh_name')!r}: needs tla_ids, a rationale, sources, its reviewer "
-                             f"and the validation {OVERRIDE_VALIDATION!r}")
-    names = [row["dh_name"] for row in rows]
-    if len(set(names)) != len(names):
-        raise ValueError("more than one override for one name")
-    return {row["dh_name"]: row for row in rows}
+def model_decision(data: dict, unit: tl.Unit) -> tuple[str, list[tl.Option]]:
+    """A unit's decision by rule (one TLA name on the exact or claim-graph keys), by the
+    reviewers' agreement, or by the reconciler."""
+    if unit.by_rule is not None:
+        return "rule", [unit.by_rule]
+    a, b = reviews_of(data, unit)
+    if set(a["choices"]) == set(b["choices"]):
+        choices, basis = a["choices"], "agreement"
+    else:
+        r = valid_answer(stored(RUNS / "reconciler", unit), (data["system"], compose_reconciler(data, unit)))
+        if r is None:
+            raise ValueError(f"{unit.dh_name}: disputed and not reconciled")
+        choices, basis = r["choices"], "reconciler"
+    labels = labelled(unit)
+    return basis, sorted((labels[c] for c in choices), key=lambda o: o.name)
+
+
+def compose_expert(data: dict, unit: tl.Unit) -> str:
+    """The expert sees the unit as the reviewers did, and how D&H write every other name decided
+    by rule or by the reviewers' agreement (linked, or to no TLA name; the expert units and
+    reconciled units excluded), as evidence of their conventions; not this unit's decision,
+    nor why it was sent to the expert (prompt audit, expert v1 round 1)."""
+    lines = []
+    for other in data["units"]:
+        if other.dh_name == unit.dh_name or other.dh_name in EXPERT_UNITS:
+            continue
+        basis, options = model_decision(data, other)
+        if basis not in ("rule", "agreement"):  # a reconciled decision is contested (prompt audit)
+            continue
+        names = " or ".join(data["tla"][o.tla_ids[0]]["transliteration"] for o in options) or "no TLA name"
+        lines.append(f"- {other.dh_name}: {names}")
+    return compose(EXPERT_TEMPLATE, unit, data["tla"], conventions="\n".join(lines))
 
 
 def decide(data: dict) -> list[dict]:
-    """One decision per unit: by rule (one TLA name on the exact or claim-graph keys), by the
-    reviewers' agreement, or by the reconciler; then a cited override, where there is one. An
-    unstable unit (`unstable_units`) must have an override."""
-    by_override, unstable = overrides(), unstable_units(data)
-    unknown = set(by_override) - {u.dh_name for u in data["units"]}
-    if unknown:
-        raise ValueError(f"overrides for names that are no unit: {sorted(unknown)}")
-    missing = [name for name in unstable if name not in by_override]
+    """One decision per unit: `model_decision`, or, for an expert unit, the stored expert
+    call's answer, whatever it is (the model decision is kept beside it). An unstable unit
+    must be an expert unit."""
+    missing = [name for name in unstable_units(data) if name not in EXPERT_UNITS]
     if missing:
-        raise ValueError(f"unstable units need a cited override: {missing}")
+        raise ValueError(f"unstable units must be decided by the expert: {missing}")
     out = []
     for unit in data["units"]:
-        if unit.by_rule is not None:
-            options, basis = [unit.by_rule], "rule"
-        else:
-            a, b = reviews_of(data, unit)
-            if set(a["choices"]) == set(b["choices"]):
-                choices, basis = a["choices"], "agreement"
-            else:
-                r = valid_answer(stored(RUNS / "reconciler", unit), (data["system"], compose_reconciler(data, unit)))
-                if r is None:
-                    raise ValueError(f"{unit.dh_name}: disputed and not reconciled")
-                choices, basis = r["choices"], "reconciler"
+        basis, options = model_decision(data, unit)
+        decision = {"dh_name": unit.dh_name, "dh_target_ids": list(unit.dh_target_ids), "basis": basis}
+        if unit.dh_name in EXPERT_UNITS:
+            e = valid_answer(stored(RUNS / "expert", unit), (data["system"], compose_expert(data, unit)))
+            if e is None:
+                raise ValueError(f"{unit.dh_name}: an expert unit without a stored expert answer")
             labels = labelled(unit)
-            options = sorted((labels[c] for c in choices), key=lambda o: o.name)
-        decision = {"dh_name": unit.dh_name, "dh_target_ids": list(unit.dh_target_ids), "basis": basis,
-                    "tla_ids": sorted(t for o in options for t in o.tla_ids)}
-        if (row := by_override.get(unit.dh_name)) is not None:
-            allowed = {t for o in (unit.options or (unit.by_rule,)) for t in o.tla_ids}
-            if not set(row["tla_ids"]) <= allowed:
-                raise ValueError(f"override {unit.dh_name!r}: {sorted(set(row['tla_ids']) - allowed)} are no candidates")
-            decision = {**decision, "basis": "override", "model_basis": basis, "model_tla_ids": decision["tla_ids"],
-                        "tla_ids": sorted(row["tla_ids"])}
-        names = sorted({tl.strict_name(data["tla"][t]["transliteration"]) for t in decision["tla_ids"]})
-        out.append({**decision, "tla_names": names})
+            decision |= {"basis": "expert", "model_basis": basis,
+                         "model_tla_ids": sorted(t for o in options for t in o.tla_ids)}
+            options = sorted((labels[c] for c in e["choices"]), key=lambda o: o.name)
+        decision["tla_ids"] = sorted(t for o in options for t in o.tla_ids)
+        decision["tla_names"] = [o.name for o in options]
+        out.append(decision)
     return out
 
 
@@ -342,6 +352,7 @@ def main() -> None:
     review = sub.add_parser("review")
     review.add_argument("--label", required=True, choices=("A", "B"))
     sub.add_parser("reconcile")
+    sub.add_parser("expert")
     sub.add_parser("decide")
     args = parser.parse_args()
     data = inputs()
@@ -349,6 +360,9 @@ def main() -> None:
         run_role(data, review_units(data), args.label, lambda u: compose(data["reviewer"], u, data["tla"]))
     elif args.step == "reconcile":
         run_role(data, disputed(data), "reconciler", lambda u: compose_reconciler(data, u))
+    elif args.step == "expert":
+        run_role(data, [u for u in data["units"] if u.dh_name in EXPERT_UNITS], "expert",
+                 lambda u: compose_expert(data, u))
     else:
         DECISIONS.write_text("".join(json.dumps(d, ensure_ascii=False, sort_keys=True) + "\n" for d in decide(data)),
                              encoding="utf-8")

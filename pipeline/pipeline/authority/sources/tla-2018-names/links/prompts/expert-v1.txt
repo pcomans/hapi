@@ -1,0 +1,16 @@
+Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.
+{dh_record}
+
+The candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.
+
+{candidates}
+
+{rules}
+
+How Dodson & Hilton write other names. Each line is another name as Dodson & Hilton print it, with the TLA transliteration an earlier step of this work decided is the same name, or "no TLA name" where it decided that none of that name's candidates is. These are earlier decisions, not ground truth. They show how Dodson & Hilton write names; they do not say which candidate, if any, is record 1's name, and the rules above alone decide whether two spellings are one name.
+{conventions}
+
+List every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.
+
+Answer with this JSON object, and nothing after it:
+{{"unit_id": "{unit_id}", "choices": [<zero or more of {labels}>], "reasoning": "<for each candidate: its words, whether record 1 can be read as exactly those words, and whether any of the lines above supports or argues against it>"}}
