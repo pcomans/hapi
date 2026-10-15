@@ -7,8 +7,11 @@ from __future__ import annotations
 
 import json
 import re
+from collections import Counter
 from functools import lru_cache
 from pathlib import Path
+
+import pytest
 
 SOURCE_DIR = (
     Path(__file__).parent.parent
@@ -102,6 +105,18 @@ CITATION_KC = {"pdf_pages": PDF_PAGES_KC, "edition": EDITION}
 PDF_PAGES_OKP = "190-194"
 SUB_PERIOD_OKP = "Of Kings and Priests"
 CITATION_OKP = {"pdf_pages": PDF_PAGES_OKP, "edition": EDITION}
+
+# Chunk dyn15-18 (2026-10-14): three Brief Lives blocks, extracted under
+# `prompt-dyn15-18.md` from the sub-PDF `slice_source.py dyn15-18` pins.
+# Physical = printed - 10 here. Ch 2 *Rulers of Foreign Countries* (Dyn 15,
+# p. 115) and *The Southern Kingdom* (Dyn 16 + 17 part 1, p. 120), Ch 3
+# *The Taosids* (Dyn 17 part 2 + 18 part 1, pp. 128-129).
+SUB_PERIOD_RFC = "Rulers of Foreign Countries"
+CITATION_RFC = {"pdf_pages": "105", "edition": EDITION}
+SUB_PERIOD_SOUTHERN = "The Southern Kingdom"
+CITATION_SOUTHERN = {"pdf_pages": "110", "edition": EDITION}
+SUB_PERIOD_TAOSIDS = "The Taosids"
+CITATION_TAOSIDS = {"pdf_pages": "118-119", "edition": EDITION}
 
 
 @lru_cache(maxsize=1)
@@ -288,7 +303,7 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
     present in `expected`; the row must match key-for-key, value-for-value.
 
     `is_group_entry` (issue #175 / PR #186) is special-cased with a
-    default of `False`: the typed flag is uniform-False on 463/465
+    default of `False`: the typed flag is uniform-False on all but two
     rows, so requiring 463 fixtures to explicitly write
     `"is_group_entry": False` is high-noise / low-signal noise.
     Fixtures for the 2 known True rows (`[...]18A–H`, `[...]18K–N`)
@@ -322,8 +337,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) + Of Kings and Priests (84) = 549 rows total."""
-    assert len(_rows()) == 549, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) + Of Kings and Priests (84) + Rulers of Foreign Countries (6) + Southern Kingdom (27) + Taosids (27) = 609 rows total."""
+    assert len(_rows()) == 609, len(_rows())
 
 
 def test_no_verbatim_notes_prose() -> None:
@@ -376,6 +391,9 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_KC: 108,
         SUB_PERIOD_FOUNDERS: 26,
         SUB_PERIOD_OKP: 84,
+        SUB_PERIOD_RFC: 6,
+        SUB_PERIOD_SOUTHERN: 27,
+        SUB_PERIOD_TAOSIDS: 27,
     }, by_period
 
 
@@ -405,6 +423,8 @@ CROSS_SECTION_DUPLICATE_IDS = {
     "Henttawy Q": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
     "Pinudjem I": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
     "Tentamun B": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
+    # dyn15-18: the Taosids stub ("see next section") and her full entry in Power.
+    "Mutneferet A": {SUB_PERIOD_POWER, SUB_PERIOD_TAOSIDS},
 }
 
 
@@ -419,7 +439,7 @@ def test_composite_key_is_unique() -> None:
 
 
 def test_cross_section_duplicate_ids_match_expected_set() -> None:
-    """Exactly three `dh_id`s appear under two `sub_period`s each.
+    """The listed `dh_id`s appear under two `sub_period`s each.
     Guards against accidental introduction of additional duplicates
     (which would indicate an extraction ambiguity) or loss of one
     (which would indicate a merge / fix_rows bug collapsing legitimate
@@ -475,6 +495,9 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_KC: CITATION_KC,
         SUB_PERIOD_FOUNDERS: CITATION_FOUNDERS,
         SUB_PERIOD_OKP: CITATION_OKP,
+        SUB_PERIOD_RFC: CITATION_RFC,
+        SUB_PERIOD_SOUTHERN: CITATION_SOUTHERN,
+        SUB_PERIOD_TAOSIDS: CITATION_TAOSIDS,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -505,6 +528,11 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_KC: {13},
         SUB_PERIOD_FOUNDERS: {1, 2, 3},
         SUB_PERIOD_OKP: {21},
+        # Two-dynasty sections: one dynasty or null, by the rule
+        # test_two_dynasty_sections_follow_the_royal_succession_box re-derives.
+        SUB_PERIOD_RFC: {15},
+        SUB_PERIOD_SOUTHERN: {16, 17, None},
+        SUB_PERIOD_TAOSIDS: {17, 18, None},
     }
     for r in _rows():
         assert r["dynasty"] in expected_dynasty[r["sub_period"]], r
@@ -557,6 +585,8 @@ FOUNDERS_UNPLACED_IDS = frozenset({
     "Qaienneith", "Redji", "Shepsetipet", "Sitba", "Syhefernerer",
     "Wadjetefni",
 })
+SOUTHERN_UNPLACED_IDS = frozenset({"Iuef"})
+TAOSIDS_UNPLACED_IDS = frozenset({"[...]17B", "[...]17C"})
 
 
 def test_unplaced_set_is_the_expected_ids() -> None:
@@ -567,11 +597,13 @@ def test_unplaced_set_is_the_expected_ids() -> None:
     of Kings and Commoners (printed p. 113 — Ahhotepti through [...]djeb;
     Dyn-13 sisters/daughters/sons/wives of unknown kings) + 11 at the end
     of The Founders (printed p. 49 — Khnemetptah through Wadjetefni;
-    Early-Dynastic (Dyn 1/2/3) unplaced princes/princesses/queens) = 46
-    unplaced rows total. No Unplaced sub-block in Amarna / House / Feud.
+    Early-Dynastic (Dyn 1/2/3) unplaced princes/princesses/queens) + 1 at
+    the end of The Southern Kingdom (printed p. 120) + 2 at the end of The
+    Taosids (printed p. 129) = 49 unplaced rows total. No Unplaced
+    sub-block in Amarna / House / Feud / Rulers of Foreign Countries.
     """
     unplaced = [r for r in _rows() if r["unplaced"]]
-    assert len(unplaced) == 46, f"expected 46 unplaced, got {len(unplaced)}"
+    assert len(unplaced) == 49, f"expected 49 unplaced, got {len(unplaced)}"
     assert {r["dh_id"] for r in unplaced} == (
         POWER_UNPLACED_IDS
         | DECLINE_UNPLACED_IDS
@@ -579,6 +611,8 @@ def test_unplaced_set_is_the_expected_ids() -> None:
         | SEIZERS_UNPLACED_IDS
         | KC_UNPLACED_IDS
         | FOUNDERS_UNPLACED_IDS
+        | SOUTHERN_UNPLACED_IDS
+        | TAOSIDS_UNPLACED_IDS
     )
     power_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_POWER}
     decline_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_DECLINE}
@@ -592,18 +626,20 @@ def test_unplaced_set_is_the_expected_ids() -> None:
     assert seizers_unplaced == SEIZERS_UNPLACED_IDS
     assert kc_unplaced == KC_UNPLACED_IDS
     assert founders_unplaced == FOUNDERS_UNPLACED_IDS
+    assert {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_SOUTHERN} == SOUTHERN_UNPLACED_IDS
+    assert {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_TAOSIDS} == TAOSIDS_UNPLACED_IDS
 
 
 def test_unplaced_rows_sort_last_in_reconciled_jsonl() -> None:
-    """The 46 unplaced rows must occupy the trailing 46 positions of
+    """The 49 unplaced rows must occupy the trailing 49 positions of
     `reconciled.jsonl` — merge.py's sort groups them into a final bin so
     the file reads as placed-alphabetical, then unplaced-alphabetical.
     Regression on the code-reviewer-flagged sort-key bug from PR #38.
     """
     rows = _rows()
-    for r in rows[:-46]:
+    for r in rows[:-49]:
         assert r["unplaced"] is False, r["dh_id"]
-    for r in rows[-46:]:
+    for r in rows[-49:]:
         assert r["unplaced"] is True, r["dh_id"]
 
 
@@ -640,8 +676,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 549 - 46 unplaced = 503 placed (OKP has no Unplaced sub-block).
-    assert len(placed) == 503, len(placed)
+    # 609 - 49 unplaced = 560 placed.
+    assert len(placed) == 560, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -656,17 +692,17 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     )
 
     unplaced = [r for r in rows if r["unplaced"]]
-    assert len(unplaced) == 46, len(unplaced)
+    assert len(unplaced) == 49, len(unplaced)
     # `[...]djeb` (Kings and Commoners unplaced, lacuna) and
     # `[...]pentepkau` (Power unplaced, lacuna) both sort after every
     # letter-prefixed unplaced entry. The sort key is
     # (unplaced_bin=1, lacuna_sub_bin, dh_id.lower(), sub_period); within
     # the unplaced-lacuna tail the two lacuna ids order alphabetically
-    # (`[...]djeb` < `[...]pentepkau`). The trailing two rows of the
-    # file are therefore `[...]djeb`, then `[...]pentepkau`.
-    assert unplaced[-2]["dh_id"] == "[...]djeb", unplaced[-2]["dh_id"]
-    assert unplaced[-1]["dh_id"] == "[...]pentepkau", unplaced[-1]["dh_id"]
-    for r in unplaced[:-2]:
+    # (`[...]17b` < `[...]17c` < `[...]djeb` < `[...]pentepkau`, the Taosids'
+    # two unplaced lacunae first). The trailing four rows of the file are
+    # therefore those four, in that order.
+    assert [r["dh_id"] for r in unplaced[-4:]] == ["[...]17B", "[...]17C", "[...]djeb", "[...]pentepkau"]
+    for r in unplaced[:-4]:
         assert not r["dh_id"].startswith(lacuna_prefixes), r["dh_id"]
 
 
@@ -799,6 +835,9 @@ def test_role_code_set_spans_the_known_codes() -> None:
         assert expected in all_codes, (
             f"expected Head of South code {expected!r} never extracted"
         )
+    # dyn15-18 codes (Rulers of Foreign Countries, The Southern Kingdom).
+    for expected in ["EKS", "Chief of Archers", "Commander of Koptos"]:
+        assert expected in all_codes, f"expected dyn15-18 code {expected!r} never extracted"
     # Seizers of the Two Lands codes genuinely new in chunk 5: `GF` (on
     # the father-of-Amenemhat-I entry Senwosret A — a gendered role code
     # not on prior-chunk list), and the long-form role-phrase
@@ -984,7 +1023,7 @@ def test_mutneferet_a_full_row() -> None:
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
         "source_citation": CITATION_POWER,
-    })
+    }, sub_period=SUB_PERIOD_POWER)
 
 
 def test_tiaa_a_full_row() -> None:
@@ -8659,3 +8698,79 @@ def test_pre_merge_parse_agent_filename() -> None:
     assert pre_merge._parse_agent_filename("merge-a-chunkfoo") is None
     # Empty tag.
     assert pre_merge._parse_agent_filename("agent--chunk") is None
+
+
+# The kings each dyn15-18 section's Royal Succession box lists, by dynasty,
+# titlecased (printed pp. 114, 116, 122; sub-PDF pages 1, 3, 5).
+ROYAL_SUCCESSION_BOXES = {
+    SUB_PERIOD_RFC: {
+        15: {"Semqen", "Aper-Anati", "Sakirhar", "Khyan", "Apepi", "Khamudy"},
+    },
+    SUB_PERIOD_SOUTHERN: {
+        16: {"Djehuty", "Sobkhotep VIII", "Neferhotep III", "Mentuhotepi", "Nebiriau I",
+             "Nebiriau II", "Semenre", "Bebiankh", "Sekhemre-Shedwaset", "Dedumose I",
+             "Dedumose II", "Mentuemsaf", "Mentuhotep VI", "Senwosret IV"},
+        17: {"Rahotep", "Sobkemsaf I", "Inyotef V", "Inyotef VI", "Inyotef VII", "Sobkemsaf II"},
+    },
+    SUB_PERIOD_TAOSIDS: {
+        17: {"Taa I", "Taa II", "Kamose"},
+        18: {"Ahmose I", "Amenhotep I", "Thutmose I"},
+    },
+}
+
+
+def test_two_dynasty_sections_follow_the_royal_succession_box() -> None:
+    """`prompt-dyn15-18.md`'s dynasty rule, re-derived from each row's own kin
+    fields: a one-dynasty box gives every row its dynasty; otherwise the row
+    takes the one dynasty of the unhedged kin kings in the box, or null."""
+    derived_counts: Counter = Counter()
+    for r in _rows():
+        box = ROYAL_SUCCESSION_BOXES.get(r["sub_period"])
+        if box is None:
+            continue
+        if len(box) == 1:
+            (expected,) = box
+        else:
+            kin = [*r["spouse_names"], r["father_name"], r["mother_name"], *r["children_names"]]
+            dynasties = {d for n in kin if n and "(" not in n for d, kings in box.items() if n in kings}
+            expected = dynasties.pop() if len(dynasties) == 1 else None
+        assert r["dynasty"] == expected, (r["dh_id"], r["sub_period"], r["dynasty"], expected)
+        derived_counts[(r["sub_period"], expected)] += 1
+    assert derived_counts == {
+        (SUB_PERIOD_RFC, 15): 6,
+        (SUB_PERIOD_SOUTHERN, 16): 1, (SUB_PERIOD_SOUTHERN, 17): 5, (SUB_PERIOD_SOUTHERN, None): 21,
+        (SUB_PERIOD_TAOSIDS, 17): 4, (SUB_PERIOD_TAOSIDS, 18): 5, (SUB_PERIOD_TAOSIDS, None): 18,
+    }
+
+
+# dyn15-18 full rows (rule 5): every field of these rows was checked against the
+# printed pages by the egyptologist-reviewer pass (2026-10-14). They cover each
+# section, both dynasty outcomes (one dynasty, null), hedges, an alternative
+# relation left out ([Sobk]emsaf A), a refuted one (Meryetamun B), alt_names,
+# a cross-section stub (Mutneferet A) and the Unplaced rows.
+DYN15_18_FULL_ROWS = [
+    {"dh_id": 'Apepi B', "name": 'Apepi B', "alt_names": [], "roles": ['KSon'], "sex": 'male', "spouse_names": [], "father_name": 'Apepi (probably)', "mother_name": None, "children_names": [], "dynasty": 15, "sub_period": SUB_PERIOD_RFC, "unplaced": False, "source_citation": CITATION_RFC},
+    {"dh_id": 'Yanassi', "name": 'Yanassi', "alt_names": [], "roles": ['EKS'], "sex": 'male', "spouse_names": [], "father_name": 'Khyan', "mother_name": None, "children_names": [], "dynasty": 15, "sub_period": SUB_PERIOD_RFC, "unplaced": False, "source_citation": CITATION_RFC},
+    {"dh_id": 'Mentuhotep C', "name": 'Mentuhotep C', "alt_names": [], "roles": ['KGW', 'UWC'], "sex": 'female', "spouse_names": ['Djehuty'], "father_name": None, "mother_name": None, "children_names": [], "dynasty": 16, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": False, "source_citation": CITATION_SOUTHERN},
+    {"dh_id": 'Nakht', "name": 'Nakht', "alt_names": [], "roles": ['KSon', 'Chief of Archers'], "sex": 'male', "spouse_names": [], "father_name": 'Inyotef VI (possibly)', "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": False, "source_citation": CITATION_SOUTHERN},
+    {"dh_id": '[Sobk]emsaf A', "name": '[Sobk]emsaf A', "alt_names": [], "roles": [], "sex": 'female', "spouse_names": [], "father_name": None, "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": False, "source_citation": CITATION_SOUTHERN},
+    {"dh_id": 'Sobkemsaf C', "name": 'Sobkemsaf C', "alt_names": [], "roles": ['KD'], "sex": 'female', "spouse_names": [], "father_name": None, "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": False, "source_citation": CITATION_SOUTHERN},
+    {"dh_id": 'Iuef', "name": 'Iuef', "alt_names": [], "roles": ['KSis'], "sex": 'female', "spouse_names": ['Ipu A'], "father_name": None, "mother_name": None, "children_names": ['Harmose'], "dynasty": None, "sub_period": SUB_PERIOD_SOUTHERN, "unplaced": True, "source_citation": CITATION_SOUTHERN},
+    {"dh_id": 'Ahhotep I', "name": 'Ahhotep I', "alt_names": [], "roles": ['KGW', 'KD', 'KSis', 'KM', 'GW'], "sex": 'female', "spouse_names": ['Taa II'], "father_name": None, "mother_name": None, "children_names": ['Ahmose I'], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Ahhotep II', "name": 'Ahhotep II', "alt_names": [], "roles": ['KGW'], "sex": 'female', "spouse_names": ['Kamose (perhaps)'], "father_name": None, "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Ahmes-Nefertiry', "name": 'Ahmes-Nefertiry', "alt_names": [], "roles": ['KGW', 'KD', 'KSis', 'KM', 'GW', '2PA'], "sex": 'female', "spouse_names": ['Ahmose I'], "father_name": 'Taa II', "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Ahmose-Sipairi', "name": 'Ahmose-Sipairi', "alt_names": [], "roles": ['KSon'], "sex": 'male', "spouse_names": [], "father_name": 'Taa II (probable)', "mother_name": None, "children_names": ['Thutmose I (may have been)'], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Meryetamun A', "name": 'Meryetamun A', "alt_names": ['Ahmes-Meryetamun'], "roles": ['KD', 'KSis'], "sex": 'female', "spouse_names": [], "father_name": 'Taa II (perhaps)', "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Meryetamun B', "name": 'Meryetamun B', "alt_names": [], "roles": ['KGW', 'KD', 'GW', 'KSis'], "sex": 'female', "spouse_names": ['Amenhotep I'], "father_name": 'Ahmose I', "mother_name": None, "children_names": [], "dynasty": 18, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Mutneferet A', "name": 'Mutneferet A', "alt_names": [], "roles": ['KM', 'KW', 'KSis', 'KD'], "sex": 'female', "spouse_names": [], "father_name": 'Ahmose I (probable)', "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Sitamun A', "name": 'Sitamun A', "alt_names": ['Ahmes-Sitamun'], "roles": ['GW', 'KSis', 'KD'], "sex": 'female', "spouse_names": [], "father_name": 'Ahmose I', "mother_name": None, "children_names": [], "dynasty": 18, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Sitkamose', "name": 'Sitkamose', "alt_names": [], "roles": ['KW', 'GW', 'KGW', 'KD'], "sex": 'female', "spouse_names": [], "father_name": 'Kamose (presumably)', "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": 'Tetisherit', "name": 'Tetisherit', "alt_names": [], "roles": ['KGW', 'KM'], "sex": 'female', "spouse_names": [], "father_name": 'Tjenna', "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": False, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": '[...]17B', "name": '[...]17B', "alt_names": [], "roles": ['UWC'], "sex": 'female', "spouse_names": [], "father_name": None, "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": True, "source_citation": CITATION_TAOSIDS},
+    {"dh_id": '[...]17C', "name": '[...]17C', "alt_names": [], "roles": [], "sex": 'male', "spouse_names": [], "father_name": None, "mother_name": None, "children_names": [], "dynasty": None, "sub_period": SUB_PERIOD_TAOSIDS, "unplaced": True, "source_citation": CITATION_TAOSIDS},
+]
+
+
+@pytest.mark.parametrize("expected", DYN15_18_FULL_ROWS, ids=lambda e: f"{e['dh_id']} [{e['sub_period']}]")
+def test_dyn15_18_full_row(expected: dict) -> None:
+    _assert_full_row(expected["dh_id"], expected, sub_period=expected["sub_period"])

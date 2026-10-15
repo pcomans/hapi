@@ -170,7 +170,7 @@ Schema backfills:
 - is_group_entry: state pinned to GROUP_ENTRY_DH_IDS:
     [...]18A–H [The Amarna Interlude]: True
     [...]18K–N [The Amarna Interlude]: True
-    (all 547 other rows: False)
+    (all 607 other rows: False)
 
 Field corrections:
 - Thutmose B [The Amarna Interlude]: alt_names corrected (Two of three agents included 'Thutmose Q (conceivably identical)' as an alt_name, but `alt_names` is reserved for alternate forms of the same individual's name (e.g. 'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct Brief Lives entry that D&H flags as conceivably the same person; that cross-reference belongs in `notes` (where it is already preserved) not `alt_names`.)

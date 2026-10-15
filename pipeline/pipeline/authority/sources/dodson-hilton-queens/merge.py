@@ -37,9 +37,20 @@ Usage:
     DH_AGENT_DIR=/some/path uv run python \\
         pipeline/authority/sources/dodson-hilton-queens/merge.py
 
+    uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py --carry-forward
+
 Outputs:
     reconciled.jsonl                 (this source dir)
     merge-disagreements.txt          (this source dir; committed for audit)
+
+**Carry-forward mode** (`--carry-forward`, from the Second Intermediate Period chunk,
+2026-10-14). The agent outputs of chunks 1-8 were never committed (`raw/agent-*.jsonl` is
+gitignored) and are no longer on disk, so a full re-merge cannot be run. In this mode the
+agent directory must hold exactly one chunk (`agent-{a,b,c}-<chunk>.jsonl`): its sub-periods
+are merged from the agents, and every `reconciled.jsonl` row of any other sub-period is
+carried forward unchanged, as reviewed. The chunk's disagreements go to
+`merge-disagreements-<chunk>.txt`; `merge-disagreements.txt` keeps the earlier chunks'.
+Then run `fix_rows.py` and `destructure_notes.py` as usual.
 """
 
 from __future__ import annotations
@@ -204,7 +215,11 @@ def _sort_key_for(unplaced_keys: frozenset[RowKey]):
     return _sort_key
 
 
-def main(agent_dir: Path) -> None:
+def _chunk_names(agent_dir: Path) -> set[str]:
+    return {p.name.split("-", 2)[2].removesuffix(".jsonl") for p in agent_dir.glob("agent-[abc]-*.jsonl")}
+
+
+def main(agent_dir: Path, carry_forward: bool = False) -> None:
     agents = {tag: _load_agent_chunks(agent_dir, tag) for tag in "abc"}
     empty = [tag for tag, a in agents.items() if not a]
     if empty:
@@ -289,20 +304,37 @@ def main(agent_dir: Path) -> None:
             )
         final.append(merged)
 
+    diff_path = DIFF
+    if carry_forward:
+        chunks = _chunk_names(agent_dir)
+        if len(chunks) != 1:
+            raise ValueError(f"--carry-forward merges one chunk at a time; {agent_dir} holds {sorted(chunks)}")
+        merged_sub_periods = {sub_period for _, sub_period in all_keys}
+        prior = [json.loads(line) for line in OUT.read_text(encoding="utf-8").splitlines() if line.strip()]
+        carried = [r for r in prior if r["sub_period"] not in merged_sub_periods]
+        print(f"Carried forward {len(carried)} rows of other sub-periods; "
+              f"rebuilt {len(prior) - len(carried)} rows of {sorted(merged_sub_periods)}")
+        final = carried + final
+        keys = [_row_key(r) for r in final]
+        unplaced = frozenset(k for k, r in zip(keys, final) if r["unplaced"])
+        final = [r for _, r in sorted(zip(keys, final), key=lambda kr: _sort_key_for(unplaced)(kr[0]))]
+        diff_path = SOURCE_DIR / f"merge-disagreements-{chunks.pop()}.txt"
+
     OUT.write_text(
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in final
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
-    DIFF.write_text("\n".join(report) if report else "No field-level disagreements.\n")
+    diff_path.write_text("\n".join(report) if report else "No field-level disagreements.\n", encoding="utf-8")
 
     print("Agents: " + ", ".join(f"{t}={len(a)}" for t, a in agents.items()))
     print(f"Merged rows: {len(final)}")
     rows_with_disagreement = sum(1 for r in report if r.strip())
     print(f"Rows with ≥1 field disagreement: {rows_with_disagreement}")
     print(f"Wrote {OUT.relative_to(OUT.parents[4])}")
-    print(f"Wrote {DIFF.relative_to(DIFF.parents[4])}")
+    print(f"Wrote {diff_path.relative_to(diff_path.parents[4])}")
 
 
 if __name__ == "__main__":
@@ -313,5 +345,10 @@ if __name__ == "__main__":
         default=Path(os.environ.get("DH_AGENT_DIR", DEFAULT_AGENT_DIR)),
         help=f"Directory containing agent-a/b/c.jsonl (default: {DEFAULT_AGENT_DIR}).",
     )
+    parser.add_argument(
+        "--carry-forward",
+        action="store_true",
+        help="Merge one chunk's agent outputs; carry every other sub-period's rows forward unchanged.",
+    )
     args = parser.parse_args()
-    main(args.agent_dir)
+    main(args.agent_dir, carry_forward=args.carry_forward)

@@ -47,6 +47,8 @@ for out_name, phys_range in [
 PY
 ```
 
+From the dyn15-18 chunk (2026-10-14) on, the slice is `slice_source.py <chunk>`, which pins the book's and the sub-PDF's SHA-256 (dyn15-18: `7e92f81d1ea9ef0c45a115757095a00c11f3bab849ccc392183f5a87a80b796f`, physical pp. 104, 105, 106, 110, 112, 118, 119).
+
 The sub-PDFs are gitignored (`raw/*`). The source PDF lives under `proprietary/` (repo-level gitignored). Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"157-162"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
 
 ### OCR
@@ -127,7 +129,16 @@ Source PDF SHA-256: `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07
 
 ## Physical vs printed page offset
 
-Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 110 — offset +11 (physical = printed − 11). Verified at printed 136 / physical 125 (chapter opening photo) and printed 141 / physical 130 (end of Power and Glory Brief Lives).
+Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 111: offset +10 (physical = printed − 10). Until 2026-10-14 this note gave physical p. 110, an off-by-one; physical p. 110 is printed p. 120, the last page of Ch 2's *The Southern Kingdom* (dyn15-18 chunk). By printed 136 / physical 125 (chapter opening photo) and printed 141 / physical 130 (end of Power and Glory Brief Lives) the offset is +11. The one-page jump lies between printed 129 and 136 and was not located.
+
+**dyn15-18 chunk verification points** (read on the page images, 2026-10-14):
+- Physical p. 104 = printed p. 114: *Rulers of Foreign Countries* opening, Royal Succession box.
+- Physical p. 105 = printed p. 115: its Brief Lives.
+- Physical p. 106 = printed p. 116: *The Southern Kingdom* opening, box.
+- Physical p. 110 = printed p. 120: its Brief Lives and Unplaced.
+- Physical p. 111 = printed p. 121: Ch 3 opening photo and contents.
+- Physical p. 112 = printed p. 122: *The Taosids* opening, box.
+- Physical pp. 118–119 = printed pp. 128–129: its Brief Lives and Unplaced.
 
 **Amarna chunk offset drift.** The offset is `+11` through printed pp. 142–143 (physical 131–132) but changes to `+12` from printed p. 147 onwards. The cause is a two-page genealogical-chart spread at printed pp. 144–145 that the original scanner captured as a **single** PDF page (physical 134), while placing printed p. 146 before it (physical 133). This is a one-time scan-artifact jump, not a repeat drift — the `+12` offset holds stably from physical 135 through at least physical 146 (printed 158, start of "House of Ramesses"). For the Amarna Brief Lives sub-block specifically (printed pp. 154–157 / physical pp. 142–145), the `+12` offset is uniform. Every follow-up PR must re-verify the offset at both the chunk's first and last printed pages.
 

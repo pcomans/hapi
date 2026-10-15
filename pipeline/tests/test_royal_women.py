@@ -19,6 +19,8 @@ class Kings:
     NAMES = {
         "king:amenhotep-iii": (["Amenhotep III"], (18,)),
         "king:mentuhotep-ii": (["Mentuhotep II"], (11,)),
+        "king:taa-ii": (["Taa II"], (17,)),
+        "king:ahmose-i": (["Ahmose I"], (18,)),
         "king:akhenaten": (["Akhenaten"], (18,)),
         "king:setnakhte": (["Setnakhte"], (20,)),
         "king:ramesses-iii": (["Ramesses III"], (20,)),
@@ -68,7 +70,9 @@ def resolve(index, text, *, cue=True, kings=frozenset(), dynasty=None):
 
 
 def test_the_women_are_dodson_and_hiltons(women) -> None:
-    assert len(women) == 317
+    # 317 until 2026-10-14; the dyn15-18 chunk added 36 women, one of them (Mutneferet A's
+    # Taosids stub) a woman already counted.
+    assert len(women) == 352
     tiye = women["dodson_hilton:Tiye A"]
     assert (tiye.label, tiye.labels, tiye.alt_names, tiye.dynasties) == ("Tiye A", ("Tiye A", "Tiye"), (), (18,))
     assert tiye.dh_rows == (("Tiye A", "The Amarna Interlude"),)
@@ -84,6 +88,20 @@ def test_a_woman_in_two_chapters_is_one_woman_as_classified(women) -> None:
     assert henttawy.family_names == ("Pinudjem I", "Ramesses XI", "Pasebkhanut I", "Djedkhonsiufankh I")
     assert {"dodson_hilton:Takhat A", "dodson_hilton:Isetneferet C", "dodson_hilton:Tentamun B",
             "dodson_hilton:Hetepti"} <= set(women)
+    mutneferet = women["dodson_hilton:Mutneferet A"]
+    assert mutneferet.dh_rows == (("Mutneferet A", "The Power and the Glory"), ("Mutneferet A", "The Taosids"))
+    assert (mutneferet.dynasties, mutneferet.family_names) == ((18,), ("Thutmose I", "Thutmose II"))
+
+
+def test_a_woman_of_two_dynasties_has_no_dynasty_to_be_contradicted(women) -> None:
+    """Ahmes-Nefertiry, daughter of Taa II (Dyn 17) and wife of Ahmose I (Dyn 18): D&H's
+    Taosids section gives her no single dynasty, so no record's dynasty rules her out."""
+    ahmes_nefertiry = women["dodson_hilton:Ahmes-Nefertiry"]
+    assert (ahmes_nefertiry.labels, ahmes_nefertiry.dynasties, ahmes_nefertiry.family_names) == (
+        ("Ahmes-Nefertiry",), (), ("Ahmose I", "Taa II"))
+    ahhotep = women["dodson_hilton:Ahhotep I"]
+    assert (ahhotep.labels, ahhotep.dynasties, ahhotep.family_names) == (
+        ("Ahhotep I", "Ahhotep"), (), ("Taa II", "Ahmose I"))
 
 
 def test_an_unclassified_repeated_woman_is_refused(tmp_path: Path) -> None:
@@ -125,6 +143,17 @@ def test_a_bare_name_is_chosen_by_the_records_family_then_dynasty(index) -> None
     # Two Dynasty 20 Tiyes and no family link: nothing chooses.
     assert resolve(index, "Tiye", dynasty=20) == (
         "ambiguous", ["dodson_hilton:Tiye A", "dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"], None)
+
+
+def test_ahhotep_i_is_chosen_by_her_husband_not_by_a_dynasty_she_lacks(index) -> None:
+    """D&H's two Ahhoteps (The Taosids): Ahhotep I, wife of Taa II and mother of Ahmose I,
+    and Ahhotep II, perhaps wife of Kamose. Neither has a single dynasty, so a Dynasty 18
+    record alone cannot choose; a record naming Taa II or Ahmose I does."""
+    assert resolve(index, "Ahhotep", kings={"king:taa-ii"}) == ("resolved", ["dodson_hilton:Ahhotep I"], "family")
+    assert resolve(index, "Ahhotep", kings={"king:ahmose-i"}, dynasty=18) == (
+        "resolved", ["dodson_hilton:Ahhotep I"], "family")
+    assert resolve(index, "Ahhotep", dynasty=18) == (
+        "ambiguous", ["dodson_hilton:Ahhotep I", "dodson_hilton:Ahhotep II"], None)
 
 
 def test_neferu_needs_her_husband_dynasty_11_has_two(index) -> None:

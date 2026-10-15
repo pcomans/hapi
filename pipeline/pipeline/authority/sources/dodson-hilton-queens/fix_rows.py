@@ -564,6 +564,10 @@ KNOWN_ROLE_TOKENS: set[str] = {
     "PMut",                      # Priest of Mut (Ankhefenmut B)
     "PSeth",                     # Priest of Seth (Hori C)
     "Sem-Priest at Medinet Habu",
+    # dyn15-18 chunk (2026-10-14), verbatim on the page per the egyptologist review:
+    "EKS",                       # Yanassi (p. 115): D&H print EKS, not EKSon; kept as printed
+    "Chief of Archers",          # Nakht (p. 120)
+    "Commander of Koptos",       # Qinen (p. 120)
 }
 
 _OVERRIDES_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
