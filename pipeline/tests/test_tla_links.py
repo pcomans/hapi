@@ -35,9 +35,9 @@ def by_id(pairs, pair_id):
 
 
 def test_the_candidate_pairs_and_their_tiers(pairs) -> None:
-    assert len(pairs) == 165
+    assert len(pairs) == 163
     assert collections.Counter(p.tier for p in pairs) == {
-        "weak_sign_skeleton": 122, "raw_exact": 34, "committed_normalized": 9}
+        "weak_sign_skeleton": 121, "raw_exact": 34, "committed_normalized": 8}
     assert len({p.pair_id for p in pairs}) == len(pairs)
     # Same spelling, linked by rule: D&H "Ahmes-Nefertiry" against TLA 600465 is a weak-sign
     # pair (the TLA writes Ahmes-Nefertari), while an identical spelling is exact.
@@ -54,7 +54,7 @@ def test_keys_that_different_names_share_propose_nothing(pairs, women) -> None:
     # Nebtit / Nebtu, Neferet / Neferu, Tentamun / Tintamun.
     assert tl.withheld_keys(women) == {"hntt", "nbt", "nfr", "tntmn"}
     weak = [p for p in pairs if p.tier == "weak_sign_skeleton"]
-    assert len(weak) == 122
+    assert len(weak) == 121
     assert not {weak_sign_skeleton(p.dh_name) for p in weak} & tl.withheld_keys(women)
 
 
@@ -62,7 +62,12 @@ def test_renderings_drop_glosses_and_descriptions() -> None:
     row = {"transliteration": "Jꜥḥ-ms.w-nfr.t-jr.j", "translations": [
         {"lang": "de", "value": "Ahmes-Nefertari (Frau des Ahmose)"}, {"lang": "en", "value": "[a queen]"},
         {"lang": "en"}, {"lang": "en", "value": "Ahmose-Nofretari; Nefertari"}]}
-    assert tl.renderings(row) == ["Jꜥḥ-ms.w-nfr.t-jr.j", "Ahmes-Nefertari", "Ahmose-Nofretari"]
+    # A gloss in parentheses and a bracketed description go; a second spelling after ";" is one.
+    assert tl.renderings(row) == ["Jꜥḥ-ms.w-nfr.t-jr.j", "Ahmes-Nefertari", "Ahmose-Nofretari", "Nefertari"]
+    # A parenthesis inside a name goes alone: "Chnum(?)-anchu" is "Chnum-anchu", not "Chnum".
+    assert tl.spellings_of("Chnum(?)-anchu") == ["Chnum-anchu"]
+    assert tl.spellings_of("Nefer-hetep, der Ältere") == ["Nefer-hetep"]
+    assert tl.spellings_of("[Thronname Mentuhoteps IV.]") == [] and tl.spellings_of(None) == []
 
 
 def test_strict_name_is_the_transliteration_without_separators_or_marks() -> None:
@@ -80,7 +85,7 @@ def test_a_name_is_one_name_one_rule_name_decides_and_otherwise_it_is_reviewed(u
     rule = [u for u in units.values() if u.by_rule]
     review_units = [u for u in units.values() if not u.by_rule]
     assert (len(units), len(rule), len(review_units)) == (97, 32, 65)
-    assert sum(len(u.options) for u in review_units) == 108
+    assert sum(len(u.options) for u in review_units) == 107
     assert all(not u.options for u in rule) and all(u.options for u in review_units)
     # One TLA name on the exact or claim-graph keys decides; the weak-sign candidates of a
     # name so decided are not reviewed.
@@ -222,7 +227,7 @@ def test_every_rendered_candidate_spelling_is_a_name_without_description() -> No
     import re
     data = review.inputs()
     ids = {t for u in review.review_units(data) for o in u.options for t in o.tla_ids}
-    assert len(ids) == 109
+    assert len(ids) == 108
     stop = re.compile(r"\b(Tochter|Frau|Sohn|Mutter|Vater|König|Königin|wife|daughter|son|mother|king|queen|"
                       r"der|die|des|the|of)\b", re.I)
     for tla_id in ids:
@@ -275,22 +280,62 @@ def test_the_committed_decisions_are_rebuilt_from_the_stored_calls() -> None:
     committed = [json.loads(line) for line in review.DECISIONS.read_text(encoding="utf-8").splitlines()]
     assert committed == [json.loads(json.dumps(d, sort_keys=True)) for d in review.decide(data)]
     assert collections.Counter((d["basis"], len(d["tla_names"])) for d in committed) == {
-        ("rule", 1): 32, ("agreement", 0): 15, ("agreement", 1): 41, ("agreement", 2): 3,
-        ("reconciler", 0): 3, ("reconciler", 1): 3}
+        ("rule", 1): 32, ("agreement", 0): 15, ("agreement", 1): 40, ("agreement", 2): 2,
+        ("reconciler", 0): 3, ("reconciler", 1): 2, ("override", 0): 2, ("override", 2): 1}
     assert [u.dh_name for u in review.disputed(data)] == [
         "Meryetneith", "Minemaes", "Nubemhat", "Nubemiunu", "Reniseneb", "Werenro"]
     by_name = {d["dh_name"]: d for d in committed}
     # The names v1 linked wrongly (v1-withdrawn/README.md) are not linked to those lemmas now.
     assert by_name["Mut-Tuy"]["tla_ids"] == [] and by_name["Nubemiunu"]["tla_ids"] == []
     assert by_name["Neferure"]["basis"] == "rule" and by_name["Neferure"]["tla_names"] == ["nfrwrꜥw"]
-    assert by_name["Minemaes"]["tla_names"] == ["mnwmsw"]
+    # The cited overrides (overrides.jsonl): Minemaes and Neferuni unlinked, Meryetyotes kept;
+    # Neferuni and Meryetyotes are the units reviewer B answered differently across runs.
+    assert {n: (d["model_tla_ids"], d["tla_ids"]) for n, d in by_name.items() if d["basis"] == "override"} == {
+        "Minemaes": (["550286"], []), "Neferuni": (["703639"], []), "Meryetyotes": (["702196", "702311"], ["702196", "702311"])}
+    assert review.unstable_units(data) == ["Meryetyotes", "Neferuni"]
+    # A fragmentary lemma ("Jpw-...") is no candidate.
+    assert by_name["Ipu"]["tla_ids"] == ["400482"]
 
 
 def test_the_links_add_spellings_without_new_collisions_or_unwithheld_keys(women) -> None:
     linked = tl.linked_spellings()
-    assert (len(linked), sum(map(len, linked.values()))) == (121, 265)
+    assert (len(linked), sum(map(len, linked.values()))) == (119, 259)
     before = rw.build_index(women, KINGS)
     after = rw.build_index(women, KINGS, linked_spellings=linked)
     assert rw.different_spellings(after).keys() == rw.different_spellings(before).keys() == {
         "hntt", "nbt", "nfr", "nfrsbk", "tntmn"}
     assert rw.new_weak_sign_collisions(after) == rw.new_weak_sign_collisions(before)
+
+
+def test_the_only_key_the_links_newly_share_between_different_names_is_tj(women) -> None:
+    """New spellings of one name are shared by its homonymous women, as its D&H labels are;
+    across different names the links add one shared key, and it leaves the mention ambiguous,
+    not resolved."""
+    linked = tl.linked_spellings()
+    before = rw.build_index(women, KINGS)
+    after = rw.build_index(women, KINGS, linked_spellings=linked)
+    names = {w.target_id: frozenset(rw.base_spelling(label) for label in w.labels) for w in women}
+
+    def across(index, tier):
+        return {key: sorted(ids) for key, ids in getattr(index, tier).items()
+                if len(ids) > 1 and not frozenset.intersection(*(names[t] for t in ids if t in names))}
+    new = {tier: {k: v for k, v in across(after, tier).items() if across(before, tier).get(k) != v}
+           for tier in ("exact", "normalized")}
+    assert new == {"exact": {}, "normalized": {"tj": ["dodson_hilton:Ti", "dodson_hilton:Tia C", "dodson_hilton:Tia Q"]}}
+
+
+def test_the_withdrawn_runs_and_the_probe_stay_on_disk() -> None:
+    """Withdrawn calls decide nothing but are the record (Rule 13); their counts are pinned."""
+    counts = {d: len(list((tl.LINKS_DIR / d).glob("*.json"))) for d in (
+        "v1-withdrawn/runs/A", "v1-withdrawn/runs/B", "v1-withdrawn/runs/reconciler",
+        "withdrawn-v2.0-strict-parser/B", "withdrawn-v2.0-strict-parser/reconciler",
+        "withdrawn-v2.1-khnemet-candidate/A", "withdrawn-v2.1-khnemet-candidate/B")}
+    assert counts == {"v1-withdrawn/runs/A": 124, "v1-withdrawn/runs/B": 124, "v1-withdrawn/runs/reconciler": 2,
+                      "withdrawn-v2.0-strict-parser/B": 79, "withdrawn-v2.0-strict-parser/reconciler": 15,
+                      "withdrawn-v2.1-khnemet-candidate/A": 1, "withdrawn-v2.1-khnemet-candidate/B": 1}
+    # The hidden-context probe: a 15-token prompt read as 602 input tokens, with or without skills.
+    for name in ("default.jsonl", "disable-slash-commands.jsonl"):
+        events = [json.loads(line) for line in (tl.LINKS_DIR / "probe-hidden-context" / name).read_text().splitlines()
+                  if line.startswith("{")]
+        usage = events[-1]["usage"]
+        assert usage["input_tokens"] + usage["cache_creation_input_tokens"] + usage["cache_read_input_tokens"] == 602

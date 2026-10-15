@@ -44,6 +44,11 @@ FENCED_ANSWER = re.compile(r"```(?:json)?\s*(\{.*\})\s*```$", re.S)
 PROMPTS = tl.LINKS_DIR / "prompts"
 RUNS = tl.LINKS_DIR / "runs"
 DECISIONS = tl.LINKS_DIR / "decisions.jsonl"
+OVERRIDES = tl.LINKS_DIR / "overrides.jsonl"
+OVERRIDE_VALIDATION = "LLM-applied override, not human-validated"
+# Earlier runs of a reviewer on the same units, read by today's parser: a unit whose answers
+# differ across them is unstable, and agreement on it is luck, not consensus.
+EARLIER_RUNS = {"B": tl.LINKS_DIR / "withdrawn-v2.0-strict-parser" / "B"}
 SHUFFLE_SALT = "tla-links-v2/"
 RULES = (PROMPTS / "rules-v2.txt").read_text(encoding="utf-8").strip()
 
@@ -252,9 +257,57 @@ def compose_reconciler(data: dict, unit: tl.Unit) -> str:
     return compose(data["reconciler"], unit, data["tla"], text)
 
 
+def answered_names(unit: tl.Unit, records: list[dict]) -> list[tuple[str, ...]]:
+    """The TLA names each valid stored answer chose, read by today's `validate`."""
+    out = []
+    for record in records:
+        checked = validate(record)
+        if "answer" in checked:
+            out.append(tuple(sorted(record["labels"][c] for c in checked["answer"]["choices"])))
+    return out
+
+
+def unstable_units(data: dict) -> list[str]:
+    """The units on which one reviewer's valid answers, in this run and its earlier runs, name
+    different TLA names."""
+    out = []
+    for unit in review_units(data):
+        for role, earlier in EARLIER_RUNS.items():
+            answers = answered_names(unit, stored(earlier, unit) + stored(RUNS / role, unit))
+            if len(set(answers)) > 1:
+                out.append(unit.dh_name)
+    return out
+
+
+def overrides() -> dict[str, dict]:
+    """Per-row decisions with a cited rationale (Constitutional Rules 2 and 6). Each names the
+    review it comes from and says that it is an LLM-applied override, not human-validated, as
+    the D&H source's overrides do (`dodson-hilton-queens/README.md`)."""
+    rows = [json.loads(line) for line in OVERRIDES.read_text(encoding="utf-8").splitlines()] \
+        if OVERRIDES.exists() else []
+    for row in rows:
+        if set(row) != {"dh_name", "tla_ids", "rationale", "sources", "reviewer", "validation"} \
+                or not row["rationale"].strip() or not row["sources"] or not row["reviewer"].strip() \
+                or row["validation"] != OVERRIDE_VALIDATION:
+            raise ValueError(f"override {row.get('dh_name')!r}: needs tla_ids, a rationale, sources, its reviewer "
+                             f"and the validation {OVERRIDE_VALIDATION!r}")
+    names = [row["dh_name"] for row in rows]
+    if len(set(names)) != len(names):
+        raise ValueError("more than one override for one name")
+    return {row["dh_name"]: row for row in rows}
+
+
 def decide(data: dict) -> list[dict]:
     """One decision per unit: by rule (one TLA name on the exact or claim-graph keys), by the
-    reviewers' agreement, or by the reconciler."""
+    reviewers' agreement, or by the reconciler; then a cited override, where there is one. An
+    unstable unit (`unstable_units`) must have an override."""
+    by_override, unstable = overrides(), unstable_units(data)
+    unknown = set(by_override) - {u.dh_name for u in data["units"]}
+    if unknown:
+        raise ValueError(f"overrides for names that are no unit: {sorted(unknown)}")
+    missing = [name for name in unstable if name not in by_override]
+    if missing:
+        raise ValueError(f"unstable units need a cited override: {missing}")
     out = []
     for unit in data["units"]:
         if unit.by_rule is not None:
@@ -270,8 +323,16 @@ def decide(data: dict) -> list[dict]:
                 choices, basis = r["choices"], "reconciler"
             labels = labelled(unit)
             options = sorted((labels[c] for c in choices), key=lambda o: o.name)
-        out.append({"dh_name": unit.dh_name, "dh_target_ids": list(unit.dh_target_ids), "basis": basis,
-                    "tla_names": [o.name for o in options], "tla_ids": sorted(t for o in options for t in o.tla_ids)})
+        decision = {"dh_name": unit.dh_name, "dh_target_ids": list(unit.dh_target_ids), "basis": basis,
+                    "tla_ids": sorted(t for o in options for t in o.tla_ids)}
+        if (row := by_override.get(unit.dh_name)) is not None:
+            allowed = {t for o in (unit.options or (unit.by_rule,)) for t in o.tla_ids}
+            if not set(row["tla_ids"]) <= allowed:
+                raise ValueError(f"override {unit.dh_name!r}: {sorted(set(row['tla_ids']) - allowed)} are no candidates")
+            decision = {**decision, "basis": "override", "model_basis": basis, "model_tla_ids": decision["tla_ids"],
+                        "tla_ids": sorted(row["tla_ids"])}
+        names = sorted({tl.strict_name(data["tla"][t]["transliteration"]) for t in decision["tla_ids"]})
+        out.append({**decision, "tla_names": names})
     return out
 
 

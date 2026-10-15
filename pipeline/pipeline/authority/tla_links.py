@@ -43,6 +43,7 @@ LINKS_DIR = TLA_DIR / "links"
 DESCRIPTION = re.compile(r"\s*\([^)]*\)|,.*$")
 STRICT_SEPARATORS = re.compile(r"[.\-=⸗~ʾ\s\[\]()]|\u032f|\u032e")
 
+FRAGMENT = "..."
 BY_RULE = ("raw_exact", "committed_normalized")
 BY_REVIEW = "weak_sign_skeleton"
 
@@ -134,7 +135,8 @@ def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
     normalized: dict[str, set[str]] = collections.defaultdict(set)
     weak: dict[str, set[str]] = collections.defaultdict(set)
     for row in rows:
-        if row["subtype"] != "person_name":
+        # A broken-off name ("Jpw-...") cannot be shown to be any name (egyptologist review).
+        if row["subtype"] != "person_name" or FRAGMENT in row["transliteration"]:
             continue
         for form in renderings(row):
             exact[rw.surface_key(form)].add(row["tla_id"])
