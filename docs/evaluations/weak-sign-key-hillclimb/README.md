@@ -2,8 +2,9 @@
 
 The royal-women resolver's third tier (`pipeline/pipeline/authority/weak_sign_skeleton.py`)
 matches spellings of one name across conventions. The protocol is `PROTOCOL.md`, committed
-(af905e7) before any v2 measurement; the one later harness change (99ec9fb) fixed module
-loading, before any measurement too. A first climb (v1) was withdrawn on review; why, and
+(af905e7) before any v2 measurement. Two later harness changes: 99ec9fb fixed module loading,
+before any measurement; 1590c17 corrected the merge count to distinct names, after the run
+("Correction after the run" below). A first climb (v1) was withdrawn on review; why, and
 what it changed, is in `PROTOCOL.md`.
 
 ## Result
@@ -46,8 +47,10 @@ Recall and coverage by split, and strict strong merges over the whole set (names
   fold-aware merge counts were inflated.
 - **The fix.** `measure.py` now counts distinct names, as PROTOCOL.md defines the metric, and
   every result was regenerated. The table above shows the corrected counts.
-- **The effect.** No decision changed: the acceptance rule gives the same verdict for every
-  candidate under both counts, and a test re-applies it. The counts as first reported were:
+- **The effect.** No decision changed. Reading the two tables, the acceptance rule gives the
+  same verdict for every candidate under both counts; the test re-applies it to the corrected
+  counts. C1's margin over the baseline narrowed from 8 names to 2. The counts as first
+  reported were:
 
   | Key | Strict | Fold-aware |
   |---|---|---|
@@ -85,7 +88,7 @@ Recall and coverage by split, and strict strong merges over the whole set (names
   this: a three-consonant key needs a named family king, and a contradicting dynasty is
   refused. A test pins it.
 - **Commit order is consistent with "protocol before measurement", not proof of it.**
-  - Order: af905e7 → 99ec9fb → a7af450.
+  - Order: af905e7 → 99ec9fb → a7af450 (results), then the post-run correction 1590c17.
   - Git cannot rule out a run from an uncommitted tree.
   - The harness at af905e7 could not load its normalizer until 99ec9fb, which weakly
     supports "no earlier run".
