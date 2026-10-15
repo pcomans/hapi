@@ -351,7 +351,8 @@ def test_a_differently_spelt_key_never_resolves(index) -> None:
     of the weak-sign key, P1)."""
     withheld = ("ambiguous", "weak_sign_skeleton", NFR, "weak_sign_different_spellings")
     # The P1 case: "Nofret" (nfr) on a record naming Amenemhat I reached Neferu III, his
-    # daughter, through the family filter, though Nofret is nfrt, Neferet, not nfrw.
+    # daughter, through the family filter: Nofret keys nfr, under which D&H spell Neferu and
+    # Neferet.
     assert index.family_king_ids["dodson_hilton:Neferu III"] == {"king:amenemhat-i"}
     assert found(index, "Nofret", kings={"king:amenemhat-i"}) == withheld
     assert found(index, "Nofret", kings={"king:amenemhat-i"}, dynasty=12) == withheld

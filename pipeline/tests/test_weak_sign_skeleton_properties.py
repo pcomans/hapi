@@ -503,8 +503,8 @@ def test_on_the_real_king_graph_the_tier_reaches_the_queens_and_no_other_king(gr
 
 
 def test_on_the_real_king_graph_the_new_collisions_are_the_pinned_ones(graph_index) -> None:
-    """The collisions the tier introduces over the real graph: the three different-name
-    groups and Tentamun/Tintamun from D&H, the Ptolemaic female rulers who share a name
+    """The collisions the tier introduces over the real graph: the four D&H keys whose women
+    D&H spell differently (hntt, nbt, nfr, tntmn), the Ptolemaic female rulers who share a name
     (Berenike II / Berenike III; Cleopatra I / II / VII), and female-rulers.json's
     "Neferusobek" for the king Sobkneferu meeting D&H's princess Neferusobk."""
     new = rw.new_weak_sign_collisions(graph_index)

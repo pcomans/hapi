@@ -317,11 +317,11 @@ def test_the_collision_table_over_the_dodson_and_hilton_women(women) -> None:
 
 
 def test_the_threshold_decision_three_consonants_with_a_named_king_against_four(women, monkeypatch) -> None:
-    """At four consonants the key never merges different names on its own, but 44 more women
+    """At four consonants the key merges fewer spellings (hntt and tntmn remain), but 44 more women
     are unreachable, among them Ahmes A/B (hms), Inhapy (nhp), Sitre A (str), Mutemwia (mtm)
     and Khnemet (ḫnm, three consonants in four letters). At three it reaches them, and the
     resolver takes a three-consonant match with a named family king only, which is what
-    the different-name groups need anyway."""
+    the keys the authority spells differently get anyway: they never resolve."""
     keyed3, colliding3, new3, unkeyed3 = women_collisions(women)
     monkeypatch.setattr(module, "MIN_WEAK_SIGN_CONSONANTS", 4)
     keyed4, colliding4, new4, unkeyed4 = women_collisions(women)

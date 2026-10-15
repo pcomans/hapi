@@ -82,8 +82,9 @@ Recall and coverage by split, and strict strong merges over the whole set (names
   - Its strong skeleton drops w, j, y and a final t, so it cannot see merges like
     Neferu/Neferet.
   - It counts over thousands of private and divine TLA names, not the 255 keyed D&H women.
-- **"A key shared by different names never resolves" holds only within D&H.** `DIFFERENT_NAMES`
-  lists collisions among D&H's own women. A museum name outside D&H can still meet a D&H
+- **A key withheld for different spellings is withheld only within the authority.**
+  `different_spellings` (which replaced the hand-written `DIFFERENT_NAMES` list after the run)
+  looks at the authority's own spellings: D&H's labels and the female rulers' king names. A museum name outside D&H can still meet a D&H
   woman's key: "Isetweret" (ꜣst-) and D&H's Sitre A (zꜣt-) both key `str`. The gates bound
   this: a three-consonant key needs a named family king, and a contradicting dynasty is
   refused. A test pins it.
