@@ -351,6 +351,12 @@ def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
     assert found(index, "Cleopatre", dynasty=33) == ("ambiguous", "weak_sign_skeleton",
                                                      ["king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p"], None)
     assert found(index, "Kleopatra II", dynasty=33) == ("unmatched", None, [], None)
+    # A wrapped numeral is a numeral (Codex review): "(II)", "[II]", "II." pick Cleopatra II.
+    for wrapped in ("(II)", "[II]", "II."):
+        assert found(index, f"Cleopatre {wrapped}", dynasty=33) == (
+            "resolved", "weak_sign_skeleton", ["king:cleopatra-ii"], None), wrapped
+    assert [rw.numeral_of(t) for t in ("II", "(II)", "[VII]", "III.", "ii", "Vi", "()", "Ines")] == [
+        "II", "II", "VII", "III", None, None, None, None]
     assert found(index, "Ahhotp I", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotep I"], None)
     assert found(index, "Ahhotp II") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
     # "II" leaves Neferu II and Neferet II, "III" Neferu III alone; nfr is a DIFFERENT_NAMES

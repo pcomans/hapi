@@ -85,5 +85,5 @@ Recall and coverage by split, and strict strong merges over the whole set (names
   - `tla-test-split-not-held-out.json`.
 
 `pipeline/tests/test_weak_sign_key_hillclimb.py` rebuilds every result from its key and the
-frozen normalizer, re-applies the acceptance rule, and checks that v2-1 is the committed
-key's code.
+frozen normalizer, re-applies the acceptance rule, and checks that v2-4 (the owner's
+decision, above) is the committed key's code.

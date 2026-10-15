@@ -290,12 +290,22 @@ def _add(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
             index.normalized[key].add(target_id)
 
 
+NUMERAL_WRAPPING = "()[]."
+
+
+def numeral_of(token: str) -> str | None:
+    """The regnal numeral a token writes, bare or wrapped ("II", "(II)", "[II]", "II."), or
+    None. Uppercase only: a lowercase "vi" or "ii" can be part of a name."""
+    bare = token.strip(NUMERAL_WRAPPING)
+    return bare if bare and NUMERAL.match(bare) else None
+
+
 def weak_sign_entry(label: str) -> tuple[str, frozenset[str]]:
     """How the authority side keys a label: the D&H letter and the regnal numeral stripped
     before the key is taken, the numerals kept ("Neferu II" -> ("nfr", {"II"}))."""
     tokens = label.split()
     key = weak_sign_skeleton(" ".join(t for t in tokens if not DISAMBIGUATOR.match(t)))
-    return key, frozenset(t for t in tokens if NUMERAL.match(t))
+    return key, frozenset(n for t in tokens if (n := numeral_of(t)))
 
 
 def _add_weak_sign(index: RoyalWomenIndex, target_id: str, labels: Iterable[str]) -> None:
@@ -402,8 +412,8 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
     if not candidates:
         # The mention's numeral is not keyed; a candidate must carry it.
         tokens = text.split()
-        numerals = {t for t in tokens if NUMERAL.match(t)}
-        skeleton = weak_sign_skeleton(" ".join(t for t in tokens if t not in numerals))
+        numerals = {n for t in tokens if (n := numeral_of(t))}
+        skeleton = weak_sign_skeleton(" ".join(t for t in tokens if not numeral_of(t)))
         if skeleton:
             candidates = sorted(t for t in index.weak_sign.get(skeleton, ())
                                 if numerals <= index.weak_sign_numerals[skeleton][t])
