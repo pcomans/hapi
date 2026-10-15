@@ -24,6 +24,11 @@ class Kings:
         "king:akhenaten": (["Akhenaten"], (18,)),
         "king:setnakhte": (["Setnakhte"], (20,)),
         "king:ramesses-ii": (["Ramesses II"], (19,)),
+        "king:ramesses-v": (["Ramesses V"], (20,)),
+        "king:sety-i": (["Sety I"], (19,)),
+        "king:thutmose-i": (["Thutmose I"], (18,)),
+        "king:thutmose-iv": (["Thutmose IV"], (18,)),
+        "king:shoshenq-i": (["Shoshenq I"], (22,)),
         "king:ramesses-iii": (["Ramesses III"], (20,)),
         "king:hatshepsut": (["Hatshepsut", "Maatkare"], (18,)),
         "king:tausret": (["Tausret"], (19,)),
@@ -191,8 +196,10 @@ def test_a_royal_woman_cue_keeps_queens_and_kings_apart(index) -> None:
     assert resolve(index, "Maatkare", dynasty=18) == ("resolved", ["king:hatshepsut"], "dynasty")
     assert resolve(index, "Maatkare") == ("ambiguous", ["dodson_hilton:Hatshepsut D", "dodson_hilton:Maatkare A"], None)
     assert resolve(index, "Maatkare", cue=False, dynasty=21) == ("resolved", ["king:hatshepsut"], None)
-    # A cued name no royal woman or female ruler bears stays unmatched; it never falls to a king.
-    assert resolve(index, "Ahmose") == ("unmatched", [], None)
+    # A cued name no royal woman or female ruler bears never falls to a king: "Ahmose" (hms)
+    # reaches only D&H's princesses Ahmes A/B, on the third tier, and only a named king picks.
+    assert resolve(index, "Ahmose") == ("ambiguous", ["dodson_hilton:Ahmes A", "dodson_hilton:Ahmes B"], None)
+    assert resolve(index, "Ahmose I", cue=False) == ("resolved", ["king:ahmose-i"], None)
     assert resolve(index, "Nefertiti") == ("resolved", ["dodson_hilton:Nefertiti"], None)
 
 
@@ -241,47 +248,124 @@ def found(index, text, *, kings=frozenset(), dynasty=None):
 
 def test_the_weak_sign_tier_reaches_the_other_sources_renderings_of_a_dh_woman(index) -> None:
     """Spellings attested in the committed Porter & Moss and Leprohon sources for women D&H
-    spells otherwise; each differs from the D&H label by the key's documented rules only."""
-    # A weak-sign match counts only when the record confirms it (family king, or dynasty).
-    # PM I.2, 599 "ʿAhmosi Nefertere" (rules 1, 3) for D&H "Ahmes-Nefertiry": D&H give her
-    # no dynasty (daughter of Taa II, Dyn 17; wife of Ahmose I, Dyn 18), so her family
-    # kings' dynasties confirm a Dynasty 17 or 18 record.
+    spell otherwise; each differs from the D&H label by the key's documented rules only. A
+    weak-sign match counts only when the record confirms it: a named family king, or a single
+    dynasty among hers and her family kings'."""
+    # PM I.2, 599 "ʿAhmosi Nefertere" for D&H "Ahmes-Nefertiry": D&H give her no dynasty of
+    # her own; her father Taa II (Dyn 17) and husband Ahmose I (Dyn 18) confirm 17 and 18.
     assert found(index, "ʿAhmosi Nefertere") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
-    assert found(index, "ʿAhmosi Nefertere", dynasty=18) == (
-        "resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes-Nefertiry"], None)
-    assert found(index, "ʿAhmosi Nefertere", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    for dynasty in (17, 18):
+        assert found(index, "ʿAhmosi Nefertere", dynasty=dynasty) == (
+            "resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes-Nefertiry"], None), dynasty
     assert found(index, "ʿAhmosi Nefertere", kings={"king:ahmose-i"}) == (
         "resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes-Nefertiry"], None)
-    # PM I.2, 761 "Nebttaui" (rule 3, w/u) for D&H "Nebettawy A" (Dyn 19).
+    # Known limitation: a record's dynasty is the object's. A Ramesside stela of the deified
+    # queen (Dyn 19-20) is not confirmed by it; only a named family king would be.
+    for dynasty in (19, 20):
+        assert found(index, "ʿAhmosi Nefertere", dynasty=dynasty) == (
+            "unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed"), dynasty
+    # PM I.2, 761 "Nebttaui" (rule 4, w/u) for D&H "Nebettawy A" (Dyn 19, daughter of Ramesses II).
     assert found(index, "Nebttaui", dynasty=19) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nebettawy A"], None)
-    assert found(index, "Nebttaui")[3] == "weak_sign_unconfirmed"
-    # Leprohon 18.01's "Tetisheri" (rule 2) for D&H "Tetisherit": her D&H entry names no king
+    assert found(index, "Nebttaui") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    # Leprohon 18.01's "Tetisheri" (rule 3) for D&H "Tetisherit": her D&H entry names no king
     # (only her father Tjenna) and no dynasty, so no record can confirm her on this tier.
     for dynasty in (None, 17, 18):
         assert found(index, "Tetisheri", dynasty=dynasty) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
-    # PM I.2, 600 "ʿAhhotp" (rules 1, 3): D&H's two Ahhoteps, told apart by the husband.
+    # PM I.2, 600 "ʿAhhotp": D&H's two Ahhoteps, told apart by the husband.
     assert found(index, "ʿAhhotp") == ("ambiguous", "weak_sign_skeleton",
                                        ["dodson_hilton:Ahhotep I", "dodson_hilton:Ahhotep II"], None)
     assert found(index, "ʿAhhotp", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton",
                                                              ["dodson_hilton:Ahhotep I"], "family")
-    # PM I.2, 765 "Merytamun" (rule 3, ꞽ/y): six Meryetamuns; Ramesses II's daughter is E.
+    # PM I.2, 765 "Merytamun" (rule 4, ꞽ/y): six Meryetamuns; Ramesses II's daughter is E.
     assert found(index, "Merytamun")[:2] == ("ambiguous", "weak_sign_skeleton")
     assert found(index, "Merytamun", kings={"king:ramesses-ii"}) == ("resolved", "weak_sign_skeleton",
                                                                      ["dodson_hilton:Meryetamun E"], "family")
-    # PM I.2, 762 "Nefertari" (rule 3): D&H's Nefertiry D (wife) and E (daughter) are both
-    # Ramesses II's and both Dynasty 19, so the record cannot choose; nothing is picked.
+    # PM I.2, 762 "Nefertari": D&H's Nefertiry D (wife) and E (daughter) are both Ramesses
+    # II's and both Dynasty 19, so the record cannot choose; nothing is picked.
     assert found(index, "Nefertari", kings={"king:ramesses-ii"}, dynasty=19) == (
         "ambiguous", "weak_sign_skeleton",
         ["dodson_hilton:Nefertiry B", "dodson_hilton:Nefertiry C", "dodson_hilton:Nefertiry D Meryetmut",
          "dodson_hilton:Nefertiry E", "dodson_hilton:Nefertiry F"], None)
-    # An alternative name is keyed too: "Ankhesenamun" (D&H's alt for Ankhesenpaaten), rule 3.
+    # An alternative name is keyed too: "Ankhesenamun" (D&H's alt for Ankhesenpaaten), rule 4.
     assert found(index, "Ankhesenamon", dynasty=18) == (
         "resolved", "weak_sign_skeleton", ["dodson_hilton:Ankhesenpaaten"], None)
-    # The record's single dynasty still rules a lone candidate out.
-    assert found(index, "Nebttaui", dynasty=20) == ("unmatched", "weak_sign_skeleton", [], "record_dynasty_contradicts")
-    # A woman who later reigned is still the king on this tier: rule 3 on "Sobkneferu".
+    # The bracketed D&H form itself reaches her (rule 1 keeps the restored letters).
+    assert found(index, "[Mut]metennefer", dynasty=19) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:[Mut]metennefer"], None)
+    # A woman who later reigned is still the king on this tier: rule 4 on "Sobkneferu".
     assert found(index, "Sobkneferu", dynasty=12) == ("resolved", "raw_exact", ["king:sobekneferu"], None)
     assert found(index, "Sebekneferu", dynasty=12) == ("resolved", "weak_sign_skeleton", ["king:sobekneferu"], None)
+
+
+def test_a_three_consonant_key_takes_a_named_family_king_only(index) -> None:
+    # "Ahmose" (iꜥḥ-ms, hms): D&H's Ahmes A (Dyn 17, daughter of Taa II) and Ahmes B (Dyn 18,
+    # wife of Thutmose I). A dynasty narrows but cannot confirm three consonants.
+    assert found(index, "Ahmose") == ("ambiguous", "weak_sign_skeleton", ["dodson_hilton:Ahmes A", "dodson_hilton:Ahmes B"], None)
+    assert found(index, "Ahmose", dynasty=18) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "Ahmose", kings={"king:thutmose-i"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes B"], "family")
+    assert found(index, "Ahmose", kings={"king:taa-ii"}, dynasty=17) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes A"], "family")
+    # "Inhapi" (rule 4) for Inhapy (Dyn 17, wife of Taa II); "Satre" for Sitre A (Ramesses I, Sety I).
+    assert found(index, "Inhapi", dynasty=17) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "Inhapi", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Inhapy"], None)
+    assert found(index, "Satre", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "Satre", kings={"king:sety-i"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Sitre A"], None)
+    # Four consonants: the dynasty confirms.
+    assert found(index, "Ahhotepty", dynasty=13) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotepti"], None)
+    assert found(index, "Nubhotpet", dynasty=12) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nubhotepet"], None)
+
+
+def test_a_different_name_group_takes_a_named_family_king_only(index) -> None:
+    # hntt: Henttawy A-Q and Henutwati (wife of Ramesses V). Dynasty 19 leaves Henttawy A
+    # alone, but a dynasty cannot confirm a key that different names share.
+    assert found(index, "Henttaui", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "Henttaui", dynasty=21)[:2] == ("ambiguous", "weak_sign_skeleton")
+    assert found(index, "Henttaui", kings={"king:ramesses-ii"}) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Henttawy A"], "family")
+    assert found(index, "Henutwaty", kings={"king:ramesses-v"}) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Henutwati"], "family")
+    # nfr: Neferu and Neferet, eleven women. Mentuhotep II names his Neferu II; Dynasty 11 alone does not.
+    assert found(index, "Nefru", kings={"king:mentuhotep-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Neferu II"], "family")
+    assert found(index, "Nefru", dynasty=11)[:2] == ("ambiguous", "weak_sign_skeleton")
+    # tntmn is one name (Tentamun / Tintamun): a dynasty narrows and confirms.
+    assert found(index, "Tentamon", dynasty=18) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Tintamun"], "dynasty")
+    assert found(index, "Tentamon", dynasty=20)[:2] == ("ambiguous", "weak_sign_skeleton")
+
+
+def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
+    assert rw.weak_sign_entry("Neferu II") == ("nfr", frozenset({"II"}))
+    assert rw.weak_sign_entry("Tiye B Mereniset") == ("tmrns", frozenset())
+    assert rw.weak_sign_entry("Cleopatra VII Philopator") == ("klptrphlptr", frozenset({"VII"}))
+    assert found(index, "Cleopatra III") == ("unmatched", None, [], None)
+    assert found(index, "Ahhotep III") == ("unmatched", None, [], None)
+    assert found(index, "Kleopatra II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["king:cleopatra-ii"], None)
+    assert found(index, "Kleopatra", dynasty=33) == ("ambiguous", "weak_sign_skeleton",
+                                                     ["king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p"], None)
+    assert found(index, "Ahhotp I", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotep I"], None)
+    assert found(index, "Ahhotp II") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    # "II" leaves Neferu II and Neferet II; the husband picks.
+    assert found(index, "Nefru II", kings={"king:mentuhotep-ii"}) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Neferu II"], "family")
+    assert found(index, "Nefru II")[2] == ["dodson_hilton:Neferet II", "dodson_hilton:Neferu II"]
+    assert found(index, "Nefru III", kings={"king:mentuhotep-ii"}) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+
+
+def test_a_named_family_king_overrides_the_records_dynasty_on_every_tier(index) -> None:
+    """Tentsepeh A (D&H, Dynasty 21), mother of Shoshenq I (Dynasty 22): a Dynasty 22 record
+    naming him is hers, on the exact, the claim-graph and the weak-sign tier alike."""
+    assert found(index, "Tentsepeh", dynasty=22) == ("unmatched", "raw_exact", [], "record_dynasty_contradicts")
+    assert found(index, "Tentsepeh", kings={"king:shoshenq-i"}, dynasty=22) == (
+        "resolved", "raw_exact", ["dodson_hilton:Tentsepeh A"], None)
+    assert found(index, "Téntsepeh", kings={"king:shoshenq-i"}, dynasty=22) == (
+        "resolved", "committed_normalized", ["dodson_hilton:Tentsepeh A"], None)
+    assert found(index, "Tintsepeh", dynasty=22) == ("unmatched", "weak_sign_skeleton", [], "record_dynasty_contradicts")
+    assert found(index, "Tintsepeh", kings={"king:shoshenq-i"}, dynasty=22) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Tentsepeh A"], None)
+    assert found(index, "Nebttaui", dynasty=20) == ("unmatched", "weak_sign_skeleton", [], "record_dynasty_contradicts")
+    assert found(index, "Nebttaui", kings={"king:ramesses-ii"}, dynasty=20) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Nebettawy A"], None)
+    assert found(index, "Nefertiti", kings={"king:akhenaten"}, dynasty=22) == (
+        "resolved", "raw_exact", ["dodson_hilton:Nefertiti"], None)
 
 
 def test_the_weak_sign_tier_runs_only_when_the_first_two_find_nothing(index) -> None:
@@ -308,45 +392,39 @@ def test_the_weak_sign_tier_runs_only_when_the_first_two_find_nothing(index) -> 
 
 
 def test_the_weak_sign_tier_never_reaches_a_king_and_never_matches_below_the_minimum(index) -> None:
-    # Only the royal women and the female rulers are keyed; no other king is a candidate
-    # (Arsinoe II, rsn, is below the minimum).
+    # The female rulers are keyed by their female-rulers.json king_name only (a leading
+    # "Queen" dropped), never by the king authority's other labels: the stub's "(Queen)
+    # Sobekneferu" for the king Sobkneferu is not keyed, her D&H label and "Neferusobek" are.
     assert {t for targets in index.weak_sign.values() for t in targets if t.startswith("king:")} == {
-        "king:berenike-ii", "king:cleopatra-i", "king:cleopatra-ii", "king:berenike",
+        "king:arsinoe-ii", "king:berenike-ii", "king:cleopatra-i", "king:cleopatra-ii", "king:berenike",
         "king:cleopatra-vii-l", "king:cleopatra-vii-p", "king:neith-iqeret"}
+    assert index.weak_sign["sbknfr"] == {"dodson_hilton:Sobkneferu"}
+    assert index.weak_sign["nfrsbk"] == {"dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu"}
+    assert index.weak_sign["nthkr"] == {"king:neith-iqeret"}
     # The kings D&H names as husbands and fathers are not reachable under a cue, even when
     # their names are spelt as the key would fold them.
     for text in ("Amenhotep III", "Amenhotep", "Amenhotpe", "Akhenaten", "Akhenaton", "Ramesses II", "Ramses",
-                 "Thutmose IV", "Thutmosis", "Taa II"):
+                 "Thutmose IV", "Thutmosis", "Taa II", "Shoshenq I"):
         assert found(index, text) == ("unmatched", None, [], None), text
-    # Below the minimum (three consonants or fewer): no match, so "Queen Tiye" variants and
+    # Below the minimum (two consonants or fewer): no match, so "Queen Tiye" variants and
     # the short names stay with the first two tiers only.
-    for text in ("Teye", "Tiy", "Teje", "Kija", "Inhapi", "Ahmose", "Satre", "Esi", "Aset", "Nefru", "Nofret"):
+    for text in ("Teye", "Tiy", "Teje", "Kija", "Esi", "Aset", "Tuja"):
         assert found(index, text) == ("unmatched", None, [], None), text
-    # Different women never merge on this tier.
     assert found(index, "Ahhotepti") == ("resolved", "raw_exact", ["dodson_hilton:Ahhotepti"], None)
-    assert found(index, "Ahhotepty", dynasty=13) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotepti"], None)
-    assert found(index, "Nubhotpet", dynasty=12) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nubhotepet"], None)
-    # The two groups the key introduces stay ambiguous unless the record tells them apart.
-    assert found(index, "Henttaui", dynasty=21)[:2] == ("ambiguous", "weak_sign_skeleton")
-    assert found(index, "Henttaui", kings={"king:ramesses-ii"}) == ("resolved", "weak_sign_skeleton",
-                                                                    ["dodson_hilton:Henttawy A"], "family")
-    assert found(index, "Tentamon", dynasty=18) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Tintamun"], "dynasty")
-    assert found(index, "Tentamon", dynasty=20)[:2] == ("ambiguous", "weak_sign_skeleton")
 
 
 def test_the_collision_helpers_agree_with_the_index(index) -> None:
     collisions = rw.weak_sign_collisions(index)
     new = rw.new_weak_sign_collisions(index)
-    assert collisions["hntt"] == new["hntt"] == (
-        "dodson_hilton:Henttawy A", "dodson_hilton:Henttawy B", "dodson_hilton:Henttawy C", "dodson_hilton:Henttawy D",
-        "dodson_hilton:Henttawy Q", "dodson_hilton:Henutwati")
+    assert collisions["hntt"] == new["hntt"] == rw.DIFFERENT_NAMES["hntt"]["members"]
     assert new["tntmn"] == ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun")
     # Same-named women are the exact tier's collisions, not new ones.
     assert collisions["stmkhb"] == tuple(sorted(index.exact["isetemkheb"])) and "stmkhb" not in new
-    # The stand-in king authority's label "Neferusobek" for the king Sobkneferu meets D&H's
-    # princess Neferusobk (both Dynasty 12): a collision the female-ruler labels bring in.
+    # female-rulers.json's king_name "Neferusobek" for the king Sobkneferu meets D&H's
+    # princess Neferusobk (both Dynasty 12); the Ptolemaic female rulers share their names.
     assert new["nfrsbk"] == ("dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu")
-    assert set(new) == {"brnk", "clptr", "hntt", "nfrsbk", "tntmn"}
+    assert new["klptr"] == ("king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p")
+    assert set(new) == {"brnk", "hntt", "klptr", "nbt", "nfr", "nfrsbk", "tntmn"}
 
 
 def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:

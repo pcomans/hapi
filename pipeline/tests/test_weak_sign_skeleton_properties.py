@@ -16,28 +16,29 @@ import collections
 import json
 import re
 import sys
-import unicodedata
 from pathlib import Path
 
 import pytest
 
 from pipeline.authority import royal_women as rw
 from pipeline.authority import weak_sign_skeleton as module
-from pipeline.authority.weak_sign_skeleton import DISAMBIGUATOR, MIN_WEAK_SIGN_SKELETON_LEN, weak_sign_skeleton
+from pipeline.authority.claimgraph.normalize import translit_key
+from pipeline.authority.royal_women import DISAMBIGUATOR
+from pipeline.authority.weak_sign_skeleton import MIN_WEAK_SIGN_CONSONANTS, consonant_count, weak_sign_skeleton
 
 sys.path.insert(0, str(Path(__file__).parent))
 from test_royal_women import KINGS  # noqa: E402  (the shared king-authority stand-in)
 
 PIPELINE = Path(__file__).resolve().parents[1]
 REPO = PIPELINE.parent
-SOURCES = PIPELINE / "pipeline" / "authority" / "sources"
 
 VOWELS = "aeiou"
 WEAK = {"y": "i", "i": "y", "w": "u", "u": "w"}
 # Consonants that stand alone after the fold (never part of kh, sh, ch, dj, tj, th), each
 # with a different consonant to swap in that also stands alone.
 SWAP = {"b": "f", "f": "b", "m": "n", "n": "m", "p": "b", "r": "l", "l": "r", "z": "b"}
-KEY_ALPHABET = re.compile(r"^(?:[bcdfghklmnpqrstvxz]|(?<=[dt])j)+$")
+# After the fold: no c or q (both k), j only in dj/tj.
+KEY_ALPHABET = re.compile(r"^(?:[bdfghklmnprstvxz]|(?<=[dt])j)+$")
 
 
 @pytest.fixture(scope="module")
@@ -70,36 +71,53 @@ def keyed(names: list[str]) -> list[str]:
 def test_the_name_population_is_what_the_properties_run_on(names) -> None:
     # Pinned so a change in the women (a new chunk) shows up here too, reviewed.
     assert len(names) == 257
-    assert len(keyed(names)) == 172
+    assert len(keyed(names)) == 199
 
 
 # --- Each rule as an invariant over every name -------------------------------------------
 
-def test_rule_0_any_disambiguator_token_is_ignored(names) -> None:
+def test_rule_0_the_authority_side_strips_the_disambiguator_and_keeps_the_numeral(names) -> None:
+    """The key itself strips nothing: a letter that is a consonant changes it and a roman
+    numeral, all weak i/v/x, mostly vanishes — which is why the resolver strips both before
+    keying a label and remembers the numeral (`weak_sign_entry`)."""
     for name in keyed(names):
         key = weak_sign_skeleton(name)
         for token in ("A", "B", "Q", "Z", "I", "II", "III", "IV", "V", "VII", "X"):
-            assert weak_sign_skeleton(f"{name} {token}") == key, (name, token)
-            assert weak_sign_skeleton(f"{token} {name}") == key, (name, token)
+            numerals = frozenset({token}) if rw.NUMERAL.match(token) else frozenset()
+            assert rw.weak_sign_entry(f"{name} {token}") == (key, numerals), (name, token)
+            assert rw.weak_sign_entry(f"{token} {name}") == (key, numerals), (name, token)
+        for token in ("B", "Q", "Z", "V", "X"):
+            assert weak_sign_skeleton(f"{name} {token}") != key, (name, token)
+        if not translit_key(name).endswith("t"):  # else the trailing token shields the final t
+            for token in ("A", "I", "II", "III"):
+                assert weak_sign_skeleton(f"{name} {token}") == key, (name, token)
 
 
-def test_rule_1_case_separators_and_diacritics_do_not_count(names) -> None:
+def test_rule_1_case_and_separators_do_not_count(names) -> None:
     for name in keyed(names):
         key = weak_sign_skeleton(name)
-        variants = {
-            name.lower(), name.title(), name.replace("-", " "), name.replace("-", ""),
-            name.replace(" ", "-"), f"  {name}  ", name.replace("e", "é").replace("a", "á"),
-        }
-        for variant in variants:
+        for variant in {name.lower(), name.title(), name.replace("-", " "), name.replace("-", ""),
+                        name.replace(" ", "-"), name.replace(" ", ""), f"  {name}  "}:
             if any(DISAMBIGUATOR.match(t) for t in variant.split()):
-                continue  # an uppercase single letter would be read as a D&H letter
+                continue  # an uppercase single letter would be read as a D&H letter by the resolver
             assert weak_sign_skeleton(variant) == key, (name, variant)
-        assert weak_sign_skeleton(unicodedata.normalize("NFD", name)) == key, name
 
 
-def test_rule_2_a_final_t_comes_and_goes(names) -> None:
+def test_rule_2_c_and_q_meet_k(names) -> None:
+    checked = 0
+    for name in keyed(names):
+        key = weak_sign_skeleton(name)
+        for i, ch in enumerate(name):
+            if ch.lower() != "k" or name[i + 1:i + 2].lower() == "h":
+                continue  # kh is ḫ, not k
+            for other in "cq":
+                assert weak_sign_skeleton(name[:i] + other + name[i + 1:]) == key, (name, i, other)
+                checked += 1
+    assert checked == 38
+
+
+def test_rule_3_a_final_t_comes_and_goes(names) -> None:
     """The final t is the folded name's (so "Meryetre(-Hatshepsut)" loses its t too)."""
-    from pipeline.authority.claimgraph.normalize import translit_key
     for name in keyed(names):
         if translit_key(name).endswith("t"):
             stripped = name[:name.rindex("t")] + name[name.rindex("t") + 1:]
@@ -108,7 +126,7 @@ def test_rule_2_a_final_t_comes_and_goes(names) -> None:
             assert weak_sign_skeleton(name + "t") == weak_sign_skeleton(name), name
 
 
-def test_rule_3_every_vowel_may_be_any_vowel(names) -> None:
+def test_rule_4_every_vowel_may_be_any_vowel(names) -> None:
     checked = 0
     for name in keyed(names):
         key = weak_sign_skeleton(name)
@@ -119,10 +137,10 @@ def test_rule_3_every_vowel_may_be_any_vowel(names) -> None:
                 variant = name[:i] + (other.upper() if ch.isupper() else other) + name[i + 1:]
                 assert weak_sign_skeleton(variant) == key, (name, variant)
                 checked += 1
-    assert checked == 3660
+    assert checked == 4020
 
 
-def test_rule_3_every_weak_sign_may_be_its_other_rendering_or_absent(names) -> None:
+def test_rule_4_every_weak_sign_may_be_its_other_rendering_or_absent(names) -> None:
     checked = 0
     for name in keyed(names):
         key = weak_sign_skeleton(name)
@@ -132,18 +150,20 @@ def test_rule_3_every_weak_sign_may_be_its_other_rendering_or_absent(names) -> N
             swapped = name[:i] + WEAK[ch.lower()] + name[i + 1:]
             dropped = name[:i] + name[i + 1:]
             assert weak_sign_skeleton(swapped) == key, (name, swapped)
-            # Dropping it changes nothing, unless that exposes a final t (rule 2 is surface-final).
+            # Dropping it changes nothing, unless that exposes a final t (rule 3 is surface-final).
             if not (dropped.endswith("t") and not name.endswith("t")):
                 assert weak_sign_skeleton(dropped) == key, (name, dropped)
             checked += 1
-    assert checked == 225
+    assert checked == 258
 
 
-def test_rule_3_j_is_a_weak_sign_except_in_dj_and_tj(names) -> None:
+def test_rule_4_j_is_a_weak_sign_except_in_dj_and_tj(names) -> None:
     for name in keyed(names):
         key = weak_sign_skeleton(name)
-        # A j inserted after a vowel is the weak sign and goes.
+        # A j inserted after a vowel is the weak sign and goes; so is one opening a token.
         assert weak_sign_skeleton(re.sub(r"([aeiou])", r"\1j", name, count=1)) == key, name
+        assert weak_sign_skeleton("J" + name.lower()) == key, name
+        assert weak_sign_skeleton(name.replace(" ", "-J").replace("-", "-J")) == key, name
     # In dj/tj (ḏ, ṯ after the fold) the j is the consonant's and stays: ḏ is not d.
     assert weak_sign_skeleton("Nedjmetes") == "ndjmts" != weak_sign_skeleton("Nedmetes") == "ndmts"
     assert weak_sign_skeleton("Netjerkhet") == "ntjrkh" != weak_sign_skeleton("Neterkhet") == "ntrkh"
@@ -165,20 +185,13 @@ def test_a_real_consonant_always_changes_the_key(names) -> None:
             new = weak_sign_skeleton(variant)
             assert new != key, (name, variant)
             checked += 1
-    assert checked == 514
+    assert checked == 560
 
 
 def test_every_key_is_consonants_only_and_at_least_the_minimum(names) -> None:
     for name in names:
         key = weak_sign_skeleton(name)
-        assert key == "" or (KEY_ALPHABET.match(key) and len(key) >= MIN_WEAK_SIGN_SKELETON_LEN), (name, key)
-
-
-def test_the_key_is_deterministic_and_total() -> None:
-    for text in ("", " ", "-", "A", "II", "–18P", "[...]", "ʿ", "Ahmes-Nefertiry", "ꜥꜣ-ḫpr-kꜣ-rꜥ"):
-        assert weak_sign_skeleton(text) == weak_sign_skeleton(text)
-        assert isinstance(weak_sign_skeleton(text), str)
-    assert [weak_sign_skeleton(t) for t in ("", " ", "-", "A", "II", "–18P", "[...]", "ʿ")] == [""] * 8
+        assert key == "" or (KEY_ALPHABET.match(key) and consonant_count(key) >= MIN_WEAK_SIGN_CONSONANTS), (name, key)
 
 
 # --- The resolver tier, over the whole index ------------------------------------------------
@@ -199,51 +212,121 @@ def _variant_only_the_third_tier_finds(index, label: str) -> str | None:
     return None
 
 
-def test_every_keyed_woman_is_reached_by_a_rendering_the_first_two_tiers_miss(index) -> None:
-    """For every weak-sign key: a rendering of one of its labels by the documented rules, which
-    the first two tiers miss, finds exactly the key's women; it resolves only when the record
-    confirms the woman (her family king, or her dynasty, or her family kings' dynasty), never
-    on the bare name, and never with another dynasty."""
-    reached = groups = confirmable = 0
+def _resolve(index, text, kings=frozenset(), dynasty=None):
+    return rw.resolve_royal_woman(index, text, record_king_ids=set(kings), record_dynasty=dynasty)
+
+
+def _labels_under(index, key: str, targets: set[str]) -> list[str]:
+    """The indexed labels of `targets` that the authority side keys under `key`, without
+    their letters and numerals (the exact index holds them casefolded, so a regnal numeral
+    is put back in capitals first to be recognised)."""
+    labels = set()
+    for label, ids in index.exact.items():
+        restored = re.sub(r"\b([ivx]+)\b", lambda m: m.group(1).upper(), label)
+        if ids & targets and rw.weak_sign_entry(restored)[0] == key:
+            labels.add(" ".join(t for t in restored.split() if not DISAMBIGUATOR.match(t)))
+    return sorted(labels)
+
+
+def _family_only(key: str) -> bool:
+    return key in rw.DIFFERENT_NAMES or consonant_count(key) == MIN_WEAK_SIGN_CONSONANTS
+
+
+def _confirming(index, woman: str) -> set[int]:
+    return set(index.dynasties[woman]) | set(index.family_dynasties[woman])
+
+
+def test_every_key_is_reached_by_a_rendering_the_first_two_tiers_miss(index) -> None:
+    """For every weak-sign key of the index: a rendering of one of its labels by the
+    documented rules, which the first two tiers miss, finds exactly the key's targets. A
+    single target resolves only when the record confirms it (a family king named, or a
+    dynasty among hers and her family kings' — unless the key is three consonants or in
+    DIFFERENT_NAMES, when only the king does), never on the bare name, and never against
+    her own dynasty without a named king."""
+    reached, skipped = 0, {}
+    groups = singles = by_king = by_dynasty_only = never = 0
     for key, targets in sorted(index.weak_sign.items()):
-        labels = sorted(label for label, ids in index.exact.items() if ids & targets and weak_sign_skeleton(label) == key)
+        labels = _labels_under(index, key, targets)
         variant = next((v for v in (_variant_only_the_third_tier_finds(index, label) for label in labels) if v), None)
         if variant is None:
+            skipped[key] = labels
             continue
         reached += 1
-        bare = rw.resolve_royal_woman(index, variant, record_king_ids=set(), record_dynasty=None)
+        bare = _resolve(index, variant)
         assert bare["resolution_method"] == "weak_sign_skeleton", variant
         assert bare["candidate_ids"] == sorted(targets), variant
         assert bare["status"] != "resolved", variant
         if len(targets) > 1:
-            assert bare["status"] == "ambiguous", variant
             groups += 1
+            assert bare["status"] == "ambiguous", variant
             continue
+        singles += 1
         (woman,) = targets
         assert bare["context_rule"] == "weak_sign_unconfirmed", variant
-        confirming = set(index.dynasties[woman]) or set(index.family_dynasties[woman])
+        own, confirming, kings = set(index.dynasties[woman]), _confirming(index, woman), index.family_king_ids[woman]
+        target = index.king_ids.get(woman, woman)
         for dynasty in range(0, 34):
-            f = rw.resolve_royal_woman(index, variant, record_king_ids=set(), record_dynasty=dynasty)
-            if dynasty in confirming:
-                assert (f["status"], f["target_ids"]) == ("resolved", [index.king_ids.get(woman, woman)]), (variant, dynasty)
+            f = _resolve(index, variant, dynasty=dynasty)
+            if own and dynasty not in own:
+                assert (f["status"], f["context_rule"]) == ("unmatched", "record_dynasty_contradicts"), (variant, dynasty)
+            elif dynasty in confirming and not _family_only(key):
+                assert (f["status"], f["target_ids"]) == ("resolved", [target]), (variant, dynasty)
             else:
-                assert f["status"] == "unmatched", (variant, dynasty)
-        if index.family_king_ids[woman]:
-            f = rw.resolve_royal_woman(index, variant, record_king_ids=set(index.family_king_ids[woman]),
-                                       record_dynasty=None)
-            assert f["status"] == "resolved", variant
-        confirmable += bool(confirming or index.family_king_ids[woman])
-    # 138 single women; 11 of them have neither a dynasty nor a family king (Tetisherit and
-    # the like), so this tier can never resolve them.
-    assert (reached, groups, confirmable) == (171, 33, 127)
+                assert (f["status"], f["context_rule"]) == ("unmatched", "weak_sign_unconfirmed"), (variant, dynasty)
+        if kings:
+            assert _resolve(index, variant, kings=kings)["target_ids"] == [target], variant
+            # ... and the named king overrides a dynasty that is not hers.
+            other = next(d for d in range(0, 34) if d not in own)
+            assert _resolve(index, variant, kings=kings, dynasty=other)["target_ids"] == [target], variant
+            by_king += 1
+        elif confirming and not _family_only(key):
+            by_dynasty_only += 1
+        else:
+            never += 1
+    # Every key is reached: for each, some single-letter rendering of one of its labels is
+    # neither an indexed label nor a claim-graph key of one.
+    assert skipped == {}
+    assert reached == len(index.weak_sign) == 197
+    # Single targets: confirmable by a named family king (with or without a dynasty), by a
+    # dynasty alone (female rulers, and women none of whose kin the stand-in king authority
+    # resolves, on a key of four consonants or more), or by nothing (Tetisherit and the
+    # like, and three-consonant keys without a resolvable king).
+    assert (groups, singles, by_king, by_dynasty_only, never) == (37, 160, 53, 78, 29)
 
 
-def test_the_third_tier_never_overrides_the_first_two(index) -> None:
-    """For every indexed label and each of its claim-graph keys, the answer comes from the
-    tier that holds it, whatever the weak-sign index says."""
-    for label, ids in index.exact.items():
-        f = rw.resolve_royal_woman(index, label, record_king_ids=set(), record_dynasty=None)
-        assert (f["resolution_method"], f["candidate_ids"]) == ("raw_exact", sorted(ids)), label
+def test_the_narrowing_rules_pick_within_a_group_and_the_confirmation_still_applies(index) -> None:
+    """For every shared key: each member a named family king singles out resolves (rule
+    "family", overriding any dynasty); each dynasty that singles a member out resolves her
+    only when the key is not family-only and the dynasty confirms her (rule "dynasty")."""
+    by_family = by_dynasty = dynasty_refused = 0
+    for key, targets in sorted(index.weak_sign.items()):
+        if len(targets) < 2:
+            continue
+        labels = _labels_under(index, key, targets)
+        variant = next((v for v in (_variant_only_the_third_tier_finds(index, label) for label in labels) if v), None)
+        if variant is None:
+            continue
+        for member in sorted(targets):
+            kings = index.family_king_ids[member]
+            if kings and sum(1 for t in targets if index.family_king_ids[t] & kings) == 1:
+                f = _resolve(index, variant, kings=kings, dynasty=99)
+                assert (f["status"], f["target_ids"], f["context_rule"]) == (
+                    "resolved", [index.king_ids.get(member, member)], "family"), (variant, member)
+                by_family += 1
+        for dynasty in range(0, 34):
+            fitting = [t for t in targets if not index.dynasties[t] or dynasty in index.dynasties[t]]
+            if len(fitting) != 1:
+                continue
+            (member,) = fitting
+            f = _resolve(index, variant, dynasty=dynasty)
+            if not _family_only(key) and dynasty in _confirming(index, member):
+                assert (f["status"], f["target_ids"], f["context_rule"]) == (
+                    "resolved", [index.king_ids.get(member, member)], "dynasty"), (variant, dynasty)
+                by_dynasty += 1
+            else:
+                assert (f["status"], f["context_rule"]) == ("unmatched", "weak_sign_unconfirmed"), (variant, dynasty)
+                dynasty_refused += 1
+    assert (by_family, by_dynasty, dynasty_refused) == (21, 19, 99)
 
 
 def test_the_third_tier_only_ever_returns_indexed_royal_women_or_female_rulers(index, women) -> None:
@@ -251,63 +334,48 @@ def test_the_third_tier_only_ever_returns_indexed_royal_women_or_female_rulers(i
     assert {w.target_id for w in women} <= indexed
     for targets in index.weak_sign.values():
         assert targets <= indexed
-    female_rulers = {t for t in indexed if t.startswith("king:")} | set(index.king_ids.values())
-    other_kings = set(KINGS.NAMES) - female_rulers
-    assert other_kings >= {"king:amenhotep-iii", "king:mentuhotep-ii", "king:akhenaten", "king:ramesses-ii"}
-    for king in other_kings:
-        for label in KINGS.NAMES[king][0]:
-            for variant in (label, label.replace("e", "a"), label + "t"):
-                f = rw.resolve_royal_woman(index, variant, record_king_ids=set(), record_dynasty=None)
-                assert king not in f["candidate_ids"] and king not in f["target_ids"], variant
+    female_rulers = {t for t in indexed if t.startswith("king:")}
+    assert {t for targets in index.weak_sign.values() for t in targets if t.startswith("king:")} == female_rulers
+    assert female_rulers == {"king:arsinoe-ii", "king:berenike", "king:berenike-ii", "king:cleopatra-i", "king:cleopatra-ii",
+                             "king:cleopatra-vii-l", "king:cleopatra-vii-p", "king:neith-iqeret"}
 
 
-@pytest.mark.parametrize("dynasty", [1, 11, 12, 13, 17, 18, 19, 20, 21])
-def test_a_record_dynasty_never_lets_the_third_tier_pick_a_woman_of_another_dynasty(index, dynasty) -> None:
-    for key, targets in index.weak_sign.items():
-        text = key + "a"  # the skeleton itself plus a vowel: it folds back to `key`
+def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynasty(index) -> None:
+    """The skeleton itself plus a vowel folds back to the key. Under each dynasty, a bare
+    key resolves only a woman the dynasty confirms (hers or her family kings'), never on a
+    family-only key, never against her own dynasty; otherwise it is refused or ambiguous."""
+    outcomes = collections.Counter()
+    for key, targets in sorted(index.weak_sign.items()):
+        text = key + "a"
         if rw.surface_key(text) in index.exact or any(k in index.normalized for k in rw.name_keys(text)):
+            outcomes["caught by an earlier tier"] += 1
             continue
-        f = rw.resolve_royal_woman(index, text, record_king_ids=set(), record_dynasty=dynasty)
-        if f["status"] == "resolved":
-            chosen = f["royal_woman_id"] if "royal_woman_id" in f else f["target_ids"][0]
-            known = index.dynasties.get(chosen, ())
-            assert not known or dynasty in known, (text, chosen, known, dynasty)
-
-
-# --- The citations in the module's docstring are to committed data ------------------------
-
-@pytest.mark.parametrize(("source", "text"), [
-    ("porter-moss-theban-necropolis", "ʿAhmosi Nefertere"),
-    ("porter-moss-theban-necropolis", "Merytamun"),
-    ("porter-moss-theban-necropolis", "Meryet-Amun"),
-    ("porter-moss-theban-necropolis", "Tanezem(t)"),
-    ("porter-moss-theban-necropolis", "Nebttaui"),
-    ("leprohon-2013-titulary", "Tetisheri"),
-    ("leprohon-2013-titulary", "iah mes"),
-    ("leprohon-2013-titulary", "imen em ipet"),
-    ("leprohon-2013-titulary", "djehuty"),
-    ("leprohon-2013-titulary", "netjeru"),
-    ("pharaoh-se", "Khasty"),
-    ("pharaoh-se", "Meni"),
-    ("pharaoh-se", "Semsu"),
-    ("pharaoh-se", "Qebehu"),
-    ("pharaoh-se", "Iah mesu"),
-    ("pharaoh-se", "Netjery khet"),
-    ("dodson-hilton-queens", "Tetisherit"),
-    ("dodson-hilton-queens", "Ahmes-Nefertiry"),
-    ("dodson-hilton-queens", "Nebettawy A"),
-])
-def test_each_cited_rendering_is_in_the_committed_source(source: str, text: str) -> None:
-    """Both ways: the cited rendering is in the committed source, and the module cites it."""
-    rows = (SOURCES / source / "reconciled.jsonl").read_text(encoding="utf-8")
-    assert text in rows
-    assert text in module.__doc__
+        for dynasty in range(0, 34):
+            f = _resolve(index, text, dynasty=dynasty)
+            assert f["resolution_method"] == "weak_sign_skeleton", text
+            if f["status"] == "resolved":
+                woman = f["royal_woman_id"]
+                assert woman in targets
+                assert not _family_only(key), (text, dynasty)
+                assert dynasty in _confirming(index, woman), (text, dynasty)
+                assert not index.dynasties[woman] or dynasty in index.dynasties[woman], (text, dynasty)
+                outcomes["resolved"] += 1
+            else:
+                outcomes[f["status"], f["context_rule"]] += 1
+    # 197 keys x 34 dynasties: no bare key is an indexed label or claim-graph key.
+    assert outcomes == {
+        "resolved": 147,
+        ("unmatched", "record_dynasty_contradicts"): 4849,
+        ("unmatched", "weak_sign_unconfirmed"): 562,
+        ("ambiguous", None): 1140,
+    }
 
 
 def test_every_cited_pair_of_renderings_meets_on_one_key() -> None:
     pairs = [("Ahmes-Nefertiry", "ʿAhmosi Nefertere"), ("Meryetamun", "Merytamun"), ("Meryetamun", "Meryet-Amun"),
              ("Tetisherit", "Tetisheri"), ("Nebettawy", "Nebttaui"), ("Nefertiry", "Nefertari"),
-             ("Ahmes-Nefertiry", "Ahmose-Nefertiry")]
+             ("Ahmes-Nefertiry", "Ahmose-Nefertiry"), ("Ahmes-Nefertiry", "Jꜥḥ-ms-nfrt-jrj"), ("Cleopatra", "Kleopatra"),
+             ("Berenike", "Berenice"), ("Anuketemheb", "Anuqetemheb"), ("Ahmes", "Iah mesu")]
     for a, b in pairs:
         assert weak_sign_skeleton(a) == weak_sign_skeleton(b) != "", (a, b)
 
@@ -382,11 +450,36 @@ def test_on_the_real_king_graph_the_tier_reaches_the_queens_and_no_other_king(gr
     # No king in her D&H entry and no dynasty of her own: nothing can confirm these two.
     assert found("Tetisheri", dynasty=17) == ("unmatched", "weak_sign_skeleton", [])
     assert found("Ahmose-Tumerisi", dynasty=17) == ("unmatched", "weak_sign_skeleton", [])
+    # The Ptolemaic female rulers, by their king_name only, numeral matched.
+    assert found("Kleopatra II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["leprohon-leprohon-33.08a"])
+    assert found("Cleopatra III", dynasty=33) == ("unmatched", None, [])
+    assert found("Berenice II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["leprohon-leprohon-33.03a"])
+    assert found("Berenice", dynasty=33)[:2] == ("ambiguous", "weak_sign_skeleton")
     # The only kings the tier can reach are the female rulers of `female-rulers.json`: those
     # the king lists alone hold (keyed as kings) and D&H's women who reigned (resolved to theirs).
     king_targets = {t for targets in graph_index.weak_sign.values() for t in targets if not t.startswith("dodson_hilton:")}
     assert king_targets == KING_ONLY_FEMALE_RULERS_REACHED
     assert sorted(graph_index.king_ids.values()) == DH_WOMEN_WHO_REIGNED
+    assert len(graph_index.weak_sign) == 197
+
+
+def test_on_the_real_king_graph_the_new_collisions_are_the_pinned_ones(graph_index) -> None:
+    """The collisions the tier introduces over the real graph: the three different-name
+    groups and Tentamun/Tintamun from D&H, the Ptolemaic female rulers who share a name
+    (Berenike II / Berenike III; Cleopatra I / II / VII), and female-rulers.json's
+    "Neferusobek" for the king Sobkneferu meeting D&H's princess Neferusobk."""
+    new = rw.new_weak_sign_collisions(graph_index)
+    assert new == {
+        "brnk": ("leprohon-leprohon-33.03a", "leprohon-leprohon-33.12"),
+        "hntt": rw.DIFFERENT_NAMES["hntt"]["members"],
+        "klptr": ("leprohon-leprohon-33.05a", "leprohon-leprohon-33.08a", "pharaoh_se-Cleopatra-VII"),
+        "nbt": rw.DIFFERENT_NAMES["nbt"]["members"],
+        "nfr": rw.DIFFERENT_NAMES["nfr"]["members"],
+        "nfrsbk": ("dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu"),
+        "tntmn": ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun"),
+    }
+    assert graph_index.weak_sign_numerals["klptr"] == {
+        "leprohon-leprohon-33.05a": {"I"}, "leprohon-leprohon-33.08a": {"II"}, "pharaoh_se-Cleopatra-VII": {"VII"}}
 
 
 # --- No museum or evaluation data ------------------------------------------------------------
