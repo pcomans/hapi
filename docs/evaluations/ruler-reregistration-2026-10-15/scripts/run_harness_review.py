@@ -184,11 +184,6 @@ def review_case(case: dict, role: Role, inputs: dict, out: Path, label: str | No
         record = call(case, inputs)
         if "failure" not in record:
             record = validate(record, case, role, inputs["schema"])
-        # A process that exited unsuccessfully decides nothing, as `decided_record` reads it
-        # (#358: the runner accepted such a call through `validate` alone).
-        if "failure" not in record and record["exit_code"] != 0:
-            record = {**{k: v for k, v in record.items() if k != "decision"},
-                      "failure": f"the call's process exited {record['exit_code']}"}
         record.update(reviewer="reconciler" if role.reconciler else label, role=role.name,
                       attempt=attempt_number(path))
         write_new(path, record)

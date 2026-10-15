@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-BASE_COMMIT = "723eecbe2eba2a8a29e4ef603cbfe72eab727384"  # main after #366; graph_kings.py added here
+BASE_COMMIT = "9fa4953a1fb9b61da628afed06ba0d376caae42f"  # main after #367: every input below
 EVALUATION_DATE = "2026-10-15"
 MUSEUMS = ("met", "brooklyn", "harvard")
 PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard"))
@@ -165,7 +165,11 @@ def load_current_resolvers(repo_root: Path):
         from pipeline.authority import graph_kings, royal_women, tla_links
         # The modules must be this tree's: a `pipeline` package imported earlier from another
         # checkout would run in place of the frozen files the input hashes vouch for.
-        for authority_module in (graph_kings, royal_women, tla_links):
+        # Every loaded module of the authority package (weak_sign_skeleton, the normalizer, …), not
+        # only the three named here (code review).
+        authority_modules = [m for name, m in sorted(sys.modules.items())
+                             if name.startswith("pipeline.authority") and getattr(m, "__file__", None)]
+        for authority_module in authority_modules:
             if not Path(authority_module.__file__).resolve().is_relative_to(Path(pipeline_root).resolve()):
                 raise ValueError(f"{authority_module.__name__} was imported from {authority_module.__file__}, "
                                  f"not from {pipeline_root}")
@@ -210,15 +214,17 @@ class RulerAuthority:
 
 
 def _authority_row(resolution: dict, authority: str) -> dict:
+    """One row shape for both authorities. The kings report `raw_exact_status` and no context
+    rule; the royal women report a `context_rule` and no raw-exact status."""
     status = resolution["status"]
     return {
         "status": status,
         "reason": None if status == "resolved" else f"authority_{status}",
         "resolution_method": resolution["resolution_method"],
         "target_ids": resolution["target_ids"],
-        "raw_exact_status": resolution.get("raw_exact_status"),
+        "raw_exact_status": resolution["raw_exact_status"] if authority == "kings" else None,
         "authority": authority,
-        "context_rule": resolution.get("context_rule"),
+        "context_rule": resolution["context_rule"] if authority == "royal_women" else None,
     }
 
 

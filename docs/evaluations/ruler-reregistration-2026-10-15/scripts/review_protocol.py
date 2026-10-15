@@ -299,8 +299,8 @@ def _open_page_result(block: dict) -> dict:
 def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     """Derive the record's fields from its stored event stream and validate the answer.
 
-    Reads only `record["events"]`, so a stored attempt is re-checked without calling the
-    model again (Rule 13)."""
+    Reads only `record["events"]` and `record["exit_code"]`, so a stored attempt is re-checked
+    without calling the model again (Rule 13)."""
 
     events = record["events"]
     init = next((e for e in events if e.get("type") == "system" and e.get("subtype") == "init"), None)
@@ -386,6 +386,11 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     # whatever answer its last message may hold.
     if final is None or final.get("subtype") != "success" or final.get("is_error"):
         record["failure"] = "the call did not end in a successful result"
+        return record
+    # A process that exited unsuccessfully decides nothing, whatever it answered: here, the one
+    # check every path reads (a new call, a re-check, a decided record, the gate) (#358 item 9).
+    if record["exit_code"] != 0:
+        record["failure"] = f"the call's process exited {record['exit_code']}"
         return record
     if not record["stated_text"]:
         record["failure"] = "no final text"
@@ -516,7 +521,7 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
             source = directory / call
             if not source.exists() or read_json(source).get("events") != stored["events"]:
                 raise ProtocolFailure(f"{path}: a re-check whose events are not those of {call}")
-        recheck = validate({"events": stored["events"]}, case, role, inputs["schema"])
+        recheck = validate({"events": stored["events"], "exit_code": stored["exit_code"]}, case, role, inputs["schema"])
         # A process that exited unsuccessfully decides nothing, whatever it answered.
         if stored["exit_code"] != 0:
             if "decision" in stored:

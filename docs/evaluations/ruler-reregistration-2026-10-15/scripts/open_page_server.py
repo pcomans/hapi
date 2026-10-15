@@ -260,7 +260,8 @@ async def _reread_in_browserbase(url: str, host: str, local_failure: str) -> dic
     try:
         opened = await _open_in_browserbase(url)
     except Exception as err:
-        raise RuntimeError(f"{url}: Browserbase re-read failed ({err}); local failure: {local_failure}") from err
+        reason = (str(err).splitlines() or [type(err).__name__])[0]  # one line: callers keep the first
+        raise RuntimeError(f"{url}: Browserbase re-read failed ({reason}); local failure: {local_failure}") from err
     return {**opened, "local_failure": local_failure}
 
 

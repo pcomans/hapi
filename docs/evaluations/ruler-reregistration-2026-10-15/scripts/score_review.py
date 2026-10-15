@@ -572,7 +572,7 @@ def score(
     write_json(private_out, private)
     transitions = [case for case in joined if case["transition_class"] != "retained_control"]
     public = {
-        "schema_version": "hapi-authority-control-adjudicated-score/3",
+        "schema_version": "hapi-authority-control-adjudicated-score/4",
         "evaluation_date": "2026-10-15",
         "scorer_sha256": sha256_path(Path(__file__)),
         "input_hashes": private["input_hashes"],

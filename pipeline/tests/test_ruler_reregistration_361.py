@@ -51,6 +51,13 @@ RUNTIME_PYPROJECT_SHA256 = "8c584c759b96f174115106336231535fc4b0fe10ae09e1612c57
 HASH_2 = "2" * 64
 
 
+# The review run's results (score, records, page-load gate) are committed after the run; the
+# tests that read them run as soon as they are.
+AFTER_THE_RUN = pytest.mark.skipif(
+    not (EVALUATION / "results" / "real-adjudicated-score.json").exists(),
+    reason="reads the review run's committed results, which follow the run")
+
+
 def stage_1_case(case_id: str, evidence_sha256: str) -> dict:
     return {
         "case_id": case_id,
@@ -147,7 +154,7 @@ def test_validate_extracts_the_decision_and_research_from_events() -> None:
     role = protocol.ROLES["stage_1_reviewer"]
     schema = protocol.role_inputs(role)["schema"]
     answer = review_answer(case, "same_entity", "useful")
-    record = protocol.validate({"events": events("Wrapping up.\n" + json.dumps(answer))}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events("Wrapping up.\n" + json.dumps(answer))}, case, role, schema)
     assert record["decision"] == answer
     assert record["note_before_answer"] == "Wrapping up."
     assert record["served_model"] == "claude-sonnet-5-5"
@@ -182,7 +189,7 @@ def test_validate_fails_loud(kwargs: dict, mutate: dict | None, failure: str | N
     role = protocol.ROLES["stage_1_reviewer"]
     schema = protocol.role_inputs(role)["schema"]
     answer = {**review_answer(case, "same_entity", "useful"), **(mutate or {})}
-    record = protocol.validate({"events": events(answer, **kwargs)}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(answer, **kwargs)}, case, role, schema)
     assert "decision" not in record
     if failure is None:
         assert record["failure"].startswith("invalid decision: ValidationError: 'probably' is not one of")
@@ -200,13 +207,13 @@ def test_reconciler_must_resolve_exactly_the_disputed_questions() -> None:
     wrong = {"case_id": case["case_id"],
              "resolutions": {"same_entity": {**resolution, "outcome": "same_entity"},
                              "useful_granularity": resolution}}
-    record = protocol.validate({"events": events(wrong)}, item, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(wrong)}, item, role, schema)
     assert record["failure"] == (
         "invalid decision: resolves ['same_entity', 'useful_granularity'], "
         "not the disputed questions ['useful_granularity']"
     )
     right = {**wrong, "resolutions": {"useful_granularity": resolution}}
-    assert protocol.validate({"events": events(right)}, item, role, schema)["decision"] == right
+    assert protocol.validate({"exit_code": 0, "events": events(right)}, item, role, schema)["decision"] == right
 
 
 def test_model_input_refuses_private_keys() -> None:
@@ -452,7 +459,7 @@ def test_a_citation_is_only_a_page_the_call_opened_and_that_loaded() -> None:
              opened_page(redirected[0], final_url=redirected[1]), "Error: net::ERR_NAME_NOT_RESOLVED")
 
     def check(citations: list[str]) -> dict:
-        return protocol.validate({"events": events({**base, "citations": citations}, opens=opens)}, case, role, schema)
+        return protocol.validate({"exit_code": 0, "events": events({**base, "citations": citations}, opens=opens)}, case, role, schema)
 
     # An opened page counts under its requested and final URL; host case, www., scheme and a
     # trailing slash are ignored, a query is not.
@@ -485,9 +492,9 @@ def test_a_reconciler_cites_only_pages_it_opened_itself() -> None:
                 "resolutions": {"useful_granularity": {"outcome": "too_broad", "rationale": "r",
                                                        "citations": citations}}}
 
-    record = protocol.validate({"events": events(answer([OPENED, reviewed]))}, item, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(answer([OPENED, reviewed]))}, item, role, schema)
     assert record["failure"] == f"cites a page it did not open: {[reviewed]}"
-    assert protocol.validate({"events": events(answer([OPENED]))}, item, role, schema)["decision"] == answer([OPENED])
+    assert protocol.validate({"exit_code": 0, "events": events(answer([OPENED]))}, item, role, schema)["decision"] == answer([OPENED])
 
 
 def test_committed_digest_binds_every_current_protocol_file() -> None:
@@ -498,10 +505,10 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
         "stage_1_reconciler", "stage_1_reviewer", "stage_2_reconciler", "stage_2_reviewer",
     ]
     assert bindings["prompts"]["stage_2_reviewer"]["path"] == (
-        "docs/evaluations/authority-independent-control-2026-10-11/prompts/stage-2-reviewer-v6.txt"
+        "docs/evaluations/ruler-reregistration-2026-10-15/prompts/stage-2-reviewer-v6.txt"
     )
     assert bindings["citable_sources"] == {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/citable-sources.json",
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/citable-sources.json",
         "sha256": protocol.sha256_path(protocol.CITABLE_SOURCES_PATH),
     }
     assert bindings["browser_tool"] == {
@@ -509,7 +516,7 @@ def test_committed_digest_binds_every_current_protocol_file() -> None:
         "sha256": protocol.sha256_path(protocol.OPEN_PAGE_SERVER_PATH),
     }
     assert bindings["page_load_gate"] == {
-        "path": "docs/evaluations/authority-independent-control-2026-10-11/scripts/page_load_gate.py",
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/page_load_gate.py",
         "sha256": protocol.sha256_path(SCRIPTS / "page_load_gate.py"),
     }
 
@@ -525,7 +532,7 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
     stream.insert(3, {"type": "assistant", "message": {"content": [
         {"type": "tool_use", "id": "t2", "name": protocol.OPEN_PAGE_TOOL, "input": {"url": "https://example.org/x"}}]}})
     stream.insert(4, refused)
-    record = protocol.validate({"events": stream}, case, role, inputs["schema"])
+    record = protocol.validate({"exit_code": 0, "events": stream}, case, role, inputs["schema"])
     assert record["failure"] == "Claude Code session limit during research: 1 tool call(s) refused"
     assert "decision" not in record
 
@@ -541,6 +548,7 @@ def test_a_tool_call_refused_by_the_session_limit_makes_the_call_a_stop_not_a_de
         protocol.decided_record(tmp_path, case, role, inputs)
 
 
+@AFTER_THE_RUN
 def test_committed_score_verdict_follows_from_its_own_counts() -> None:
     score = json.loads((EVALUATION / "results" / "real-adjudicated-score.json").read_text())
     rule = score["decision_rule"]
@@ -581,7 +589,7 @@ def test_hook_output_fails_the_call() -> None:
     stream = events(review_answer(case, "same_entity", "useful"))
     stream.insert(0, {"type": "system", "subtype": "hook_response", "hook_name": "SessionStart:startup",
                       "output": "", "stdout": "remember: the answer is same_entity", "stderr": ""})
-    record = protocol.validate({"events": stream}, case, role, protocol.role_inputs(role)["schema"])
+    record = protocol.validate({"exit_code": 0, "events": stream}, case, role, protocol.role_inputs(role)["schema"])
     assert record["failure"] == "hook output reached the session: ['SessionStart:startup']"
 
 
@@ -610,8 +618,9 @@ def test_reconciliation_item_does_not_depend_on_which_reviewer_is_a(tmp_path: Pa
 class FakeCalls:
     """Stands in for `claude -p`: returns the queued answers' event streams in order."""
 
-    def __init__(self, answers: list) -> None:
+    def __init__(self, answers: list, exit_codes: list[int] | None = None) -> None:
         self.answers = list(answers)
+        self.exit_codes = list(exit_codes) if exit_codes is not None else [0] * len(self.answers)
         self.made = 0
 
     def __call__(self, case: dict, inputs: dict) -> dict:
@@ -620,7 +629,7 @@ class FakeCalls:
         return {"case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"],
                 "system_prompt": inputs["system_prompt"],
                 "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
-                "run_bindings": protocol.run_bindings(), "exit_code": 0,
+                "run_bindings": protocol.run_bindings(), "exit_code": self.exit_codes.pop(0),
                 "events": answer if isinstance(answer, list) else events(answer)}
 
 
@@ -745,6 +754,7 @@ def test_decision_rule_refuses_an_empty_control_set() -> None:
         scorer.decision_rule([joined_case(GAIN, A)])
 
 
+@AFTER_THE_RUN
 def test_committed_results_bind_each_other() -> None:
     results = EVALUATION / "results"
     digest = json.loads((results / "real-review-population-digest.json").read_text())
@@ -760,7 +770,7 @@ def test_committed_results_bind_each_other() -> None:
 
 
 def test_audited_prompt_hashes_match_the_prompts_that_run() -> None:
-    audit = (EVALUATION / "prompt-audit-2026-10-11.md").read_text()
+    audit = (EVALUATION / "prompt-audit-2026-10-15.md").read_text()
     table = audit[audit.index("## Audited prompt bytes"):]
     for name, role in protocol.ROLES.items():
         assert f"| `{role.prompt.name}` | `{protocol.sha256_path(role.prompt)}` |" in table, name
@@ -866,10 +876,11 @@ def test_review_population_accepts_only_a_run_made_from_the_frozen_inputs(
 
 def test_review_population_refuses_a_tree_whose_resolver_inputs_are_not_the_frozen_ones(
         tmp_path: Path, frozen_inputs_root) -> None:
-    # The live claim graph, changed by #357 after #337 froze its inputs.
+    # A claim graph that is not the frozen one.
     tampered = tmp_path / "tree"
     shutil.copytree(frozen_inputs_root, tampered)
-    shutil.copyfile(ROOT / "web-claimgraph/data/claim-graph.json", tampered / "web-claimgraph/data/claim-graph.json")
+    with (tampered / "web-claimgraph/data/claim-graph.json").open("ab") as graph:
+        graph.write(b"\n")
     run = tmp_path / "run"
     _frozen_run(run)
     with pytest.raises(ValueError, match="current resolver input changed: web-claimgraph/data/claim-graph.json"):
@@ -891,18 +902,18 @@ def test_only_insufficient_evidence_may_cite_nothing() -> None:
     schema = protocol.role_inputs(role)["schema"]
     nothing_loaded = (opened_page(loaded=False),)
     unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
-    record = protocol.validate({"events": events(unsure, opens=nothing_loaded)}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(unsure, opens=nothing_loaded)}, case, role, schema)
     assert record["decision"] == unsure
     for judged in ({"same_entity": "different_entity"}, {"useful_granularity": "too_broad"}):
-        record = protocol.validate({"events": events({**unsure, **judged}, opens=nothing_loaded)}, case, role, schema)
+        record = protocol.validate({"exit_code": 0, "events": events({**unsure, **judged}, opens=nothing_loaded)}, case, role, schema)
         assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
 
     stage_2 = protocol.ROLES["stage_2_reviewer"]
     answer = {"case_id": case["case_id"], "canonical_identity": "insufficient_evidence",
               "reasoning": "r", "citations": []}
     schema_2 = protocol.role_inputs(stage_2)["schema"]
-    assert protocol.validate({"events": events(answer, opens=nothing_loaded)}, case, stage_2, schema_2)["decision"] == answer
-    record = protocol.validate({"events": events({**answer, "canonical_identity": "exact_identity"}, opens=nothing_loaded)},
+    assert protocol.validate({"exit_code": 0, "events": events(answer, opens=nothing_loaded)}, case, stage_2, schema_2)["decision"] == answer
+    record = protocol.validate({"exit_code": 0, "events": events({**answer, "canonical_identity": "exact_identity"}, opens=nothing_loaded)},
                                case, stage_2, schema_2)
     assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
 
@@ -914,7 +925,7 @@ def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(t
     schema = protocol.role_inputs(role)["schema"]
     uncited = {"case_id": "review-unit-002", "resolutions": {
         "useful_granularity": {"outcome": "too_broad", "rationale": "No page loaded.", "citations": []}}}
-    record = protocol.validate({"events": events(uncited)}, item, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(uncited)}, item, role, schema)
     assert record["failure"].startswith("invalid decision: ValidationError: [] should be non-empty")
     uncited["resolutions"]["useful_granularity"]["outcome"] = "insufficient_evidence"
     write_attempt(records / "reconciler", "stage_1_reconciler", item, 1, uncited, opens=(opened_page(loaded=False),))
@@ -924,6 +935,7 @@ def test_an_uncited_reconciler_answer_is_insufficient_evidence_and_labelled_so(t
     assert disputed["field_resolutions"]["useful_granularity"]["citations"] == []
 
 
+@AFTER_THE_RUN
 def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() -> None:
     results = EVALUATION / "results"
     gate = json.loads((results / "real-page-load-gate.json").read_text())
@@ -989,9 +1001,9 @@ def test_a_citation_must_be_a_citable_source() -> None:
     opens = (opened_page(), opened_page(wiki), opened_page(ucl_news), opened_page(digital_egypt))
     base = review_answer(case, "same_entity", "useful")
     for uncitable in (wiki, ucl_news):
-        record = protocol.validate({"events": events({**base, "citations": [OPENED, uncitable]}, opens=opens)}, case, role, schema)
+        record = protocol.validate({"exit_code": 0, "events": events({**base, "citations": [OPENED, uncitable]}, opens=opens)}, case, role, schema)
         assert record["failure"] == f"cites a non-citable source: {[uncitable]}"
-    record = protocol.validate({"events": events({**base, "citations": [OPENED, digital_egypt]}, opens=opens)}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events({**base, "citations": [OPENED, digital_egypt]}, opens=opens)}, case, role, schema)
     assert record["decision"]["citations"] == [OPENED, digital_egypt]
     assert protocol.citable_source_of(digital_egypt)["role"] == "independent"
     assert protocol.citable_source_of(OPENED)["role"] == "case_input"
@@ -1022,11 +1034,11 @@ def test_loaded_is_re_derived_from_the_stored_status_and_title() -> None:
     opens = (opened_page(), opened_page(walled, title="Oh noes!"),
              opened_page("https://pcma.uw.edu.pl/?p=1", title="Captcha Verification Needed"),
              opened_page("https://whc.unesco.org/en/list/86", status=404, title="Not found"))
-    record = protocol.validate({"events": events(review_answer(case, "same_entity", "useful"), opens=opens)},
+    record = protocol.validate({"exit_code": 0, "events": events(review_answer(case, "same_entity", "useful"), opens=opens)},
                                case, role, schema)
     assert [(o["reported_loaded"], o["loaded"]) for o in record["page_opens"]] == [
         (True, True), (True, False), (True, False), (True, False)]
-    record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+    record = protocol.validate({"exit_code": 0, "events": events({**review_answer(case, "same_entity", "useful"),
                                                   "citations": [OPENED, walled]}, opens=opens)}, case, role, schema)
     assert record["failure"] == f"cites a page it did not open: {[walled]}"
 
@@ -1040,7 +1052,7 @@ def test_a_page_read_before_its_load_event_counts_and_says_so() -> None:
     shown = "https://gazetteer.dainst.org/app/#!/show/2042907"
     opens = (opened_page(), {**opened_page(place, final_url=shown, title="Saqqāra | iDAI.gazetteer"),
                              "load_event": False})
-    record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+    record = protocol.validate({"exit_code": 0, "events": events({**review_answer(case, "same_entity", "useful"),
                                                   "citations": [OPENED, place]}, opens=opens)},
                                case, role, protocol.role_inputs(role)["schema"])
     assert [(o["final_url"], o["load_event"], o["loaded"]) for o in record["page_opens"]] == [
@@ -1056,7 +1068,7 @@ def test_the_validator_keeps_a_page_opens_local_failure() -> None:
     walled = "https://pleiades.stoa.org/places/786036"
     opens = (opened_page(), {**opened_page(walled), "browser": "browserbase", "browserbase_session_id": "s-1",
                              "local_failure": "status 200, title 'Oh noes!'"})
-    record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+    record = protocol.validate({"exit_code": 0, "events": events({**review_answer(case, "same_entity", "useful"),
                                                   "citations": [OPENED, walled]}, opens=opens)},
                                case, role, protocol.role_inputs(role)["schema"])
     assert [(o["browser"], o.get("local_failure"), o["loaded"]) for o in record["page_opens"]] == [
@@ -1068,7 +1080,7 @@ def test_a_redirect_to_a_blocked_domain_fails_the_call() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
     opens = (opened_page(), opened_page("https://w.wiki/Abc", final_url="https://www.wikidata.org/wiki/Q1"))
-    record = protocol.validate({"events": events(review_answer(case, "same_entity", "useful"), opens=opens)},
+    record = protocol.validate({"exit_code": 0, "events": events(review_answer(case, "same_entity", "useful"), opens=opens)},
                                case, role, protocol.role_inputs(role)["schema"])
     assert record["failure"] == "blocked domain used: ['https://www.wikidata.org/wiki/Q1']"
 
@@ -1078,11 +1090,11 @@ def test_insufficient_evidence_may_cite_nothing_only_if_no_citable_page_loaded()
     role = protocol.ROLES["stage_1_reviewer"]
     schema = protocol.role_inputs(role)["schema"]
     unsure = {**review_answer(case, "insufficient_evidence", "insufficient_evidence"), "citations": []}
-    record = protocol.validate({"events": events(unsure)}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(unsure)}, case, role, schema)
     assert record["failure"] == "invalid decision: cites nothing although a citable page it opened loaded"
     # A loaded page outside the citable list (a research lead) does not oblige a citation.
     wiki = "https://en.wikipedia.org/wiki/Abydos,_Egypt"
-    record = protocol.validate({"events": events(unsure, opens=(opened_page(wiki), opened_page(loaded=False)))},
+    record = protocol.validate({"exit_code": 0, "events": events(unsure, opens=(opened_page(wiki), opened_page(loaded=False)))},
                                case, role, schema)
     assert "failure" not in record
     assert record["decision"] == unsure
@@ -1107,7 +1119,7 @@ def test_a_redirect_cannot_carry_a_citation_onto_or_off_the_citable_list() -> No
     opens = (opened_page(), opened_page(onto, final_url=OPENED + "0"),
              opened_page(off, final_url="https://en.wikipedia.org/wiki/Abydos"))
     for cited in (onto, off):
-        record = protocol.validate({"events": events({**review_answer(case, "same_entity", "useful"),
+        record = protocol.validate({"exit_code": 0, "events": events({**review_answer(case, "same_entity", "useful"),
                                                       "citations": [OPENED, cited]}, opens=opens)}, case, role, schema)
         assert record["failure"] == f"cites a non-citable source: {[cited]}"
 
@@ -1136,6 +1148,7 @@ def test_the_model_never_sees_or_echoes_the_evidence_hash() -> None:
         assert '"case_id": "review-unit-001"' in content
 
 
+@AFTER_THE_RUN
 def test_the_scorer_refuses_a_digest_that_binds_another_browser_tool_or_source_list() -> None:
     digest = json.loads((EVALUATION / "results" / "real-review-population-digest.json").read_text())
     scorer.verify_protocol_bindings(ROOT, digest)
@@ -1147,6 +1160,7 @@ def test_the_scorer_refuses_a_digest_that_binds_another_browser_tool_or_source_l
             scorer.verify_protocol_bindings(ROOT, changed)
 
 
+@AFTER_THE_RUN
 def test_the_scorer_refuses_a_run_that_failed_the_page_load_gate() -> None:
     gate = json.loads((EVALUATION / "results" / "real-page-load-gate.json").read_text())
     scorer.require_page_load_gate(gate)
@@ -1185,7 +1199,7 @@ def test_a_call_that_did_not_finish_decides_nothing(tmp_path: Path) -> None:
     cut_off = events(answer)[:-1]
     errored = events(answer)[:-1] + [{"type": "result", "subtype": "error_during_execution", "is_error": True}]
     for stream in (cut_off, errored):
-        record = protocol.validate({"events": stream}, case, role, schema)
+        record = protocol.validate({"exit_code": 0, "events": stream}, case, role, schema)
         assert record["failure"] == "the call did not end in a successful result"
     # A process that exited unsuccessfully is not a decision, even with a complete stream; a
     # stored record that claims one fails loud.
@@ -1254,10 +1268,10 @@ def test_insufficient_evidence_without_trying_a_citable_page_is_unresearched() -
     refused = {**opened_page("ftp://www.metmuseum.org/art/collection/search/1", loaded=False)}
     shouted = {**opened_page("HTTPS://www.metmuseum.org/art/collection/search/1", loaded=False)}
     for opens in ((), (stray,), ("Error executing tool open_page",), (refused,), (shouted,)):
-        record = protocol.validate({"events": events(unsure, opens=opens)}, case, role, schema)
+        record = protocol.validate({"exit_code": 0, "events": events(unsure, opens=opens)}, case, role, schema)
         assert record["failure"] == "invalid decision: cites nothing without having tried a citable page", opens
     # A citable page that was tried and did not load is research.
-    record = protocol.validate({"events": events(unsure, opens=(stray, opened_page(loaded=False)))}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events(unsure, opens=(stray, opened_page(loaded=False)))}, case, role, schema)
     assert record["decision"] == unsure
 
 
@@ -1274,7 +1288,7 @@ def test_a_call_made_by_another_claude_code_release_is_refused() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
     stream = events(review_answer(case, "same_entity", "useful"), claude_code_version="2.1.300")
-    record = protocol.validate({"events": stream}, case, role, protocol.role_inputs(role)["schema"])
+    record = protocol.validate({"exit_code": 0, "events": stream}, case, role, protocol.role_inputs(role)["schema"])
     assert record["failure"] == "Claude Code '2.1.300', not '2.1.299'"
 
 
@@ -1304,9 +1318,9 @@ def test_a_routed_fragment_names_the_page_so_another_record_cannot_be_cited() ->
     other = "https://gazetteer.dainst.org/app/#!/show/2042834"
     opens = (opened_page(), opened_page("https://gazetteer.dainst.org/place/2042907", final_url=shown))
     answer = review_answer(case, "same_entity", "useful")
-    record = protocol.validate({"events": events({**answer, "citations": [OPENED, other]}, opens=opens)}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events({**answer, "citations": [OPENED, other]}, opens=opens)}, case, role, schema)
     assert record["failure"] == f"cites a page it did not open: {[other]}"
-    record = protocol.validate({"events": events({**answer, "citations": [OPENED, shown]}, opens=opens)}, case, role, schema)
+    record = protocol.validate({"exit_code": 0, "events": events({**answer, "citations": [OPENED, shown]}, opens=opens)}, case, role, schema)
     assert record["decision"]["citations"] == [OPENED, shown]
     # An ordinary anchor is not part of the page.
     assert protocol._page(OPENED + "#provenance") == protocol._page(OPENED)
@@ -1321,7 +1335,7 @@ def test_a_citable_url_whose_open_failed_counts_as_tried() -> None:
         for block in (event.get("message") or {}).get("content") or []:
             if block.get("type") == "tool_use" and block["name"] == protocol.OPEN_PAGE_TOOL:
                 block["input"]["url"] = OPENED
-    record = protocol.validate({"events": stream}, case, role, protocol.role_inputs(role)["schema"])
+    record = protocol.validate({"exit_code": 0, "events": stream}, case, role, protocol.role_inputs(role)["schema"])
     assert record["page_opens"] == [{"url": OPENED, "loaded": False, "error": "Error executing tool open_page"}]
     assert record["decision"] == unsure
 
@@ -1333,7 +1347,7 @@ def test_a_reconciler_resolution_citing_nothing_without_trying_a_citable_page_is
     role = protocol.ROLES["stage_1_reconciler"]
     unresolved = {"case_id": case["case_id"], "resolutions": {"useful_granularity": {
         "outcome": "insufficient_evidence", "rationale": "r", "citations": []}}}
-    record = protocol.validate({"events": events(unresolved, opens=())}, item, role, protocol.role_inputs(role)["schema"])
+    record = protocol.validate({"exit_code": 0, "events": events(unresolved, opens=())}, item, role, protocol.role_inputs(role)["schema"])
     assert record["failure"] == "invalid decision: cites nothing without having tried a citable page"
 
 
@@ -1343,6 +1357,7 @@ def test_local_host_shorthands_count_as_local() -> None:
         True, True, True, True, True, False, False]
 
 
+@AFTER_THE_RUN
 def test_the_committed_rerun_proof_binds_the_scored_digest_and_population() -> None:
     results = EVALUATION / "results"
     proof = json.loads((results / "real-rerun-proof.json").read_text())
@@ -1368,17 +1383,23 @@ def test_the_committed_preflight_check_counts() -> None:
     errors = [r for r in rows if "error" in r]
     gone = [r for r in rows if "error" not in r and r["status"] in (404, 410)]
     loaded = [r for r in rows if "error" not in r and r["loaded"]]
-    assert (len(rows), len(loaded), len(gone), len(rows) - len(loaded) - len(gone), len(errors)) == (184, 132, 34, 18, 5)
+    assert (len(rows), len(loaded), len(gone), len(rows) - len(loaded) - len(gone), len(errors)) == (195, 140, 40, 15, 5)
+    # Made with this registration's tool, list and script (#358 fix 1: a failed re-read names the
+    # local failure, so the errors say why).
+    assert check["made_with"] == {name: protocol.sha256_path(path) for name, path in (
+        ("preflight_page_check.py", SCRIPTS / "preflight_page_check.py"),
+        ("open_page_server.py", protocol.OPEN_PAGE_SERVER_PATH), ("citable-sources.json", protocol.CITABLE_SOURCES_PATH))}
+    assert all("local failure:" in r["error"] for r in errors)
     assert sorted(r["url"] for r in loaded if r["browser"] == "browserbase" and not r["local_failure"]) == sorted(
         r["url"] for r in rows if "ucl.ac.uk/museums-static/digitalegypt" in r["url"])
     assert sum(1 for r in rows if r["host"] == "pcma.uw.edu.pl" and "error" not in r
-               and r["title"] == "Captcha Verification Needed") == 7
+               and r["title"] == "Captcha Verification Needed") == 8
 
 
 def test_a_blocked_host_written_with_a_trailing_dot_is_still_blocked() -> None:
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
-    record = protocol.validate({"events": events(review_answer(case, "same_entity", "useful"),
+    record = protocol.validate({"exit_code": 0, "events": events(review_answer(case, "same_entity", "useful"),
                                                  opens=(opened_page(), opened_page("https://www.wikidata.org./wiki/Q1")))},
                                case, role, protocol.role_inputs(role)["schema"])
     assert record["failure"] == ("blocked domain used: ['https://www.wikidata.org./wiki/Q1', "
@@ -1407,6 +1428,7 @@ def test_the_page_load_gate_counts_the_reconcilers_pages(tmp_path: Path) -> None
         "site/authority_only_transition": {"loaded": 3, "opened": 4}}
 
 
+@AFTER_THE_RUN
 def test_the_scorer_accepts_only_the_committed_records(tmp_path: Path) -> None:
     committed = json.loads((EVALUATION / "results" / "real-review-records.json").read_text())
     stages = committed["stages"]
@@ -1447,7 +1469,7 @@ extractor = _script("_rulers361_extract_mentions", "extract_mentions.py")
 
 @pytest.mark.parametrize(("text", "candidate"), [
     ("Beer Vat of Queen Mother Ankhenes-Pepi", "Ankhenes-Pepi"),
-    ('Inscribed on base: "The King’s Wife "Nefertity"', "Nefertity"),
+    ('Inscribed on base: "The King’s Wife "Nefertity"', '"Nefertity'),  # #337's span: the quote is kept
     ("Shabti of the God's Wife of Amun Maatkare, Dynasty 21", "Maatkare"),
     ("Divine Adoratrice of Amun Shepenwepet", "Shepenwepet"),
     ("Canopic jar of princess Sithathoryunet", "Sithathoryunet"),
@@ -1473,47 +1495,95 @@ def test_every_royal_woman_cue_of_the_resolver_is_a_cue_of_the_extractor() -> No
         assert extractor.ROYAL_CUE.fullmatch(phrase), phrase
 
 
-def _mention(artifact: str, text: str, field_value: str, dynasty: str | None) -> dict:
+def _mention(artifact: str, text: str, field_value: str, dynasty: str | None, field_path: str = "title") -> dict:
     start = field_value.index(text)
-    return {"mention_id": f"m-{artifact}-{start}", "artifact_id": artifact, "museum": "met", "entity_type": "ruler",
-            "field_value": field_value, "span_start": start, "span_end": start + len(text), "mention_text": text,
-            "expression_type": "single_identity", "record_dynasty": dynasty}
+    return {"mention_id": f"m-{artifact}-{field_path}", "artifact_id": artifact, "museum": "met",
+            "entity_type": "ruler", "field_path": field_path, "field_value": field_value, "span_start": start,
+            "span_end": start + len(text), "mention_text": text, "expression_type": "single_identity",
+            "record_dynasty": dynasty}
+
+
+_RESOLVE_IN_FROZEN_TREE = """
+import importlib.util, json, sys
+from pathlib import Path
+tree = Path.cwd()
+spec = importlib.util.spec_from_file_location("compare_arms_frozen", tree / sys.argv[1])
+comparison = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = comparison
+spec.loader.exec_module(comparison)
+_, resolvers, catalogs = comparison.load_current_resolvers(tree)
+mentions = json.loads(sys.stdin.read())
+rows = comparison.resolve_mentions(mentions, "current_authority", resolvers)
+print(json.dumps({"rows": rows, "nefertiti": catalogs["ruler"]["dodson_hilton:Nefertiti"]}))
+"""
 
 
 @pytest.fixture(scope="module")
-def ruler_authority():
+def frozen_authority(tmp_path_factory):
+    """The authority arm run in its own process on a tree archived at `BASE_COMMIT` (the whole
+    pipeline package, the claim graph, the linkability resolver) with this registration's
+    scripts: not the live checkout, whose inputs a later main changes (rule 11), and not a
+    `pipeline` package this test process has already imported."""
     comparison = queue_builder.load_comparison_module(ROOT)
-    _module, resolvers, catalogs = comparison.load_current_resolvers(ROOT)
-    return comparison, resolvers, catalogs
+    tree = tmp_path_factory.mktemp("frozen-authority")
+    archive = subprocess.run(
+        ["git", "-C", str(ROOT), "archive", comparison.BASE_COMMIT, "pipeline/pipeline", "web-claimgraph/data/claim-graph.json",
+         "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"],
+        check=True, capture_output=True).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+        tar.extractall(tree, filter="data")
+    shutil.copytree(SCRIPTS, tree / SCRIPTS.relative_to(ROOT))
+
+    def resolve(mentions: list[dict]) -> dict:
+        done = subprocess.run([sys.executable, "-c", _RESOLVE_IN_FROZEN_TREE,
+                               str((SCRIPTS / "compare_arms.py").relative_to(ROOT))],
+                              cwd=tree, input=json.dumps(mentions), capture_output=True, text=True, check=True)
+        return json.loads(done.stdout)
+    return resolve
 
 
-def test_a_royal_woman_cued_mention_resolves_among_the_royal_women_with_the_records_context(ruler_authority) -> None:
-    comparison, resolvers, _ = ruler_authority
+def test_a_royal_woman_cued_mention_resolves_among_the_royal_women_with_the_records_context(frozen_authority) -> None:
+    # As the Met catalogues it: the reign field names the king, the title the queen.
     mentions = [
-        _mention("a", "Mentuhotep II", "Relief of King Mentuhotep II and Queen Neferu", None),
-        _mention("a", "Neferu", "Relief of King Mentuhotep II and Queen Neferu", None),
+        _mention("a", "Mentuhotep II", "reign of Mentuhotep II", "Dynasty 11", field_path="reign"),
+        _mention("a", "Neferu", "Relief from the tomb of Queen Neferu", "Dynasty 11"),
         _mention("b", "Neferu", "Sunk Relief of Queen Neferu", "second part of Dynasty 11"),
         _mention("c", "Neferu", "Statue of King Neferu", None),
+        _mention("d", '"Nefertity', 'Inscribed on base: "The King\u2019s Wife "Nefertity"', None),
     ]
-    rows = {(r["artifact_id"], r["mention_id"]): r for r in comparison.resolve_mentions(mentions, "current_authority", resolvers)}
-    king, cued, alone, uncued = (rows[(m["artifact_id"], m["mention_id"])] for m in mentions)
-    assert (king["authority"], king["status"]) == ("kings", "resolved")
+    rows = {row["mention_id"]: row for row in frozen_authority(mentions)["rows"]}
+    king, cued, alone, uncued, quoted = (rows[m["mention_id"]] for m in mentions)
+    assert (king["authority"], king["status"], king["context_rule"]) == ("kings", "resolved", None)
     # The record's own king (Mentuhotep II, her husband) picks Neferu II among the Neferus.
-    assert (cued["authority"], cued["status"], cued["target_ids"], cued["context_rule"]) == (
-        "royal_women", "resolved", ["dodson_hilton:Neferu II"], "family")
+    assert (cued["authority"], cued["status"], cued["target_ids"], cued["context_rule"], cued["raw_exact_status"]) == (
+        "royal_women", "resolved", ["dodson_hilton:Neferu II"], "family", None)
     # Without a king, and with a dynasty the resolver does not read as one ("second part of"),
     # the bare name stays ambiguous (a limitation found after the population was built).
     assert (alone["authority"], alone["status"]) == ("royal_women", "ambiguous")
     # No royal-woman cue: the kings decide, as in #337 v10.
-    assert uncued["authority"] == "kings"
+    assert (uncued["authority"], uncued["context_rule"]) == ("kings", None)
+    # A quoted name after a cue is still cued (the extractor keeps #337's span, quote included),
+    # and the reader refuses the quote: a missed link, never the kings (code review P1).
+    assert (quoted["authority"], quoted["status"], quoted["context_rule"]) == (
+        "royal_women", "unmatched", "unreadable_mention")
 
 
-def test_a_royal_womans_released_target_carries_no_spellings_or_local_pages(ruler_authority) -> None:
-    _, _, catalogs = ruler_authority
-    target = catalogs["ruler"]["dodson_hilton:Nefertiti"]
-    assert target == {"label": "Nefertiti", "entity_type": "ruler", "representation": "dodson_hilton_royal_woman",
-                      "source": "Dodson & Hilton, The Complete Royal Families of Ancient Egypt (2004)",
-                      "dynasties": [18], "family_names": ["Akhenaten"]}
+def test_a_royal_womans_released_target_carries_no_spellings_or_local_pages(frozen_authority) -> None:
+    assert frozen_authority([])["nefertiti"] == {
+        "label": "Nefertiti", "entity_type": "ruler", "representation": "dodson_hilton_royal_woman",
+        "source": "Dodson & Hilton, The Complete Royal Families of Ancient Egypt (2004)",
+        "dynasties": [18], "family_names": ["Akhenaten"]}
+
+
+def test_the_committed_ledger_diff() -> None:
+    """93 new mentions, all after a royal-woman cue; none of #337's lost or changed; and no
+    mention after a royal-woman cue that the resolver would send to the kings
+    (`scripts/ledger_diff.py`, run on the frozen corpus)."""
+    diff = json.loads((EVALUATION / "results" / "ledger-diff.json").read_text())
+    assert (diff["v10_mentions"], diff["new_mentions"], diff["added"], diff["lost"],
+            diff["changed_ignoring_record_dynasty"]) == (148_871, 148_964, 93, 0, 0)
+    assert "none" not in diff["added_by_royal_woman_cue"] and sum(diff["added_by_royal_woman_cue"].values()) == 93
+    assert diff["royal_woman_cued_mentions_the_resolver_does_not_read_as_cued"] == 0
 
 
 def test_the_registration_scores_rulers_only() -> None:
@@ -1614,3 +1684,109 @@ def test_a_pdf_records_no_load_event_and_the_gate_counts_only_a_measured_false(p
     source = (SCRIPTS / "open_page_server.py").read_text(encoding="utf-8")
     assert '"text": text, "load_event": None}' in source
     assert 'opened["load_event"] is False' in (SCRIPTS / "page_load_gate.py").read_text(encoding="utf-8")
+
+
+def test_the_tool_description_the_model_reads_is_v10s() -> None:
+    """#358's fixes change the browser server, not what the model reads of it."""
+    def description(path: Path) -> str:
+        source = path.read_text(encoding="utf-8")
+        start = source.index("@server.tool(")
+        return source[start:source.index("async def open_page", start)]
+    v10 = ROOT / "docs/evaluations/authority-independent-control-2026-10-11/scripts/open_page_server.py"
+    assert description(SCRIPTS / "open_page_server.py") == description(v10)
+
+
+def test_a_call_that_exited_unsuccessfully_decides_nothing_on_any_path(monkeypatch, tmp_path: Path) -> None:
+    """#358 item 9: the runner, a resume's re-check and `decided_record` all read one rule
+    (`validate`): a process that exited 1 decides nothing, even with a valid answer."""
+    case = stage_1_case("review-unit-001", HASH_1)
+    role = protocol.ROLES["stage_1_reviewer"]
+    inputs = protocol.role_inputs(role)
+    out = tmp_path / "reviewer-A"
+    out.mkdir()
+    fake = FakeCalls([review_answer(case, "same_entity", "useful")], exit_codes=[1])
+    monkeypatch.setattr(runner, "call", fake)
+    with pytest.raises(protocol.ProtocolFailure, match="process exited 1"):
+        runner.review_case(case, role, inputs, out, "A", "test")
+    stored = protocol.read_json(out / "review-unit-001.attempt-1.json")
+    assert (stored["failure"], "decision" in stored) == ("the call's process exited 1", False)
+    # A resume re-checks the stored call and writes no decision; it stops again, asking no model.
+    monkeypatch.setattr(runner, "call", lambda *a: pytest.fail("a stopped case is not re-asked"))
+    with pytest.raises(protocol.ProtocolFailure, match="not resumed automatically"):
+        runner.review_case(case, role, inputs, out, "A", "test")
+    assert sorted(p.name for p in out.iterdir()) == ["review-unit-001.attempt-1.json"]
+    with pytest.raises(protocol.ProtocolFailure, match="valid calls"):
+        protocol.decided_record(out, case, role, inputs)
+
+
+def test_the_gate_counts_a_measured_false_load_event_only(tmp_path: Path) -> None:
+    """#358 fix 4: a PDF's `load_event` is None (not measured) and is not counted as a page that
+    loaded without its load event; a measured false is."""
+    pdf = {**opened_page("https://www.metmuseum.org/a.pdf"), "load_event": None}
+    late = {**opened_page("https://www.metmuseum.org/art/collection/search/2"), "load_event": False}
+    counted = [o for o in (pdf, late, opened_page()) if o["loaded"] and o["load_event"] is False]
+    assert counted == [late]
+    assert 'if opened["loaded"] and opened["load_event"] is False' in (SCRIPTS / "page_load_gate.py").read_text()
+
+
+class _StubPage:
+    """A page for `_html`: navigates on while its text is first read, and counts load waits."""
+
+    def __init__(self, server, navigations: int = 1) -> None:
+        self.server, self.navigations, self.load_waits, self.url = server, navigations, 0, "https://example.org/p"
+        self.main_frame = object()
+
+    def on(self, event, handler):
+        response = type("R", (), {"status": 200, "url": self.url, "headers": {"content-type": "text/html"},
+                                  "frame": self.main_frame,
+                                  "request": type("Q", (), {"is_navigation_request": lambda self: True})()})()
+        self._handler = handler
+        handler(response)
+
+    async def goto(self, url, **_):
+        return None
+
+    async def wait_for_load_state(self, state, timeout=None):
+        if state == "load":
+            self.load_waits += 1
+
+    async def wait_for_timeout(self, _):
+        return None
+
+    async def title(self):
+        return "Object"
+
+    async def inner_text(self, _):
+        if self.navigations:
+            self.navigations -= 1
+            raise self.server.PlaywrightError(self.server.CONTEXT_DESTROYED + ": the page navigated")
+        return "Object record"
+
+
+def test_html_waits_for_the_load_event_once_and_reads_the_text_through_the_navigation_guard(page_server) -> None:
+    """#358 fixes 2 and 3: the text read survives a navigation; the load event is awaited once."""
+    import asyncio
+    page = _StubPage(page_server, navigations=2)
+    read = asyncio.run(page_server._html(page, page.url))
+    assert (read["text"], read["load_event"], page.load_waits) == ("Object record", True, 1)
+
+
+def test_open_page_refuses_a_name_resolving_to_a_private_address_and_a_redirect_onto_one(page_server, monkeypatch) -> None:
+    """#358 fix 7, by what a name resolves to, and on the page a request ends on."""
+    import asyncio
+    import socket
+    addresses = {"intranet.example": "10.1.2.3", "museum.example": "93.184.216.34", "evil.example": "127.0.0.1"}
+    monkeypatch.setattr(socket, "getaddrinfo", lambda host, *_: [(None, None, None, None, (addresses[host], 0))])
+    assert page_server._local("https://intranet.example/x") and not page_server._local("https://museum.example/x")
+    async def pace(host):
+        return None
+    async def ends_on_a_local_host(url):
+        return {"final_url": "https://evil.example/admin", "status": 200, "title": "t", "text": "x",
+                "load_event": True, "browser": "local"}
+    monkeypatch.setattr(page_server, "_paced", pace)
+    monkeypatch.setattr(page_server, "_open_locally", ends_on_a_local_host)
+    monkeypatch.setattr(page_server, "browser_for", lambda url: "local")
+    with pytest.raises(ValueError, match="may not be opened"):
+        asyncio.run(page_server.open_page("https://museum.example/record"))
+    with pytest.raises(ValueError, match="local or private-network host"):
+        asyncio.run(page_server.open_page("https://intranet.example/x"))

@@ -159,8 +159,7 @@ def classify_reign_expression(value: str) -> tuple[str, str | None, tuple[int, i
 def candidate_after_royal_cue(text: str, cue: re.Match[str]) -> tuple[str | None, int, int]:
     """Bound a cued name with syntax alone: at most three title-cased/name tokens."""
     tail = text[cue.end():]
-    # #361: an opening quote before the name is not part of it ('The King's Wife "Nefertity"').
-    leading = len(tail) - len(tail.lstrip(" :-,\t\"'\u201c\u2018"))
+    leading = len(tail) - len(tail.lstrip(" :-,\t"))
     start = cue.end() + leading
     tokens = list(NAME_TOKEN.finditer(text[start:]))
     selected: list[re.Match[str]] = []

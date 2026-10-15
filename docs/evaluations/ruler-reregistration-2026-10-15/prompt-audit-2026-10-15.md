@@ -105,3 +105,31 @@ The unchanged text reads coherently.
 2. If P2(a)/(b) are applied, rebuild the released queue and confirm the `forbidden`
    recursion in `released_stage_2_queue` and the scorer's rebuild-equality check still pass.
    The queue hash changes, so re-pin it before any model call.
+
+
+## Audited prompt bytes
+
+What the model reads in this registration. The four prompts, the system prompt and the
+citable-source list are byte-identical to #337 v10's, leak-audited there in rounds 14–20
+(`../authority-independent-control-2026-10-11/prompt-audit-2026-10-11.md`). The browser
+server's file changed only by #358's fixes; the `open_page` tool description the model reads
+is identical to v10's (checked by a test). New in this registration is the rendering of a royal
+woman's Stage 2 target, audited above (fine to run; both P2s applied: no `labels`, no local
+PDF pages).
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v6.txt` | `e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f` |
+| `stage-1-reconciler-v6.txt` | `8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e` |
+| `stage-2-reviewer-v6.txt` | `98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4` |
+| `stage-2-reconciler-v6.txt` | `d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `0fb13c7940a91b62aa50b8734682d921e222618dd43979aa582354f56552e3a7` |
+| `open_page_server.py` | `125ba1266eab82bbd66dc064c427905890937fd6fe8f9cf68768cecdc7598a66` |
+
+## Follow-up checks (2026-10-15)
+
+- **Item 1 of "checks left to the parent" is done.** The released Stage 1 queue contains no
+  "Dodson", and the Stage 2 custodian no `pdf_pages` or `source_citations`.
+- **Item 2 is done.** After the two P2 edits the population was rebuilt, and the forbidden-key
+  and identifier counts in the digest are 0.

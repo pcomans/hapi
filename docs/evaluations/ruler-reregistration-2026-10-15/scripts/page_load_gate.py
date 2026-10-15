@@ -172,7 +172,8 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         deciding.append((records / "reconciler", item, reconciler, reconciler_inputs, classes_of_case[item["case_id"]]))
     for directory, case, call_role, call_inputs, classes in deciding:
         _, stored = decided_record(directory, case, call_role, call_inputs)
-        record = validate({"events": stored["events"]}, case, call_role, call_inputs["schema"])
+        record = validate({"events": stored["events"], "exit_code": stored["exit_code"]}, case, call_role,
+                          call_inputs["schema"])
         calls += not call_role.reconciler
         reconciler_calls += call_role.reconciler
         calls_without_a_loaded_page += not any(o["loaded"] for o in record["page_opens"])

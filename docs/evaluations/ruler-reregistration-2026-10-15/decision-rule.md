@@ -10,7 +10,11 @@ to be **different entities** is a wrong link, labelled before any uncertainty is
 An authority gain is then **b** (a false merge), a literal-only loss **e**, and a control
 `calibration_control_useful_but_wrong_or_nonidentity`. Under #337 the classifier checked
 uncertainty first, so a false merge whose usefulness had nothing to judge was labelled **f**
-(case-067). The labels' meanings are unchanged.
+(case-067). The label definitions are v10's; what changes is that a different-entity finding
+decides first. That moves two kinds of gain to b: one #337 labelled f (a different-entity pair
+whose usefulness was insufficient evidence), and one it labelled c (a different-entity pair
+judged too broad or not useful). Any b makes a scope unsafe. The score's schema version is
+bumped (`adjudicated-score/4`).
 
 ## Labels
 

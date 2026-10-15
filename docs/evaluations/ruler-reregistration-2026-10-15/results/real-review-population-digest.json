@@ -1,0 +1,203 @@
+{
+  "arm_native_inventory": {
+    "different_membership_case_binding_set_sha256": "3a525c0380dfe6e71578a7702ccf064ab4a541fea8dd5e9e5980c3f97a8f2cb9",
+    "distinct_accounting_case_binding_set_sha256": "3a525c0380dfe6e71578a7702ccf064ab4a541fea8dd5e9e5980c3f97a8f2cb9",
+    "literal_nodes_represented_by_retained_controls": 15,
+    "multiple_literal_case_binding_set_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "retained_authority_control_cases": 15,
+    "retained_controls_requiring_distinct_arm_native_accounting": 2,
+    "retained_controls_with_different_arm_native_record_membership": 2,
+    "retained_controls_with_multiple_literal_nodes": 0,
+    "shared_node_cases_by_arm": {
+      "authority": 17,
+      "literal": 17
+    },
+    "shared_node_cases_by_pair_and_arm": {
+      "brooklyn__harvard": {
+        "authority": 2,
+        "literal": 2
+      },
+      "met__brooklyn": {
+        "authority": 13,
+        "literal": 13
+      },
+      "met__harvard": {
+        "authority": 2,
+        "literal": 2
+      }
+    }
+  },
+  "executable_check_counts": {
+    "actual_controls_numerator": 150,
+    "required_controls_numerator": 36,
+    "retained_controls": 15,
+    "stage_1_cross_side_group_token_matches": 0,
+    "stage_1_distinct_visible_structure_signatures": 1,
+    "stage_1_evidence_hash_mismatches": 0,
+    "stage_1_forbidden_key_occurrences": 0,
+    "stage_1_malformed_evidence_block_schemas": 0,
+    "stage_1_non_singleton_side_evidence_blocks": 0,
+    "stage_1_private_identifier_occurrences": 0,
+    "stage_2_custodian_duplicate_case_ids": 0,
+    "stage_2_evidence_hash_mismatches": 0,
+    "stage_2_insufficient_evidence_cases": 0,
+    "stage_2_missing_stage_1_review_units": 0,
+    "stage_2_recomputed_evidence_hash_mismatches": 0,
+    "stage_2_release_candidate_cases": 17,
+    "stage_2_stage_1_duplicate_case_ids": 0,
+    "transition_cases": 4,
+    "transition_expected": {
+      "authority_only_transition": {
+        "brooklyn__harvard": 0,
+        "met__brooklyn": 2,
+        "met__harvard": 0
+      },
+      "literal_only_transition": {
+        "brooklyn__harvard": 0,
+        "met__brooklyn": 2,
+        "met__harvard": 0
+      },
+      "retained_control": {
+        "brooklyn__harvard": 2,
+        "met__brooklyn": 11,
+        "met__harvard": 2
+      }
+    },
+    "transition_observed": {
+      "authority_only_transition": {
+        "brooklyn__harvard": 0,
+        "met__brooklyn": 2,
+        "met__harvard": 0
+      },
+      "literal_only_transition": {
+        "brooklyn__harvard": 0,
+        "met__brooklyn": 2,
+        "met__harvard": 0
+      },
+      "retained_control": {
+        "brooklyn__harvard": 2,
+        "met__brooklyn": 11,
+        "met__harvard": 2
+      }
+    }
+  },
+  "input_hashes": {
+    "authority_arm_sha256": "457cf9648124cb0b7c0896934148e7c1091c58527453134c73c7462c8cfa9742",
+    "authority_links_sha256": "894f01f0dee4867d94090acc3b45c4513c0f56ed27064b71477893601f268695",
+    "literal_arm_sha256": "938a5fd1fe3a64a41257a0dad7d1b7627b79f04868143b573aca793b7f49aced",
+    "literal_links_sha256": "c8f3535fae5ddd668966a83627e07f65969be2cd3b39970cdb33c709f175503c",
+    "mention_ledger_sha256": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
+    "report_sha256": "7959881188656dc396a022ff1a3eb5d5ad359a044e590ab2902ea7c484911047",
+    "review_population_builder_sha256": "396a30a05e6a248f75b083047b589505284ba7d5c07b149e78991a8bf1197462",
+    "review_protocol": {
+      "artifact_schema": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/review-artifact.schema.json",
+        "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
+      },
+      "browser_tool": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/open_page_server.py",
+        "sha256": "125ba1266eab82bbd66dc064c427905890937fd6fe8f9cf68768cecdc7598a66"
+      },
+      "citable_sources": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/citable-sources.json",
+        "sha256": "0fb13c7940a91b62aa50b8734682d921e222618dd43979aa582354f56552e3a7"
+      },
+      "launcher_system_prompts": {
+        "review": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/launcher-instructions/review-system-v4.txt",
+          "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
+        }
+      },
+      "page_load_gate": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/page_load_gate.py",
+        "sha256": "98636dec34c1db969d60ab3ee5b9d0a2b69ea50207254fb07121384ae77c2dfd"
+      },
+      "prompts": {
+        "stage_1_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/prompts/stage-1-reconciler-v6.txt",
+          "sha256": "8190916efafc4b916409694462762a81e5baff63aec6c18e0d3f1357c594f21e"
+        },
+        "stage_1_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/prompts/stage-1-reviewer-v6.txt",
+          "sha256": "e3d3b169a90ab33a2a36d0d7d22f229c469b1735c95c0e57ceafce2036fe1c7f"
+        },
+        "stage_2_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/prompts/stage-2-reconciler-v6.txt",
+          "sha256": "d3a8ed2d74bf75796d8bc693c2f100280bad9e61b64d61c2900f16c8aff651bd"
+        },
+        "stage_2_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/prompts/stage-2-reviewer-v6.txt",
+          "sha256": "98a36059e79fb554c2218c42e08626e12d4f62b0ead6bd56c3be51abbdb3bdc4"
+        }
+      },
+      "protocol_version": "hapi-337-reregistration-consensus/1",
+      "raw_response_contracts": {
+        "stage_1_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
+          "sha256": "f780f4b6f61225fae7511ea1374eae758ccfb9e31f522e1ba5c8873b5fd211a7"
+        },
+        "stage_1_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/raw-response-contracts/stage-1-reviewer-case-v3.schema.json",
+          "sha256": "bcb59a3429ca3d031af242eab3082f25ded4e047f2ad958b42006dbbbd7d4bd4"
+        },
+        "stage_2_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
+          "sha256": "dd9535da0b94a9e3770f970dda666b77740f003a9e48c6c22aa6eee362257812"
+        },
+        "stage_2_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-15/raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
+          "sha256": "b8fb1c959904bde658ae7a3a00d4a76aa788a90fc5ffe5275f2f9fea30e12ac3"
+        }
+      },
+      "runner": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/run_harness_review.py",
+        "sha256": "e3ff818d49dbf222086137de6d38753043e3bee769272673cc90983de1a43370"
+      },
+      "scorer": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/score_review.py",
+        "sha256": "2396c5ca7ec630c1589cc3654dfc6c2f204ff9c3574e558feed0b10f3ca07fdb"
+      },
+      "validator": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-15/scripts/review_protocol.py",
+        "sha256": "344e01cb2bee6f7a08672c439407fa8eb26116d543523e365bbf555fc3ef42fe"
+      }
+    },
+    "run_manifest_sha256": "33c3bc0fe0e56e01a63cca8b39f60b433de150ee0271eacace3e604c6f6a6657"
+  },
+  "output_hashes": {
+    "private_answer_key_sha256": "4e1d126ca19fa3c8da7e0d8bd1ffcf699f8dd1b224f4c2d89ffcf41c241d697e",
+    "private_population_manifest_sha256": "9917a2b2fd17357f8389b2b419501ba080e0a7a1c403318aefb0fee4285cb1ab",
+    "review_protocol_manifest_sha256": "7912eabc96e05b1deef502418163156ee709f14f5ace3f7e4023930bf2c58075",
+    "stage_1_queue_sha256": "de5260e7dd57d8febb698955079f63a11c32c2706e24f0c2fd638828ce1d56a3",
+    "stage_2_custodian_sha256": "bd80f99dc16243629f2dd23b1d30f4af0265ef6ff2a6c8f022cb6dacdaec19fa"
+  },
+  "population_counts": {
+    "by_class": {
+      "authority_only_transition": 2,
+      "literal_only_transition": 2,
+      "retained_control": 15
+    },
+    "by_entity_type": {
+      "ruler": 19
+    },
+    "by_pair_and_class": {
+      "brooklyn__harvard": {
+        "retained_control": 2
+      },
+      "met__brooklyn": {
+        "authority_only_transition": 2,
+        "literal_only_transition": 2,
+        "retained_control": 11
+      },
+      "met__harvard": {
+        "retained_control": 2
+      }
+    },
+    "stage_1_arm_native_review_units": 21,
+    "total": 19
+  },
+  "review": {
+    "protocol_manifest_sha256": "7912eabc96e05b1deef502418163156ee709f14f5ace3f7e4023930bf2c58075"
+  },
+  "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
+}
