@@ -72,5 +72,42 @@
   "met": 106,
   "pairs": 206,
   "recall": 0.5146
+ },
+ "v2-4-no-c-q-as-k": {
+  "keys_shared_by_clusters": [
+   "ddms",
+   "drs",
+   "hms",
+   "mmnms",
+   "mnhtp",
+   "mnmh",
+   "mnphs",
+   "mnthhtp",
+   "mnthtp",
+   "mss",
+   "nbr",
+   "nctnb",
+   "nktnbs",
+   "ntf",
+   "pnḏm",
+   "psbḫnn",
+   "psmmtḫs",
+   "psmtk",
+   "pssnns",
+   "ptlm",
+   "rmss",
+   "rmsss",
+   "sbḫtp",
+   "snsr",
+   "srkn",
+   "ssstrs",
+   "sths",
+   "thtms",
+   "tthmss",
+   "ššnq"
+  ],
+  "met": 105,
+  "pairs": 206,
+  "recall": 0.5097
  }
 }

@@ -38,7 +38,7 @@ WEAK = {"y": "i", "i": "y", "w": "u", "u": "w"}
 # with a different consonant to swap in that also stands alone.
 SWAP = {"b": "f", "f": "b", "m": "n", "n": "m", "p": "b", "r": "l", "l": "r", "z": "b"}
 # After the fold: no c or q (both k); the digraph units written ḫ š ḏ ṯ; no j outside them.
-KEY_ALPHABET = re.compile(r"^[bdfghklmnprstvxzḫšḏṯ]+$")
+KEY_ALPHABET = re.compile(r"^[bcdfghklmnpqrstvxzḫšḏṯ]+$")
 
 
 @pytest.fixture(scope="module")
@@ -108,7 +108,8 @@ def test_rule_1_case_and_separators_do_not_count(names) -> None:
             assert weak_sign_skeleton(variant) == key, (name, variant)
 
 
-def test_rule_2_c_and_q_meet_k(names) -> None:
+def test_rule_2_c_and_q_are_letters_of_their_own(names) -> None:
+    """The former c/q → k rule is dropped: putting c or q for a k changes the key."""
     checked = 0
     for name in keyed(names):
         key = weak_sign_skeleton(name)
@@ -116,7 +117,7 @@ def test_rule_2_c_and_q_meet_k(names) -> None:
             if ch.lower() != "k" or name[i + 1:i + 2].lower() == "h":
                 continue  # kh is ḫ, not k
             for other in "cq":
-                assert weak_sign_skeleton(name[:i] + other + name[i + 1:]) == key, (name, i, other)
+                assert weak_sign_skeleton(name[:i] + other + name[i + 1:]) != key, (name, i, other)
                 checked += 1
     assert checked == 38
 
@@ -406,8 +407,7 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
 def test_every_cited_pair_of_renderings_meets_on_one_key() -> None:
     pairs = [("Ahmes-Nefertiry", "ʿAhmosi Nefertere"), ("Meryetamun", "Merytamun"), ("Meryetamun", "Meryet-Amun"),
              ("Tetisherit", "Tetisheri"), ("Nebettawy", "Nebttaui"), ("Nefertiry", "Nefertari"),
-             ("Ahmes-Nefertiry", "Ahmose-Nefertiry"), ("Ahmes-Nefertiry", "Jꜥḥ-ms-nfrt-jrj"), ("Cleopatra", "Kleopatra"),
-             ("Berenike", "Berenice"), ("Anuketemheb", "Anuqetemheb"), ("Ahmes", "Iah mesu")]
+             ("Ahmes-Nefertiry", "Ahmose-Nefertiry"), ("Ahmes-Nefertiry", "Jꜥḥ-ms-nfrt-jrj"), ("Ahmes", "Iah mesu")]
     for a, b in pairs:
         assert weak_sign_skeleton(a) == weak_sign_skeleton(b) != "", (a, b)
 
@@ -482,11 +482,13 @@ def test_on_the_real_king_graph_the_tier_reaches_the_queens_and_no_other_king(gr
     # No king in her D&H entry and no dynasty of her own: nothing can confirm these two.
     assert found("Tetisheri", dynasty=17) == ("unmatched", "weak_sign_skeleton", [])
     assert found("Ahmose-Tumerisi", dynasty=17) == ("unmatched", "weak_sign_skeleton", [])
-    # The Ptolemaic female rulers, by their king_name only, numeral matched.
-    assert found("Kleopatra II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["leprohon-leprohon-33.08a"])
+    # The Ptolemaic female rulers, by their king_name only, numeral matched. Their Greek and
+    # Latin spellings (Kleopatra, Berenice) do not meet on this tier since c/q → k was dropped.
+    assert found("Cleopatra II", dynasty=33) == ("resolved", "raw_exact", ["leprohon-leprohon-33.08a"])
+    assert found("Kleopatra II", dynasty=33) == ("unmatched", None, [])
     assert found("Cleopatra III", dynasty=33) == ("unmatched", None, [])
-    assert found("Berenice II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["leprohon-leprohon-33.03a"])
-    assert found("Berenice", dynasty=33)[:2] == ("ambiguous", "weak_sign_skeleton")
+    assert found("Berenike II", dynasty=33) == ("resolved", "raw_exact", ["leprohon-leprohon-33.03a"])
+    assert found("Berenice II", dynasty=33) == ("unmatched", None, [])
     # The only kings the tier can reach are the female rulers of `female-rulers.json`: those
     # the king lists alone hold (keyed as kings) and D&H's women who reigned (resolved to theirs).
     king_targets = {t for targets in graph_index.weak_sign.values() for t in targets if not t.startswith("dodson_hilton:")}
@@ -504,13 +506,13 @@ def test_on_the_real_king_graph_the_new_collisions_are_the_pinned_ones(graph_ind
     assert new == {
         "brnk": ("leprohon-leprohon-33.03a", "leprohon-leprohon-33.12"),
         "hntt": rw.DIFFERENT_NAMES["hntt"]["members"],
-        "klptr": ("leprohon-leprohon-33.05a", "leprohon-leprohon-33.08a", "pharaoh_se-Cleopatra-VII"),
+        "clptr": ("leprohon-leprohon-33.05a", "leprohon-leprohon-33.08a", "pharaoh_se-Cleopatra-VII"),
         "nbt": rw.DIFFERENT_NAMES["nbt"]["members"],
         "nfr": rw.DIFFERENT_NAMES["nfr"]["members"],
         "nfrsbk": ("dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu"),
         "tntmn": ("dodson_hilton:Tentamun A", "dodson_hilton:Tentamun B", "dodson_hilton:Tintamun"),
     }
-    assert graph_index.weak_sign_numerals["klptr"] == {
+    assert graph_index.weak_sign_numerals["clptr"] == {
         "leprohon-leprohon-33.05a": {"I"}, "leprohon-leprohon-33.08a": {"II"}, "pharaoh_se-Cleopatra-VII": {"VII"}}
 
 

@@ -447,11 +447,12 @@ def _weak_sign_confirmed(index: RoyalWomenIndex, chosen: str, skeleton: str, fam
                          record_dynasty: int | None) -> bool:
     """A weak-sign match is only a shared consonant skeleton, and a queen has no throne name
     or reign to corroborate it, so the record must: it names one of her family kings, or its
-    single dynasty is one of hers or her family kings'. A key of the minimum length, or one
-    that different names share (`DIFFERENT_NAMES`), takes the named king only."""
+    single dynasty is one of hers or her family kings'. A key of the minimum length takes the
+    named king only. (A key in `DIFFERENT_NAMES` never gets here: it is ambiguous before any
+    narrowing.)"""
     if family_named:
         return True
-    if skeleton in DIFFERENT_NAMES or consonant_count(skeleton) == MIN_WEAK_SIGN_CONSONANTS:
+    if consonant_count(skeleton) == MIN_WEAK_SIGN_CONSONANTS:
         return False
     return record_dynasty is not None and record_dynasty in (set(index.dynasties[chosen]) | index.family_dynasties[chosen])
 

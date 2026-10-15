@@ -342,12 +342,15 @@ def test_a_different_name_group_never_resolves(index) -> None:
 def test_a_numeral_in_the_mention_must_be_the_candidates(index) -> None:
     assert rw.weak_sign_entry("Neferu II") == ("nfr", frozenset({"II"}))
     assert rw.weak_sign_entry("Tiye B Mereniset") == ("tmrns", frozenset())
-    assert rw.weak_sign_entry("Cleopatra VII Philopator") == ("klptrphlptr", frozenset({"VII"}))
+    assert rw.weak_sign_entry("Cleopatra VII Philopator") == ("clptrphlptr", frozenset({"VII"}))
     assert found(index, "Cleopatra III") == ("unmatched", None, [], None)
     assert found(index, "Ahhotep III") == ("unmatched", None, [], None)
-    assert found(index, "Kleopatra II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["king:cleopatra-ii"], None)
-    assert found(index, "Kleopatra", dynasty=33) == ("ambiguous", "weak_sign_skeleton",
+    # A vowel variant meets on the weak-sign tier and the numeral picks; the Greek K does not
+    # (c/q → k was dropped).
+    assert found(index, "Cleopatre II", dynasty=33) == ("resolved", "weak_sign_skeleton", ["king:cleopatra-ii"], None)
+    assert found(index, "Cleopatre", dynasty=33) == ("ambiguous", "weak_sign_skeleton",
                                                      ["king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p"], None)
+    assert found(index, "Kleopatra II", dynasty=33) == ("unmatched", None, [], None)
     assert found(index, "Ahhotp I", kings={"king:taa-ii"}) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotep I"], None)
     assert found(index, "Ahhotp II") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
     # "II" leaves Neferu II and Neferet II, "III" Neferu III alone; nfr is a DIFFERENT_NAMES
@@ -408,7 +411,7 @@ def test_the_weak_sign_tier_never_reaches_a_king_and_never_matches_below_the_min
         "king:cleopatra-vii-l", "king:cleopatra-vii-p", "king:neith-iqeret"}
     assert index.weak_sign["sbknfr"] == {"dodson_hilton:Sobkneferu"}
     assert index.weak_sign["nfrsbk"] == {"dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu"}
-    assert index.weak_sign["nthkr"] == {"king:neith-iqeret"}
+    assert index.weak_sign["nthqr"] == {"king:neith-iqeret"}
     # The kings D&H names as husbands and fathers are not reachable under a cue, even when
     # their names are spelt as the key would fold them.
     for text in ("Amenhotep III", "Amenhotep", "Amenhotpe", "Akhenaten", "Akhenaton", "Ramesses II", "Ramses",
@@ -431,8 +434,8 @@ def test_the_collision_helpers_agree_with_the_index(index) -> None:
     # female-rulers.json's king_name "Neferusobek" for the king Sobkneferu meets D&H's
     # princess Neferusobk (both Dynasty 12); the Ptolemaic female rulers share their names.
     assert new["nfrsbk"] == ("dodson_hilton:Neferusobk", "dodson_hilton:Sobkneferu")
-    assert new["klptr"] == ("king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p")
-    assert set(new) == {"brnk", "hntt", "klptr", "nbt", "nfr", "nfrsbk", "tntmn"}
+    assert new["clptr"] == ("king:cleopatra-i", "king:cleopatra-ii", "king:cleopatra-vii-p")
+    assert set(new) == {"brnk", "clptr", "hntt", "nbt", "nfr", "nfrsbk", "tntmn"}
 
 
 def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:
@@ -444,3 +447,15 @@ def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:
     assert [rw.single_dynasty(v) for v in ("Dynasty 18", "late Dynasty 18", "Dynasty 12, late", "18th Dynasty",
                                            "Dynasty 19–20", "Dynasty 26, or later", "", None)] == [
         18, 18, 12, 18, None, None, None, None]
+
+
+def test_a_different_name_outside_dodson_and_hilton_can_still_meet_a_womans_key(index) -> None:
+    """A known limit, pinned (egyptologist review of the climb): DIFFERENT_NAMES holds only
+    collisions among D&H's own women. "Isetweret" (ꜣst-wrt, an Iset name) and D&H's Sitre A
+    (zꜣt-rꜥ) both key `str`, so a record naming Sitre's family king Sety I reaches Sitre A.
+    The gates bound it: a three-consonant key needs a named family king, and a contradicting
+    dynasty is refused."""
+    assert found(index, "Isetweret", kings={"king:sety-i"}) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Sitre A"], None)  # sole candidate, confirmed by Sety I
+    assert found(index, "Isetweret", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "Isetweret", dynasty=18) == ("unmatched", "weak_sign_skeleton", [], "record_dynasty_contradicts")

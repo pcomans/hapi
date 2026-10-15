@@ -74,16 +74,34 @@ def test_the_held_out_check_and_the_spent_test_split() -> None:
     for name, committed in held.items():
         assert harness().held_out(harness().load_key(EVAL / "keys" / f"{name}.py")) == committed
     assert {n: (h["met"], h["pairs"]) for n, h in held.items()} == {
-        "v2-0-baseline": (106, 206), "v2-1-j-weak-in-transliterations": (106, 206)}
+        "v2-0-baseline": (106, 206), "v2-1-j-weak-in-transliterations": (106, 206),
+        "v2-4-no-c-q-as-k": (105, 206)}  # v2-4 scored after the owner's decision: reported, not chosen on
     tla_test = json.loads((EVAL / "results" / "tla-test-split-not-held-out.json").read_text(encoding="utf-8"))
+    assert tla_test == {n: result(n)["splits"]["test"] for n in tla_test}
     assert {n: t["recall"] for n, t in tla_test.items()} == {
-        "v2-0-baseline": 0.8264, "v2-1-j-weak-in-transliterations": 0.8646}
+        "v2-0-baseline": 0.8264, "v2-1-j-weak-in-transliterations": 0.8646, "v2-4-no-c-q-as-k": 0.8583}
 
 
-def test_the_accepted_key_is_the_committed_key() -> None:
+def test_the_committed_key_is_v2_4_by_the_project_owners_decision() -> None:
+    """The protocol accepted v2-1. Its acceptance rule could not admit the removal C4 (removing
+    a fold never raises recall); read as an addition, c/q → k fails the same rule (code review
+    of the climb), and on 2026-10-15 the project owner dropped it. The committed key is v2-4."""
     def code(path: Path) -> str:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         tree.body = tree.body[1:]  # the module docstring
         return ast.dump(tree)
-    assert code(EVAL / "keys" / "v2-1-j-weak-in-transliterations.py") == code(
+    assert code(EVAL / "keys" / "v2-4-no-c-q-as-k.py") == code(
         REPO / "pipeline" / "pipeline" / "authority" / "weak_sign_skeleton.py")
+    v2_1, v2_4 = result("v2-1-j-weak-in-transliterations"), result("v2-4-no-c-q-as-k")
+    for r in (v2_1, v2_4):
+        r.pop("against"), r.pop("accepted")
+    # c/q → k as an addition to v2-4 is v2-1, and the acceptance rule rejects it.
+    assert harness().accepted(v2_4, v2_1) is False
+    assert (v2_4["strong_merges"]["names"], v2_1["strong_merges"]["names"]) == (234, 252)
+
+
+def test_the_live_normalizer_is_the_frozen_one() -> None:
+    """The key is deployed with the live normalizer and was measured with the frozen copy; if
+    the live one changes, the climb must be re-measured."""
+    assert (REPO / "pipeline" / "pipeline" / "authority" / "claimgraph" / "normalize.py").read_bytes() == (
+        EVAL / "normalize_frozen.py").read_bytes()

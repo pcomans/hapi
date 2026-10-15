@@ -14,5 +14,13 @@
   "pairs": 628,
   "recall": 0.8646,
   "renderings": 1401
+ },
+ "v2-4-no-c-q-as-k": {
+  "coverage": 0.7238,
+  "keyed": 1014,
+  "met": 539,
+  "pairs": 628,
+  "recall": 0.8583,
+  "renderings": 1401
  }
 }

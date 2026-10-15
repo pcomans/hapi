@@ -54,13 +54,9 @@ Rules, in the order applied
    is "Wadjkheperre" (ḏḫprr). The unit is decided within a token, so a separator between
    s and h, or t and j, is kept information: D&H's "Ahmes-Henutemipet" is s + h, which
    written solid would read š.
-2. **c and q are k.** Latin c and Greek κ: pharaoh.se row Cleopatra-VII has display
-   "Cleopatra VII" with alt_labels "Kleopatra", and renders her Egyptian nomen
-   "Qliu pa dra netjeret meret ites" (q for the κ of Κλεοπάτρα); Leprohon writes "Berenike"
-   (leprohon-33.03a, display_name "Berenike II"). The goddess ꜥnqt is "Anuket-" in D&H's
-   Anuketemheb (dh_id Anuketemheb, pp. 178–180) but "Anuq-" in Anuqneferetweben and
-   Dedetanuq (pp. 98–103): D&H's own rendering of one element varies between k and q.
-   Applied after the fold, so the German ch (→ kh) is not touched.
+2. **c and q stay themselves.** An earlier version wrote c and q as k; it was measured and
+   dropped (see "Measured and not adopted" below), so Cleopatra and Kleopatra, Berenice and
+   Berenike are different keys and must meet through the authority's alternative names.
 3. **The feminine ending -t.** One final "t" of the folded string (the last token's) is
    dropped. Egyptian feminine nouns and names end in -t (Gardiner), which modern renderings
    keep or drop: PM I.2, 751 writes "Tanezem(t)" (row QV33, occupant_name); Leprohon's
@@ -115,14 +111,26 @@ Rules, in the order applied
 
 Measured and not adopted (hill-climb protocol v2, `docs/evaluations/weak-sign-key-hillclimb/`)
 --------------------------------------------------------------------------------------------
-* z as s (TLA 400051 and 400058 `Z-n-wsr.t` "Senwosret"; PM I.1, 69 "Zeserkaraʿsonb", row
-  TT38) and ṯ as t (TLA 400020 `Mnṯ.w-ḥtp.w` "Mentuhotep") are attested rendering
-  conventions. Measured against the TLA names, each raised recall but merged more distinct
-  names (strict strong merges 252 → 293 for z/s, 252 → 270 for ṯ/t), so neither is adopted.
-* Rule 2 (c and q as k) was measured too: removing it lowers TLA train recall from 85.48% to
-  84.93% and strict strong merges from 252 to 234 names. Under the protocol's acceptance rule
-  the removal is not adopted, so the rule stays. Its cost is recorded here: 18 names merged
-  for about half a point of recall.
+* z as s (TLA 400051 and 400058 `Z-n-wsr.t` "Senwosret") and ṯ as t (TLA 400020
+  `Mnṯ.w-ḥtp.w` "Mentuhotep") are attested rendering conventions. Measured against the TLA
+  names, each raised recall but merged more distinct names (strict strong merges 252 → 293 for
+  z/s, 252 → 270 for ṯ/t), so neither is adopted. In English museum text z more often writes
+  ḏ: PM I.1, 69 "Zeserkaraʿsonb" (row TT38) is ḏsr-kꜣ-rꜥ-snb, and PM I.2, 751 "Tanezem(t)" is
+  tꜣ-nḏmt. z as ḏ outside a transliteration is a candidate for a later protocol, untested here.
+* c and q as k, the key's former rule 2, dropped on 2026-10-15 by the project owner's
+  decision, following the measurement. The convention is attested:
+  - pharaoh.se row Cleopatra-VII has display "Cleopatra VII", alt_labels "Kleopatra", and
+    renders her Egyptian nomen "Qliu pa dra netjeret meret ites" (q for the κ of Κλεοπάτρα);
+  - Leprohon writes "Berenike" (leprohon-33.03a, display_name "Berenike II");
+  - D&H write the goddess ꜥnqt "Anuket-" in Anuketemheb (dh_id Anuketemheb, pp. 178–180) but
+    "Anuq-" in Anuqneferetweben and Dedetanuq (pp. 98–103).
+  
+  But as a letter rule it merged 18 more names in the TLA set (strict strong merges 234 →
+  252) for half a point of recall. Measured as an addition to the key without it, it fails
+  the protocol's acceptance rule as z/s and ṯ/t do. (Run as the removal C4, the protocol could
+  not have accepted it, since removing a fold never raises recall; the code review of the
+  climb pointed this out.) The Ptolemaic queens' Greek and Latin spellings belong in cited
+  alternative names instead.
 
 Not adopted
 -----------
@@ -182,7 +190,7 @@ def weak_sign_skeleton(text: str) -> str:
     if re.search("[ꜣꜥꞽ=⸗\u032f]", text):
         text = text.replace("j", "i")
     tokens = [translit_key(t) for t in _SEPARATORS.split(text.replace("[", "").replace("]", "")) if t]
-    tokens = [_DIGITS.sub("", t).replace("c", "k").replace("q", "k") for t in tokens]
+    tokens = [_DIGITS.sub("", t) for t in tokens]
     tokens = [t for t in tokens if t]
     if tokens and tokens[-1].endswith("t"):
         tokens[-1] = tokens[-1][:-1]

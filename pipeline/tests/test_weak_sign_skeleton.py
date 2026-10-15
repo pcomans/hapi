@@ -43,7 +43,7 @@ def test_rule_1_brackets_separators_half_rings_and_the_fold() -> None:
     # Digits are not a name.
     assert weak_sign_skeleton("–18P") == ""
     # The key strips no disambiguator: that is the resolver's, on the authority side.
-    assert weak_sign_skeleton("Cleopatra VII") == "klptrv" != weak_sign_skeleton("Cleopatra") == "klptr"
+    assert weak_sign_skeleton("Cleopatra VII") == "clptrv" != weak_sign_skeleton("Cleopatra") == "clptr"
     assert weak_sign_skeleton("Tiye B Mereniset") == "tbmrns" != weak_sign_skeleton("Tiye Mereniset") == "tmrns"
 
 
@@ -61,16 +61,12 @@ def test_rule_1_the_digraphs_dj_and_tj_are_decided_within_a_token() -> None:
     assert weak_sign_skeleton("Nedjmetes") == "nḏmts" != weak_sign_skeleton("Nedmetes") == "ndmts"
 
 
-def test_rule_2_c_and_q_are_k() -> None:
-    # pharaoh.se row Cleopatra-VII: display "Cleopatra VII", alt_labels "Kleopatra", nomen "Qliu pa dra …".
-    assert weak_sign_skeleton("Cleopatra") == weak_sign_skeleton("Kleopatra") == "klptr"
-    assert weak_sign_skeleton("Qliu pa dra") == weak_sign_skeleton("Kleopadra") == "klpdr"
-    assert weak_sign_skeleton("Berenice") == weak_sign_skeleton("Berenike") == "brnk"
-    # D&H's own Anuket- / Anuq- for the goddess ꜥnqt.
-    assert weak_sign_skeleton("Anuketemheb") == weak_sign_skeleton("Anuqetemheb") == "nktmhb"
-    assert weak_sign_skeleton("Dedetanuq") == weak_sign_skeleton("Dedetanuk") == "ddtnk"
-    # After the fold: the German ch is kh, not k-h.
-    assert weak_sign_skeleton("Chnemet") == weak_sign_skeleton("Khnemet") == "ḫnm"
+def test_rule_2_c_and_q_stay_themselves() -> None:
+    """Dropped on measurement (docstring, "Measured and not adopted"): the Greek and Latin
+    spellings of the Ptolemaic queens meet through alternative names, not a letter rule."""
+    assert weak_sign_skeleton("Cleopatra") == "clptr" != weak_sign_skeleton("Kleopatra") == "klptr"
+    assert weak_sign_skeleton("Berenice") == "brnc" != weak_sign_skeleton("Berenike") == "brnk"
+    assert weak_sign_skeleton("Anuketemheb") == "nktmhb" != weak_sign_skeleton("Anuqetemheb") == "nqtmhb"
 
 
 def test_rule_3_one_final_t_of_the_folded_string_is_dropped() -> None:
@@ -301,7 +297,7 @@ def test_the_collision_table_over_the_dodson_and_hilton_women(women) -> None:
     unreachable on this tier. 34 keys are shared, by 106 women; 30 of those groups are D&H's
     own same-named women ("Tiye A"/"Tiye C"), which the exact tier already returns
     together. The key introduces four groups: three of different names (listed in
-    `DIFFERENT_NAMES`, confirmed by a named family king only) and Tentamun/Tintamun, one
+    `DIFFERENT_NAMES`, never resolved on this tier) and Tentamun/Tintamun, one
     name. Adding D&H chapters changes these numbers: update them with the new groups
     reviewed, never silently."""
     assert len(women) == 352
@@ -401,20 +397,31 @@ def test_a_digraph_is_a_unit_of_the_folded_letters_never_of_letters_a_dropped_vo
     assert weak_sign_skeleton("Ahmes-Henutemipet") == "hmshntmp" != weak_sign_skeleton("Ahmeshenutemipet") == "hmšntmp"
 
 
-def test_z_and_s_are_under_evaluation_and_stay_apart_for_now() -> None:
-    """TLA 400051 `Z-n-wsr.t` is "Senwosret" and PM writes "Zeserkaraʿsonb": z/s is an
-    attested convention, not adopted until the TLA measurement is redone."""
+def test_z_and_s_and_tj_and_t_stay_apart() -> None:
+    """Measured and not adopted (hill-climb v2): TLA 400051 `Z-n-wsr.t` is "Senwosret", but z as
+    s merged more distinct names than it joined. Porter & Moss's "Zeserkaraʿsonb" (TT38,
+    ḏsr-kꜣ-rꜥ-snb) writes z for ḏ, a different convention the key does not handle either."""
     assert weak_sign_skeleton("Z-n-wsr.t") == "znsr" != weak_sign_skeleton("Senwosret") == "snsr"
     assert weak_sign_skeleton("Zeserkaraʿsonb") == "zsrkrsnb" != weak_sign_skeleton("Djeserkaresonb") == "ḏsrkrsnb"
     assert weak_sign_skeleton("Mnṯ.w-ḥtp.w") == "mnṯhtp" != weak_sign_skeleton("Mentuhotep") == "mnthtp"
 
 
-def test_in_a_transliteration_j_is_always_the_weak_sign() -> None:
+def test_a_j_is_the_weak_sign_in_a_text_with_a_transliteration_only_sign() -> None:
     """Hill-climb v2, C1: TLA 600234 `Jt=j-Jmn` Itiamun, 600269 `Mn-pḥ.tj-Rꜥw` Menpehtyre,
-    600456 `Jni̯-jtj=f` Intef. Porter & Moss's half-ring does not trigger it."""
+    600456 `Jni̯-jtj=f` Intef. The trigger is a sign only transliterations use (ꜣ ꜥ ꞽ = ⸗ i̯);
+    Porter & Moss's half-ring does not trigger it."""
     assert weak_sign_skeleton("Jt=j-Jmn") == weak_sign_skeleton("Itiamun") == "tmn"
     assert weak_sign_skeleton("Mn-pḥ.tj-Rꜥw") == weak_sign_skeleton("Menpehtyre") == "mnphtr"
     assert weak_sign_skeleton("Jni̯-jtj=f") == weak_sign_skeleton("Intef") == "ntf"
-    assert weak_sign_skeleton("Nṯr.j-ḫ.t") == weak_sign_skeleton("Netjerikhet") == "nṯrḫ"
     assert weak_sign_skeleton("Wadjkheperreʿ") == weak_sign_skeleton("Wadjkheperre") == "ḏḫprr"
     assert weak_sign_skeleton("Jꜥḥ-ms-nfrt-jrj") == weak_sign_skeleton("Ahmose Nefertari") == "hmsnfrtr"
+
+
+def test_the_c1_triggers_known_misses() -> None:
+    """Known limits of C1, pinned (code review of the climb): a transliteration without a
+    trigger sign keeps t + j as ṯ (TLA `Nfr.t-jy.tj`, Nefertiti; D&H's Nubhotepti as
+    `Nbw-ḥtp.tj`), and the trigger reads the whole text, so an English Dj beside a
+    transliteration loses its ḏ. A wider trigger is a candidate for a later protocol."""
+    assert weak_sign_skeleton("Nfr.t-jy.tj") == "nfrtṯ" != weak_sign_skeleton("Nofretete") == "nfrtt"
+    assert weak_sign_skeleton("Nbw-ḥtp.tj") == "nbhtpṯ" != weak_sign_skeleton("Nubhotepti") == "nbhtpt"
+    assert weak_sign_skeleton("Djeserkare (Ḏsr-kꜣ-Rꜥ)") == "dsrkrḏsrkr"  # the English Dj lost its ḏ
