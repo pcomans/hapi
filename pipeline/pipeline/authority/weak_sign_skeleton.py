@@ -22,9 +22,9 @@ checked row by row in `tests/test_weak_sign_skeleton.py`. Two books are cited th
 disk but NOT committed (the `proprietary/books/` folder beside the checkout, PDF page
 numbers): Leprohon 2013, *The Great Name* (its introduction; the committed Leprohon source
 holds the catalogue rows only) and Beckerath 1999, *Handbuch der ägyptischen Königsnamen*
-(the committed Beckerath source is the 1997 *Chronologie*). Gardiner, *Egyptian Grammar*
-(3rd ed. 1957) is the standard reference for the alphabet and the feminine ending; it is
-not on disk, and no section numbers are given.
+(the committed Beckerath source is the 1997 *Chronologie*). No grammar is cited: every rule
+below rests on the cited renderings and on the TLA lemma list (`tla-2018-names`), whose
+counts are pinned in the tests.
 
 Rules, in the order applied
 ---------------------------
@@ -58,15 +58,16 @@ Rules, in the order applied
    dropped (see "Measured and not adopted" below), so Cleopatra and Kleopatra, Berenice and
    Berenike are different keys and must meet through the authority's alternative names.
 3. **The feminine ending -t.** One final "t" of the folded string (the last token's) is
-   dropped. Egyptian feminine nouns and names end in -t (Gardiner), which modern renderings
-   keep or drop: PM I.2, 751 writes "Tanezem(t)" (row QV33, occupant_name); Leprohon's
-   note on Ahmose's Horus name says "the Tetisheri pyramid" (leprohon-18.01,
-   horus_names[1].source_note, printed p. 95) where D&H write "Tetisherit" (dh_id
-   Tetisherit, pp. 118–119). Applied to the folded string before rule 4, so a "t" exposed
+   dropped. The ending is a morpheme of its own: the TLA segments it ".t", and 353 of its
+   personal-name lemmas end in it (TLA 702242 `Mr.t-Nj.t`, 400190 `Dd.t-Ꜥnq.t`). The TLA's
+   own renderings keep it; other sources drop it: PM I.2, 751 writes "Tanezem(t)" (row QV33,
+   occupant_name); Leprohon's note on Ahmose's Horus name says "the Tetisheri pyramid"
+   (leprohon-18.01, horus_names[1].source_note, printed p. 95) where D&H write "Tetisherit"
+   (dh_id Tetisherit, pp. 118–119). Applied to the folded string before rule 4, so a "t" exposed
    only by dropping a final weak sign ("Henttawy" → hntt) is kept.
 4. **Vowels and weak signs are dropped: a e i o u (ꜣ and ꜥ among them), y, w, and j outside
    a dj/tj unit.**
-   * Vowels are the renderer's: Leprohon gives Gardiner's consonantal transliteration with
+   * Vowels are the renderer's: Leprohon gives a consonantal transliteration with
      an "anglicized version" that inserts them (Leprohon 2013, printed p. 1 = PDF p. 22,
      not committed; committed row leprohon-21.05 birth_names[0]: `imn m ipt` =
      "imen em ipet", printed p. 140), and says the same imn is "Amun" alone but "Amen-" in
@@ -95,8 +96,6 @@ Rules, in the order applied
      (leprohon-17.23 golden_horus_names[0], p. 90) and ms(w) as "mes(u)"; D&H write
      "Nebettawy A" (dh_id Nebettawy A, pp. 157–162) where PM I.2, 761 writes "Nebttaui" (row
      QV60, occupant_name), and "Ahmes" where pharaoh.se writes "Iah mesu".
-   * The signs themselves (reed leaf, double reed leaf, quail chick; the semi-vowels):
-     Gardiner, not on disk.
 5. **Minimum length, in consonants.** A consonant is one unit of rule 1 (ḫ š ḏ ṯ one each;
    th is t + h, as in Hathor, ḥwt-ḥr), so `consonant_count` is the key's length. A residue
    of fewer than `MIN_WEAK_SIGN_CONSONANTS` (3) consonants is no key: the function returns

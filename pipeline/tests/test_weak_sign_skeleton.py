@@ -8,6 +8,7 @@ from __future__ import annotations
 import collections
 import json
 import re
+import unicodedata
 from pathlib import Path
 
 import pytest
@@ -81,6 +82,14 @@ def test_rule_3_one_final_t_of_the_folded_string_is_dropped() -> None:
     assert weak_sign_skeleton("Ahhotepti") == "hhtpt" != weak_sign_skeleton("Ahhotep") == "hhtp"
     assert weak_sign_skeleton("Nubhotepti") == "nbhtpt" != weak_sign_skeleton("Nubhotepet") == "nbhtp"
     assert weak_sign_skeleton("Iset Ta-Hemdjert") == weak_sign_skeleton("Iset Ta-Hemdjer") == "stthmḏr"
+
+
+def test_rule_3_the_tla_segments_the_feminine_ending_as_its_own_morpheme() -> None:
+    # The docstring's count: TLA personal-name lemmas whose transliteration ends in ".t".
+    ends = [r for r in _rows("tla-2018-names")[1:]
+            if r["subtype"] == "person_name" and unicodedata.normalize("NFC", r["transliteration"]).endswith(".t")]
+    assert len(ends) == 353
+    assert "353 of its\n   personal-name lemmas" in module.__doc__
 
 
 def test_rule_4_vowels_and_the_weak_signs_i_y_w_j_are_dropped() -> None:
@@ -195,6 +204,8 @@ CITATIONS = [
     ("tla-2018-names", "tla_id", "400058", "translations[1].value", "Senwosret", None, None),
     ("tla-2018-names", "tla_id", "400020", "transliteration", "Mnṯ.w-ḥtp.w", None, None),
     ("tla-2018-names", "tla_id", "400020", "translations[1].value", "Mentuhotep", None, None),
+    ("tla-2018-names", "tla_id", "702242", "transliteration", "Mr.t-Nj.t", None, None),
+    ("tla-2018-names", "tla_id", "400190", "transliteration", "Dd.t-Ꜥnq.t", None, None),
     ("dodson-hilton-queens", "dh_id", "Ahmes-Nefertiry", "name", "Ahmes-Nefertiry", "source_citation.pdf_pages", "118-119"),
     ("dodson-hilton-queens", "dh_id", "Tetisherit", "name", "Tetisherit", "source_citation.pdf_pages", "118-119"),
     ("dodson-hilton-queens", "dh_id", "Ahmes B", "name", "Ahmes B", "source_citation.pdf_pages", "126-130"),
@@ -229,12 +240,12 @@ def test_the_docstring_cites_each_row_and_marks_the_uncommitted_books() -> None:
                         "Mnṯ.w-ḥtp.w", "Zeserkaraʿsonb", "Menkauhor", "Raʿdjedef", "Wadjkheperreʿ"):
         assert cited_value in doc, cited_value
     # The books that are on disk but not committed are marked so wherever they are cited; no
-    # Gardiner section numbers are quoted; the rendering that contradicted the rules ("Tao"
-    # for ḏḥwty-ꜥꜣ) is gone.
+    # grammar is relied on (Gardiner is not on disk); the rendering that contradicted the rules
+    # ("Tao" for ḏḥwty-ꜥꜣ) is gone.
     assert "on\ndisk but NOT committed" in doc
     assert doc.count("not committed") == 4  # Leprohon's introduction three times, Beckerath 1999 once
     assert "Beckerath 1999" in doc and "Leprohon 2013, printed p. 1" in doc
-    assert "Tao" not in doc and "§" not in doc
+    assert "Tao" not in doc and "§" not in doc and "Gardiner" not in doc
 
 
 # --- The authority-side collision table and the threshold -----------------------------------
