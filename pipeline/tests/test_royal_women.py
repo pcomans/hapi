@@ -291,9 +291,10 @@ def test_the_weak_sign_tier_reaches_the_other_sources_renderings_of_a_dh_woman(i
     # An alternative name is keyed too: "Ankhesenamun" (D&H's alt for Ankhesenpaaten), rule 4.
     assert found(index, "Ankhesenamon", dynasty=18) == (
         "resolved", "weak_sign_skeleton", ["dodson_hilton:Ankhesenpaaten"], None)
-    # The bracketed D&H form itself reaches her (rule 1 keeps the restored letters).
+    # The bracketed D&H form itself reaches her: the mention reader reads the restored letters
+    # as the authority's labels do, so it meets her label on the exact tier.
     assert found(index, "[Mut]metennefer", dynasty=19) == (
-        "resolved", "weak_sign_skeleton", ["dodson_hilton:[Mut]metennefer"], None)
+        "resolved", "raw_exact", ["dodson_hilton:[Mut]metennefer"], None)
     # A woman who later reigned is still the king on this tier: rule 4 on "Sobkneferu".
     assert found(index, "Sobkneferu", dynasty=12) == ("resolved", "raw_exact", ["king:sobekneferu"], None)
     assert found(index, "Sebekneferu", dynasty=12) == ("resolved", "weak_sign_skeleton", ["king:sobekneferu"], None)
@@ -545,6 +546,17 @@ def test_the_resolvers_numeral_reader_agrees_with_the_matchers() -> None:
     ("Ahhotep (perhaps the mother)", ("resolved", "raw_exact", ["dodson_hilton:Ahhotep I"], "family")),
     ("Ahhotep (probably ?)", ("unmatched", None, [], "doubted_mention")),
     ("Ahhotep (Ahhotep II)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (Aahotep II)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (Perhaps II)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (Aahotep [II])", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (also Aahotep-II)", ("unmatched", None, [], "unreadable_numeral")),
+    ("Ahhotep (var. AahotepII)", ("unmatched", None, [], "unreadable_numeral")),
+    # A whole-word bracket is refused; a restoration inside a word is read as letters on every
+    # tier ("Ahmes-[Nefertiry]" is Ahmes-Nefertiry, not Ahmes).
+    ("Ahhotep (perhaps)", ("unmatched", None, [], "unreadable_mention")),
+    ("Ahhotep [perhaps]", ("unmatched", None, [], "unreadable_mention")),
+    ("Ahmes-[Nefertiry]", ("resolved", "raw_exact", ["dodson_hilton:Ahmes-Nefertiry"], None)),
+    ("[Ahmes]-Nefertiry", ("resolved", "raw_exact", ["dodson_hilton:Ahmes-Nefertiry"], None)),
     # A capital I, V or X ending a longer segment may be a run-on numeral, after any letter.
     ("Ahhotp'II", ("unmatched", None, [], "unreadable_numeral")),
     ("Ahhotp’II", ("unmatched", None, [], "unreadable_numeral")),
@@ -561,10 +573,8 @@ def test_the_resolvers_numeral_reader_agrees_with_the_matchers() -> None:
     # Anything that is no name token is refused, not guessed.
     ("Ahhotep & Kamose", ("unmatched", None, [], "unreadable_mention")),
     ("Ahhotep/Iah", ("unmatched", None, [], "unreadable_mention")),
-    # A whole-word description is not the name, and the name still resolves as it did.
-    ("Tiye (wife of Amenhotep III)", ("ambiguous", "raw_exact",
-                                      ["dodson_hilton:Tiye A", "dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"],
-                                      None)),
+    # A description holding a numeral is refused: whose numeral it is cannot be told.
+    ("Tiye (wife of Amenhotep III)", ("unmatched", None, [], "unreadable_numeral")),
     # A transliteration is a name token.
     ("Jꜥḥ-ms.w", ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes A"], "family")),
     ("Ḥi", ("unmatched", None, [], None)),

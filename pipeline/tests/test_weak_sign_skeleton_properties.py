@@ -587,13 +587,13 @@ def test_a_doubt_mark_anywhere_refuses_the_mention(graph_index, text) -> None:
 
 @pytest.mark.parametrize(("text", "expected"), [
     ("Mer[i]taten", ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")),
-    ("Meryet[a]ten", ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")),
-    ("[I]setneferet", ("ambiguous", "weak_sign_skeleton", ["dodson_hilton:Isetneferet A", "dodson_hilton:Isetneferet B",
-                                                           "dodson_hilton:Isetneferet C", "dodson_hilton:Isetneferet D"],
-                       None))])
+    # Read as letters, a restored name is the name: Meryetaten and Isetneferet on the exact tier.
+    ("Meryet[a]ten", ("resolved", "raw_exact", ["dodson_hilton:Meryetaten"], None)),
+    ("[I]setneferet", ("ambiguous", "raw_exact", ["dodson_hilton:Isetneferet A", "dodson_hilton:Isetneferet B",
+                                                  "dodson_hilton:Isetneferet C", "dodson_hilton:Isetneferet D"], None))])
 def test_a_restoration_inside_a_word_is_not_a_numeral(graph_index, text, expected) -> None:
-    """A bracket followed by a letter restores letters of the name (Codex review): the mention
-    reaches the weak-sign tier as the name, and only the record can confirm it."""
+    """A bracket followed by a letter restores letters of the name (Codex review), read as
+    letters on every tier."""
     found = rw.resolve_royal_woman(graph_index, text, record_king_ids=set(), record_dynasty=None)
     assert (found["status"], found["resolution_method"], found["target_ids"], found["context_rule"]) == expected
 
