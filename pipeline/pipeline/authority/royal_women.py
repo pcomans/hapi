@@ -36,6 +36,13 @@ The rule, which is deterministic and fixed here:
   has at least `MIN_WEAK_SIGN_SKELETON_LEN` consonants. The family and dynasty narrowing
   above applies to its candidates unchanged. Any D&H label meets the first tier, so the
   third never changes a name that the first two resolve.
+* A weak-sign match must be confirmed by the record. A shared consonant skeleton is weak
+  evidence, and a queen has no throne name or reign that could corroborate it, as a king's
+  match in the claim graph is corroborated. So the woman it chooses counts only if the
+  record names one of her family kings, or the record's single dynasty is hers (for a woman
+  D&H give no dynasty, one of her family kings'). Otherwise the mention stays unmatched
+  (`weak_sign_unconfirmed`), even as the only candidate. A woman with neither (Tetisherit,
+  whose entry names only her non-royal father) is not reachable on this tier.
 * A woman is never chosen against the record's own single dynasty: D&H is transcribed for
   some dynasties only (none of 4–10, 14 or 22 onward), so a lone name match of another known
   dynasty is another woman, and the mention stays unmatched. A candidate whose dynasty the
@@ -127,6 +134,9 @@ class RoyalWomenIndex:
     exact: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
     normalized: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
     weak_sign: dict[str, set[str]] = field(default_factory=lambda: collections.defaultdict(set))
+    # The dynasties of the kings a target's family names resolve to: what confirms a
+    # weak-sign match for a woman D&H give no dynasty of her own.
+    family_dynasties: dict[str, frozenset[int]] = field(default_factory=dict)
 
 
 def surface_key(text: str) -> str:
@@ -254,6 +264,7 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
             else:
                 unresolved.append(name)
         index.family_king_ids[woman.target_id] = frozenset(family)
+        index.family_dynasties[woman.target_id] = frozenset(d for king in family for d in kings.dynasties(king))
         index.family_names_not_resolved[woman.target_id] = tuple(unresolved)
     for entry in json.loads(female_rulers_path.read_text(encoding="utf-8"))["entries"]:
         found = kings.resolve(entry["king_name"])
@@ -265,6 +276,7 @@ def build_index(women: Iterable[RoyalWoman], kings: KingAuthority,
             _add(index, king_id, names)
             index.dynasties[king_id] = kings.dynasties(king_id)
             index.family_king_ids[king_id] = frozenset()
+            index.family_dynasties[king_id] = frozenset()
         else:
             if entry["dh_id"] not in by_dh_id:
                 raise ValueError(f"{female_rulers_path.name} names {entry['dh_id']}, which is not a D&H woman")
@@ -318,9 +330,22 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
         return {**base, "status": "ambiguous" if candidates else "unmatched", "target_ids": candidates}
     if record_dynasty is not None and index.dynasties[chosen] and record_dynasty not in index.dynasties[chosen]:
         return {**base, "status": "unmatched", "target_ids": [], "context_rule": "record_dynasty_contradicts"}
+    if method == "weak_sign_skeleton" and not _weak_sign_confirmed(index, chosen, record_king_ids, record_dynasty):
+        return {**base, "status": "unmatched", "target_ids": [], "context_rule": "weak_sign_unconfirmed"}
     # A D&H woman who later reigned resolves to the king.
     return {**base, "status": "resolved", "target_ids": [index.king_ids.get(chosen, chosen)], "context_rule": rule,
             "royal_woman_id": chosen}
+
+
+def _weak_sign_confirmed(index: RoyalWomenIndex, chosen: str, record_king_ids: set[str],
+                         record_dynasty: int | None) -> bool:
+    """A weak-sign match is only a shared consonant skeleton, and a queen has no throne name
+    or reign to corroborate it, so the record must: it names one of her family kings, or its
+    single dynasty is hers (for a woman D&H give no dynasty, one of her family kings')."""
+    if index.family_king_ids[chosen] & record_king_ids:
+        return True
+    return record_dynasty is not None and record_dynasty in (set(index.dynasties[chosen])
+                                                             or index.family_dynasties[chosen])
 
 
 def resolve_ruler_mention(index: RoyalWomenIndex, kings: KingAuthority, text: str, *, royal_woman_cue: bool,

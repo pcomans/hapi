@@ -242,12 +242,23 @@ def found(index, text, *, kings=frozenset(), dynasty=None):
 def test_the_weak_sign_tier_reaches_the_other_sources_renderings_of_a_dh_woman(index) -> None:
     """Spellings attested in the committed Porter & Moss and Leprohon sources for women D&H
     spells otherwise; each differs from the D&H label by the key's documented rules only."""
-    # PM I.2, 599 "ʿAhmosi Nefertere" (rules 1, 3) for D&H "Ahmes-Nefertiry".
-    assert found(index, "ʿAhmosi Nefertere") == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes-Nefertiry"], None)
-    # PM I.2, 761 "Nebttaui" (rule 3, w/u) for D&H "Nebettawy A".
-    assert found(index, "Nebttaui") == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nebettawy A"], None)
-    # Leprohon 18.01's "Tetisheri" (rule 2) for D&H "Tetisherit".
-    assert found(index, "Tetisheri") == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Tetisherit"], None)
+    # A weak-sign match counts only when the record confirms it (family king, or dynasty).
+    # PM I.2, 599 "ʿAhmosi Nefertere" (rules 1, 3) for D&H "Ahmes-Nefertiry": D&H give her
+    # no dynasty (daughter of Taa II, Dyn 17; wife of Ahmose I, Dyn 18), so her family
+    # kings' dynasties confirm a Dynasty 17 or 18 record.
+    assert found(index, "ʿAhmosi Nefertere") == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "ʿAhmosi Nefertere", dynasty=18) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes-Nefertiry"], None)
+    assert found(index, "ʿAhmosi Nefertere", dynasty=19) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
+    assert found(index, "ʿAhmosi Nefertere", kings={"king:ahmose-i"}) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Ahmes-Nefertiry"], None)
+    # PM I.2, 761 "Nebttaui" (rule 3, w/u) for D&H "Nebettawy A" (Dyn 19).
+    assert found(index, "Nebttaui", dynasty=19) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nebettawy A"], None)
+    assert found(index, "Nebttaui")[3] == "weak_sign_unconfirmed"
+    # Leprohon 18.01's "Tetisheri" (rule 2) for D&H "Tetisherit": her D&H entry names no king
+    # (only her father Tjenna) and no dynasty, so no record can confirm her on this tier.
+    for dynasty in (None, 17, 18):
+        assert found(index, "Tetisheri", dynasty=dynasty) == ("unmatched", "weak_sign_skeleton", [], "weak_sign_unconfirmed")
     # PM I.2, 600 "ʿAhhotp" (rules 1, 3): D&H's two Ahhoteps, told apart by the husband.
     assert found(index, "ʿAhhotp") == ("ambiguous", "weak_sign_skeleton",
                                        ["dodson_hilton:Ahhotep I", "dodson_hilton:Ahhotep II"], None)
@@ -264,7 +275,8 @@ def test_the_weak_sign_tier_reaches_the_other_sources_renderings_of_a_dh_woman(i
         ["dodson_hilton:Nefertiry B", "dodson_hilton:Nefertiry C", "dodson_hilton:Nefertiry D Meryetmut",
          "dodson_hilton:Nefertiry E", "dodson_hilton:Nefertiry F"], None)
     # An alternative name is keyed too: "Ankhesenamun" (D&H's alt for Ankhesenpaaten), rule 3.
-    assert found(index, "Ankhesenamon") == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ankhesenpaaten"], None)
+    assert found(index, "Ankhesenamon", dynasty=18) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Ankhesenpaaten"], None)
     # The record's single dynasty still rules a lone candidate out.
     assert found(index, "Nebttaui", dynasty=20) == ("unmatched", "weak_sign_skeleton", [], "record_dynasty_contradicts")
     # A woman who later reigned is still the king on this tier: rule 3 on "Sobkneferu".
@@ -288,7 +300,9 @@ def test_the_weak_sign_tier_runs_only_when_the_first_two_find_nothing(index) -> 
             assert g["resolution_method"] == "committed_normalized", variant
             assert set(g["candidate_ids"]) >= set(f["candidate_ids"]), variant
     # The tier's own method name is reported, and only when it supplies the candidates.
-    assert found(index, "Nofretete") == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nefertiti"], None)
+    assert found(index, "Nofretete", dynasty=18) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nefertiti"], None)
+    assert found(index, "Nofretete", kings={"king:akhenaten"}) == (
+        "resolved", "weak_sign_skeleton", ["dodson_hilton:Nefertiti"], None)
     assert found(index, "Néfertiti")[1] == "committed_normalized"
     assert found(index, "Nefertiti")[1] == "raw_exact"
 
@@ -310,7 +324,7 @@ def test_the_weak_sign_tier_never_reaches_a_king_and_never_matches_below_the_min
         assert found(index, text) == ("unmatched", None, [], None), text
     # Different women never merge on this tier.
     assert found(index, "Ahhotepti") == ("resolved", "raw_exact", ["dodson_hilton:Ahhotepti"], None)
-    assert found(index, "Ahhotepty") == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotepti"], None)
+    assert found(index, "Ahhotepty", dynasty=13) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Ahhotepti"], None)
     assert found(index, "Nubhotpet", dynasty=12) == ("resolved", "weak_sign_skeleton", ["dodson_hilton:Nubhotepet"], None)
     # The two groups the key introduces stay ambiguous unless the record tells them apart.
     assert found(index, "Henttaui", dynasty=21)[:2] == ("ambiguous", "weak_sign_skeleton")
