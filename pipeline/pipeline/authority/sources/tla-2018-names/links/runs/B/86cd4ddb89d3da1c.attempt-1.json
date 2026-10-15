@@ -1,0 +1,595 @@
+{
+ "unit_id": "Hrere",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ḥrwr",
+  "C2": "ḥrrt",
+  "C3": "ḥrwwr"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Hrere\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ḥrwr\n  Lemma 1: German: Herwer | English: (none)\n\nCandidate C2: Ḥrr.t\n  Lemma 1: German: Hereret | English: Hereret\n\nCandidate C3: Ḥr.w-wr\n  Lemma 1: German: Hor-wer | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Hrere\", \"choices\": [<zero or more of \"C1\", \"C2\", \"C3\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "4f8d5df3d52df51114bd9b2d118d402ca5b2ad8c5cb8ac29aa8ab59187717888",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "3f1951af-bfc4-4d02-95b7-85c2dda9ae05",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "2ed307ec-85bf-4dae-aa2f-59e6eade1eca",
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "3f1951af-bfc4-4d02-95b7-85c2dda9ae05",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "904d48a5-856c-413b-9e64-59324c3857bc",
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-wu0_6dit",
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "cf301cac-8196-464b-b780-f337d2e332bf",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-wu0-6dit/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1990326.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "c2c9f0f6-3c9a-431d-9bad-8a1bc4020777"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 2,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "3bb818d5-140d-413f-8dad-e385618390a7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "c50fb6ec-4407-4939-ac27-a56384c5a6be"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 6,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "9bc8e967-b613-4345-adc3-b0aff78280f7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "0c3628f3-ef51-49f7-8108-9b9e8081e76b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "5aca9e13-78fc-4f14-9628-1163e90ac0e5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "1949f2cc-fe1e-4362-a398-77f644911024"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 3,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "5526a65e-2c31-4717-925f-3e6f7584ce1f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 3,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "f102f73e-70f1-4bdb-8f79-710e9a5581a5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 16,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "da1bb610-d47c-4c9a-a1b0-82764183ad14"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 4,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "d07b7cbf-c410-43b2-8ff0-fa96d2363cf1"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "4ba6f55d-f84f-4f83-bef9-97f22520a524"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "665f1824-7f96-4be6-8d8d-3bf3ce4bfbfa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "75756411-b47d-4159-9366-b9f04e93f3a8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "62f0bf82-6e00-4429-aabd-4c349667b0d7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "82c08a6e-48e6-4d8b-89de-572850120ef9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 4,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "2b7d6e86-aab7-4e25-81db-304a9e17b8dd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 36,
+   "estimated_tokens_delta": 6,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "2ef29c1b-9e2c-41e6-a11f-95614ce032f0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "53a3c8d6-1284-48e6-b11e-472427f6e72e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 3,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "67f9468a-fc26-4a91-9371-08156910e54f"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "cfb940a1-18ad-435f-9a3a-b7d3816bb35e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 44,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "4bd414a5-ce5c-45ca-b55c-9fe692fde81d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 49,
+   "estimated_tokens_delta": 5,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "e5b0e3d2-9c01-419e-aa1d-6a3331b87ba3"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 5,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "9d808f95-d560-4c79-9174-c6212795ac71"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 56,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "147f4b66-a8aa-47e5-aca2-de404ffad8a0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 58,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "24348b38-bcf3-44a7-b4bb-e1c3e1ad703a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 59,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "3e964865-f4ef-4e6b-a548-88b3a0b65fe0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 61,
+   "estimated_tokens_delta": 2,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "d9bc5ea5-af44-4afd-95a1-0ddd8bb465ba"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 62,
+   "estimated_tokens_delta": 1,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "2622ec65-c0a7-4a2a-ad62-735d9e279e00"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 342,
+   "estimated_tokens_delta": 280,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "afde9fae-95f1-4a3d-8c67-1a27292a32fa"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MppNobzPefxMoXvrwj",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Hrere matches Ḥrr.t \"flower,\" wife of Piankh and mother of Nodjmet—consonants h-r-r line up with the feminine t dropped. Checking Ḥrwr too, the w could similarly be elided to still produce Hrere.\n\n",
+      "signature": "CAQS0QoKEAgSGAI4AUIIdGhpbmtpbmcSDFS3isY1qjM8XAKWfxoMe8Q5CFkZC0IMYKOkIjCqs/TU6CJZaY/NTtalOdCWR5lrnTrcIUmRqRAPYLodpuZdCO+83X8pqI6t7L7BWXMq7gmP7fmTV+uOTbx/mbjpw2KaPSQc80V5b9jA6AKmhRl2Ps2L9uLsMcbrqXaJL5wK95+73QOtlE/wUcjQbWbECL5p1EoQawiuAbwqIR4HISFsf9lWXayXu1oUMB+VXydbJjGJPZCWbMu0NSkmGcADz/d1kbkOfGApXCTvotNvqloBJG5eeMzUrwwxMNa6+Ew6Ob3u4y5Kzhi/Xqsa9FbO0uwdNLrJ6fVeXpGmH85l4sStSa73WDIIJzr/hHK9WgBPujm6j1P0R/5vTU7VUOCB5UjODMHo/w/Fge1++TsVcczu9Ot9wHajxHq5H0bT38fIb3v4lJKYzBb7F7prIBV6eZziBgayOChxY0LuRNeDojcmBG7kQT76aNyDDjG0mcGb94EDBue9yYkDyYy2d2h3uzyR5BUSWpZ/OkIo4dD8l5P/PYPbUwogcvUDOYTuJA38Mnx7WX4UGzg9IFUrnNuJHlCBi7+hs/KKUBwYgI7rFDI/ZhX7oCPQv8FFObFeDFZHwlX9MiMB0ZLMCfzT2lRW2I5u1aSfFb+9U6Rxm8sRHCt7CqaVq2j0PANx3cIsbcWgeJPNmHbAaQtUh80z/JN7Mh9vRi5pYoNaBELq8fbYf0ejCwOHtCkGSJW77JIMsRr3K1Ys9kJohrR3dRHZ/X8nSSXPJCP/MfPYsRoXysvxi0oJvFYY3gZgpAYOsKqn8QgKjrbEp+xy4WCfwGZh54J8l1R71clzIrqwvGAtV7tU7KHPd6s4jBFsOBvbkwUUVnirKZ/aReJ0k6WlT5GsU/5uNtiFYnE6gXInEsn+vT5E6jLm2lk8DqeZu+z7MxS4cxz2tMnxru3dm94bojbhgNWvRvFdAU72m7O36WHmpl4G8TVul5wBzmnRi07DDWtsWM7sw+/fRNVpq3m7Prs8RF4JAZcIqy6fshiS9oruwhUsGbH9Z/DfK2J7azLsZyNnPMQgwkj3pw95C7po/suXB3Sqhb7HFkO+zVbhB8jzyrR+1S7VH967drcAzzk1I2zQpmmAOejP1ghT0x5bDiVb/cKMNWs1j+9dGfsOWR9DwTnqxFha3Dc9tE4ldXc33NO2yY6exOvXQDnWYs/T1B0PvRYxqtSq+g7V+GOV4DYvKhSHWrDPFWlpagDXN1nM7hspDp2sHicJoQbhMrVzN7UhU3/ZRqwoBz7lQFMezB+H8uKKDigZXm6zlIKt4MnNVtdHXDv+uHTYjoy0mzr+1CRPaElX8LfpwyoX/L1zwXZLWlilbA1Y0S4jnGc/4EORamv+rCsCQU3AsNMYzl3HL76hTflVrnsZNU+J0ATc604yw8WGaZTN1FqHxDKrFjbhcpnvoIKKT04B/hKSZOtZW06ANuhOHyYqgqCcgTayoJXo/X7Z7LAI0RidkzubysWrENh+6B52/5h/i7Flz+W/idRz8eHWjn4ZBAhvMDkCMLuGsyCuguvNss3FngJvYqXDIErkGN2YU25Ns3aAgWBwiXT1R7r7ccL7gw2Yxx8yH++D4+hvQdqK1ENKbW+hb9dEusxEzIyaPe4p6z/979d6/GMYUIz4YYtUqO74Bmq77KqVrWSiKI3RMUT6XtmnezHu6tnp0V1DOW+zx+kpx/DbSmSW0/SfEDs/8CbiCBQMw6/b/FsSiojM59cifCVwrlaeEF2dKYq+Z8lipSSZK/7k6Ek2x38M5RgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1277,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 7,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "a5480bbf-f4c6-4159-9bc6-1f98d982d97b",
+   "timestamp": "2026-10-15T16:44:52.153Z",
+   "request_id": "req_011Cg4MppA9ke89qRijbXRE2",
+   "thinking_duration_ms": 6178,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MppNobzPefxMoXvrwj",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Hrere\", \"choices\": [\"C2\"], \"reasoning\": \"C2 Ḥrr.t ('Hereret') is the single feminine word ḥrr.t, 'flower'. Record 1 Hrere renders ḥ-r-r with added vowels and drops the feminine ending t, which is allowed. That is exactly this word, the standard rendering of the name of the wife of Piankh, so it matches. C1 Ḥrwr ('Herwer') is one word ḥ-r-w-r. If w is left out, the consonants fit. But Herwer is a different word, a place-name type form, not ḥrr.t 'flower'. Record 1 read as a modern spelling renders the flower word, so C1 is a different name. C3 Ḥr.w-wr ('Hor-wer') is two words, 'Horus' + 'great'. The consonants can be forced to fit, but Hrere does not render 'Horus-the-great'; it renders the single word ḥrr.t. So C3 is a different name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1277,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 7,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "uuid": "4d127f47-bddc-4dcb-915b-5411eece88b7",
+   "timestamp": "2026-10-15T16:44:53.182Z",
+   "request_id": "req_011Cg4MppA9ke89qRijbXRE2"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "b8bb68fa-d4d9-4ec9-8636-5d6dc22d5df0",
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719"
+  },
+  {
+   "duration_api_ms": 8260,
+   "stop_reason": "end_turn",
+   "session_id": "904ee8e2-2fbc-4489-9764-f055bd8cd719",
+   "total_cost_usd": 0.0172234,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 345,
+    "cache_read_input_tokens": 1277,
+    "output_tokens": 710,
+    "output_tokens_details": {
+     "thinking_tokens": 369
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 345,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 710,
+      "cache_read_input_tokens": 1277,
+      "cache_creation_input_tokens": 345,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 345
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 710,
+     "cacheReadInputTokens": 1277,
+     "cacheCreationInputTokens": 345,
+     "webSearchRequests": 0,
+     "costUSD": 0.0172234,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 369,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Hrere\", \"choices\": [\"C2\"], \"reasoning\": \"C2 Ḥrr.t ('Hereret') is the single feminine word ḥrr.t, 'flower'. Record 1 Hrere renders ḥ-r-r with added vowels and drops the feminine ending t, which is allowed. That is exactly this word, the standard rendering of the name of the wife of Piankh, so it matches. C1 Ḥrwr ('Herwer') is one word ḥ-r-w-r. If w is left out, the consonants fit. But Herwer is a different word, a place-name type form, not ḥrr.t 'flower'. Record 1 read as a modern spelling renders the flower word, so C1 is a different name. C3 Ḥr.w-wr ('Hor-wer') is two words, 'Horus' + 'great'. The consonants can be forced to fit, but Hrere does not render 'Horus-the-great'; it renders the single word ḥrr.t. So C3 is a different name.\"}",
+   "ttft_ms": 7248,
+   "type": "result",
+   "duration_ms": 8344,
+   "uuid": "31403720-df75-42e8-be22-499816f62da1",
+   "ttft_stream_ms": 1069,
+   "time_to_request_ms": 38,
+   "first_content_frame_ms": 1070,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Hrere",
+   "choices": [
+    "C2"
+   ],
+   "reasoning": "C2 Ḥrr.t ('Hereret') is the single feminine word ḥrr.t, 'flower'. Record 1 Hrere renders ḥ-r-r with added vowels and drops the feminine ending t, which is allowed. That is exactly this word, the standard rendering of the name of the wife of Piankh, so it matches. C1 Ḥrwr ('Herwer') is one word ḥ-r-w-r. If w is left out, the consonants fit. But Herwer is a different word, a place-name type form, not ḥrr.t 'flower'. Record 1 read as a modern spelling renders the flower word, so C1 is a different name. C3 Ḥr.w-wr ('Hor-wer') is two words, 'Horus' + 'great'. The consonants can be forced to fit, but Hrere does not render 'Horus-the-great'; it renders the single word ḥrr.t. So C3 is a different name."
+  }
+ }
+}

@@ -1,0 +1,489 @@
+{
+ "unit_id": "Isetneferet",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "ꜣstnfrt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Isetneferet\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Ꜣs.t-nfr.t\n  Lemma 1: German: Aset-neferet | English: Aset-neferet\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Isetneferet\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "b476bbc332c4a42de4c5e20fe8334d9376f2b82a2d65310123be544bae1a5149",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "656d9e53-da5c-4a84-acec-2ac412be8867",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "bec95b76-7832-46b3-9ca8-a1a90dc4b994",
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "656d9e53-da5c-4a84-acec-2ac412be8867",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "714f1a84-93d0-4038-9a67-37eda18e147f",
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-rjkdvrwt",
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "478d6678-9476-4ed4-a3b8-0dabb763a6c2",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-rjkdvrwt/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1990901.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 5,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "e6962d7a-2e0a-4b7c-9136-2c0777315efa"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 4,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "0195f0b3-16a2-4c33-9875-dae5b5d18fa2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 14,
+   "estimated_tokens_delta": 5,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "90449ebe-26eb-4de7-8bd1-c8e5c469e029"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 1,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "24b8908b-9696-49bf-b9b7-d2a1d23e0a55"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 19,
+   "estimated_tokens_delta": 4,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "db6db448-2ab7-4ca8-9a37-8cee46ed8108"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 2,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "21830481-4d60-4b86-bfd2-4846bc46a4b9"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 2,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "1764b308-774e-44d9-b0ef-5b3d4e29aeee"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 4,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "513e98c3-85e9-450c-a7db-2380ab77d7bd"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 2,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "34db9029-173f-4b72-a053-e6780b923f48"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 1,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "eb2044c2-4662-486c-b25c-48e7c077cf15"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 31,
+   "estimated_tokens_delta": 1,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "b5132fa5-c88e-4046-a694-5022c614712c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 1,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "b1c509f6-e27a-4dbb-abd3-fae358cb9bb8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 33,
+   "estimated_tokens_delta": 1,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "a9f43742-aa83-4335-a28f-1108981875a8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 38,
+   "estimated_tokens_delta": 5,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "19aa7f36-134b-4508-b4f0-dacf515e0eb8"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 41,
+   "estimated_tokens_delta": 3,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "68b747d7-8c82-4401-bd23-772e4752d33b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 1,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "efb1d5a5-90f9-461c-b805-90d012e7bf35"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 186,
+   "estimated_tokens_delta": 144,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "09c5a6bf-6a93-4082-858e-bc8c3077bd7a"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MtEVTj9r57TATTNkJS",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Breaking down Isetneferet, it parses as Isis plus \"nfrt\" (beautiful) — same construction as before, with the Ꜣ sound rendered as the vowel \"I\".\n\n",
+      "signature": "CAQS3gUKEAgSGAI4AUIIdGhpbmtpbmcSDBvd+THxo1GLRQ53KhoMxQZ6tv0b13zLST9aIjBd107GFK7wnSVH/bO7zKk5Mzbtzl9diaVsTWXuoH6qRaUBAt9GiOkvee+aQwe1YeUq+wSU2JKFxNtBnhb7y9NOdORhXJWUqkylVLzkT8TxB4InEyW5GMVuI8ItEeKwdjC7L+MPsqZZiVQ0Mdq1cFeyaMGrjPSj/jSc3LcYFmoe7j4ZxK2xMTXxiPOI9LilprvEelc7jh1B0CXgknZ1GC5g9uACStWmySnwgkG/Evolfz7QRGUKmBiKyF+3gZ/MPTMpP7DJSeH+ya3ZH5b4Ysv8omFFCEsGN+HyylOX0yue081OlpP/lY6H0MEbLwyIcH4+AjP39+dbo+HsaXOULeoR73CeYUYkiVGF90Eu/pqBTkwP7sSGls1fzRBqshl5Zy/B/M1HmQPNT2JFoHrpf5d5SKKjO3VF/kppEAiUC09anzSJSU+UTZm1qep9dkGG/d1Xe2fsHtMJktOZ+FFUoI8uz1aIIFaEvGTHIwgglbOiBlIK6+3uyAU34kfTuMhhRuKy3JE1yvkfCGKPCjLKwLy8aVUw/OszdYah+NgFztw8LiaPjk/3D9SVITpXCOk3d4W5n1eqKZPjPvrQ2F2UsifUN1tzEaFpwVUdh9kSMc/GV4BVGpgCzdURiCo3tV8NRYfB94cqBV03Z6PEsUshCowv1O5FvfZny8YbWng1N0HJj2OfLXKzBKEaaOE/OYhwXekAg0aUM4TH5kWvebqimhvexwpOWZFtTDhbKT0LLmRkeq365IYTtQzyrqjZ1YUhl2cfBD4sb0q6nHyW7dxi+oInkzBtw9Fts0Ss/bN4JZyOcbtkxg+I9yEVOmXhUnCrFrvR7yTI+pdYWaCuQDPbmUq4uFdW95PZnf9SEwdO0e7lOkw00om8HM/wXSlMMGF8xvOczB00r+RbOQfMriDPiBgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 346,
+     "cache_read_input_tokens": 1208,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 346
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "d29c0803-b22f-417e-9fb7-5dde307b0bc9",
+   "timestamp": "2026-10-15T16:45:35.069Z",
+   "request_id": "req_011Cg4MtEF5kuoy6bDUSeRAt",
+   "thinking_duration_ms": 2527,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MtEVTj9r57TATTNkJS",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Isetneferet\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ꜣs.t-nfr.t is made of two words: the goddess name Isis (Ꜣs.t, Aset/Iset) and nfr.t, 'beautiful/good'. The TLA translation is 'Aset-neferet'. Record 1 reads letter by letter as follows: I renders ꜣ as a vowel; s-e-t renders s and the feminine .t; n-e-f-e-r renders nfr; the final t renders the feminine ending .t. 'Iset' is the conventional modern spelling of Isis, so record 1 renders the same words in the same order, with no extra or missing consonants. It is the same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 346,
+     "cache_read_input_tokens": 1208,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 346
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "uuid": "7b46fc27-f93c-4b7a-ba4c-5b8047a1ed8d",
+   "timestamp": "2026-10-15T16:45:36.502Z",
+   "request_id": "req_011Cg4MtEF5kuoy6bDUSeRAt"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "353c953b-c487-4ad2-8ae6-8b16942bcc12",
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97"
+  },
+  {
+   "duration_api_ms": 5229,
+   "stop_reason": "end_turn",
+   "session_id": "cca41fbd-3510-47fa-ab57-dd93e82eee97",
+   "total_cost_usd": 0.0095576,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 346,
+    "cache_read_input_tokens": 1208,
+    "output_tokens": 327,
+    "output_tokens_details": {
+     "thinking_tokens": 80
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 346,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 327,
+      "cache_read_input_tokens": 1208,
+      "cache_creation_input_tokens": 346,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 346
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 327,
+     "cacheReadInputTokens": 1208,
+     "cacheCreationInputTokens": 346,
+     "webSearchRequests": 0,
+     "costUSD": 0.0095576,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 80,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Isetneferet\", \"choices\": [\"C1\"], \"reasoning\": \"C1 Ꜣs.t-nfr.t is made of two words: the goddess name Isis (Ꜣs.t, Aset/Iset) and nfr.t, 'beautiful/good'. The TLA translation is 'Aset-neferet'. Record 1 reads letter by letter as follows: I renders ꜣ as a vowel; s-e-t renders s and the feminine .t; n-e-f-e-r renders nfr; the final t renders the feminine ending .t. 'Iset' is the conventional modern spelling of Isis, so record 1 renders the same words in the same order, with no extra or missing consonants. It is the same name.\"}",
+   "ttft_ms": 3812,
+   "type": "result",
+   "duration_ms": 5310,
+   "uuid": "f0d1d9b9-ed04-49b1-8ff8-00602900738d",
+   "ttft_stream_ms": 1284,
+   "time_to_request_ms": 36,
+   "first_content_frame_ms": 1285,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Isetneferet",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 Ꜣs.t-nfr.t is made of two words: the goddess name Isis (Ꜣs.t, Aset/Iset) and nfr.t, 'beautiful/good'. The TLA translation is 'Aset-neferet'. Record 1 reads letter by letter as follows: I renders ꜣ as a vowel; s-e-t renders s and the feminine .t; n-e-f-e-r renders nfr; the final t renders the feminine ending .t. 'Iset' is the conventional modern spelling of Isis, so record 1 renders the same words in the same order, with no extra or missing consonants. It is the same name."
+  }
+ }
+}

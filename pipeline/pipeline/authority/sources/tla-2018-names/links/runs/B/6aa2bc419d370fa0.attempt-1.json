@@ -1,0 +1,561 @@
+{
+ "unit_id": "Nesikhonsu",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "njswḫnsw"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Nesikhonsu\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: N.j-sw-Ḫns.w\n  Lemma 1: German: Neschons | English: (none)\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Nesikhonsu\", \"choices\": [<zero or more of \"C1\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "d9459eaf4836af4df148cf98077c3cd77c7f00426c39fd9f3883305105969b22",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "37f2fb25-9494-45f2-9adc-2cf3a4170424",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "c7a23786-ccac-4230-9ed8-3e367bc8d49f",
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "37f2fb25-9494-45f2-9adc-2cf3a4170424",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "82d2ca01-a4f6-48e8-920f-3e8eda8c9ff7",
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-4ggdyllq",
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "3b8bc8b8-c659-40b8-a25b-6cc5b26a8956",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-4ggdyllq/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1997197.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "016e7694-5c21-4dd6-bd79-4b01ad83df16"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "66b6dcdf-8212-471f-9b27-e9482334c4fc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "b94c06b5-74aa-4f35-b7fc-6098b44f6146"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "47c0c468-6286-4436-a05b-b7524ea7e14d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "6c437f1d-1219-4fb0-b54b-36f66ebcdbf5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "b39d4fa9-333a-4167-9d05-21e1e9f5032d"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "2c4e3bd1-0819-4b70-916d-a2ef5eb3c634"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "b101687a-cf33-4a1b-98ad-49e15587c020"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 13,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "fb748b7f-3862-4bf2-b7fb-d3c1b997c7a6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 15,
+   "estimated_tokens_delta": 2,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "5bd1c869-d206-403e-87d0-54d394a9b265"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 21,
+   "estimated_tokens_delta": 6,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "8ad73eb5-e932-4e25-864b-239264849187"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 24,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "a7ac67a4-d2e8-4750-a6ac-4d423acf9136"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 27,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "c406176d-a0cf-4d1d-80dc-b800e986c3e6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 32,
+   "estimated_tokens_delta": 5,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "31208cba-4bbe-4794-a0ea-e50098c1b2c0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 37,
+   "estimated_tokens_delta": 5,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "4ba04c8a-8750-4287-813d-5a172debce96"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "7be111f7-d667-4122-b2b7-1137495b62a5"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 42,
+   "estimated_tokens_delta": 2,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "f48c5d1a-64bb-409e-8a26-886a182b22fc"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 45,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "6cc387b3-0553-4c1f-aa39-00a8770409a2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "b5fa814d-f084-4093-9fac-39a23014606b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 51,
+   "estimated_tokens_delta": 5,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "dcc3a663-0517-45bf-88ac-4fea57372d30"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 52,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "895ec2c0-3b74-444a-b731-af680de2977a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 53,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "f86492c9-0a0e-446d-9b7f-8264a1a22227"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 54,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "c4d1b25d-6a44-431b-927c-fd07de612319"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 57,
+   "estimated_tokens_delta": 3,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "77da21b8-e564-448b-93fc-2d3f30c206d0"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 58,
+   "estimated_tokens_delta": 1,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "bcc7c7a0-0f21-4d7c-a42a-d79b29fbbcee"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 250,
+   "estimated_tokens_delta": 192,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "594fd006-7889-494a-b369-387a9050f031"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4NDQBQChkG8492Sk5fh",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "I'm working through how \"Nesikhonsu\" transliterates from the Egyptian elements meaning \"belonging to Khonsu,\" tracing how each consonant and glide maps onto the vowelized rendering.\n\n",
+      "signature": "CAQS3wcKEAgSGAI4AUIIdGhpbmtpbmcSDG1+3tgSu3ZTYkJ+qBoMUmwP739yx5dfkAb0IjBYXptbr9FIdqz6TNKPYc/lrEdKSO8UeCbevahZiPnaXe7y1OBMNle8pYM/znjCVGMq/AZ/tDtArOBoXgziOZABfo0Bzu8avMryoKaTtcWqiP4ukWCRsZPXktqrpiNeM4VT6kAI0CNtPCtkHmxxvLzH22X4ysx9PNEc4dcEPz1enOM0JO+hGM0IF+IBMlTZkjRcrwz7xjRKfr1oehLgxuMZnFnwxrHddMeJ/UQxxEXhWTsblr3UMLou+BGC4WVXTQfBTUkqe6dBPCMAZTf49FdpKytxMJqZVB8l/Bt+fFaYD6ysTt0EVEZ4IK/apT5Kh2TIV41yOLCBnqjOjt0RR6oIlDeaLMKq2zcGriPLsWCVpmAHMvYPkBldqjTB0hGW/lvSqrqBcmnghE5NPGz6h+TVYYIJk7NOw1wf3kKrfnBQ2JKQRiI3z+wUXmXmKNedeZBQaGw4LLc6kjsuP7pOC9OFOrHiAvNdb1rZKpdjfVMGRSOwl+J9ZwnztNBHxcDW20PFQ+MObfcFZvppPK+oApdbLG9ETSRyXQo21PFMfKViMGN5RVqAo/rOIE3eeLcKDkQLpYde70qigQedgBAIdgKUgUtXiBgsYOsdLfGo6qybFK8xFckL1acnJh2SIHZnIenuBxQUSFmou6SkQB3/0HqKWKnSdECGvIL+odAZrrIVL+hnsbS4USKF1Z2Mleu70BmOQF/74aSay94CpGIaqrsLlDWBER1/WtIfqktvdcOQYNCLIOnTk6xGbGL8QOqctiF/Gm3YEK0g389Mpy0U+QZw6FJPan2BaGEEwZ7xpi8SX9VkC1tcaVQUj5JEy3puGlg81z5+Rh2smUSWfGA8DvxIsGhKlKkQX5Qq3LV8x5wOS45Lq/Z6QUMa12sqlqCjkFJZFax9w5I3y87vK2GBF8TF2aMlSHa9kv8DnWo7mjo+N3clZ9dfGwgtK7E81if+tFk/BSiEX5itQaszu+w58lmmoXaZV3g1NsrCVrilNlWVjGIo42zc/a+SQkNh3EApbxzGB9fQhiJecdKixxIjU58u+CqF3LeG/KnCPurZDcBSDklMAD89AEB1N3nF1gR3b8SYL2v75QIol4MC4KcRxzKwB5vuXKXVypXdbl05bQcpBEicyTH95qWfY/z9zUtMTsOVRSKTg4BIxKHTVghEMY8zMXWAmNux/78ULpNYuYWb+7Yewrnr6uewDiGv3yFX3nHLPxdpnG0UKbLHLZA5QOvZbEnZUypZIf6PsM6BiGvmGAE="
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1205,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "ba867dfa-adc4-4a87-a4a9-1c7af3858a2d",
+   "timestamp": "2026-10-15T16:49:57.541Z",
+   "request_id": "req_011Cg4NDPrZSBqWGAyDsGUgQ",
+   "thinking_duration_ms": 5106,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4NDQBQChkG8492Sk5fh",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Nesikhonsu\", \"choices\": [\"C1\"], \"reasoning\": \"C1 N.j-sw-Ḫns.w is the words nj-sw ('he/she belongs to') plus Ḫns.w (the god Khonsu), meaning 'belonging to Khonsu'; its German spelling is Neschons. Record 1 Nesikhonsu reads as exactly these words in the same order. N is n; the weak j is unwritten or covered by the added vowel e; s is s; the weak w is rendered i; kh is ḫ; o is an added vowel; n and s are n and s; the final u is the weak w of Ḫns.w. No consonant is added or left out, and the elements Nesi- and -khonsu are the conventional modern spellings of nj-sw and Khonsu. Same name.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1205,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "uuid": "56438a6f-9ccb-4167-9f5b-8bf15f999002",
+   "timestamp": "2026-10-15T16:49:58.255Z",
+   "request_id": "req_011Cg4NDPrZSBqWGAyDsGUgQ"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.13,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "164cbea5-9e29-4f39-86c5-6faa172a72d3",
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066"
+  },
+  {
+   "duration_api_ms": 6985,
+   "stop_reason": "end_turn",
+   "session_id": "1698eeb7-723f-4e83-b534-a231e82e5066",
+   "total_cost_usd": 0.012849000000000001,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 345,
+    "cache_read_input_tokens": 1205,
+    "output_tokens": 492,
+    "output_tokens_details": {
+     "thinking_tokens": 218
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 345,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 492,
+      "cache_read_input_tokens": 1205,
+      "cache_creation_input_tokens": 345,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 345
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 492,
+     "cacheReadInputTokens": 1205,
+     "cacheCreationInputTokens": 345,
+     "webSearchRequests": 0,
+     "costUSD": 0.012849000000000001,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 218,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Nesikhonsu\", \"choices\": [\"C1\"], \"reasoning\": \"C1 N.j-sw-Ḫns.w is the words nj-sw ('he/she belongs to') plus Ḫns.w (the god Khonsu), meaning 'belonging to Khonsu'; its German spelling is Neschons. Record 1 Nesikhonsu reads as exactly these words in the same order. N is n; the weak j is unwritten or covered by the added vowel e; s is s; the weak w is rendered i; kh is ḫ; o is an added vowel; n and s are n and s; the final u is the weak w of Ḫns.w. No consonant is added or left out, and the elements Nesi- and -khonsu are the conventional modern spellings of nj-sw and Khonsu. Same name.\"}",
+   "ttft_ms": 6302,
+   "type": "result",
+   "duration_ms": 7071,
+   "uuid": "7dc6f6d3-842d-4d50-b452-7952db43cbaa",
+   "ttft_stream_ms": 1195,
+   "time_to_request_ms": 41,
+   "first_content_frame_ms": 1195,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Nesikhonsu",
+   "choices": [
+    "C1"
+   ],
+   "reasoning": "C1 N.j-sw-Ḫns.w is the words nj-sw ('he/she belongs to') plus Ḫns.w (the god Khonsu), meaning 'belonging to Khonsu'; its German spelling is Neschons. Record 1 Nesikhonsu reads as exactly these words in the same order. N is n; the weak j is unwritten or covered by the added vowel e; s is s; the weak w is rendered i; kh is ḫ; o is an added vowel; n and s are n and s; the final u is the weak w of Ḫns.w. No consonant is added or left out, and the elements Nesi- and -khonsu are the conventional modern spellings of nj-sw and Khonsu. Same name."
+  }
+ }
+}

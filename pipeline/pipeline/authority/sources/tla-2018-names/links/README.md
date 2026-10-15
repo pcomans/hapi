@@ -1,75 +1,116 @@
-# Spelling links: Dodson & Hilton's women's names ↔ TLA personal-name lemmas (2026-10-15)
+# Spelling links: Dodson & Hilton's women's names ↔ TLA personal-name lemmas (protocol v2.1, 2026-10-15)
 
-A link says that a D&H name and a TLA lemma are **one name**, so that the lemma's renderings
-(its transliteration and translations, glosses removed) become further spellings of that name
-for the royal-women resolver (`royal_women.build_index(..., linked_spellings=...)`). A link is
-never a decision about a person: "Henttawy" would link to every D&H woman of that name, and
-the resolver still chooses among them by the record's numeral, family and dynasty.
+A link says that a D&H name and one or more TLA lemmas are **one name**. The lemmas'
+renderings (transliteration and translations, glosses removed) then become further spellings
+of that name for the royal-women resolver (`royal_women.build_index(..., linked_spellings=...)`).
 
-Code: `pipeline/pipeline/authority/tla_links.py` (candidates, linked spellings) and
-`tla_link_review.py` (the model review). Tests: `pipeline/tests/test_tla_links.py`.
+A link is never a decision about a person:
+- "Henttawy" would link to every D&H woman of that name;
+- the resolver still chooses among them by the record's numeral, family and dynasty.
+
+Code:
+- `pipeline/pipeline/authority/tla_links.py`: candidates, units, linked spellings.
+- `tla_link_review.py`: the model review.
+
+Tests: `pipeline/tests/test_tla_links.py`.
 
 ## Licence
 
-The linked renderings are TLA data, CC BY-SA 4.0, with the attribution in `../README.md`.
-They stay in this source's directory and are read from here; they are not copied into
-Apache-licensed data.
+This directory is Adapted Material of the TLA lemma list, shared under CC BY-SA 4.0 with the
+attribution in `../README.md` (and the repository's `NOTICE`). That covers:
+- the stored model calls, which quote TLA rows;
+- the decisions;
+- the prompts.
 
-## Candidates
+The linked renderings are read from here and are not copied into Apache-licensed data.
 
-`tla_links.candidate_pairs`: every (D&H name, TLA `person_name` lemma) whose spellings meet on
-one of the resolver's tiers. A D&H name is a label with D&H's letter or numeral removed.
+## Candidates and units
 
-| Tier the pair first meets on | Pairs | Decided by |
-|---|---|---|
-| exact (`raw_exact`) | 34 | rule: the resolver already treats this tier as one name |
-| claim-graph keys (`committed_normalized`) | 9 | rule, as above |
-| weak-sign key only (`weak_sign_skeleton`) | 122 | model review (below) |
-
-A weak-sign key that D&H spells differently for different women (`withheld_keys`: hntt,
-nbt, nfr, tntmn) proposes no pair, since the key cannot tell those names apart.
+- **Candidates.** `tla_links.candidate_pairs`: every (D&H name, TLA `person_name` lemma) whose
+  spellings meet on one of the resolver's tiers. A D&H name is a label with D&H's letter or
+  numeral removed.
+- **Withheld keys.** A weak-sign key that D&H spells differently for different women
+  (`withheld_keys`: hntt, nbt, nfr, tntmn) proposes nothing.
+- **Units.** `tla_links.units` groups the candidates by D&H name. Within a name, lemmas of one
+  strict transliteration (`strict_name`) are one TLA name: 97 D&H names.
+  - **By rule (32).** The exact or claim-graph keys find exactly one TLA name, which is
+    linked: the resolver already treats those tiers as one name.
+  - **Reviewed (65).** The rule finds no TLA name, or more than one (Iaret, Ti), and the
+    candidates go to review: 108 TLA names in all.
 
 ## Review (Rule 13, Rule 14)
 
-- **Prompts:** `prompts/system-v1.txt`, `reviewer-v1.txt`, `reconciler-v1.txt`. Each was
-  leak-audited before any call (`prompt-audit.md`, three rounds; a test checks the SHA-256s).
-  The D&H side of a prompt carries the name only, never the woman's kin, dynasty or letter.
-- **Calls:** Claude Code headless on the subscription (`claude -p`, model alias `sonnet`,
-  served `claude-sonnet-5-5`, effort high), with no tools. Every call is stored complete in
-  `runs/<role>/` as its stream-json event log, with the command, the system prompt and the
-  user content. A test re-checks each stored call: no API-key billing, the served model, no
-  tools, no hook output, and a valid answer with stated reasoning.
-- **Reviewers A and B** judged each of the 122 pairs independently. Their verdicts agreed on
-  120. The reconciler, which saw both reviews under shuffled opaque labels, decided the 2 they
-  disagreed on.
-- **Reasoning captured:** every one of the 250 answers states its reasoning; 249 of the calls
-  also hold the model's thinking block. Reviewer A's call on Seneb|706871 has none, and its
-  answer's reasoning stands alone.
-- **Two stored pairs decide nothing.** The run withheld hntt, nbt and nfr. The resolver's
-  rule was later derived from the data (`different_spellings`) and also withholds tntmn
-  (Tentamun / Tintamun). So the run's two pairs Tentamun|708230 and Tintamun|708230 are no
-  longer candidates. Their calls stay on disk (Rule 13), and a test pins them as the only
-  calls that are not current candidates.
+**Prompts** (`prompts/`, one shared rules block):
+- The D&H name is shown with its candidates under opaque labels, in an order seeded by the
+  name. The prompt shows no lemma ids and no descriptions such as "(a wife of Tuthmosis IV)".
+- The rule compares words, not consonant skeletons. Consonant conventions are stated; a
+  feminine ending t may be omitted; nothing else may be added or dropped; different words that
+  share consonants are different names.
+- The answer is the set of every candidate that is the same name, possibly empty.
+- Audited in two rounds before any call. The auditor's full reports are
+  `prompt-audit-v2-round1.md` and `prompt-audit-v2-round2.md`; the summary and SHA-256s, which
+  a test checks, are in `prompt-audit-v2.md`.
+
+**Calls:**
+- Claude Code headless on the subscription (`claude -p`, no API key), effort high, no tools,
+  slash commands off.
+- Reviewer A is claude-sonnet-5-5. Reviewer B and the reconciler are claude-opus-5-5, so the
+  two reviewers are different models.
+- Every call is stored complete in `runs/<role>/`: stream-json events, command, system prompt,
+  user content.
+- A decision is re-derived from the stored event log (`validate`), and the `result` stored
+  beside it must agree.
+- A test re-checks every call: no API-key billing, only the role's model in the init event,
+  every assistant message and the usage, no tools, no hook output.
+
+**Hidden context.** Claude Code adds about 585 tokens of its own context to every headless
+call. A probe measured it: 602 input tokens for a 15-token prompt. No subscription-auth flag
+removes it (`--bare` requires an API key), so it is not in the stored input. That is a limit
+of harness runs.
+
+**Result of the review:**
+- A and B agreed on 59 of the 65 units. The reconciler, which saw both reviews under shuffled
+  opaque labels, decided the other 6: Meryetneith, Minemaes, Nubemhat, Nubemiunu, Reniseneb,
+  Werenro.
+- Every answer states its reasoning. A thinking block is present in 49 of A's 65 answering
+  calls, 55 of B's 65 and all 6 of the reconciler's: thinking is adaptive.
+- One call failed format and was retried: A on Meketaten, with no JSON object in the answer.
 
 ## Result (`decisions.jsonl`)
 
-| Basis | same_name | different_name |
-|---|---|---|
-| rule (exact or claim-graph keys) | 43 | — |
-| reviewers agree | 70 | 50 |
-| reconciler | — | 2 |
+| Basis | no TLA name | one TLA name | two TLA names |
+|---|---|---|---|
+| rule | — | 32 | — |
+| reviewers agree | 15 | 41 | 3 |
+| reconciler | 3 | 3 | — |
 
-`decisions.jsonl` is rebuilt from the stored calls by
-`uv run python -m pipeline.authority.tla_link_review decide`. A test checks that the rebuild
-equals the committed file. The 113 `same_name` links give 110 women 304 further spellings.
-They add no weak-sign collision and change no withheld key (tested).
+- **Two names.** The three agreements on two TLA names are Iaret (`Jꜥr.t`, `Jꜣrt`), Ti (`Tj`,
+  `Ty`) and Meryetyotes (`Mr.t-jtj=s`, `Mr.yt-jtj=s`): one name in two TLA orthographies. This
+  is the documented policy: every candidate that is the same name is linked.
+- **Rebuilt from the calls.** `decisions.jsonl` is rebuilt from the stored calls by
+  `uv run python -m pipeline.authority.tla_link_review decide`, and a test checks that the
+  rebuild equals the committed file.
+- **Effect on the resolver.** The links give 121 women 265 further spellings. They add no
+  weak-sign collision and change no withheld key (tested).
+
+## Withdrawn runs (kept, deciding nothing)
+
+- `v1-withdrawn/`: protocol v1, a consonant-procedure review of single pairs. It linked names
+  that differ; see its README.
+- `withdrawn-v2.0-strict-parser/`: the v2.0 runs of reviewer B and the reconciler.
+  - v2.0's parser rejected answers in a closing code fence, and the reconciler fenced six of
+    six attempts on one unit.
+  - Re-reading those attempts under a looser parser would have changed two of B's answers
+    after they were seen, so B and the reconciler were run afresh under v2.1.
+  - A's calls read the same under both parsers.
 
 ## Limits
 
-- **The reviewers judge spelling, not usage.** The prompt lets a modern spelling leave out
-  an element-final t, so a masculine and a feminine form can be one name (Seneb and `Snb.t`).
-  That is the key's own rule 3.
-- **Lemmas are not one-to-one with names.** One D&H name can link to several lemmas of one
-  name entered twice. Every one of their renderings becomes a spelling.
-- **Royal-name (`kings_name`) lemmas are not linked here.** Linking them to the king graph is
-  a later stage.
+- **A model judgment.** The review judges which words a modern spelling renders. D&H give no
+  transliteration, so the decision rests on the model reading the D&H spelling, checked
+  against the TLA's transliteration and translations. The egyptologist review of this PR
+  checks the linked names.
+- **Sampling variance.** In the withdrawn v2.0 run, one reviewer answered two units
+  differently on different attempts.
+- **Royal-name lemmas are not linked here.** Linking the `kings_name` lemmas to the king graph
+  is a later stage.

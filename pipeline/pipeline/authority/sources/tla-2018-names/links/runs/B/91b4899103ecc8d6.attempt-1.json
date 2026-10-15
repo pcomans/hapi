@@ -1,0 +1,539 @@
+{
+ "unit_id": "Iaret",
+ "role": "B",
+ "requested_model": "opus",
+ "labels": {
+  "C1": "jꜣrt",
+  "C2": "jꜥrt"
+ },
+ "parameters": {
+  "effort": "high",
+  "thinking_display": "summarized",
+  "tools": []
+ },
+ "command": [
+  "claude",
+  "-p",
+  "<user_content>",
+  "--model",
+  "opus",
+  "--effort",
+  "high",
+  "--thinking-display",
+  "summarized",
+  "--system-prompt",
+  "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+  "--tools",
+  "",
+  "--mcp-config",
+  "{\"mcpServers\": {}}",
+  "--strict-mcp-config",
+  "--disable-slash-commands",
+  "--output-format",
+  "stream-json",
+  "--verbose",
+  "--no-session-persistence"
+ ],
+ "system_prompt": "You are an Egyptologist deciding which, if any, of several candidate names are the same ancient Egyptian personal name as a name in a book. You have no tools: decide only from the records in the message. Answer with one JSON object and nothing after it.\n",
+ "user_content": "Record 1 is a name as Dodson & Hilton, *The Complete Royal Families of Ancient Egypt* (2004), print it, without the letter or numeral with which they tell apart women of one name.\nName: Iaret\n\nThe candidates are names from the Thesaurus Linguae Aegyptiae lemma list (January 2018), matched to record 1 by spelling keys; any number of them, or none, may be the same name as record 1. Each candidate is one transliteration, with the modern spellings the TLA gives for each lemma entered under it (descriptions in parentheses or brackets left out). Labels and order are arbitrary.\n\nCandidate C1: Jꜣrt\n  Lemma 1: German: Iaret | English: (none)\n\nCandidate C2: Jꜥr.t\n  Lemma 1: German: Iaret | English: Iaret\n\nAn Egyptian personal name is a sequence of words: names of gods, nouns, adjectives, verbs, prepositions, particles and pronouns. In a TLA transliteration, hyphens and spaces separate words, a dot marks off an ending (such as a feminine .t or a plural .w), and = attaches a suffix pronoun; the translations render the name in modern spelling. A modern spelling such as record 1 renders the same words with vowels added by convention, often written as one word with no separators.\n\nRecord 1 and a candidate are the same name when record 1 can be read as the candidate's words, in the same order, by these conventions:\n- each consonant sign is rendered by its own letter or letters: ḥ as h; ḫ and ẖ as kh or ch; š as sh; ṯ as tj or t; ḏ as dj or d; z as s; q and ḳ as q or k; every other consonant by its own letter;\n- ꜣ and ꜥ are rendered as a vowel or not at all; the weak consonants j (also written ꞽ or i̯), y and w are rendered as i, y, u, w or not at all;\n- vowel letters may be added anywhere and stand for no sign;\n- apart from what the lines above allow, record 1 may not render a consonant the candidate lacks, nor leave out a consonant the candidate has; the one further omission allowed is a feminine ending t.\nMatching consonants are necessary but not enough: the candidate's translations show which words it is made of, and the candidate is a different name when record 1, read as a modern spelling, renders different words (for instance, a different word that happens to share consonants).\nWho bore a name is not evidence that two spellings are one name.\n\nList every candidate that is the same personal name as record 1 (several candidates can be the same name in different orthographies), or none.\n\nAnswer with this JSON object, and nothing after it:\n{\"unit_id\": \"Iaret\", \"choices\": [<zero or more of \"C1\", \"C2\">], \"reasoning\": \"<for each candidate: its words, and whether record 1 can be read as exactly those words>\"}\n",
+ "user_content_sha256": "6892a5dd660fa5855547606562cd531edb50eccc4966563769ef773175a3b847",
+ "exit_code": 0,
+ "stderr": "",
+ "events": [
+  {
+   "type": "system",
+   "subtype": "hook_started",
+   "hook_id": "46627c49-a177-4a61-96a8-3e10657a9f70",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "uuid": "b01c8e18-0ff0-4faf-b804-dbc20c438c6f",
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c"
+  },
+  {
+   "type": "system",
+   "subtype": "hook_response",
+   "hook_id": "46627c49-a177-4a61-96a8-3e10657a9f70",
+   "hook_name": "SessionStart:startup",
+   "hook_event": "SessionStart",
+   "output": "",
+   "stdout": "",
+   "stderr": "",
+   "exit_code": 0,
+   "outcome": "success",
+   "uuid": "c6c61f63-6cdf-4ed7-81d9-36f1692aff9c",
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c"
+  },
+  {
+   "type": "system",
+   "subtype": "init",
+   "cwd": "/tmp/hapi-tla-link-2elm1wyu",
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "tools": [],
+   "mcp_servers": [],
+   "model": "claude-opus-5-5",
+   "permissionMode": "default",
+   "slash_commands": [],
+   "apiKeySource": "none",
+   "claude_code_version": "2.1.299",
+   "output_style": "default",
+   "agents": [
+    "claude",
+    "codex:codex-rescue",
+    "Explore",
+    "general-purpose",
+    "Plan",
+    "statusline-setup"
+   ],
+   "skills": [],
+   "plugins": [
+    {
+     "name": "codex",
+     "path": "/home/vscode/.claude/plugins/marketplaces/cubicj-codex-plugin-cc/plugins/codex",
+     "source": "codex@openai-codex",
+     "version": "1.0.6"
+    },
+    {
+     "name": "git-credentials",
+     "path": "/home/vscode/.claude/plugins/cache/devpods/git-credentials/1.0.0",
+     "source": "git-credentials@devpods",
+     "version": "1.0.0"
+    },
+    {
+     "name": "cc-plugin-agents-md",
+     "path": "builtin",
+     "source": "cc-plugin-agents-md@builtin"
+    },
+    {
+     "name": "cc-plugin-telemetry",
+     "path": "builtin",
+     "source": "cc-plugin-telemetry@builtin"
+    },
+    {
+     "name": "cc-plugin-plugin-authoring",
+     "path": "builtin",
+     "source": "cc-plugin-plugin-authoring@builtin"
+    }
+   ],
+   "capabilities": [
+    "interrupt_receipt_v1",
+    "interrupt_cancel_queued_v1",
+    "interrupt_send_now_v1",
+    "msg_lifecycle_v1",
+    "request_marker_lists_v1",
+    "sdk_mcp_tools_list_changed",
+    "sdk_mcp_manifests",
+    "mcp_read_resource_v1",
+    "mcp_tool_ui_meta_v1",
+    "ui_surface_v1"
+   ],
+   "analytics_disabled": false,
+   "product_feedback_disabled": false,
+   "uuid": "e8bd0d71-a418-4390-b41a-e5be6c4bfb6d",
+   "memory_paths": {
+    "auto": "/home/vscode/.claude/projects/-tmp-hapi-tla-link-2elm1wyu/memory/"
+   },
+   "messaging_socket_path": "/tmp/cc-socks/1990450.sock",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "per_turn_effort_active": true,
+   "view_mode": "default"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 1,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "0f48a4f3-d41e-4a4e-8666-9fda0a8b009a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 3,
+   "estimated_tokens_delta": 2,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "3d205a1e-42b3-47ae-a909-45b6d362ace6"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 4,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "de31f6d7-6e24-4fc6-9836-5807cf42c63c"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 5,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "768af7c0-cc3a-4fe1-b9f5-6f364133cc9a"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 7,
+   "estimated_tokens_delta": 2,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "606752b4-5742-4812-a892-11f1dff8966e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 8,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "6b28d223-5ed7-442b-9928-8a8960d0bfd7"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 9,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "b37aaf4e-e77b-46b3-8058-3124fc2159e2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 10,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "e85d6cc9-1476-4ba8-94f7-b93f856d3794"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 11,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "c747c0a9-1d95-496a-94bf-9e5d58df39ea"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 12,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "de172dc4-90f9-4bef-96da-ce9710b2655e"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 17,
+   "estimated_tokens_delta": 5,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "504dac3f-bed9-4113-81bd-06a402040750"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 20,
+   "estimated_tokens_delta": 3,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "b20cef77-14bf-42e2-8016-5d2315fa04af"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 22,
+   "estimated_tokens_delta": 2,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "dc44e097-4fbc-4b40-9d3a-01273fce852b"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 23,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "3839f776-43b7-4a6f-bf69-327de68642f2"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 25,
+   "estimated_tokens_delta": 2,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "5a21f94e-14fd-4e8d-89ec-4fb8ab51beed"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 26,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "0abecb8f-adb3-4743-ab48-64294d22a3a4"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 29,
+   "estimated_tokens_delta": 3,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "ad1a8d25-43bc-44db-8f13-1df7e6c61958"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 30,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "ca787092-43e7-43e6-a36c-5358c2adac99"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 34,
+   "estimated_tokens_delta": 4,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "9c1b1e60-73bf-4681-90da-129dacb82577"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 40,
+   "estimated_tokens_delta": 6,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "dffbe693-dbe5-4f49-9411-893c698cb761"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 46,
+   "estimated_tokens_delta": 6,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "a0758eeb-9863-4815-a86b-b63e82732cbf"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 47,
+   "estimated_tokens_delta": 1,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "4d29aa00-e48e-41d5-b08c-f72949061e90"
+  },
+  {
+   "type": "system",
+   "subtype": "thinking_tokens",
+   "estimated_tokens": 258,
+   "estimated_tokens_delta": 211,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "35c84802-0a00-4385-adfb-9ce25e1a1dd0"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MqVcE5U2Be3J4RNDVe",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "thinking",
+      "thinking": "Checking Iaret against jꜥr.t \"uraeus\" - the consonants line up (j=I, ꜥ=a, r, t), so this looks like a valid match despite the orthographic variation.\n\n",
+      "signature": "CAQS/gcKEAgSGAI4AUIIdGhpbmtpbmcSDDTYMmsHBdN1CqZ1thoMTe1BK9Fei1eADUL9IjC8opJOqSozjzvp9nuFhLUBj45x7BF//j3NitE6oOL9M+an7ZtgWa7MbQ6GTxsWRSEqmwccxoLgEMbm9FLCN9989Z//eikL1h+S1J3BWRPWiysyD1G8yqUF0mn+r51DnfWvgvmiyotazseIrYwh8x3u7zb1xS6iKLUZ3xr5rebtksaguDLEJvl+LOKHNgmRh/+DtMIlNxqkOO/BqBYhR9Pe2C2P5x7+DLnts9mA8N+j/nK+64WNvxq1s0GJz0XdrZvHS8glkd38QhLAGC8xPzWSlymnAsnwdkCzrgMJrWG+pizOzgYuK7EPJj3SZv/APxqGlN6LBgjrTFYAsP9e3yOXD19Ff/3vh+vQb3yxtDvm8VlmG+t5gLYph4sIztLPWQzwfZgb44h0Ch34Yoy/bx2Ctuh9/vBVF+XHlyhBaSsUgd0OY72PGIqLYfVM1gFRF26YTDNZJy/JP/m96dcbgSB0UQjcsPqQ+jEORTsvktdzewpMW20W4sndctfCP6oAsFpI9Zbzhy0lm4ngRZJ4KY/ipx+nQIro83Tj8rGcIhS9+cnXngsClpgToeaOx4whkmoXcZ5HsJcZ+8ybL3/8F3TzuiyXUUwH0MMydYKkjokEkptFVZT55wGq4lndsHeTudtmjFq8tU0X7seKdEUFY2zrV1M9ho0bty7rj6bZQaMvZk0AjMEfxOcxkzQIzycxS8PrSlrFfr52XaFZEg0NieyLDAYPHPXz9hfW4+kz1FUKXYBQpLgJC38Nusp6fXfBKrD6ju7G9j36Hybjz4s7601T5Xd2oPiz6dGcWUg9W47t5BSSq/xU6Jdyb/Q7ap4juhqZcHx6MFjtrTrF0U+KOeh14BeZs+sI9Ro4U6mKrgh1JyZIOTWubcSIoHy/YySbXjBQb4IjyLgEPBodyXuBBwrZqkKoD9O9IF7CGhH7KI/debkBVRuB52AJCfRd57PIjKSK6rFI3bUFkGkcqz/Fjm1ZimTD3bWdxI0uuWR6Vvid5PPjnjt6124IcvBsTsJhrN/bfAsG9/p5/ujLxfISsJZJhYo7mhW2ehrc2Vtf5V9brxtWp9/JTpjB5HfTcZjkzMGJB9r5lTCmE1TKMfrt9IKnv6b5Y4F5VhSbrtC/UOaNfQeLeDLh3UOTZJURqYkD+hoRUCvNTPRxulNrgTw2ApuXFx6+53m8bXjFKHc6zPXtEBryDdX+rxapZtopWg1yS7Vjf5K/jwptcMX2N+/Kkr2I2odgiMuycld0T+53V7suDec31ejI03I7R+pV+8y5tQoUSvcXQFqfEQOxFlsqoBgB"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1232,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "79a394a5-1c7b-433a-837d-0291c423cac8",
+   "timestamp": "2026-10-15T16:44:59.770Z",
+   "request_id": "req_011Cg4MqVQpdnU5PRND4PvJ4",
+   "thinking_duration_ms": 4658,
+   "thinking_display": "summarized"
+  },
+  {
+   "type": "assistant",
+   "message": {
+    "model": "claude-opus-5-5",
+    "id": "msg_011Cg4MqVcE5U2Be3J4RNDVe",
+    "type": "message",
+    "role": "assistant",
+    "content": [
+     {
+      "type": "text",
+      "text": "{\"unit_id\": \"Iaret\", \"choices\": [\"C1\", \"C2\"], \"reasoning\": \"C2 Jꜥr.t is one word, the feminine noun jꜥr.t, 'uraeus', and the TLA gives it the modern spelling Iaret. Record 1 reads as exactly that word: I renders j, a renders ꜥ, r renders r, e is an added vowel, and t is the feminine ending. So C2 matches. C1 Jꜣrt is also one word. Its consonants map onto Iaret in the same way: I for j, a for ꜣ, r, then t. Nothing is added or left out. Its only gloss is German 'Iaret', the same spelling as C2's gloss. It reads as the same word, uraeus, written with ꜣ in place of ꜥ, so it is the same name in a different orthography. Record 1 can be read as exactly the words of either candidate.\"}"
+     }
+    ],
+    "container": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "stop_details": null,
+    "usage": {
+     "input_tokens": 2,
+     "cache_creation_input_tokens": 345,
+     "cache_read_input_tokens": 1232,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "output_tokens": 8,
+     "service_tier": "standard",
+     "inference_geo": "global"
+    },
+    "input_transformations": [],
+    "diagnostics": null,
+    "context_management": null
+   },
+   "parent_tool_use_id": null,
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "uuid": "772c798b-9eee-4365-88bb-33758b33f178",
+   "timestamp": "2026-10-15T16:44:59.777Z",
+   "request_id": "req_011Cg4MqVQpdnU5PRND4PvJ4"
+  },
+  {
+   "type": "rate_limit_event",
+   "rate_limit_info": {
+    "status": "allowed",
+    "resetsAt": 1792093200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "org_level_disabled",
+    "isUsingOverage": false,
+    "unifiedWindows": {
+     "five_hour": {
+      "utilization": 0.12,
+      "resetsAt": 1792093200
+     },
+     "seven_day": {
+      "utilization": 0.12,
+      "resetsAt": 1792566000
+     }
+    }
+   },
+   "uuid": "5d0fdbf0-bb5b-4629-8ae2-dbfca6f119f0",
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c"
+  },
+  {
+   "duration_api_ms": 5674,
+   "stop_reason": "end_turn",
+   "session_id": "53dd51eb-c1a8-4589-b92b-602bf0d5be9c",
+   "total_cost_usd": 0.013114400000000002,
+   "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 345,
+    "cache_read_input_tokens": 1232,
+    "output_tokens": 505,
+    "output_tokens_details": {
+     "thinking_tokens": 206
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 345,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+     {
+      "input_tokens": 2,
+      "output_tokens": 505,
+      "cache_read_input_tokens": 1232,
+      "cache_creation_input_tokens": 345,
+      "cache_creation": {
+       "ephemeral_5m_input_tokens": 0,
+       "ephemeral_1h_input_tokens": 345
+      },
+      "type": "message"
+     }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "modelUsage": {
+    "claude-opus-5-5": {
+     "inputTokens": 2,
+     "outputTokens": 505,
+     "cacheReadInputTokens": 1232,
+     "cacheCreationInputTokens": 345,
+     "webSearchRequests": 0,
+     "costUSD": 0.013114400000000002,
+     "contextWindow": 1000000,
+     "maxOutputTokens": 128000,
+     "thinkingTokens": 206,
+     "canonicalModel": "claude-opus-5-5",
+     "provider": "firstParty",
+     "costBasis": "list"
+    }
+   },
+   "permission_denials": [],
+   "terminal_reason": "completed",
+   "fast_mode_state": "off",
+   "fast_mode_disabled_reason": "sdk_opt_in_required",
+   "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+     "background": 0,
+     "foreground": 0,
+     "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+     "parent": 0,
+     "user": 0,
+     "system": 0
+    },
+    "refused": {
+     "depth_limit": 0,
+     "concurrency_limit": 0,
+     "budget": 0
+    },
+    "by_type": {}
+   },
+   "safety_stops": 0,
+   "is_error": false,
+   "num_turns": 1,
+   "subtype": "success",
+   "api_error_status": null,
+   "result": "{\"unit_id\": \"Iaret\", \"choices\": [\"C1\", \"C2\"], \"reasoning\": \"C2 Jꜥr.t is one word, the feminine noun jꜥr.t, 'uraeus', and the TLA gives it the modern spelling Iaret. Record 1 reads as exactly that word: I renders j, a renders ꜥ, r renders r, e is an added vowel, and t is the feminine ending. So C2 matches. C1 Jꜣrt is also one word. Its consonants map onto Iaret in the same way: I for j, a for ꜣ, r, then t. Nothing is added or left out. Its only gloss is German 'Iaret', the same spelling as C2's gloss. It reads as the same word, uraeus, written with ꜣ in place of ꜥ, so it is the same name in a different orthography. Record 1 can be read as exactly the words of either candidate.\"}",
+   "ttft_ms": 5684,
+   "type": "result",
+   "duration_ms": 5755,
+   "uuid": "cb2dede9-5c80-47be-a7f3-2e74e721237b",
+   "ttft_stream_ms": 1025,
+   "time_to_request_ms": 35,
+   "first_content_frame_ms": 1026,
+   "queued_turn_count": 0,
+   "result_index": 0
+  }
+ ],
+ "result": {
+  "answer": {
+   "unit_id": "Iaret",
+   "choices": [
+    "C1",
+    "C2"
+   ],
+   "reasoning": "C2 Jꜥr.t is one word, the feminine noun jꜥr.t, 'uraeus', and the TLA gives it the modern spelling Iaret. Record 1 reads as exactly that word: I renders j, a renders ꜥ, r renders r, e is an added vowel, and t is the feminine ending. So C2 matches. C1 Jꜣrt is also one word. Its consonants map onto Iaret in the same way: I for j, a for ꜣ, r, then t. Nothing is added or left out. Its only gloss is German 'Iaret', the same spelling as C2's gloss. It reads as the same word, uraeus, written with ꜣ in place of ꜥ, so it is the same name in a different orthography. Record 1 can be read as exactly the words of either candidate."
+  }
+ }
+}
