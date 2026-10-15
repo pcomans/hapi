@@ -622,3 +622,16 @@ def test_the_mention_reader_refuses_no_authority_label(graph_index, women) -> No
     assert "Cleopatra VII Philopator" in labels
     refused = sorted({label for label in labels if rw.read_mention(label)[1]})
     assert refused == ["–18P", "–18Q"]
+
+
+def test_graph_kings_built_from_a_given_module_and_graph_is_the_default_one() -> None:
+    """The injection point the #361 evaluation uses (a frozen tree's linkability module and
+    graph) gives the same kings as the default construction."""
+    from pipeline.authority.graph_kings import load_linkability
+    default = GraphKings()
+    module = load_linkability()
+    given = GraphKings(module, json.loads(module.GRAPH.read_text(encoding="utf-8")))
+    assert given.catalog.keys() == default.catalog.keys() and len(given.catalog) > 800
+    for target in ("cluster-beckerath-18.05", "cluster-beckerath-18.15", "cluster-leprohon-leprohon-19.08"):
+        assert (given.labels(target), given.dynasties(target)) == (default.labels(target), default.dynasties(target))
+    assert default.dynasties("cluster-beckerath-18.05") == (18,)

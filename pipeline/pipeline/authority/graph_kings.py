@@ -4,6 +4,9 @@ The resolver is the linkability resolver the evaluations load
 (`docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py`); this wraps it
 so that the royal-women index can resolve a woman's family kings and read the female rulers'
 king labels and dynasties from the same graph.
+
+An evaluation adapter, not enrichment: it executes the evaluations' linkability script, which
+puts the repository's `pipeline/` on `sys.path` and stays in `sys.modules`.
 """
 
 from __future__ import annotations
@@ -32,8 +35,8 @@ class GraphKings:
     """`resolve`, `labels` and `dynasties` over the claim graph's ruler identity clusters."""
 
     def __init__(self, linkability=None, graph: dict | None = None) -> None:
-        mod = linkability or load_linkability()
-        graph = graph if graph is not None else json.loads(mod.GRAPH.read_text(encoding="utf-8"))
+        mod = load_linkability() if linkability is None else linkability
+        graph = json.loads(mod.GRAPH.read_text(encoding="utf-8")) if graph is None else graph
         self._resolver, self._catalog = mod.build_ruler_resolver(graph)
         self._norm = mod.ruler_norm
         self._node = {r["id"]: r for r in graph["rulers"]}
@@ -50,12 +53,9 @@ class GraphKings:
         self._names = names
 
     @property
-    def resolver(self):
-        return self._resolver
-
-    @property
-    def norm(self):
-        return self._norm
+    def catalog(self) -> dict:
+        """The resolver's targets (identity clusters) with their labels and members."""
+        return self._catalog
 
     def resolve(self, name: str) -> dict:
         return self._resolver.resolve(name, self._norm)
