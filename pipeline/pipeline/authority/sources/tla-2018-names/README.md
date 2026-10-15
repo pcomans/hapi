@@ -41,7 +41,7 @@ and checks it byte for byte.
 | `tla_id` | The TLA lemma id. |
 | `subtype` | `person_name` or `kings_name`, as the TLA classes it. |
 | `transliteration` | The lemma in the TLA's transliteration (e.g. `Jꜥḥ-ms.w-nfr.t-jr.j`). |
-| `translations` | The lemma's translations as the source holds them: `lang` and, where present, `value`. Every row has a German value (one, Smendes 863237, has it empty); English has a value on 1,858 rows, an empty value on 322 and no value key on 33. A value is the TLA's rendering, often with a gloss (`"Ahmes-Nefertari (Frau des Ahmose)"`); a bracketed value (`"[Thronname Mentuhoteps IV.]"`) is a description, not a name. |
+| `translations` | The lemma's translations as the source holds them: `lang` and, where present, `value`. Per lemma: 2,212 have one German and one English entry, 1,148 one German only; two are exceptions, 863237 (Smendes) with only an English entry and 704366 (Hen-iati) with two German ones ("Hen-iati", "PN/?"). Of the English entries, 1,858 have a value, 322 an empty value and 33 no value key. A value is the TLA's rendering, often with a gloss (`"Ahmes-Nefertari (Frau des Ahmose)"`); a bracketed value (`"[Thronname Mentuhoteps IV.]"`) is a description, not a name. |
 | `relations` | The lemma's relations to other lemmas (`type`, `objectId`) as the source holds them: successor 93, referencedBy 91, referencing 85, contains 5, partOf 5, and one with neither key. |
 | `revision_state` | `published` (3,280) or `published-obsolete` (82). Every obsolete lemma has a `referencing` relation to the lemma that replaces it. Its spellings are kept: they are the TLA's renderings all the same. |
 

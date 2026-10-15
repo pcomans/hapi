@@ -67,6 +67,13 @@ def test_counts_as_the_readme_states() -> None:
                                        for t in r["translations"])
     assert translations == {("de", True, True): 3362, ("en", True, True): 1858, ("en", True, False): 322,
                             ("en", False, False): 33}
+    # Per lemma: (German entries, English entries). Two exceptions to "one German each":
+    # 863237 Smendes has only an English entry, and 704366 Hen-iati two German ones.
+    per_lemma = collections.Counter((sum(t["lang"] == "de" for t in r["translations"]),
+                                     sum(t["lang"] == "en" for t in r["translations"])) for r in rows())
+    assert per_lemma == {(1, 1): 2212, (1, 0): 1148, (0, 1): 1, (2, 0): 1}
+    assert by_id("863237")["translations"] == [{"lang": "en", "value": "Smendes"}]
+    assert by_id("704366")["translations"] == [{"lang": "de", "value": "Hen-iati"}, {"lang": "de", "value": "PN/?"}]
     assert collections.Counter(rel.get("type") for r in rows() for rel in r["relations"]) == {
         "successor": 93, "referencedBy": 91, "referencing": 85, "contains": 5, "partOf": 5, None: 1}
     obsolete = [r for r in rows() if r["revision_state"] == "published-obsolete"]
