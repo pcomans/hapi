@@ -4,8 +4,8 @@
 which qualified rulers for Met–Brooklyn on four changed cases. This registration reuses #361's
 review protocol and scripts (copies here). It changes only what is listed below.
 
-**Status: registered, not yet run.** The decision rule (`decision-rule.md`) awaits the project
-owner's approval. No model judges any case before that.
+**Status: registered, not yet run.** The project owner approved the decision rule
+(`decision-rule.md`) on 2026-10-16, before any model judged any case.
 
 ## Question
 

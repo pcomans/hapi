@@ -1,7 +1,7 @@
 # Ruler re-registration with Cleveland and the Walters — frozen decision rule
 
-**Status: DRAFT, awaiting the project owner's approval.** No model judges any case of this
-registration before the owner approves this file. The approval and its date will be recorded here.
+**Approved by the project owner on 2026-10-16, before any model judged any case of this
+registration.**
 
 The rule is #361's (`../ruler-reregistration-2026-10-15/decision-rule.md`): #337 v10's rule, with
 #358's correction that a different-entity finding is labelled first. It is unchanged except for
