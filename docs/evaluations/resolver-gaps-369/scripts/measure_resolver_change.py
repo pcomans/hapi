@@ -27,6 +27,7 @@ import hashlib
 import inspect
 import io
 import json
+import re
 import subprocess
 import sys
 import tarfile
@@ -105,7 +106,40 @@ def resolve_side(root: Path, ledger: Path, values: list[str]) -> dict:
         "mention_texts": {t: kings.resolve(t)["target_ids"] for t in sorted({m["mention_text"] for m in ruler})},
         "family_names": {n: kings.resolve(n)["target_ids"] for n in sorted({n for w in women for n in w.family_names})},
         "cued": cued,
+        "unread_kin": unread_kin(rw, index, kings, ruler, record_kings) if field_api else None,
     }
+
+
+def unread_kin(rw, index, kings, ruler: list[dict], record_kings: dict[str, set[str]]) -> dict:
+    """The kin `stated_kin_names` leaves unread, found by a looser reading of the whole field
+    ("<kin> of [King] <Name>" and "<Name>'s <kin>" anywhere): how many cued mentions' fields hold
+    such a name, how many of those names the kings resolve, and which mentions' results reading
+    them would change."""
+    after = re.compile(rf"\b{rw.KIN_WORD}\s+of\s+(?:king\s+)?(?P<name>[^,;()\[\]]*[^\s,;()\[\]])", re.I)
+    before = re.compile(rf"(?P<name>[A-Z][\w'’-]*(?:\s+[IVX]+)?)['’]s\s+{rw.KIN_WORD}\b", re.I)
+    with_unread, resolving, changes = 0, 0, []
+    for m in ruler:
+        field = m["field_value"]
+        if not rw.royal_woman_cued(field, m["span_start"]):
+            continue
+        read = set(rw.stated_kin_names(field, m["span_start"], m["span_end"]))
+        # "God's Wife", "King's Mother" and the like are cues, not kin.
+        loose = {x["name"] for pattern in (after, before) for x in pattern.finditer(field)
+                 if x["name"].casefold() not in {"god", "king"}} - read
+        if not loose:
+            continue
+        with_unread += 1
+        added = {t for name in loose if (r := kings.resolve(name))["status"] == "resolved" for t in r["target_ids"]}
+        resolving += bool(added)
+        kwargs = {"record_dynasty": rw.single_dynasty(m["record_dynasty"])}
+        now = rw.resolve_ruler_mention(index, kings, field, m["span_start"], m["span_end"],
+                                       record_king_ids=record_kings[m["artifact_id"]], **kwargs)
+        read_too = rw.resolve_ruler_mention(index, kings, field, m["span_start"], m["span_end"],
+                                            record_king_ids=record_kings[m["artifact_id"]] | added, **kwargs)
+        if (now["status"], now["target_ids"]) != (read_too["status"], read_too["target_ids"]):
+            changes.append({"artifact_id": m["artifact_id"], "now": now["target_ids"], "if_read": read_too["target_ids"]})
+    return {"cued_mentions_with_unread_kin_names": with_unread, "of_which_a_name_resolves_among_the_kings": resolving,
+            "results_reading_them_would_change": changes}
 
 
 def run_side(root: Path, ledger: Path, values: list[str]) -> dict:
@@ -147,7 +181,7 @@ def measure(archive: Path, ledger: Path) -> dict:
                     if (before["cued"][k]["status"], before["cued"][k]["target_ids"])
                     != (after["cued"][k]["status"], after["cued"][k]["target_ids"])]
     return {
-        "schema_version": "hapi-369-resolver-change/1",
+        "schema_version": "hapi-369-resolver-change/2",
         "base_commit": BASE_COMMIT,
         "measured_sha256": {path: sha256_path(REPO / path) for path in MEASURED},
         "corpus_archive_sha256": ARCHIVE_SHA256,
@@ -158,6 +192,7 @@ def measure(archive: Path, ledger: Path) -> dict:
         "dh_family_names": {"distinct": len(before["family_names"]), "changed": changed("family_names")},
         "royal_woman_cued_mentions": {"count": len(before["cued"]), "changed": len(cued_changes),
                                       "changes": cued_changes},
+        "unread_kin": after["unread_kin"],
     }
 
 

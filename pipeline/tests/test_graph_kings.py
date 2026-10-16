@@ -58,9 +58,20 @@ def test_the_committed_369_measurement_is_of_361s_ledger_and_consistent() -> Non
     assert f'BASE_COMMIT = "{result["base_commit"]}"' in script
     assert f'LEDGER_SHA256 = "{result["ledger_gzip_sha256"]}"' in script
     cued = result["royal_woman_cued_mentions"]
-    assert (cued["count"], cued["changed"], len(cued["changes"])) == (194, 2, 2)
-    assert [(c["artifact_id"], c["after"]["target_ids"], c["after"]["context_rule"]) for c in cued["changes"]] == [
-        ("brooklyn-3634", ["dodson_hilton:Ahmes B"], "family"), ("met-566763", ["dodson_hilton:Ahmes B"], "family")]
+    assert (cued["count"], cued["changed"], len(cued["changes"])) == (194, 11, 11)
+    resolved = [(c["artifact_id"], c["after"]["target_ids"], c["after"]["context_rule"]) for c in cued["changes"]
+                if c["before"]["status"] != c["after"]["status"]]
+    assert resolved == [("brooklyn-3634", ["dodson_hilton:Ahmes B"], "family"),
+                        ("met-566763", ["dodson_hilton:Ahmes B"], "family")]
+    # The other nine stay ambiguous and name a subset of the women they named before.
+    narrowed = [c for c in cued["changes"] if c["before"]["status"] == c["after"]["status"]]
+    assert len(narrowed) == 9 and all(
+        c["after"]["status"] == "ambiguous" and set(c["after"]["target_ids"]) < set(c["before"]["target_ids"])
+        for c in narrowed)
+    assert "brooklyn-3599" in {c["artifact_id"] for c in narrowed}  # #361's Neferu d
+    assert result["unread_kin"] == {"cued_mentions_with_unread_kin_names": 2,
+                                    "of_which_a_name_resolves_among_the_kings": 0,
+                                    "results_reading_them_would_change": []}
     assert result["dynasty_values"] == {"distinct": 696, "newly_read_as_one_dynasty": 45, "read_differently": 0,
                                         "records_newly_read": 217}
     assert (result["king_mention_texts"], result["dh_family_names"]) == (

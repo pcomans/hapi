@@ -45,7 +45,9 @@ The rule, which is deterministic and fixed here:
        given;
     2. dynasty: among the family matches if there are several, else among all, the women of
        the record's dynasty (or of no known dynasty), when the record gives exactly one.
-  Otherwise the mention stays ambiguous.
+  Otherwise the mention stays ambiguous, among the women the family and dynasty leave (#369);
+  when the record's dynasty leaves none and it names no family king, it is unmatched
+  (`record_dynasty_contradicts`), as a lone candidate of another dynasty is.
 * A name is looked up in three tiers, each tried only when the one before finds no
   candidate: the exact surface (`raw_exact`), the claim graph's transliteration and phonetic
   keys (`committed_normalized`), and the weak-sign skeleton (`weak_sign_skeleton`, see
@@ -579,21 +581,30 @@ def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: s
         # I would reach Neferu III).
         return {**base, "status": "ambiguous", "target_ids": candidates, "context_rule": "weak_sign_different_spellings"}
     chosen, rule = None, None
+    # The women the record's context leaves, reported when none is chosen (`candidate_ids` keeps
+    # every woman the name meets).
+    remaining = candidates
     if len(candidates) == 1:
         chosen = candidates[0]
     elif candidates:
         family = [t for t in candidates if index.family_king_ids[t] & record_king_ids]
+        remaining = family or candidates
         if len(family) == 1:
             chosen, rule = family[0], "family"
         elif record_dynasty is not None:
             # A candidate whose dynasty the authority does not give stays in: it is not
             # contradicted, so it cannot be ruled out.
-            dynasty = [t for t in (family or candidates)
-                       if not index.dynasties[t] or record_dynasty in index.dynasties[t]]
+            dynasty = [t for t in remaining if not index.dynasties[t] or record_dynasty in index.dynasties[t]]
             if len(dynasty) == 1:
                 chosen, rule = dynasty[0], "dynasty"
+            elif dynasty:
+                remaining = dynasty
+            elif not family:
+                # Every woman of the name is of another dynasty, as for a lone candidate below.
+                return {**base, "status": "unmatched", "target_ids": [], "context_rule": "record_dynasty_contradicts"}
+            # (A record naming her family kings overrides its dynasty: the family stay.)
     if chosen is None:
-        return {**base, "status": "ambiguous" if candidates else "unmatched", "target_ids": candidates}
+        return {**base, "status": "ambiguous" if candidates else "unmatched", "target_ids": remaining}
     family_named = bool(index.family_king_ids[chosen] & record_king_ids)
     # A record naming one of her family kings overrides its own dynasty (Tentsepeh A, Dynasty
     # 21, on a monument of her son Shoshenq I, Dynasty 22).

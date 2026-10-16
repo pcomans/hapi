@@ -157,9 +157,12 @@ def test_a_bare_name_is_chosen_by_the_records_family_then_dynasty(index) -> None
     assert resolve(index, "Tiye", dynasty=18) == ("resolved", ["dodson_hilton:Tiye A"], "dynasty")
     assert resolve(index, "Tiye", kings={"king:setnakhte"}, dynasty=20) == (
         "resolved", ["dodson_hilton:Tiye B Mereniset"], "family")
-    # Two Dynasty 20 Tiyes and no family link: nothing chooses.
+    # Two Dynasty 20 Tiyes and no family link: nothing chooses. The result names the two the
+    # dynasty leaves, not Tiye A (Dynasty 18).
     assert resolve(index, "Tiye", dynasty=20) == (
-        "ambiguous", ["dodson_hilton:Tiye A", "dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"], None)
+        "ambiguous", ["dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"], None)
+    # Every Tiye of another dynasty: refused, as a lone contradicted candidate is.
+    assert resolve(index, "Tiye", dynasty=26) == ("unmatched", [], "record_dynasty_contradicts")
 
 
 def test_ahhotep_i_is_chosen_by_her_husband_not_by_a_dynasty_she_lacks(index) -> None:
@@ -178,11 +181,10 @@ def test_neferu_needs_her_husband_dynasty_11_has_two(index) -> None:
         "resolved", ["dodson_hilton:Neferu II"], "family")
     # #369: Brooklyn's "Sunk Relief of Queen Neferu" gives "second part of Dynasty 11", now read
     # as 11, but no king: Neferu I and II are both of Dynasty 11, and Neferu B has no dynasty to
-    # rule her out, so she stays ambiguous (reported with every candidate the name meets). The
-    # phase does not choose between them.
-    assert resolve(index, "Neferu", dynasty=11) == ("ambiguous", [
-        "dodson_hilton:Neferu A", "dodson_hilton:Neferu B", "dodson_hilton:Neferu I", "dodson_hilton:Neferu II",
-        "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"], None)
+    # rule her out, so she stays ambiguous among those three. The phase does not choose between
+    # them: nothing on disk dates a woman within a dynasty.
+    assert resolve(index, "Neferu", dynasty=11) == (
+        "ambiguous", ["dodson_hilton:Neferu B", "dodson_hilton:Neferu I", "dodson_hilton:Neferu II"], None)
 
 
 def test_a_king_her_own_field_names_as_her_kin_is_named_by_the_record(index) -> None:
@@ -340,9 +342,7 @@ def test_the_weak_sign_tier_reaches_the_other_sources_renderings_of_a_dh_woman(i
     # PM I.2, 762 "Nefertari": D&H's Nefertiry D (wife) and E (daughter) are both Ramesses
     # II's and both Dynasty 19, so the record cannot choose; nothing is picked.
     assert found(index, "Nefertari", kings={"king:ramesses-ii"}, dynasty=19) == (
-        "ambiguous", "weak_sign_skeleton",
-        ["dodson_hilton:Nefertiry B", "dodson_hilton:Nefertiry C", "dodson_hilton:Nefertiry D Meryetmut",
-         "dodson_hilton:Nefertiry E", "dodson_hilton:Nefertiry F"], None)
+        "ambiguous", "weak_sign_skeleton", ["dodson_hilton:Nefertiry D Meryetmut", "dodson_hilton:Nefertiry E"], None)
     # An alternative name is keyed too: "Ankhesenamun" (D&H's alt for Ankhesenpaaten), rule 4.
     assert found(index, "Ankhesenamon", dynasty=18) == (
         "resolved", "weak_sign_skeleton", ["dodson_hilton:Ankhesenpaaten"], None)
