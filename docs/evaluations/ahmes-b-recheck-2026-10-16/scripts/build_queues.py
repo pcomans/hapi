@@ -174,11 +174,24 @@ def verify(private: Path, check_path: Path, template: Path, archive: Path, stage
     * the target, run and records checked are the private binding's, and the reviewed Stage 1
       queue and that binding are exactly what this script builds from the frozen corpus."""
     rp = protocol()
+    # The templates are #361's own queues, by the hashes #361 committed for them.
+    results_361 = EVAL_361 / "results"
+    pinned = {
+        stage_1_template: json.loads((results_361 / "real-review-population-digest.json").read_text(
+            encoding="utf-8"))["output_hashes"]["stage_1_queue_sha256"],
+        template: json.loads((results_361 / "real-review-records.json").read_text(
+            encoding="utf-8"))["stages"]["2"]["queue.json"],
+    }
+    for path, expected in pinned.items():
+        if sha256_path(path) != expected:
+            raise ValueError(f"{path} is not #361's queue (#361 committed {expected})")
+    check = json.loads(check_path.read_text(encoding="utf-8"))
+    if set(check["stages"]) != {"1", "2"}:
+        raise ValueError(f"check.json gives stages {sorted(check['stages'])}, not 1 and 2")
     queue_1, binding_1 = stage_1(archive, json.loads(stage_1_template.read_text(encoding="utf-8")))
     if (queue_1, binding_1) != (json.loads((private / "stage-1/queue.json").read_text(encoding="utf-8")),
                                 json.loads((private / "stage-1/private-binding.json").read_text(encoding="utf-8"))):
         raise ValueError("the reviewed Stage 1 queue or private binding is not what the frozen corpus gives")
-    check = json.loads(check_path.read_text(encoding="utf-8"))
     binding = json.loads((private / "stage-1/private-binding.json").read_text(encoding="utf-8"))
     if (check["target_id"], check["run_id"], check["records_checked"]) != (
             binding["target_id"], binding["run_id"], binding["artifact_ids_by_side"]):

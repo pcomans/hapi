@@ -60,7 +60,9 @@ verbatim. Their SHA-256 hashes are in `results/check.json` (Rule 13).
 
 With the private records, `scripts/build_queues.py verify` (with the private dir, the frozen
 corpus and #361's two queues) checks everything `check.json` publishes:
-- both consensus files rebuild from the stored calls (#361's `verify_consensus`);
+- the two template queues are #361's own, by the hashes #361 committed for them;
+- `check.json` covers both stages, and both consensus files rebuild from the stored calls
+  (#361's `verify_consensus`);
 - every hash matches;
 - the outcomes and resolutions (method, reviewer outcomes, citations) are the consensus's;
 - the target, run and records are the private binding's, and the reviewed Stage 1 queue and
