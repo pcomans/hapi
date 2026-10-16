@@ -204,6 +204,8 @@ def verify(private: Path, check_path: Path, template: Path, archive: Path, stage
             binding["target_id"], binding["run_id"], binding["artifact_ids_by_side"]):
         raise ValueError("check.json's target, run or records are not the private binding's")
     for stage, recorded in check["stages"].items():
+        if set(recorded) != {"queue_sha256", "consensus_sha256", "stored_calls_sha256", "outcome", "resolution"}:
+            raise ValueError(f"stage {stage}: check.json's fields are not the ones this check publishes")
         d = private / f"stage-{stage}"
         consensus = rp.verify_consensus(stage, d / "consensus.json", d / "queue.json", d)
         if (sha256_path(d / "queue.json"), sha256_path(d / "consensus.json")) != (recorded["queue_sha256"], recorded["consensus_sha256"]):
