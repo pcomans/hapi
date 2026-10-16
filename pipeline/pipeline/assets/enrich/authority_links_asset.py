@@ -38,9 +38,14 @@ def authority_links(context: AssetExecutionContext, database: DatabaseResource) 
 
     manifest = write_run(Path(os.environ.get("HAPI_AUTHORITY_LINKS_DIR", DEFAULT_ROOT)), read_inputs)
     context.log.info(f"authority links run {manifest['run_id']}: {manifest['files']['links-authority.ndjson.gz']['rows']} links")
+    set_aside = manifest["canonical_rows_set_aside"]
+    if set_aside:
+        context.log.warning(f"{len(set_aside)} canonical rows set aside: the normalize step no longer keeps their "
+                            f"raw payload, and the normalize assets do not delete them (#374): {set_aside}")
     context.add_output_metadata({
         "run_id": manifest["run_id"],
         "records": manifest["records"],
+        "canonical_rows_set_aside": set_aside,
         "links_authority": manifest["files"]["links-authority.ndjson.gz"]["rows"],
         "links_literal": manifest["files"]["links-literal.ndjson.gz"]["rows"],
     })

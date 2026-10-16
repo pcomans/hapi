@@ -401,7 +401,7 @@ def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, aut
     assert (root / lf.CURRENT).read_text() == expected["run_id"] + "\n"
     assert json.loads((root / expected["run_id"] / "manifest.json").read_text()) == expected
     assert context.get_output_metadata("result") == {
-        "run_id": expected["run_id"], "records": 17,
+        "run_id": expected["run_id"], "records": 17, "canonical_rows_set_aside": [],
         "links_authority": expected["files"]["links-authority.ndjson.gz"]["rows"],
         "links_literal": expected["files"]["links-literal.ndjson.gz"]["rows"]}
 
@@ -599,6 +599,15 @@ def test_a_canonical_row_the_normalize_step_no_longer_makes_is_set_aside_and_lis
     assert (manifest["canonical_rows_set_aside"], manifest["records"]) == (["brooklyn-3198"], len(canonical))
     run = tmp_path / manifest["run_id"]
     assert "brooklyn-3198" not in {m["artifact_id"] for m in lf.read_rows(run / "mentions.ndjson.gz")}
+    # The leftover row deleted (by hand, or by #374's fix): another run, not a collision with
+    # this one, and no link moves. And back again.
+    cleaned = lf.write_run(tmp_path, lambda: (canonical, full), authority)
+    assert cleaned["run_id"] != manifest["run_id"] and cleaned["canonical_rows_set_aside"] == []
+    assert (tmp_path / lf.CURRENT).read_text() == cleaned["run_id"] + "\n"
+    diff = json.loads((tmp_path / "diffs" / f"{manifest['run_id']}-to-{cleaned['run_id']}.json").read_text())
+    for mode in al.MODES:
+        assert (diff[mode]["added"], diff[mode]["removed"], diff[mode]["changed"]) == ([], [], [])
+    assert lf.write_run(tmp_path, lambda: (canonical + leftover, full), authority) == manifest
 
 
 def test_the_normalizers_are_the_normalize_assets() -> None:

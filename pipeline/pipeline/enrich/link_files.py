@@ -190,7 +190,9 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
     inputs = input_digest(canonical, raw_indexes)
     writer = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    run_id = hashlib.sha256(json.dumps({"inputs": inputs, "writer": writer,
+    # The rows set aside are part of what the run is: they are in its manifest, so the same kept
+    # rows with other rows set aside are another run.
+    run_id = hashlib.sha256(json.dumps({"inputs": inputs, "writer": writer, "set_aside": set_aside,
                                         "versions": {m: s["resolver_version"] for m, s in snapshots.items()}},
                                        sort_keys=True).encode("utf-8")).hexdigest()
     files: dict[str, bytes] = {"mentions.ndjson.gz": gzip_rows(found)}
