@@ -231,6 +231,25 @@ def run_lock(root: Path):
 
 def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, canonical: list[dict],
            by_mode: dict) -> dict:
+    # The diff against the run in force first: if that run's files are not what it wrote, nothing
+    # is written.
+    previous_id = (root / CURRENT).read_text(encoding="utf-8").strip() if (root / CURRENT).exists() else None
+    if previous_id is not None and (not previous_id or not (root / previous_id).is_dir()):
+        raise ValueError(f"{root / CURRENT} names {previous_id!r}, which is not a run under {root}")
+    diff = None
+    if previous_id is not None and previous_id != run_id:
+        artifact_ids = {row["id"] for row in canonical}
+        diff = {"previous_run": previous_id, "run": run_id}
+        recorded = json.loads((root / previous_id / "manifest.json").read_text(encoding="utf-8"))["files"]
+        for mode in authority_links.MODES:
+            name = f"links-{mode}.ndjson.gz"
+            data = (root / previous_id / name).read_bytes()
+            # The previous run's links as it wrote them, or the diff would report false changes.
+            if content_sha256(name, data) != recorded[name]["content_sha256"]:
+                raise ValueError(f"{root / previous_id / name} is not what that run wrote (its manifest disagrees)")
+            diff[mode] = diff_links([json.loads(line) for line in gzip.decompress(data).splitlines()],
+                                    by_mode[mode][1], by_mode[mode][0], artifact_ids)
+
     run_dir = root / run_id
     if run_dir.exists():
         # A run directory appears whole (renamed into place), so one that lacks a file or holds
@@ -253,21 +272,7 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
             (scratch / name).write_bytes(data)
         os.rename(scratch, run_dir)
 
-    previous_id = (root / CURRENT).read_text(encoding="utf-8").strip() if (root / CURRENT).exists() else None
-    if previous_id is not None and (not previous_id or not (root / previous_id).is_dir()):
-        raise ValueError(f"{root / CURRENT} names {previous_id!r}, which is not a run under {root}")
-    if previous_id is not None and previous_id != run_id:
-        artifact_ids = {row["id"] for row in canonical}
-        diff = {"previous_run": previous_id, "run": run_id}
-        recorded = json.loads((root / previous_id / "manifest.json").read_text(encoding="utf-8"))["files"]
-        for mode in authority_links.MODES:
-            name = f"links-{mode}.ndjson.gz"
-            data = (root / previous_id / name).read_bytes()
-            # The previous run's links as it wrote them, or the diff would report false changes.
-            if content_sha256(name, data) != recorded[name]["content_sha256"]:
-                raise ValueError(f"{root / previous_id / name} is not what that run wrote (its manifest disagrees)")
-            diff[mode] = diff_links([json.loads(line) for line in gzip.decompress(data).splitlines()],
-                                    by_mode[mode][1], by_mode[mode][0], artifact_ids)
+    if diff is not None:
         (root / "diffs").mkdir(exist_ok=True)
         (root / "diffs" / f"{previous_id}-to-{run_id}.json").write_text(
             json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")

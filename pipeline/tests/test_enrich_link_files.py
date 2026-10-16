@@ -285,15 +285,99 @@ def test_a_previous_run_whose_links_were_changed_is_not_diffed_against(inputs, a
         lf.write_run(canonical, raw2, tmp_path, authority)
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     assert not (tmp_path / "diffs").exists()
+    assert sorted(p.name for p in tmp_path.iterdir() if not p.name.startswith(".")) == [lf.CURRENT, first["run_id"]]
 
 
-def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot() -> None:
-    """The asset itself cannot run here (no database); its source must take the run lock
-    before reading the tables, read them in one REPEATABLE READ transaction, and write under
-    the lock it holds."""
-    import inspect
+def lock_held(root: Path) -> bool:
+    with open(root / lf.LOCK, "a") as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return True
+        fcntl.flock(handle, fcntl.LOCK_UN)
+        return False
+
+
+class RecordingConnection:
+    """A stand-in for the asset's database connection, over the fixture corpus as the tables
+    hold it (canonical rows; raw payloads as JSON text keyed by object id). It records, at each
+    read, whether the run lock is held, whether a transaction is open and its isolation level."""
+
+    def __init__(self, tables: dict[str, list[dict]], root: Path, log: list) -> None:
+        self.tables, self.root, self.log = tables, root, log
+        self.isolation, self.in_transaction = None, False
+
+    def execution_options(self, isolation_level=None, **_):
+        self.isolation = isolation_level
+        return self
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def begin(self):
+        conn = self
+
+        class Transaction:
+            def __enter__(self):
+                conn.in_transaction = True
+
+            def __exit__(self, *exc):
+                conn.in_transaction = False
+                return False
+        return Transaction()
+
+    def execute(self, statement):
+        (table,) = statement.get_final_froms()
+        self.log.append(("read", table.name, lock_held(self.root), self.in_transaction, self.isolation, id(self)))
+        rows = self.tables[table.name]
+
+        class Result:
+            def mappings(self):
+                return rows
+        return Result()
+
+
+def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, authority, tmp_path, monkeypatch) -> None:
+    """The asset cannot reach a database here; over a recording connection it reads every table
+    inside one REPEATABLE READ transaction, holds the run lock through every read and the write,
+    and writes the run its inputs make. (That PostgreSQL gives REPEATABLE READ one snapshot is
+    PostgreSQL's to keep; that the reads are inside it is pinned here.)"""
+    from dagster import build_asset_context
     from pipeline.assets.enrich import authority_links_asset as asset
-    source = inspect.getsource(asset)
-    lock, snapshot, read, write = (source.index(s) for s in (
-        "with run_lock(root):", 'isolation_level="REPEATABLE READ"', "sa.select(artifacts_table)", "write_run_locked("))
-    assert lock < snapshot < read < write
+    from pipeline.resources import DatabaseResource
+
+    canonical, raw = inputs
+    tables = {"artifacts": canonical, **{f"raw_{museum}": [{"object_id": source_id, "data": json.dumps(payload)}
+                                                          for source_id, payload in rows.items()]
+                                         for museum, rows in raw.items()}}
+    log: list = []
+    connections: list[RecordingConnection] = []
+
+    class Engine:
+        def connect(self):
+            connections.append(RecordingConnection(tables, tmp_path, log))
+            return connections[-1]
+
+    class Database(DatabaseResource):
+        def get_engine(self):
+            return Engine()
+
+    real = asset.write_run_locked
+
+    def write(*args, **kwargs):
+        log.append(("write", lock_held(tmp_path)))
+        return real(*args, **kwargs)
+    monkeypatch.setattr(asset, "write_run_locked", write)
+    monkeypatch.setattr(lf.authority_links, "load_authority", lambda: authority)
+    monkeypatch.setenv("HAPI_AUTHORITY_LINKS_DIR", str(tmp_path))
+    asset.authority_links(context=build_asset_context(), database=Database())
+
+    (conn,) = connections
+    assert log == [("read", name, True, True, "REPEATABLE READ", id(conn))
+                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard")] + [("write", True)]
+    assert not lock_held(tmp_path)
+    expected = lf.write_run(canonical, raw, tmp_path / "direct", authority)
+    assert (tmp_path / lf.CURRENT).read_text() == expected["run_id"] + "\n"
