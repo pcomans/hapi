@@ -176,12 +176,10 @@ def test_ahhotep_i_is_chosen_by_her_husband_not_by_a_dynasty_she_lacks(index) ->
 def test_neferu_needs_her_husband_dynasty_11_has_two(index) -> None:
     assert resolve(index, "Neferu", kings={"king:mentuhotep-ii"}, dynasty=11) == (
         "resolved", ["dodson_hilton:Neferu II"], "family")
-    assert resolve(index, "Neferu", dynasty=11)[0] == "ambiguous"
     # #369: Brooklyn's "Sunk Relief of Queen Neferu" gives "second part of Dynasty 11", now read
     # as 11, but no king: Neferu I and II are both of Dynasty 11, and Neferu B has no dynasty to
     # rule her out, so she stays ambiguous (reported with every candidate the name meets). The
     # phase does not choose between them.
-    assert rw.single_dynasty("second part of Dynasty 11") == 11
     assert resolve(index, "Neferu", dynasty=11) == ("ambiguous", [
         "dodson_hilton:Neferu A", "dodson_hilton:Neferu B", "dodson_hilton:Neferu I", "dodson_hilton:Neferu II",
         "dodson_hilton:Neferu III", "dodson_hilton:Neferu Q"], None)
@@ -569,7 +567,8 @@ def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:
               "early to mid-Dynasty 12": 12, "mid to end Dynasty 12": 12, "late 18 Dynasty": 18,
               "late Dynasty18": 18, "Dynasty 2, second half": 2, "Dynasty 5, end": 5, "Dynasty 12, beginning": 12,
               "Dynasty 12, early-mid": 12, "Dynasty 12, early - mid": 12, "Dynasty 12, mid–late": 12,
-              "Dynasty 26, mid to late": 26, "Dynasty 12, mid to second half": 12}
+              "Dynasty 26, mid to late": 26, "Dynasty 12, mid to second half": 12,
+              "mid-to-late Dynasty 18": 18, "mid\u2013Dynasty 18": 18, "mid\u2010Dynasty 18": 18}
     assert {v: rw.single_dynasty(v) for v in phased} == phased
     # Two dynasties, a doubt, a style, an approximation, a period, a reign or a bare number: none.
     for value in ("late Dynasty 12–13", "Dynasty 12, late–early 13", "Dynasty 11–mid 12", "Dynasty 12, late–17",

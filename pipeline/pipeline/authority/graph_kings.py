@@ -9,14 +9,20 @@ An evaluation adapter, not enrichment: it executes the evaluations' linkability 
 puts the repository's `pipeline/` on `sys.path` and stays in `sys.modules`.
 
 One rule is added to that resolver (#369). A numeral in brackets is a source's own count of the
-bearers of a name: Leprohon writes `N. NAME I` and `N. NAME (I)` as distinct headword patterns
-(`sources/leprohon-2013-titulary/prompt-dyn13.md`, "Headword-pattern rules"), and his Dynasty
-18 founder is "Ahmose (II)", counting Senakhtenre "Ahmose (I)" (`prompt-dyn18.md`, "Numbering
-note"). Such a count often agrees with the usual one ("Merenre (I)"), so it is not refused as
-such. But when the same king also bears the name under a different plain numeral ("Ahmose I"),
-the graph itself shows that the bracketed count is not the usual one, and that label no longer
-keys its numeral: a mention's "Ahmose II" (usually Amasis) does not reach the Dynasty 18 king.
-Its exact surface, brackets included, still does.
+bearers of a name. Leprohon's Dynasty 18 founder is "Ahmose (II)" (`leprohon-18.01`, Leprohon
+2013 p. 95), counting Senakhtenre "Ahmose (I)" (`leprohon-17.26`, p. 91;
+`sources/leprohon-2013-titulary/reconciled.jsonl`), where pharaoh.se and Beckerath call the
+founder "Ahmose I" / "Amosis I.". Such a count often agrees with the usual one ("Merenre (I)"),
+so it is not refused as such. But when the same king also bears the name under a different
+plain numeral, the graph itself shows that the bracketed count is not the usual one, and that
+label no longer keys on the normalized tier: a mention's "Ahmose II" (usually Amasis) does not
+reach the Dynasty 18 king. Its exact surface, brackets included, still does. No claim-graph
+label calls Amasis "Ahmose II" (pharaoh.se's alt_labels do, but the graph does not take alt
+labels), so the mention stays unmatched.
+
+The linkability script's own resolver, which earlier evaluations load directly and whose file
+is hash-pinned by their manifests, does not have this rule: it still sends "Ahmose II" to the
+Dynasty 18 king.
 """
 
 from __future__ import annotations

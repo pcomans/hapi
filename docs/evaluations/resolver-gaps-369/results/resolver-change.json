@@ -1,0 +1,60 @@
+{
+  "base_commit": "d82b7ef9f689bbf2e01b9fdc81eb76b070fa83b4",
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "dh_family_names": {
+    "changed": 0,
+    "distinct": 102
+  },
+  "dynasty_values": {
+    "distinct": 696,
+    "newly_read_as_one_dynasty": 45,
+    "read_differently": 0,
+    "records_newly_read": 217
+  },
+  "king_mention_texts": {
+    "changed": 0,
+    "distinct": 232
+  },
+  "ledger_gzip_sha256": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
+  "measured_sha256": {
+    "pipeline/pipeline/authority/graph_kings.py": "0c96d750ee58256bc5350b30adee0d034d4a7b76458d337591b8884100b64afb",
+    "pipeline/pipeline/authority/royal_women.py": "604f190eeaf58add1bd0c9531794e671a038afe6baa296369f8df43dbea2e8bb"
+  },
+  "royal_woman_cued_mentions": {
+    "changed": 2,
+    "changes": [
+      {
+        "after": {
+          "context_rule": "family",
+          "status": "resolved",
+          "target_ids": [
+            "dodson_hilton:Ahmes B"
+          ]
+        },
+        "artifact_id": "brooklyn-3634",
+        "before": {
+          "context_rule": "weak_sign_unconfirmed",
+          "status": "unmatched",
+          "target_ids": []
+        }
+      },
+      {
+        "after": {
+          "context_rule": "family",
+          "status": "resolved",
+          "target_ids": [
+            "dodson_hilton:Ahmes B"
+          ]
+        },
+        "artifact_id": "met-566763",
+        "before": {
+          "context_rule": "weak_sign_unconfirmed",
+          "status": "unmatched",
+          "target_ids": []
+        }
+      }
+    ],
+    "count": 194
+  },
+  "schema_version": "hapi-369-resolver-change/1"
+}

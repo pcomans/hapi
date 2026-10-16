@@ -37,7 +37,12 @@ The rule, which is deterministic and fixed here:
        record (`stated_kin_names`, #369): "Queen Ahmose, Mother of Hatshepsut", "Hatshepsut's
        Mother, Queen Ahmose", "Queen Inhapi, wife of Tao II, daughter of Tao I". Only the
        appositive forms are read, the kin word being mother, wife, daughter, sister, widow or
-       consort; which kin D&H gives is not compared, as for any other king the record names;
+       consort; which kin D&H gives is not compared, as for any other king the record names.
+       A stated name counts only if the king authority resolves it: the claim graph has no
+       "Tao I", "Tao II" or "Taa II" (Ryholt's lone "Tao" is Seqenenre), so Inhapi's stated
+       kin, like D&H's own "Taa II" family links, add nothing yet. Only
+       `resolve_ruler_mention` reads them; `resolve_royal_woman` takes the record's kings as
+       given;
     2. dynasty: among the family matches if there are several, else among all, the women of
        the record's dynasty (or of no known dynasty), when the record gives exactly one.
   Otherwise the mention stays ambiguous.
@@ -140,9 +145,11 @@ KIN_BEFORE = re.compile(rf"(?:^|[,;:]\s*)(?P<name>[^,;:()\[\]]*[^\s,;:()\[\]])['
 # A phase of one dynasty, or a span of two phases of it ("early-mid", "mid to late"), as the
 # museums write them (#369: read from every dynasty value in the 2026-08-27 corpus).
 DYNASTY_PHASE = r"(?:early|late|middle|mid|end|beginning|(?:first|second)\s+(?:half|part))"
-DYNASTY_PHASES = rf"{DYNASTY_PHASE}(?:\s*(?:-|–|—|\bto\b)\s*{DYNASTY_PHASE})?"
+# A hyphen (ASCII or Unicode), an en dash or an em dash.
+DASH = "[-‐‑–—]"
+DYNASTY_PHASES = rf"{DYNASTY_PHASE}(?:\s*(?:{DASH}to{DASH}|{DASH}|\bto\b)\s*{DYNASTY_PHASE})?"
 SINGLE_DYNASTY = re.compile(
-    rf"^\s*(?:{DYNASTY_PHASES}(?:\s+of)?(?:\s+|-))?(?:Dynasty\s*(\d+)|(\d+)(?:st|nd|rd|th)?\s+Dynasty)"
+    rf"^\s*(?:{DYNASTY_PHASES}(?:\s+of)?(?:\s+|{DASH}))?(?:Dynasty\s*(\d+)|(\d+)(?:st|nd|rd|th)?\s+Dynasty)"
     rf"\s*(?:,\s*{DYNASTY_PHASES})?\s*$",
     re.I,
 )
@@ -539,6 +546,9 @@ def royal_woman_cued(field_value: str, span_start: int) -> bool:
 
 def resolve_royal_woman(index: RoyalWomenIndex, text: str, *, record_king_ids: set[str],
                         record_dynasty: int | None) -> dict:
+    """A cued mention's text among the royal women, with `record_king_ids` as the record's
+    kings exactly as given. It does not read the kin the mention's field states; a caller
+    resolving a museum field uses `resolve_ruler_mention`, which adds them."""
     # Readable numerals are written bare before any tier ("Berenike [II]" would otherwise meet
     # the bare "Berenike" on the claim-graph keys); a mention that cannot be read is refused.
     text, refusal = read_mention(text)

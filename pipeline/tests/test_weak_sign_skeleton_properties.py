@@ -635,3 +635,25 @@ def test_graph_kings_built_from_a_given_module_and_graph_is_the_default_one() ->
     for target in ("cluster-beckerath-18.05", "cluster-beckerath-18.15", "cluster-leprohon-leprohon-19.08"):
         assert (given.labels(target), given.dynasties(target)) == (default.labels(target), default.dynasties(target))
     assert default.dynasties("cluster-beckerath-18.05") == (18,)
+
+
+def test_on_the_real_king_graph_both_queen_ahmose_records_reach_ahmes_b_through_hatshepsut() -> None:
+    """#369, as #361 resolves (the real graph, the TLA-linked spellings): the field of Brooklyn
+    3634 and of Met 566763 names Hatshepsut as her kin, Hatshepsut is one cluster, and that
+    cluster is a family king of Ahmes B. Without the stated kin, the three-consonant key stays
+    unconfirmed."""
+    from pipeline.authority import tla_links
+
+    kings = GraphKings()
+    index = rw.build_index(rw.load_royal_women(), kings, linked_spellings=tla_links.linked_spellings())
+    assert kings.resolve("Hatshepsut")["target_ids"] == ["cluster-beckerath-18.05"]
+    assert "cluster-beckerath-18.05" in index.family_king_ids["dodson_hilton:Ahmes B"]
+    assert not rw.spelled_differently(index, weak_sign_skeleton("Ahmose"))
+    for field in ("Queen Ahmose, Mother of Hatshepsut", "Hatshepsut's Mother, Queen Ahmose"):
+        start = field.index("Ahmose")
+        f = rw.resolve_ruler_mention(index, kings, field, start, start + len("Ahmose"), record_king_ids=set(),
+                                     record_dynasty=18)
+        assert (f["status"], f["target_ids"], f["resolution_method"], f["context_rule"], f["stated_kin_king_ids"]) == (
+            "resolved", ["dodson_hilton:Ahmes B"], "weak_sign_skeleton", "family", ["cluster-beckerath-18.05"]), field
+    f = rw.resolve_ruler_mention(index, kings, "Queen Ahmose", 6, 12, record_king_ids=set(), record_dynasty=18)
+    assert (f["status"], f["context_rule"]) == ("unmatched", "weak_sign_unconfirmed")
