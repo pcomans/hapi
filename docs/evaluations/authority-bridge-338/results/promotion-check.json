@@ -67,7 +67,7 @@
         "pipeline/pipeline/authority/claimgraph/normalize.py": "ca59b734db3f67511c9e58f16eaf8769e998c5e480d18c8be49a575390b16939",
         "pipeline/pipeline/authority/graph_kings.py": "1acb266ad4f869ee3a1e271989b6d616a38701da85ca6785b1de7ec45f4ffd79",
         "pipeline/pipeline/authority/resolver.py": "289d5473464b095719cad27755168ada538f4f6be51246dda442f5f6f86bf173",
-        "pipeline/pipeline/authority/royal_women.py": "0c360263f1970c14367cdfc38fe919f475ceab3de6cd0461b8dbef4891fd6555",
+        "pipeline/pipeline/authority/royal_women.py": "21315b743ff224a221b3f08aff7b6a1d3f11259e7b814622388ded56ada57d89",
         "pipeline/pipeline/authority/sources/dodson-hilton-queens/female-rulers.json": "c2927337d0370082c5cd375ea10df7b162974555d1b252343a3a6eda3dc3157d",
         "pipeline/pipeline/authority/sources/dodson-hilton-queens/reconciled.jsonl": "0daa6e20a9ff2a754de665524941727125a19d8402cff22ee1031f7162b15da6",
         "pipeline/pipeline/authority/sources/dodson-hilton-queens/same-woman-across-sub-periods.json": "f21be005cd2b9147bbb46042d432b9b50b334be18751b5505154da3a5d3f9492",
@@ -76,7 +76,7 @@
         "pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl": "4414c5b4a3004c3b6d6669e45a4708bf2405e0c952620633cc155a6d4478a2ff",
         "pipeline/pipeline/authority/sources/tla-2018-names/links/decisions.jsonl": "4430d6491f5d6585459795c2a164272bcd499876088f17e3bb08b6477ff64b48",
         "pipeline/pipeline/authority/sources/tla-2018-names/reconciled.jsonl": "fbfedbf6adb996dff680b2cc3e44f2f9814adfbc83b7694ab3b3fb16f31c2c22",
-        "pipeline/pipeline/authority/tla_links.py": "49d5ede5a547337fb6d96f3207b00eb71257a7dc272c24cd0b88e05ab41c38af",
+        "pipeline/pipeline/authority/tla_links.py": "e3e8a108cf62cd4f824912348c1f2738707a4ed86c1c94be7e05c630898081cd",
         "pipeline/pipeline/authority/weak_sign_skeleton.py": "2f4066c9af7ce8a89c24c8b3ca77e89215d086f645084f84f816bd69cf126ac9",
         "pipeline/pipeline/enrich/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "pipeline/pipeline/enrich/authority_links.py": "c6bae72f5aca520c72bb49aed81f4361b4c569ca388d5a908e8b25fa4e5a9231",
@@ -84,7 +84,7 @@
         "web-claimgraph/data/claim-graph.json": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66"
       },
       "mode": "authority",
-      "resolver_version": "839cb51c95c7797d7ffa7753110c0eba6ae0224a9abc5ea294d7357a488300be",
+      "resolver_version": "b48b544a44a42735112ec051168046b71c48e2fe73954eff7aa87ed33c4f6b70",
       "unicode": "15.0.0"
     },
     "literal": {

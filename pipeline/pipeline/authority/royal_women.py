@@ -114,6 +114,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .claimgraph.normalize import NameForm, keys_for_form
+from .resolver import surface_key
 from .weak_sign_skeleton import MIN_WEAK_SIGN_CONSONANTS, consonant_count, weak_sign_skeleton
 
 SOURCE_DIR = Path(__file__).resolve().parent / "sources" / "dodson-hilton-queens"
@@ -205,10 +206,6 @@ class RoyalWomenIndex:
     family_dynasties: dict[str, frozenset[int]] = field(default_factory=dict)
 
 
-
-
-def surface_key(text: str) -> str:
-    return " ".join(unicodedata.normalize("NFC", text).split()).casefold()
 
 
 def name_keys(text: str) -> set[str]:

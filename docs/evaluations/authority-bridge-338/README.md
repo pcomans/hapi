@@ -66,10 +66,15 @@ The CI tests need no private data:
   Whether the link file types them apart from kings (the owner kept queens distinct from kings
   in the authority, 2026-10-14) is a schema decision for step 2, with the schema and CIDOC
   reviewers. So is the vocabulary for `relation` (#333).
-- `royal_women.surface_key` and `resolver.surface_key` are two definitions of one key.
-  Merging them changes the royal-women index, so it gets its own measured change.
+- A structure test that every museum with an ingest asset has a field inventory in
+  `mentions.extract_mentions`. Until the asset exists, an unknown museum already fails loud
+  there (a `KeyError`).
 
 ## Next
+
+The proof covers the code in its recorded snapshot only. Any later edit to a file in the
+snapshot (`results/promotion-check.json`, `snapshot`) needs a new `check_promotion` run before
+the proof covers it.
 
 - **Step 2:** a Dagster asset that writes versioned resolution and link files. It must make
   deterministic re-runs, remove a link when its source decision is withdrawn, and inventory the

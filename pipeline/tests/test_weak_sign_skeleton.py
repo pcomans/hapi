@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from pipeline.authority import royal_women as rw
+from pipeline.authority import resolver, royal_women as rw
 from pipeline.authority import weak_sign_skeleton as module
 from pipeline.authority.weak_sign_skeleton import MIN_WEAK_SIGN_CONSONANTS, consonant_count, weak_sign_skeleton
 
@@ -267,7 +267,7 @@ def women_collisions(women: list[rw.RoyalWoman]) -> tuple[int, dict[str, tuple[s
         for key in keys:
             groups[key].add(woman.target_id)
         for name in names:
-            exact[rw.surface_key(name)].add(woman.target_id)
+            exact[resolver.surface_key(name)].add(woman.target_id)
             for key in rw.name_keys(name):
                 normalized[key].add(woman.target_id)
     existing = [*exact.values(), *normalized.values()]
