@@ -125,6 +125,11 @@ The CI tests need no private data:
     - a canonical row has no raw payload;
     - a raw row the step keeps has no canonical row yet.
 
+    A canonical row whose raw payload the step no longer keeps (a Brooklyn object re-ingested
+    as not Egyptian) is not refused. The normalize assets never delete (#374), so such a row
+    would otherwise block every run; it is left out instead and listed in the manifest
+    (`canonical_rows_set_aside`).
+
     That is all it checks. Whether the raw rows read are a complete ingest is not checked: a
     half re-ingested raw table, fully normalized, passes. With the code recorded in
     `results/promotion-check.json` (`check_inputs.code_sha256`: every `pipeline` module the

@@ -55,6 +55,7 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
     assert {name: f["rows"] for name, f in manifest["files"].items()} == {
         "links-authority.ndjson.gz": 14, "links-literal.ndjson.gz": 48, "mentions.ndjson.gz": 59,
         "resolutions-authority.ndjson.gz": 59, "resolutions-literal.ndjson.gz": 59}
+    assert manifest["canonical_rows_set_aside"] == []
     assert (manifest["records"], manifest["inputs_sha256"], manifest["writer_sha256"]) == (
         len(canonical), lf.input_digest(canonical, raw), hashlib.sha256(Path(lf.__file__).read_bytes()).hexdigest())
     assert manifest["snapshots"] == {"authority": authority.snapshot, "literal": al.snapshot("literal")}
@@ -566,7 +567,7 @@ def test_an_evidence_role_change_alone_is_a_change(inputs, authority, tmp_path) 
 def test_inputs_that_are_not_one_pipeline_generation_are_refused(inputs, authority, tmp_path) -> None:
     from pipeline.enrich.inputs import check_inputs
     canonical, raw = inputs
-    check_inputs(canonical, raw)
+    assert check_inputs(canonical, raw) == (canonical, [])
     # A raw payload re-ingested after its canonical row was written.
     raw2 = copy.deepcopy(raw)
     raw2["met"]["900001"]["title"] = "Scarab"
@@ -582,10 +583,22 @@ def test_inputs_that_are_not_one_pipeline_generation_are_refused(inputs, authori
     del raw4["met"]["900001"]
     with pytest.raises(ValueError, match=r"1 canonical rows have no raw payload"):
         check_inputs(canonical, raw4)
-    # A canonical row the normalize step would not make: a non-Egyptian Brooklyn record.
+
+
+
+def test_a_canonical_row_the_normalize_step_no_longer_makes_is_set_aside_and_listed(inputs, authority, tmp_path) -> None:
+    """A Brooklyn object re-ingested as not Egyptian keeps its old canonical row: the normalize
+    assets never delete (#374). It is not the step's output, so a run leaves it out and says so,
+    rather than refusing every run until someone deletes it."""
+    from pipeline.enrich.inputs import check_inputs
+    canonical, raw = inputs
     _, full = corpus(EXTRA)
-    with pytest.raises(ValueError, match=r"'brooklyn-3198'"):
-        check_inputs(canonical + [r for r in corpus(EXTRA)[0] if r["id"] == "brooklyn-3198"], full)
+    leftover = [r for r in corpus(EXTRA)[0] if r["id"] == "brooklyn-3198"]
+    assert check_inputs(canonical + leftover, full) == (canonical, ["brooklyn-3198"])
+    manifest = lf.write_run(tmp_path, lambda: (canonical + leftover, full), authority)
+    assert (manifest["canonical_rows_set_aside"], manifest["records"]) == (["brooklyn-3198"], len(canonical))
+    run = tmp_path / manifest["run_id"]
+    assert "brooklyn-3198" not in {m["artifact_id"] for m in lf.read_rows(run / "mentions.ndjson.gz")}
 
 
 def test_the_normalizers_are_the_normalize_assets() -> None:

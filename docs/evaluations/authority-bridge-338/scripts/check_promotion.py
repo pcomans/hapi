@@ -113,7 +113,9 @@ def check(archive: Path, run: Path) -> dict:
     canonical, raw = load_corpus(archive)
     # 5. The frozen tables are the normalize step's output for their raw rows (#338 step 2's
     #    `check_inputs`, which every run applies): raises if not.
-    check_inputs(canonical, raw)
+    kept, set_aside = check_inputs(canonical, raw)
+    if (len(kept), set_aside) != (len(canonical), []):
+        raise ValueError(f"the frozen corpus has canonical rows check_inputs sets aside: {set_aside[:5]}")
     ledger = gz_rows((run / "mentions.ndjson.gz").read_bytes())
     found, _ = production_mentions.extract_mentions(canonical, raw)
     mention_rows_equal = [canonical_line(r) for r in found] == [canonical_line(r) for r in ledger]

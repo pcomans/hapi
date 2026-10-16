@@ -41,10 +41,15 @@ def normalized(raw_indexes: dict[str, dict[str, dict]]) -> list[dict]:
     return rows
 
 
-def check_inputs(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]]) -> None:
+def check_inputs(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]]) -> tuple[list[dict], list[str]]:
+    """The canonical rows to run on, and the ids of those set aside: rows whose raw payload the
+    normalize step no longer keeps (a Brooklyn object re-ingested as no longer Egyptian). The
+    normalize assets upsert and never delete, so such a row stays in the table (#374); it is not
+    the step's output, and a run leaves it out and lists it. Anything else that is not the step's
+    output is refused."""
     if set(raw_indexes) != set(NORMALIZERS):
         raise ValueError(f"raw payloads of {sorted(raw_indexes)}, not of every normalized museum {sorted(NORMALIZERS)}")
-    stale, orphaned = [], []
+    stale, orphaned, kept, dropped = [], [], [], []
     seen: dict[str, set[str]] = {museum: set() for museum in NORMALIZERS}
     mappers = {museum: mapper() for museum, (mapper, _) in NORMALIZERS.items()}
     for row in canonical:
@@ -54,8 +59,12 @@ def check_inputs(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]])
         keep = NORMALIZERS[museum][1]
         if payload is None:
             orphaned.append(row["id"])
-        elif (keep is not None and not keep(payload)) or mappers[museum].map_to_canonical(payload).model_dump() != row:
+        elif keep is not None and not keep(payload):
+            dropped.append(row["id"])
+        elif mappers[museum].map_to_canonical(payload).model_dump() != row:
             stale.append(row["id"])
+        else:
+            kept.append(row)
     pending = sorted(f"{museum}:{source_id}" for museum, (_, keep) in NORMALIZERS.items()
                      for source_id, payload in raw_indexes[museum].items()
                      if source_id not in seen[museum] and (keep is None or keep(payload)))
@@ -69,5 +78,5 @@ def check_inputs(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]])
         problems.append(f"{len(pending)} raw rows are not normalized yet (e.g. {pending[:SHOWN]})")
     if problems:
         raise ValueError("the canonical rows are not the normalize step's output for the raw rows read "
-                         "(ingest or normalize mid-run?): "
-                         + "; ".join(problems))
+                         "(ingest or normalize mid-run?): " + "; ".join(problems))
+    return kept, sorted(dropped)

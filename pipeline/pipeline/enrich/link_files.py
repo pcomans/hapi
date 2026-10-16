@@ -179,12 +179,12 @@ def write_run(root: Path, read_inputs: Callable[[], tuple[list[dict], dict[str, 
     current before it. The inputs must be one pipeline generation (`inputs.check_inputs`)."""
     with run_lock(root):
         canonical, raw_indexes = read_inputs()
-        check_inputs(canonical, raw_indexes)
-        return _run(root, canonical, raw_indexes, authority)
+        canonical, set_aside = check_inputs(canonical, raw_indexes)
+        return _run(root, canonical, raw_indexes, authority, set_aside)
 
 
 def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dict]],
-         authority: authority_links.Authority | None) -> dict:
+         authority: authority_links.Authority | None, set_aside: list[str]) -> dict:
     authority = authority or authority_links.load_authority()
     found, extraction = mentions.extract_mentions(canonical, raw_indexes)
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
@@ -211,6 +211,8 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
         # This module types the rows and writes the files; its SHA-256 is in the run id too.
         "writer_sha256": writer,
         "records": len(canonical),
+        # Canonical rows left out: the normalize step no longer keeps their raw payload (#374).
+        "canonical_rows_set_aside": set_aside,
         "snapshots": snapshots,
         "extraction": extraction,
         # The SHA-256 of each file's content: a gzip file's decompressed NDJSON, which does not
