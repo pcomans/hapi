@@ -161,7 +161,17 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
 
 def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], root: Path,
               authority: authority_links.Authority | None = None) -> dict:
-    """Write one run under `root` and point `root/CURRENT` at it; return its manifest."""
+    """Write one run under `root` and point `root/CURRENT` at it; return its manifest. The
+    caller has read the inputs already; a caller that reads them from a live store takes
+    `run_lock(root)` first and calls `write_run_locked`, so that no run can read older inputs
+    than a run that becomes current before it."""
+    with run_lock(root):
+        return write_run_locked(canonical, raw_indexes, root, authority)
+
+
+def write_run_locked(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], root: Path,
+                     authority: authority_links.Authority | None = None) -> dict:
+    """`write_run`, for a caller that holds `run_lock(root)`."""
     authority = authority or authority_links.load_authority()
     found, extraction = mentions.extract_mentions(canonical, raw_indexes)
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
@@ -199,9 +209,7 @@ def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], ro
     }
     files["manifest.json"] = (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
-    root.mkdir(parents=True, exist_ok=True)
-    with run_lock(root):
-        return _write(root, run_id, files, manifest, canonical, by_mode)
+    return _write(root, run_id, files, manifest, canonical, by_mode)
 
 
 @contextlib.contextmanager
@@ -209,6 +217,7 @@ def run_lock(root: Path):
     """One run at a time under a root: a second one fails loud instead of racing for CURRENT
     (two runs diffing against the same CURRENT would leave a withdrawal between them
     unrecorded). The operating system releases the lock if the process dies."""
+    root.mkdir(parents=True, exist_ok=True)
     with open(root / LOCK, "a") as handle:
         try:
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -250,9 +259,15 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
     if previous_id is not None and previous_id != run_id:
         artifact_ids = {row["id"] for row in canonical}
         diff = {"previous_run": previous_id, "run": run_id}
+        recorded = json.loads((root / previous_id / "manifest.json").read_text(encoding="utf-8"))["files"]
         for mode in authority_links.MODES:
-            diff[mode] = diff_links(read_rows(root / previous_id / f"links-{mode}.ndjson.gz"), by_mode[mode][1],
-                                    by_mode[mode][0], artifact_ids)
+            name = f"links-{mode}.ndjson.gz"
+            data = (root / previous_id / name).read_bytes()
+            # The previous run's links as it wrote them, or the diff would report false changes.
+            if content_sha256(name, data) != recorded[name]["content_sha256"]:
+                raise ValueError(f"{root / previous_id / name} is not what that run wrote (its manifest disagrees)")
+            diff[mode] = diff_links([json.loads(line) for line in gzip.decompress(data).splitlines()],
+                                    by_mode[mode][1], by_mode[mode][0], artifact_ids)
         (root / "diffs").mkdir(exist_ok=True)
         (root / "diffs" / f"{previous_id}-to-{run_id}.json").write_text(
             json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")

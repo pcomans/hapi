@@ -101,6 +101,12 @@ The CI tests need no private data:
     should run once against a real Postgres before anything relies on it.
   - Runs under one root hold an exclusive lock; a second materialization at the same time
     fails loud and changes nothing. The operating system releases the lock if a run dies.
+  - The asset takes the lock before it reads the tables and reads them all in one
+    `REPEATABLE READ` transaction. A run therefore cannot read older inputs than a run that
+    became current before it, and its canonical rows and raw payloads come from the same
+    moment.
+  - A new run checks the previous run's link files against that run's manifest before it
+    writes the diff.
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 

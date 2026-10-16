@@ -272,3 +272,28 @@ def test_a_run_while_another_holds_the_root_fails_loud_and_changes_nothing(input
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     # Released, the next run goes ahead.
     assert lf.write_run(canonical, raw2, tmp_path, authority)["run_id"] != first["run_id"]
+
+
+def test_a_previous_run_whose_links_were_changed_is_not_diffed_against(inputs, authority, tmp_path) -> None:
+    canonical, raw = inputs
+    first = lf.write_run(canonical, raw, tmp_path, authority)
+    path = tmp_path / first["run_id"] / "links-authority.ndjson.gz"
+    path.write_bytes(lf.gzip_rows(lf.read_rows(path)[1:]))
+    raw2 = copy.deepcopy(raw)
+    raw2["met"]["900001"]["title"] = "Scarab"
+    with pytest.raises(ValueError, match="links-authority.ndjson.gz is not what that run wrote"):
+        lf.write_run(canonical, raw2, tmp_path, authority)
+    assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
+    assert not (tmp_path / "diffs").exists()
+
+
+def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot() -> None:
+    """The asset itself cannot run here (no database); its source must take the run lock
+    before reading the tables, read them in one REPEATABLE READ transaction, and write under
+    the lock it holds."""
+    import inspect
+    from pipeline.assets.enrich import authority_links_asset as asset
+    source = inspect.getsource(asset)
+    lock, snapshot, read, write = (source.index(s) for s in (
+        "with run_lock(root):", 'isolation_level="REPEATABLE READ"', "sa.select(artifacts_table)", "write_run_locked("))
+    assert lock < snapshot < read < write
