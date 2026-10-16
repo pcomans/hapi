@@ -82,8 +82,11 @@ The CI tests need no private data:
   one; these files are a working store.)
   - A run directory that lacks a file, holds a stray one or differs in content fails loud,
     with a message saying which.
-  - Before writing anything, a run checks `CURRENT` and the previous run's link files against
+  - Before writing anything, a run checks `CURRENT` and every file of the previous run against
     that run's manifest. A mismatch fails loud and leaves the root as it was.
+  - A pending diff is written whole and then named. One left by a killed process is published
+    if its run became current; otherwise it is discarded unread, so a truncated file never
+    blocks the root.
 - **Withdrawal.** `<root>/CURRENT` names the run in force. When a new run replaces it,
   `<root>/diffs/<previous>-to-<run>.json` lists, for each mode, the links added, removed and
   changed.

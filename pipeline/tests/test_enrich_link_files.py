@@ -430,7 +430,7 @@ def test_a_diff_is_published_only_if_its_run_became_current(inputs, authority, t
 
     # The process dies after CURRENT is replaced, before the diff takes its name: it did happen.
     def die_on_diff(src, dst):
-        if Path(dst).parent.name == "diffs":
+        if Path(dst).parent.name == "diffs" and Path(dst).name.endswith(".json"):
             raise OSError("killed")
         return real_rename(src, dst)
     monkeypatch.setattr(lf.os, "rename", die_on_diff)
@@ -490,7 +490,7 @@ def test_a_run_that_fails_its_checks_leaves_a_pending_diff_as_it_was(inputs, aut
 
 def test_a_pending_diff_this_module_did_not_write_fails_loud(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    current = lf.write_run(tmp_path, lambda: (canonical, raw), authority)["run_id"]
     (tmp_path / "diffs").mkdir()
     (tmp_path / "diffs" / ".notes.partial").write_text("x")
     raw_b = copy.deepcopy(raw)
@@ -498,10 +498,49 @@ def test_a_pending_diff_this_module_did_not_write_fails_loud(inputs, authority, 
     with pytest.raises(ValueError, match="is not a pending diff this module writes"):
         lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
     (tmp_path / "diffs" / ".notes.partial").unlink()
-    (tmp_path / "diffs" / f".{'a' * 64}-to-{'b' * 64}.json.partial").write_text(
-        json.dumps({"previous_run": "c" * 64, "run": "b" * 64}))
-    with pytest.raises(ValueError, match="holds the diff of c{64} to b{64}"):
+    # A diff to publish (its run is current) whose content names other runs.
+    (tmp_path / "diffs" / f".{'a' * 64}-to-{current}.json.partial").write_text(
+        json.dumps({"previous_run": "c" * 64, "run": current}))
+    with pytest.raises(ValueError, match=f"holds the diff of c{{64}} to {current}"):
         lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+
+
+def test_a_pending_diff_cut_short_by_a_killed_process_never_blocks_the_root(inputs, authority, tmp_path) -> None:
+    """A run killed while writing its pending diff left a `.writing` file; one killed before
+    the commit may also have left an unreadable pending diff of a run that never became current.
+    Both are discarded unread."""
+    canonical, raw = inputs
+    a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    (tmp_path / "diffs").mkdir()
+    (tmp_path / "diffs" / f".{a['run_id']}-to-{'b' * 64}.json.partial.writing").write_text('{"previous_')
+    (tmp_path / "diffs" / f".{a['run_id']}-to-{'c' * 64}.json.partial").write_text('{"previous_')
+    raw_b = copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    b = lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+    assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == [f"{a['run_id']}-to-{b['run_id']}.json"]
+
+
+def test_a_damaged_previous_run_is_not_accepted_as_history(inputs, authority, tmp_path) -> None:
+    canonical, raw = inputs
+    a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    run = tmp_path / a["run_id"]
+    raw_b = copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    for damage, message in ((lambda: (run / "mentions.ndjson.gz").write_bytes(lf.gzip_rows([])),
+                             "mentions.ndjson.gz is not what that run wrote"),
+                            (lambda: (run / "resolutions-literal.ndjson.gz").unlink(), "not the files its manifest names"),
+                            (lambda: (run / "manifest.json").unlink(), "has no manifest.json")):
+        saved = {p.name: p.read_bytes() for p in run.iterdir()}
+        damage()
+        with pytest.raises(ValueError, match=message):
+            lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+        assert (tmp_path / lf.CURRENT).read_text() == a["run_id"] + "\n"
+        assert sorted(p.name for p in tmp_path.iterdir() if not p.name.startswith(".")) == sorted(
+            [lf.CURRENT, a["run_id"]])
+        for p in run.iterdir():
+            p.unlink()
+        for name, data in saved.items():
+            (run / name).write_bytes(data)
 
 
 def test_an_evidence_role_change_alone_is_a_change(inputs, authority, tmp_path) -> None:

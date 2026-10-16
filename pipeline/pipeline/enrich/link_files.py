@@ -253,14 +253,11 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
     if previous_id is not None and previous_id != run_id:
         artifact_ids = {row["id"] for row in canonical}
         diff = {"previous_run": previous_id, "run": run_id}
-        recorded = json.loads((root / previous_id / "manifest.json").read_text(encoding="utf-8"))["files"]
+        # The previous run as it wrote it, every file, or the diff would report false changes and
+        # the store would keep a damaged run as history.
+        verify_run(root / previous_id)
         for mode in authority_links.MODES:
-            name = f"links-{mode}.ndjson.gz"
-            data = (root / previous_id / name).read_bytes()
-            # The previous run's links as it wrote them, or the diff would report false changes.
-            if content_sha256(name, data) != recorded[name]["content_sha256"]:
-                raise ValueError(f"{root / previous_id / name} is not what that run wrote (its manifest disagrees)")
-            diff[mode] = diff_links([json.loads(line) for line in gzip.decompress(data).splitlines()],
+            diff[mode] = diff_links(read_rows(root / previous_id / f"links-{mode}.ndjson.gz"),
                                     by_mode[mode][1], by_mode[mode][0], artifact_ids)
 
     run_dir = root / run_id
@@ -296,7 +293,11 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
     if diff is not None:
         (root / "diffs").mkdir(exist_ok=True)
         pending = root / "diffs" / f".{previous_id}-to-{run_id}.json.partial"
-        pending.write_text(json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        # Written whole, then named: a process killed while writing leaves only a `.writing` file,
+        # which `settle_diffs` discards.
+        writing = pending.with_name(pending.name + ".writing")
+        writing.write_text(json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        os.rename(writing, pending)
     pointer = root / f".{CURRENT}.partial"
     pointer.write_text(run_id + "\n", encoding="utf-8")
     os.replace(pointer, root / CURRENT)
@@ -305,14 +306,30 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
     return manifest
 
 
-PENDING_DIFF = re.compile(r"^\.(?P<previous>[0-9a-f]{64})-to-(?P<run>[0-9a-f]{64})\.json\.partial$")
+PENDING_DIFF = re.compile(
+    r"^\.(?P<previous>[0-9a-f]{64})-to-(?P<run>[0-9a-f]{64})\.json\.partial(?P<writing>\.writing)?$")
+
+
+def verify_run(run_dir: Path) -> None:
+    """A run directory holds exactly the files its manifest names, each with its recorded
+    content."""
+    if not (run_dir / "manifest.json").is_file():
+        raise ValueError(f"{run_dir} has no manifest.json")
+    recorded = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))["files"]
+    present = sorted(p.name for p in run_dir.iterdir())
+    if present != sorted([*recorded, "manifest.json"]):
+        raise ValueError(f"{run_dir} holds {present}, not the files its manifest names")
+    for name, entry in recorded.items():
+        if content_sha256(name, (run_dir / name).read_bytes()) != entry["content_sha256"]:
+            raise ValueError(f"{run_dir / name} is not what that run wrote (its manifest disagrees)")
 
 
 def settle_diffs(root: Path, current: str | None) -> None:
     """A diff left pending by a run that died: published if its run became current (the run died
-    after the commit), else removed (it died before; that transition never happened). Only this
-    module writes pending diffs, so one it cannot read, or whose content names other runs than
-    its name, fails loud, and before any pending diff is touched."""
+    after the commit), else removed unread (it died before, so that transition never happened,
+    whatever the file holds; a `.writing` file is always such). Only this module writes pending
+    diffs, so a name it does not write, or a diff to publish whose content names other runs
+    than its name, fails loud, and before any pending diff is touched."""
     if not (root / "diffs").is_dir():
         return
     found = []
@@ -320,12 +337,14 @@ def settle_diffs(root: Path, current: str | None) -> None:
         m = PENDING_DIFF.match(pending.name)
         if m is None:
             raise ValueError(f"{pending} is not a pending diff this module writes")
-        content = json.loads(pending.read_text(encoding="utf-8"))
-        if (content["previous_run"], content["run"]) != (m["previous"], m["run"]):
-            raise ValueError(f"{pending} holds the diff of {content['previous_run']} to {content['run']}")
-        found.append((pending, m))
-    for pending, m in found:
-        if m["run"] == current:
+        publish = m["run"] == current and not m["writing"]
+        if publish:
+            content = json.loads(pending.read_text(encoding="utf-8"))
+            if (content["previous_run"], content["run"]) != (m["previous"], m["run"]):
+                raise ValueError(f"{pending} holds the diff of {content['previous_run']} to {content['run']}")
+        found.append((pending, m, publish))
+    for pending, m, publish in found:
+        if publish:
             os.rename(pending, root / "diffs" / f"{m['previous']}-to-{m['run']}.json")
         else:
             pending.unlink()
