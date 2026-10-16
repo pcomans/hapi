@@ -56,6 +56,10 @@ neither museum's spellings.
    - For the same reason, no scope starts qualified. #361's Met–Brooklyn result hung on a case
      the resolver was later tuned on. After this registration, the qualified ruler scopes are
      the ones it qualifies.
+   - Production still lists #361's Met–Brooklyn (`QUALIFIED_SCOPES` in
+     `pipeline/enrich/authority_links.py`) until this result is applied. That is on purpose:
+     `authority_links.py` is one of the files the frozen resolver versions digest, so editing it
+     now would void the frozen run. The result's PR sets the ruler scopes to this registration's.
 6. **Citable sources.** Cleveland and the Walters, already citable, are now case museums, and the
    Walters' permanent-link host is added (`citable-sources.json`).
 7. **New seeds** for the opaque orders, the reconciliation order and the preflight sample.
