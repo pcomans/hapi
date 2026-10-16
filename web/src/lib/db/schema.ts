@@ -19,6 +19,21 @@ export const fuzzyMatchReviewsInCatalog = catalog.table("fuzzy_match_reviews", {
 	reviewNotes: text("review_notes"),
 });
 
+export const rawBrooklynInCatalog = catalog.table("raw_brooklyn", {
+	objectId: varchar("object_id").primaryKey().notNull(),
+	data: text().notNull(),
+});
+
+export const rawHarvardInCatalog = catalog.table("raw_harvard", {
+	objectId: varchar("object_id").primaryKey().notNull(),
+	data: text().notNull(),
+});
+
+export const rawMetInCatalog = catalog.table("raw_met", {
+	objectId: varchar("object_id").primaryKey().notNull(),
+	data: text().notNull(),
+});
+
 export const artifactsInCatalog = catalog.table("artifacts", {
 	id: varchar().primaryKey().notNull(),
 	sourceMuseum: varchar("source_museum").notNull(),
@@ -61,17 +76,7 @@ export const artifactsInCatalog = catalog.table("artifacts", {
 	index("ix_catalog_artifacts_tomb_temple_id").using("btree", table.tombTempleId.asc().nullsLast().op("text_ops")),
 ]);
 
-export const rawBrooklynInCatalog = catalog.table("raw_brooklyn", {
-	objectId: varchar("object_id").primaryKey().notNull(),
-	data: text().notNull(),
-});
-
-export const rawHarvardInCatalog = catalog.table("raw_harvard", {
-	objectId: varchar("object_id").primaryKey().notNull(),
-	data: text().notNull(),
-});
-
-export const rawMetInCatalog = catalog.table("raw_met", {
+export const rawClevelandInCatalog = catalog.table("raw_cleveland", {
 	objectId: varchar("object_id").primaryKey().notNull(),
 	data: text().notNull(),
 });

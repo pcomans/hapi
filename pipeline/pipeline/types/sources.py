@@ -16,6 +16,7 @@ class MuseumSource(str, Enum):
     MET = "met"
     BROOKLYN = "brooklyn"
     HARVARD = "harvard"
+    CLEVELAND = "cleveland"
 
 
 class License(str, Enum):
@@ -37,4 +38,5 @@ MUSEUM_LICENSE: dict[MuseumSource, License] = {
     MuseumSource.MET: License.CC0,
     MuseumSource.BROOKLYN: License.CC_BY_NC_ND,
     MuseumSource.HARVARD: License.NON_COMMERCIAL_EDUCATIONAL,
+    MuseumSource.CLEVELAND: License.CC0,
 }

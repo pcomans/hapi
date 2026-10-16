@@ -1,0 +1,73 @@
+{
+  "id": 101400,
+  "accession_number": "1920.2011",
+  "share_license_status": "Copyrighted",
+  "tombstone": "Boomerang, 1920. Egypt. Wood. The Cleveland Museum of Art, Gift of Mrs. Gordon N. Morrill, 1920.2011",
+  "current_location": null,
+  "title": "Boomerang",
+  "creation_date": "1920",
+  "creation_date_earliest": 1920,
+  "creation_date_latest": 1920,
+  "artists_tags": [],
+  "culture": [
+    "Egypt"
+  ],
+  "technique": "wood",
+  "support_materials": [],
+  "department": "Egyptian and Ancient Near Eastern Art",
+  "collection": "Egyptian",
+  "type": "Wood",
+  "dimensions": {},
+  "state_of_the_work": null,
+  "edition_of_the_work": null,
+  "copyright": null,
+  "inscriptions": [],
+  "exhibitions": {
+    "current": [],
+    "legacy": []
+  },
+  "provenance": [],
+  "find_spot": null,
+  "related_works": [],
+  "former_accession_numbers": [
+    "A20.8"
+  ],
+  "did_you_know": null,
+  "early_education_description": null,
+  "artlens_description": null,
+  "description": null,
+  "external_resources": {
+    "wikidata": [
+      "https://www.wikidata.org/wiki/Q79496645"
+    ],
+    "internet_archive": []
+  },
+  "citations": [],
+  "url": "https://clevelandart.org/art/1920.2011",
+  "images": {},
+  "alternate_images": [],
+  "creditline": "Gift of Mrs. Gordon N. Morrill",
+  "image_credit": null,
+  "sketchfab_id": null,
+  "sketchfab_url": null,
+  "gallery_donor_text": null,
+  "athena_id": 101400,
+  "creators": [],
+  "legal_status": "accessioned",
+  "accession_date": "1920-10-28T00:00:00",
+  "sortable_date": 1920,
+  "date_added_to_oa": null,
+  "date_text": "1920",
+  "collapse_artists": false,
+  "on_loan": false,
+  "recently_acquired": false,
+  "record_type": "object",
+  "conservation_statement": null,
+  "has_conservation_images": false,
+  "cover_accession_number": null,
+  "is_nazi_era_provenance": false,
+  "impression": null,
+  "alternate_titles": [],
+  "is_highlight": false,
+  "updated_at": "2026-05-01 06:46:39.727000"
+}

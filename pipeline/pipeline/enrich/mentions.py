@@ -7,6 +7,10 @@ source of each shared definition identical, so the first change here must also c
 test and this paragraph. Detection and span boundaries come from museum field structure and fixed syntax
 rules; authority labels, aliases, identifiers and resolver results are not inputs. Each
 museum's evidence fields are named in `extract_mentions` (the per-museum field inventory).
+
+Cleveland came after #361: its reader is `cleveland_mentions`, added beside #361's definitions
+rather than into them, and `extract_all_mentions` joins the two. A run calls that; without
+Cleveland records it gives exactly what `extract_mentions` gives (tested).
 """
 
 from __future__ import annotations
@@ -315,3 +319,80 @@ def extract_mentions(canonical: list[dict], raw_indexes: dict[str, dict[str, dic
         "royal_cues_without_syntactic_candidate": dict(sorted(cue_without_candidate.items())),
     }
     return mentions, diagnostics
+
+
+JOINT_REIGN = re.compile(r"^\s*joint\s+reigns?\s+of\s+", re.I)
+
+
+def cleveland_reign_components(entry: str) -> list[tuple[str, int]]:
+    """The reign components of one Cleveland `culture` entry, with their offsets: the top-level
+    components (`component_spans`) that open as a reign does ("reign of", "probably reign of",
+    "late reign of", "joint reign of", ...). The mapper's `ruler_display_name` and
+    `cleveland_mentions` both read these, so the two cannot disagree on what a reign is."""
+    return [(component, start) for component, start, _ in component_spans(entry)
+            if LEADING_REIGN.match(component) or LEADING_UNCERTAIN_REIGN.match(component) or JOINT_REIGN.match(component)]
+
+
+def cleveland_reign_text(component: str) -> str:
+    """A reign component without its trailing dates: the final parenthesis is cut only when it
+    holds a digit ("(1390–1352 BCE)"), so a doubt mark ("Ramesses II(?)") stays and the
+    expression classifies as uncertain. Only that last parenthesis is cut, so a range keeps both
+    ends ("reign of X (dates)–reign of Y")."""
+    if component.endswith(")"):
+        cut = component.rfind("(")
+        if re.search(r"\d", component[cut:]):
+            return component[:cut].rstrip()
+    return component
+
+
+def cleveland_mentions(artifact: dict, raw: dict) -> list[dict]:
+    """Cleveland's ruler mentions: the reign components of each `culture` entry
+    (`cleveland_reign_components`), its catalogued reign, read as the Met's `reign` field is
+    (`classify_reign_expression`) once their dates are cut (`cleveland_reign_text`). Ranges and
+    qualifiers ("or later", "probably", "(?)") classify as such and are not resolved to one ruler.
+    Cleveland's other evidence (`find_spot`, places in `culture`, title cues) is not read yet
+    (docs/museum-sources/cleveland.md)."""
+    found = []
+    for index, entry in enumerate(raw.get("culture") or []):
+        for component, component_start in cleveland_reign_components(entry):
+            text = cleveland_reign_text(component)
+            length = len(text)
+            expression, candidate, span = classify_reign_expression(text)
+            if expression == "single_identity" and candidate is not None and span is not None:
+                start, end = component_start + span[0], component_start + span[1]
+            else:
+                start, end = component_start, component_start + length
+            found.append(make_mention(
+                artifact=artifact, entity_type="ruler", field_path=f"culture[{index}]", field_value=entry,
+                start=start, end=end, extraction_method="typed_structured_reign_parser",
+                evidence_role="catalogued_reign", expression_type=expression,
+            ))
+    return found
+
+
+def extract_all_mentions(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]]) -> tuple[list[dict], dict]:
+    """`extract_mentions` (#361's, verbatim) for the museums it reads, `cleveland_mentions` for
+    Cleveland, in one order and with one set of diagnostics. Without Cleveland records it gives
+    exactly what `extract_mentions` gives."""
+    others = [row for row in canonical if row["source_museum"] != "cleveland"]
+    found, diagnostics = extract_mentions(others, raw_indexes)
+    cleveland = [row for row in canonical if row["source_museum"] == "cleveland"]
+    if not cleveland:
+        return found, diagnostics
+    for artifact in cleveland:
+        found += cleveland_mentions(artifact, raw_indexes["cleveland"][artifact["source_id"]])
+    found.sort(key=lambda row: (
+        row["artifact_id"], row["entity_type"], row["field_path"], row["span_start"],
+        row["span_end"], row["extraction_method"], row["mention_id"],
+    ))
+    ids = [row["mention_id"] for row in found]
+    if len(ids) != len(set(ids)):
+        raise ValueError("mention identifiers are not unique")
+    return found, {
+        **diagnostics,
+        "records_scanned": len(canonical),
+        "records_with_at_least_one_mention": len({row["artifact_id"] for row in found}),
+        "mentions": len(found),
+        "mentions_by_museum": dict(sorted(Counter(row["museum"] for row in found).items())),
+        "mentions_by_entity_type": dict(sorted(Counter(row["entity_type"] for row in found).items())),
+    }

@@ -86,7 +86,8 @@ def test_the_report_counts_connections_by_pair_type_and_side(run) -> None:
     assert r["by_museum"]["harvard|site"] == {"authority": {"linked_records": 2, "connected_records": 1},
                                               "literal": {"linked_records": 1, "connected_records": 1}}
     assert r["records_on_shared_targets_any_type"] == {
-        "authority": {"brooklyn": 3, "harvard": 1, "met": 6}, "literal": {"brooklyn": 1, "harvard": 1, "met": 2}}
+        "authority": {"brooklyn": 3, "cleveland": 0, "harvard": 1, "met": 6},
+        "literal": {"brooklyn": 1, "cleveland": 0, "harvard": 1, "met": 2}}
 
 
 def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> None:
@@ -98,6 +99,13 @@ def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> No
     other = write_run(tmp_path / "other", AUTHORITY + [link("louvre-1", "site", "idai:thebes")], LITERAL)
     with pytest.raises(ValueError, match=r"links of museums no pair covers: \['louvre'\]"):
         cm.report(other)
+
+
+# The frozen run (end-to-end.json) is of the 2026-08-27 corpus: these museums and pairs. Cleveland
+# came later (docs/museum-sources/cleveland.md), so tests of that run iterate over these, not
+# over today's `MUSEUM_PAIRS`.
+FROZEN_MUSEUMS = ("brooklyn", "harvard", "met")
+FROZEN_PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard"))
 
 
 @pytest.fixture(scope="module")
@@ -175,12 +183,12 @@ def test_the_site_scopes_are_337s_evaluated_population(result) -> None:
     arms = json.loads((EVALUATIONS / "authority-independent-control-2026-10-11/results/real-run-report.json").read_text(
         encoding="utf-8"))["arms"]
     for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
-        for museum in cm.MUSEUMS:
+        for museum in FROZEN_MUSEUMS:
             assert result["matching"]["by_museum"][f"{museum}|site"][mode]["connected_records"] == (
                 arms[arm]["per_museum"][museum]["by_entity_type"]["site"]["records_on_shared_useful_nodes"]), (arm, museum)
     assert result["evaluation_headlines"]["337"]["typed_literal"] == result["matching"]["records_on_shared_targets_any_type"]["literal"]
     # Tombs connect nothing in either, so the authority headline's difference from #337's is rulers.
-    for museum in cm.MUSEUMS:
+    for museum in FROZEN_MUSEUMS:
         for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
             assert result["matching"]["by_museum"][f"{museum}|tomb_monument"][mode]["connected_records"] == (
                 arms[arm]["per_museum"][museum]["by_entity_type"]["tomb_monument"]["records_on_shared_useful_nodes"]) == 0
@@ -244,7 +252,7 @@ def test_the_site_top_targets_are_337s(result) -> None:
     arms = json.loads((EVALUATIONS / "authority-independent-control-2026-10-11/results/real-run-report.json").read_text(
         encoding="utf-8"))["arms"]
     for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
-        for a, b in al.MUSEUM_PAIRS:
+        for a, b in FROZEN_PAIRS:
             theirs = arms[arm]["per_pair"][f"{a}__{b}"]["concentration_by_museum_side"]
             ours = result["matching"]["by_museum_pair"][f"site|{a}|{b}"]["top_targets"][mode]
             for museum in (a, b):
@@ -293,7 +301,9 @@ def test_the_frozen_run_says_whether_each_qualified_scopes_review_covers_it(resu
                                "by": "links of the mentions resolving differently from #361 removed (step-1 proof)"},
         **{f"site|{a}|{b}": {"qualified_by": "#337 v10", "review_covers_population": True,
                              "unreviewed_connected_records": [], "by": "site links identical to #337's (identity test)"}
-           for a, b in al.MUSEUM_PAIRS}}
+           for a, b in FROZEN_PAIRS}}
+    # The frozen run's pairs are FROZEN_PAIRS.
+    assert {key.split("|", 1)[1] for key in result["matching"]["by_museum_pair"]} == {f"{a}|{b}" for a, b in FROZEN_PAIRS}
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(
         encoding="utf-8"))["royal_woman_cued_mentions"]["changes"]
     changed = {c["artifact_id"] for c in changes}
@@ -334,3 +344,37 @@ def test_the_database_run_made_the_frozen_run() -> None:
         db["dagster"]["materialization_metadata"]["links_authority"], db["dagster"]["materialization_metadata"]["links_literal"])
     assert db["database"]["rows_loaded"] == {"catalog.artifacts": 36245, "catalog.raw_met": 27969,
                                              "catalog.raw_brooklyn": 8832, "catalog.raw_harvard": 722}
+
+
+def _flat(value, path: str = "") -> dict:
+    if isinstance(value, dict):
+        return {k: v for key, item in value.items() for k, v in _flat(item, f"{path}/{key}").items()}
+    return {path: value}
+
+
+def test_adding_cleveland_changed_nothing_on_the_frozen_corpus() -> None:
+    """`results/rerun-after-cleveland/`: both proof scripts re-run on the frozen corpus with the
+    code that adds Cleveland. Every figure is the committed one; what differs is only what names
+    the code (hashes, resolver versions, run ids, the files whose rows carry the resolver version)
+    and Cleveland's own rows, all empty: the corpus predates it."""
+    results = EVALUATIONS / "authority-bridge-338/results"
+    code_named = ("code_sha256", "/files/", "resolver_version", "/run_ids", "/writer_sha256")
+    for name in ("promotion-check.json", "end-to-end.json"):
+        before = _flat(json.loads((results / name).read_text(encoding="utf-8")))
+        after = _flat(json.loads((results / "rerun-after-cleveland" / name).read_text(encoding="utf-8")))
+        differ = {k for k in before.keys() | after.keys() if before.get(k) != after.get(k)}
+        code = {k for k in differ if any(part in k for part in code_named)}
+        differ -= code
+        cleveland = {k for k in differ if "cleveland" in k}
+        assert all(after[k] in (0, [], False) for k in cleveland if k in after), name
+        assert all(k not in before for k in cleveland), name
+        unevaluated = {k for k in differ if k.startswith("/inventory/unevaluated_scopes/")}
+        for key in unevaluated:
+            assert after[key][:len(before[key])] == before[key]
+            assert all("cleveland" in pair for pair in after[key][len(before[key]):]), key
+        assert differ - cleveland - unevaluated == set(), name
+    after = json.loads((results / "rerun-after-cleveland/end-to-end.json").read_text(encoding="utf-8"))
+    before = json.loads((results / "end-to-end.json").read_text(encoding="utf-8"))
+    # The mention ledger, which carries no resolver version, is byte for byte the same.
+    assert after["files"]["mentions.ndjson.gz"] == before["files"]["mentions.ndjson.gz"]
+    assert {n: f["rows"] for n, f in after["files"].items()} == {n: f["rows"] for n, f in before["files"].items()}

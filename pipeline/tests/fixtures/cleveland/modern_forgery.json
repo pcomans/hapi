@@ -1,0 +1,197 @@
+{
+  "id": 95006,
+  "accession_number": "1915.557",
+  "share_license_status": "CC0",
+  "tombstone": "Head of a King or Osiris, 1900–1915. Egypt, Modern forgery. Graywacke; overall: 9.8 x 4.2 x 8.4 cm (3 7/8 x 1 5/8 x 3 5/16 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1915.557",
+  "current_location": null,
+  "title": "Head of a King or Osiris",
+  "creation_date": "1900–1915",
+  "creation_date_earliest": 1900,
+  "creation_date_latest": 1915,
+  "artists_tags": [],
+  "culture": [
+    "Egypt, Modern forgery"
+  ],
+  "technique": "graywacke",
+  "support_materials": [],
+  "department": "Egyptian and Ancient Near Eastern Art",
+  "collection": "Egypt - Modern Forgery",
+  "type": "Sculpture",
+  "measurements": "Overall: 9.8 x 4.2 x 8.4 cm (3 7/8 x 1 5/8 x 3 5/16 in.)",
+  "dimensions": {
+    "overall": {
+      "height": 0.098,
+      "height_inch": 3,
+      "height_inch_fraction": 0.875,
+      "width": 0.042,
+      "width_inch": 1,
+      "width_inch_fraction": 0.625,
+      "depth": 0.084,
+      "depth_inch": 3,
+      "depth_inch_fraction": 0.3125
+    }
+  },
+  "state_of_the_work": null,
+  "edition_of_the_work": null,
+  "copyright": null,
+  "inscriptions": [],
+  "exhibitions": {
+    "current": [
+      {
+        "id": 444863,
+        "title": "Fakes and Forgeries",
+        "description": "<i>Fakes and Forgeries</i>. Minneapolis Institute of Art, Minneapolis, MN (organizer) (July 11-September 30, 1973).",
+        "opening_date": "1973-07-11T04:00:00"
+      }
+    ],
+    "legacy": [
+      {
+        "description": "Minneapolis 1973, no. 24, illus.",
+        "opening_date": "1973-01-01T00:00:00"
+      }
+    ]
+  },
+  "provenance": [],
+  "find_spot": null,
+  "related_works": [],
+  "former_accession_numbers": [],
+  "did_you_know": null,
+  "early_education_description": null,
+  "artlens_description": null,
+  "description": null,
+  "external_resources": {
+    "wikidata": [
+      "https://www.wikidata.org/wiki/Q79475945"
+    ],
+    "internet_archive": []
+  },
+  "citations": [
+    {
+      "citation": "The Minneapolis Institute of Arts. <em>Fakes and Forgeries</em>, edited by Susan Brown. Minneapolis, MN: The Minneapolis Institute of Arts, 1973.",
+      "page_number": "cat. 24.",
+      "url": ""
+    },
+    {
+      "citation": "Berman, Lawrence Michael and Kenneth J. Bohač. C<em>atalogue of Egyptian Art: The Cleveland Museum of Art.</em> [Cleveland, OH]: Cleveland Museum of Art, 1999.",
+      "page_number": "Mentioned and reproduced: P. 550, cat. no. 493",
+      "url": ""
+    }
+  ],
+  "url": "https://clevelandart.org/art/1915.557",
+  "images": {
+    "annotation": null,
+    "web": {
+      "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_web.jpg",
+      "width": "812",
+      "height": "893",
+      "filesize": "78362",
+      "filename": "1915.557_web.jpg"
+    },
+    "print": {
+      "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_print.jpg",
+      "width": "3090",
+      "height": "3400",
+      "filesize": "1008643",
+      "filename": "1915.557_print.jpg"
+    },
+    "full": {
+      "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_full.tif",
+      "width": "3382",
+      "height": "3721",
+      "filesize": "37780052",
+      "filename": "1915.557_full.tif"
+    }
+  },
+  "alternate_images": [
+    {
+      "web": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt0_web.jpg",
+        "width": "1113",
+        "height": "893",
+        "filesize": "108680"
+      },
+      "print": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt0_print.jpg",
+        "width": "3400",
+        "height": "2727",
+        "filesize": "907677"
+      },
+      "full": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt0_full.tif",
+        "width": "4869",
+        "height": "3906",
+        "filesize": "57084256"
+      },
+      "date_created": "2013-04-18T15:34:54",
+      "annotation": ""
+    },
+    {
+      "web": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt1_web.jpg",
+        "width": "1136",
+        "height": "893",
+        "filesize": "122725"
+      },
+      "print": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt1_print.jpg",
+        "width": "3400",
+        "height": "2673",
+        "filesize": "1035798"
+      },
+      "full": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt1_full.tif",
+        "width": "4902",
+        "height": "3855",
+        "filesize": "56717968"
+      },
+      "date_created": "2013-04-18T15:54:59",
+      "annotation": ""
+    },
+    {
+      "web": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt2_web.jpg",
+        "width": "681",
+        "height": "893",
+        "filesize": "60346"
+      },
+      "print": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt2_print.jpg",
+        "width": "2591",
+        "height": "3400",
+        "filesize": "747037"
+      },
+      "full": {
+        "url": "https://openaccess-cdn.clevelandart.org/1915.557/1915.557_alt2_full.tif",
+        "width": "3120",
+        "height": "4094",
+        "filesize": "38352876"
+      },
+      "date_created": "2013-04-18T17:42:44",
+      "annotation": ""
+    }
+  ],
+  "creditline": "Gift of the John Huntington Art and Polytechnic Trust",
+  "image_credit": null,
+  "sketchfab_id": null,
+  "sketchfab_url": null,
+  "gallery_donor_text": null,
+  "athena_id": 95006,
+  "creators": [],
+  "legal_status": "accessioned",
+  "accession_date": "1916-03-24T00:00:00",
+  "sortable_date": 1900,
+  "date_added_to_oa": null,
+  "date_text": "1900–1915",
+  "collapse_artists": false,
+  "on_loan": false,
+  "recently_acquired": false,
+  "record_type": "object",
+  "conservation_statement": null,
+  "has_conservation_images": false,
+  "cover_accession_number": null,
+  "is_nazi_era_provenance": false,
+  "impression": null,
+  "alternate_titles": [],
+  "is_highlight": false,
+  "updated_at": "2026-08-03 14:04:26.425000"
+}

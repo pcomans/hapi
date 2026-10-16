@@ -11,7 +11,9 @@ database table comes later.
 - **`pipeline/pipeline/enrich/mentions.py`**: #361's mention extractor, copied verbatim (its
   grammar and `extract_mentions`). A test fails on the first edit to any copied definition.
   - It reads the raw museum records and is authority-blind.
-  - `extract_mentions` names each museum's evidence fields.
+  - `extract_mentions` names the evidence fields of the three museums the evaluations measured.
+    Cleveland, added later (`docs/museum-sources/cleveland.md`), has its own reader beside it,
+    `cleveland_mentions`; `extract_all_mentions` joins the two, and a run calls that.
 - **`pipeline/pipeline/authority/resolver.py`**: the linkability adapter's ruler, site and
   Porter & Moss tomb resolvers.
   - `graph_kings` now builds on this module. A frozen evaluation still passes in the adapter.
@@ -112,12 +114,11 @@ The CI tests need no private data:
   `site`, `tomb` and `literal`; a royal woman who reigned is her king. `relation` is `identity`
   only: no resolver produces containment or a close match. #333's vocabulary is needed when
   one does.
-- **The asset** is `pipeline/pipeline/assets/enrich/authority_links_asset.py`, after the three
-  normalize assets. It reads the canonical and raw tables and writes to
+- **The asset** is `pipeline/pipeline/assets/enrich/authority_links_asset.py`, after every
+  museum's normalize asset (a structural test holds the deps to that). It reads the canonical and raw tables and writes to
   `HAPI_AUTHORITY_LINKS_DIR` (default `data/authority-links/`, which is gitignored).
   - These files are a working store, not durable storage; the database table comes later.
-  - This devcontainer has no database, so the asset itself has not run, only its core. It
-    should run once against a real Postgres before anything relies on it.
+  - It has run against a real Postgres (Neon), on the frozen corpus; see "The database run (2026-10-16)" below.
   - Runs under one root hold an exclusive lock; a second materialization at the same time
     fails loud and changes nothing. The operating system releases the lock if a run dies.
   - `write_run` takes the lock before it calls the caller's `read_inputs`. A run therefore
@@ -289,6 +290,11 @@ It does not cover:
 To reproduce: `vercel env pull` in `web-claimgraph/` (linked to the project), then use
 `DATABASE_URL_UNPOOLED` as `DATABASE_URL` for Alembic, the loader and Dagster.
 
+The Neon database no longer holds the August export alone. On 2026-10-16, Cleveland was ingested
+into it live (`catalog.raw_cleveland` and its canonical rows). The loader refuses tables that
+already hold rows, Cleveland's included, so to repeat this run, load the export into an empty
+database.
+
 The proofs cover the code they recorded only:
 - `results/promotion-check.json` records `snapshot` for the resolution and
   `check_inputs.code_sha256` for the input check;
@@ -296,6 +302,17 @@ The proofs cover the code they recorded only:
 
 Any later edit to a file in them needs a new run before the proof covers it, of
 `scripts/check_promotion.py` or `scripts/run_end_to_end.py --archive <corpus archive> --out
-results/end-to-end.json`. Tests compare the committed results with the evaluations' files, not
+results/end-to-end.json`.
+
+Adding Cleveland edited them. Both scripts were re-run on the frozen corpus with that code, and
+the output is in `results/rerun-after-cleveland/`. A test compares it with the committed results:
+- every figure is the same, and the mention ledger is byte for byte the same;
+- the inventory's unevaluated-scope lists only gain the Cleveland pairs at their end;
+- what differs is only what names the code (hashes, resolver versions, run ids, the files whose
+  rows carry the resolver version);
+- Cleveland's own rows are new and empty, since the corpus predates it.
+
+The committed `results/end-to-end.json` and `database-run.json` stay the records of the run they
+describe. Tests compare the committed results with the evaluations' files, not
 with the live code, so an edit does not turn main red; it leaves the result describing the code
 it recorded.

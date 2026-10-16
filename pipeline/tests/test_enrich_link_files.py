@@ -18,7 +18,7 @@ import pytest
 from pipeline.authority import resolver
 from pipeline.enrich import authority_links as al, link_files as lf
 from pipeline.enrich.inputs import normalized
-from pipeline.enrich.mentions import extract_mentions
+from pipeline.enrich.mentions import extract_all_mentions
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_enrich_mentions import EXTRA, MAPPERS, corpus  # noqa: E402  (the museum fixtures as a corpus)
@@ -60,7 +60,7 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
     assert (manifest["records"], manifest["inputs_sha256"], manifest["writer_sha256"]) == (
         len(canonical), lf.input_digest(canonical, raw), hashlib.sha256(Path(lf.__file__).read_bytes()).hexdigest())
     assert manifest["snapshots"] == {"authority": authority.snapshot, "literal": al.snapshot("literal")}
-    assert manifest["extraction"] == extract_mentions(canonical, raw)[1]
+    assert manifest["extraction"] == extract_all_mentions(canonical, raw)[1]
     assert {k: manifest["extraction"][k] for k in ("records_scanned", "mentions")} == {"records_scanned": 17, "mentions": 59}
     assert manifest["outcomes"]["authority"] == {
         "excavation|abstained|unsupported:excavation": 4, "ruler|abstained|expression:multi_or_range": 5,
@@ -70,14 +70,18 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
     assert manifest["inventory"] == {
         "unsupported": {"excavation": {"reason": "no committed canonical excavation authority", "mentions": 4},
                         "temple": {"reason": "no committed canonical temple authority", "mentions": 1}},
-        "unevaluated_scopes": {"ruler": [["met", "harvard"], ["brooklyn", "harvard"]], "site": [],
-                               "tomb_monument": [["met", "brooklyn"], ["met", "harvard"], ["brooklyn", "harvard"]]},
+        "unevaluated_scopes": {
+            "ruler": [["met", "harvard"], ["brooklyn", "harvard"], ["met", "cleveland"], ["brooklyn", "cleveland"],
+                      ["harvard", "cleveland"]],
+            "site": [["met", "cleveland"], ["brooklyn", "cleveland"], ["harvard", "cleveland"]],
+            "tomb_monument": [["met", "brooklyn"], ["met", "harvard"], ["brooklyn", "harvard"], ["met", "cleveland"],
+                              ["brooklyn", "cleveland"], ["harvard", "cleveland"]]},
     }
     for name, f in manifest["files"].items():
         assert lf.content_sha256(name, (run / name).read_bytes()) == f["content_sha256"]
     assert json.loads((run / "manifest.json").read_text()) == manifest
     # The files hold exactly what the step makes, row for row.
-    found, _ = extract_mentions(canonical, raw)
+    found, _ = extract_all_mentions(canonical, raw)
     assert lf.read_rows(run / "mentions.ndjson.gz") == found
     for mode in al.MODES:
         resolutions = lf.typed(al.resolve_mentions(found, mode, authority if mode == "authority" else None))
@@ -269,16 +273,17 @@ def test_a_mention_withdrawn_from_a_link_another_still_makes_is_a_change(inputs,
 
 def test_every_museum_has_a_field_inventory_the_extractor_reads() -> None:
     """Each museum with an ingest asset (`test_structure`) has its evidence fields named in
-    `extract_mentions`; its fixtures give mentions from exactly these fields. (A museum without
+    `extract_all_mentions`; its fixtures give mentions from exactly these fields. (A museum without
     an inventory fails loud there, on the lookup of its ruler fields.)"""
-    assert {s.value for s in _implemented_museums()} == set(MAPPERS)
-    canonical, raw = corpus()
-    found, _ = extract_mentions(canonical, raw)
-    paths = {museum: sorted({m["field_path"] for m in found if m["museum"] == museum}) for museum in MAPPERS}
+    assert {s.value for s in _implemented_museums()} == set(MAPPERS) | {"cleveland"}
+    canonical, raw = corpus(with_cleveland=True)
+    found, _ = extract_all_mentions(canonical, raw)
+    paths = {museum: sorted({m["field_path"] for m in found if m["museum"] == museum}) for museum in (*MAPPERS, "cleveland")}
     assert paths == {"met": ["country", "excavation", "locale", "locus", "region", "reign", "subregion", "title"],
-                     "brooklyn": ["geographicalLocations[0].name"], "harvard": ["places[0].displayname", "title"]}
+                     "brooklyn": ["geographicalLocations[0].name"], "harvard": ["places[0].displayname", "title"],
+                     "cleveland": ["culture[0]"]}
     with pytest.raises(KeyError, match="louvre"):
-        extract_mentions([{**canonical[0], "source_museum": "louvre"}], {"louvre": {canonical[0]["source_id"]: {}}})
+        extract_all_mentions([{**canonical[0], "source_museum": "louvre"}], {"louvre": {canonical[0]["source_id"]: {}}})
 
 
 def test_a_run_while_another_holds_the_root_fails_loud_and_changes_nothing(inputs, authority, tmp_path) -> None:
@@ -399,7 +404,7 @@ def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, aut
     (conn,) = connections
     assert conn.transactions == 1
     assert log == [("read", name, True, 1, "REPEATABLE READ")
-                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard")]
+                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard", "raw_cleveland")]
     assert not lock_held(root)
     expected = lf.write_run(tmp_path / "direct", lambda: (canonical, raw), authority)
     assert (root / lf.CURRENT).read_text() == expected["run_id"] + "\n"
@@ -636,10 +641,11 @@ def test_the_links_of_a_record_set_aside_are_removed_as_set_aside_not_gone(input
 
 
 def test_the_normalizers_are_the_normalize_assets() -> None:
-    from pipeline.assets.normalize import brooklyn_asset, harvard_asset, met_asset
+    from pipeline.assets.normalize import brooklyn_asset, cleveland_asset, harvard_asset, met_asset
     from pipeline.enrich.inputs import NORMALIZERS
     assert NORMALIZERS["met"] == (met_asset.MetMapper, None) and NORMALIZERS["harvard"] == (harvard_asset.HarvardMapper, None)
     assert NORMALIZERS["brooklyn"] == (brooklyn_asset.BrooklynMapper, brooklyn_asset.is_egyptian)
+    assert NORMALIZERS["cleveland"] == (cleveland_asset.ClevelandMapper, cleveland_asset.is_egyptian)
     assert not hasattr(met_asset, "is_egyptian") and not hasattr(harvard_asset, "is_egyptian")
     assert set(NORMALIZERS) == {s.value for s in _implemented_museums()}
 
@@ -722,3 +728,37 @@ def test_a_change_the_mapper_cannot_see_passes_the_input_check(inputs) -> None:
     (source_id,) = [s for s in raw2["harvard"] if s == "303839"]
     raw2["harvard"][source_id]["labeltext"] = "Relief of King Amenhotep III, re-ingested"
     assert check_inputs(canonical, raw2) == (canonical, [])
+
+
+def test_a_run_with_cleveland_links_its_catalogued_reigns(authority, tmp_path) -> None:
+    """Cleveland's fixtures through a whole run: its reign mentions resolve and link as the Met's
+    do. "Amenhotep III" joins the Met's record of the same name in both modes; "Tuthmosis III"
+    (the Met writes "Thutmose III") links to a king in the authority mode only through the
+    authority, and in the literal mode to its own text."""
+    _, raw = corpus(EXTRA, with_cleveland=True)
+    canonical = normalized(raw)
+    manifest = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert manifest["canonical_rows_set_aside"] == []
+    run = tmp_path / manifest["run_id"]
+
+    def ruler_links(mode: str, artifact_id: str) -> list[dict]:
+        return [l for l in links(run, mode) if l["artifact_id"] == artifact_id and l["entity_type"] == "ruler"]
+
+    # Amenhotep III is von Beckerath's 18.09, Thutmose III his 18.06; met-900001's reign is
+    # "reign of Amenhotep III" (EXTRA).
+    assert [(l["target_id"], l["target_kind"]) for l in ruler_links("authority", "cleveland-130133")] == [
+        ("cluster-beckerath-18.09", "king")]
+    assert ("cluster-beckerath-18.09", "king") in {(l["target_id"], l["target_kind"]) for l in ruler_links("authority", "met-900001")}
+    assert [(l["target_id"], l["target_kind"]) for l in ruler_links("authority", "cleveland-101390")] == [
+        ("cluster-beckerath-18.06", "king")]
+    (amenhotep,) = ruler_links("literal", "cleveland-130133")
+    assert amenhotep["target_kind"] == "literal"
+    assert amenhotep["target_id"] in {l["target_id"] for l in ruler_links("literal", "met-900001")}
+    (tuthmosis,) = ruler_links("literal", "cleveland-101390")
+    assert tuthmosis["target_kind"] == "literal" and tuthmosis["target_id"] not in {
+        l["target_id"] for l in links(run, "literal") if l["museum"] != "cleveland"}
+    # Only the two catalogued reigns link: Cleveland's sites are not read yet, and the forgery and
+    # the Near Eastern record are not the normalize step's output.
+    for mode in al.MODES:
+        assert sorted((l["artifact_id"], l["entity_type"]) for l in links(run, mode) if l["museum"] == "cleveland") == [
+            ("cleveland-101390", "ruler"), ("cleveland-130133", "ruler")], mode
