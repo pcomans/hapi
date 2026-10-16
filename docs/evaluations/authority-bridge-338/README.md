@@ -150,11 +150,112 @@ The CI tests need no private data:
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 
-## Left for step 3
+## Step 3: cross-museum connections, authority on and off
 
-- Cross-museum linking with the authority on and off, over a run's links, reported by museum,
-  pair and entity type against `QUALIFIED_SCOPES`, and two hash-stable full-corpus runs.
+- **`pipeline/pipeline/enrich/cross_museum.py`, `report(run)`.** It reads a verified run's
+  links in both modes; the mode is the switch. Two records of different museums are connected
+  when each is linked to the same target. It gives, by museum, museum pair and entity type:
+  - the shared targets, and the records connected on each side;
+  - the records the authority connects that plain text does not (`gained`), and the reverse
+    (`lost`);
+  - the largest 1 and 5 shared targets (by ID) and their share of each side;
+  - #337's headline measure: each museum's records on a target shared with any other museum.
 
-The proof above covers the code it recorded only: `snapshot` for the resolution and
-`check_inputs.code_sha256` for the input check (`results/promotion-check.json`). Any later edit
-to a file in either needs a new `check_promotion` run before the proof covers it.
+  Each scope is flagged `qualified` per `QUALIFIED_SCOPES`. That is the policy flag: an
+  evaluation found the authority helps there. It does not say a review saw the population
+  measured, which `report()` cannot know of an arbitrary run. For this frozen run, the result's
+  `review_coverage` says so per qualified scope:
+  - the sites' reviews cover it, by the identity test above;
+  - #361's review does not cover the three Met–Brooklyn ruler records #369's Ahmes B connects.
+
+  This is the measurement; no deployed
+  matcher reads these links yet. Matching is the web query layer's (ADR-008), and that
+  integration comes with the database step.
+- **`scripts/run_end_to_end.py`** writes `results/end-to-end.json`. It runs `write_run` twice on
+  the frozen corpus, in two interpreters with different `PYTHONHASHSEED`s and into fresh
+  directories, then reports on each. The two runs must have the same manifest, file contents and
+  report; both run IDs are recorded.
+  - The result also records the hashes of the report code. A test binds its resolver versions to
+    the ones the step 1 proof measured.
+  - The result also names #369's tuned-on records (brooklyn-3634, met-566763, brooklyn-3599),
+    records each scope's shared target IDs, and includes #337's and #361's committed headlines.
+
+### Result on the frozen corpus
+
+148,964 mentions; 48,994 authority links; 127,711 literal links. Both runs were identical.
+
+| Scope | Qualified | Shared targets (authority / literal) | First museum: connected (authority / literal); gained, lost | Second museum |
+|---|---|---|---|---|
+| ruler, Met–Brooklyn | yes (#361), but 3 connected records unreviewed | 14 / 13 | Met 1,957 / 1,981; +33, −57 (−59 before #369) | Brooklyn 20 / 19; +2, −1 (−2 before #369) |
+| ruler, Met–Harvard | no (unevaluated) | 2 / 2 | Met 920 / 921; +0, −1 | Harvard 2 / 2 |
+| ruler, Brooklyn–Harvard | no (unevaluated) | 2 / 2 | Brooklyn 6 / 6 | Harvard 2 / 2 |
+| site, Met–Brooklyn | yes | 47 / 58 | Met 14,393 / 27,198; +136, −12,941 | Brooklyn 1,151 / 2,890; +0, −1,739 |
+| site, Met–Harvard | yes | 3 / 6 | Met 506 / 26,628; +1, −26,123 | Harvard 6 / 534; +0, −528 |
+| site, Brooklyn–Harvard | yes | 4 / 6 | Brooklyn 332 / 2,881; +0, −2,549 | Harvard 7 / 520; +1, −514 |
+| tomb, any pair | no (unevaluated) | 0 / 0 | none | none |
+
+### Against what the evaluations reviewed
+
+The counts here are of connections, not of right ones. Rightness was judged by review, so what
+matters is whether these are the populations that were reviewed.
+
+- **Sites: #337's reviewed population, record for record.**
+  - #361's mention ledger holds every one of #337 v10's 148,871 mentions unchanged, and adds 93
+    royal-woman-cued ruler mentions (`ruler-reregistration-2026-10-15/results/ledger-diff.json`).
+  - The step 1 proof found the pipeline's site resolutions equal to #337's resolver, and its
+    site literal targets equal to #337's own code, on every one of those mentions.
+  - So every site link, and every record it connects, is the one #337 made. The counts agree
+    accordingly, in both modes, with #337's committed report:
+    - plain text: Met 27,198, Brooklyn 2,890, Harvard 534;
+    - authority: Met 14,393, Brooklyn 1,152, Harvard 7.
+
+    So do the largest 1 and 5 shared targets of every site pair, side and mode.
+  - Tests check all of this against those files. The site scopes #337 qualified are therefore
+    this population, and its review's verdicts apply to it.
+  - Tomb connections are 0 in both, so the difference between #337's authority headline (Met
+    14,502 / Brooklyn 1,156 / Harvard 8) and this run's is in rulers, which have changed since.
+- **Rulers, Met–Brooklyn: #361's reviewed population, plus one unreviewed target from #369.**
+  - The step 1 proof found every ruler resolution equal to #361's except #369's 11 measured
+    changes, and every literal target equal.
+  - **Plain text is exactly #361's committed arm:** 13 shared targets, Met 1,981, Brooklyn 19.
+  - **The authority is #361's with one shared target more,** D&H's Ahmes B. It joins three
+    records:
+    - the two Queen Ahmose records, brooklyn-3634 and met-566763, which #369 newly resolved to
+      her;
+    - a third Met record, met-547683, which #369 did not change. It resolved to her before but
+      had no Brooklyn record to share her with.
+  - **Those three records are #361's reviewed losses that now connect.** Each is connected
+    through Ahmes B alone and was connected by plain text, and the authority only grows from
+    #361's (step 1, and #369's result: none of its changes was resolved before). Counts: Met's losses go from
+    59 to 57 and Brooklyn's from 2 to 1. The gains are #361's in number (Met 33, Brooklyn 2).
+  - **The change is unreviewed,** found on #361's deciding case. The scope's qualified flag
+    rests on #361's review of the population before it.
+  - **A next registration must flag the tuned-on records (#358).** These are brooklyn-3634,
+    met-566763, and brooklyn-3599 (Neferu, which makes no link), and met-547683 with them.
+  - Tests check all of this against #361's committed report and #369's result.
+- **Ruler and tomb scopes not qualified** are unevaluated. Nothing here judges them.
+- **The large site "losses" are mostly broad plain-text targets the authority does not hold.**
+  These are bound by their literal target hashes, so no museum text is committed. The authority
+  resolves neither name.
+  - Plain text's largest site target in Met–Brooklyn and Met–Harvard is "Egypt". In
+    Met–Brooklyn it holds 97.7% of Met's connected site records.
+  - Harvard's largest in Met–Harvard is "Africa", which holds all 534 of them.
+
+  Whether such a loss is good or bad is #337's review's to say. Its site losses were 12 judged
+  correct and useful (d) and 15 wrong or not useful (e); it named the Fayum, a whole region, as
+  too broad to be useful. That review, not this count, is the evidence.
+- **This is the pipeline code's result on a frozen export of the museum tables, not a deployed
+  run.** The asset reads the database, which this environment lacks (owner, 2026-10-16: files
+  first). Deployed lift needs the asset run against the live database (see #374 and #375) and a
+  matcher in the web layer that reads the links.
+
+The proofs cover the code they recorded only:
+- `results/promotion-check.json` records `snapshot` for the resolution and
+  `check_inputs.code_sha256` for the input check;
+- `results/end-to-end.json` records `resolver_versions`, `writer_sha256` and `report_sha256`.
+
+Any later edit to a file in them needs a new run before the proof covers it, of
+`scripts/check_promotion.py` or `scripts/run_end_to_end.py --archive <corpus archive> --out
+results/end-to-end.json`. Tests compare the committed results with the evaluations' files, not
+with the live code, so an edit does not turn main red; it leaves the result describing the code
+it recorded.
