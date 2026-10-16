@@ -74,8 +74,8 @@ The CI tests need no private data:
   `run_id`. It therefore covers the inputs, both resolver versions, the writer, the rows set
   aside, the counts, outcomes and inventory, and every file. The manifest hashes each file's
   content (a gzip file's decompressed NDJSON), so the hash does not depend on the zlib build. The
-  same inputs and code give the same content; an existing run directory is checked byte for
-  byte against what the run computes, never rewritten.
+  same inputs and code give the same content; an existing run directory is checked against
+  its manifest (`verify_run`), never rewritten.
   - A test runs `write_run` in two interpreters with different `PYTHONHASHSEED`s and requires
     the same manifest and file contents.
 - **Writes survive a process crash.** A run is written beside its place and renamed into it,
@@ -93,8 +93,9 @@ The CI tests need no private data:
 - **Withdrawal.** `<root>/CURRENT` names the run in force. When a new run replaces it,
   `<root>/diffs/<previous>-to-<run>.json` lists, for each mode, the links added, removed and
   changed.
-  - A removal gives its reason: `record_gone`, `mentions_gone`, or `resolves_otherwise` (with
-    each mention's new status and reason).
+  - A removal gives its reason: `set_aside` (the record's canonical row was set aside, see
+    above), `record_gone`, `mentions_gone`, or `resolves_otherwise` (with each mention's new
+    status and reason).
   - A kept link whose mentions, evidence roles or kind changed is listed as `changed`, with the
     old and new values and each lost mention's new resolution. A withdrawal inside a link that
     several mentions make is therefore visible, and so is a role change alone (a role is not
@@ -102,8 +103,11 @@ The CI tests need no private data:
   - Replacing `CURRENT` is the commit. A diff is published only once its run is current; one
     left pending by a run that died is published or removed by the next run, depending on
     whether the commit happened.
-  - `record_gone` cannot happen in production yet. The ingest and normalize assets upsert and
-    never delete, so a record a museum withdraws stays in the tables.
+  - `record_gone` needs a canonical row to leave the table. The ingest and normalize assets
+    upsert and never delete (#374), so in production a withdrawn record does not yet leave; a
+    record the normalize step drops is `set_aside`.
+  - `diffs/` holds one file per transition (previous run, new run), not a log: a transition made
+    twice is the same file, and the order of transitions is not kept.
 - **`target_kind`** keeps queens distinct from kings. The kinds are `king`, `royal_woman`,
   `site`, `tomb` and `literal`; a royal woman who reigned is her king. `relation` is `identity`
   only: no resolver produces containment or a close match. #333's vocabulary is needed when

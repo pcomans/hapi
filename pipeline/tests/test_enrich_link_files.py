@@ -133,19 +133,19 @@ def test_a_run_that_differs_from_its_files_on_disk_fails_loud_and_says_how(input
     run = tmp_path / manifest["run_id"]
     good = (run / "links-authority.ndjson.gz").read_bytes()
     (run / "links-authority.ndjson.gz").write_bytes(lf.gzip_rows([]))
-    with pytest.raises(ValueError, match="links-authority.ndjson.gz differs from what this run writes"):
+    with pytest.raises(ValueError, match="links-authority.ndjson.gz is not what that run wrote"):
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "links-authority.ndjson.gz").write_bytes(good)
     manifest_bytes = (run / "manifest.json").read_bytes()
     (run / "manifest.json").write_text(json.dumps({**json.loads(manifest_bytes), "records": 1}))
-    with pytest.raises(ValueError, match="manifest.json differs from what this run writes"):
+    with pytest.raises(ValueError, match="manifest.json was changed after it was written"):
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "manifest.json").unlink()
-    with pytest.raises(ValueError, match="lacks manifest.json: it was changed after it was written"):
+    with pytest.raises(ValueError, match="has no manifest.json"):
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "manifest.json").write_bytes(manifest_bytes)
     (run / "stray.txt").write_text("x")
-    with pytest.raises(ValueError, match="holds files a run does not write"):
+    with pytest.raises(ValueError, match="not the files its manifest names"):
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "stray.txt").unlink()
     (tmp_path / lf.CURRENT).write_text("")
@@ -485,7 +485,7 @@ def test_a_run_that_fails_its_checks_leaves_a_pending_diff_as_it_was(inputs, aut
     # A retry of the current run itself (no diff of its own) whose files were changed: its own
     # directory fails the check before the pending diff is settled.
     path.write_bytes(lf.gzip_rows(lf.read_rows(path)[1:]))
-    with pytest.raises(ValueError, match="links-authority.ndjson.gz differs from what this run writes"):
+    with pytest.raises(ValueError, match="links-authority.ndjson.gz is not what that run wrote"):
         lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
     assert pending.read_bytes() == data and not final.exists()
     path.write_bytes(good)
@@ -615,6 +615,24 @@ def test_a_canonical_row_the_normalize_step_no_longer_makes_is_set_aside_and_lis
     for mode in al.MODES:
         assert (diff[mode]["added"], diff[mode]["removed"], diff[mode]["changed"]) == ([], [], [])
     assert lf.write_run(tmp_path, lambda: (canonical + leftover, full), authority) == manifest
+
+
+def test_the_links_of_a_record_set_aside_are_removed_as_set_aside_not_gone(inputs, authority, tmp_path) -> None:
+    """A Brooklyn record re-ingested as not Egyptian keeps its old canonical row (#374): its
+    links go, and the diff says it was set aside, not that the record is gone."""
+    canonical, raw = inputs
+    first = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert any(l["artifact_id"] == "brooklyn-118436" for l in links(tmp_path / first["run_id"]))
+    raw2 = copy.deepcopy(raw)
+    raw2["brooklyn"]["118436"]["constituents"] = [
+        *(c for c in raw2["brooklyn"]["118436"].get("constituents") or [] if c.get("role") != "Culture"),
+        {"name": "Roman", "role": "Culture"}]
+    second = lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
+    assert second["canonical_rows_set_aside"] == ["brooklyn-118436"]
+    diff = json.loads((tmp_path / "diffs" / f"{first['run_id']}-to-{second['run_id']}.json").read_text())
+    for mode in al.MODES:
+        gone = [r for r in diff[mode]["removed"] if r["artifact_id"] == "brooklyn-118436"]
+        assert gone and {r["why"] for r in gone} == {"set_aside"}, mode
 
 
 def test_the_normalizers_are_the_normalize_assets() -> None:

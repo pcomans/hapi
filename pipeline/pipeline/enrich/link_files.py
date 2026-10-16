@@ -132,7 +132,8 @@ def inventory(resolutions: list[dict]) -> dict:
     }
 
 
-def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict], artifact_ids: set[str]) -> dict:
+def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict], artifact_ids: set[str],
+               set_aside: frozenset[str] = frozenset()) -> dict:
     """The links added, removed and changed against a previous run. A removed link says why; a
     kept link whose mentions, evidence roles or kind changed is `changed`, with the old and new
     values and the mentions it lost and how each now resolves (or that it is gone), so a
@@ -151,7 +152,9 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
     removed = []
     for k in sorted(set(old) - set(new)):
         link = old[k]
-        if link["artifact_id"] not in artifact_ids:
+        if link["artifact_id"] in set_aside:
+            why = {"why": "set_aside"}
+        elif link["artifact_id"] not in artifact_ids:
             why = {"why": "record_gone"}
         elif not any(m in by_mention for m in link["mention_ids"]):
             why = {"why": "mentions_gone"}
@@ -270,20 +273,14 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
         verify_run(root / previous_id)
         for mode in authority_links.MODES:
             diff[mode] = diff_links(read_rows(root / previous_id / f"links-{mode}.ndjson.gz"),
-                                    by_mode[mode][1], by_mode[mode][0], artifact_ids)
+                                    by_mode[mode][1], by_mode[mode][0], artifact_ids,
+                                    frozenset(manifest["canonical_rows_set_aside"]))
 
     run_dir = root / run_id
     if run_dir.exists():
-        # A run directory appears whole (renamed into place), so one that lacks a file or holds
-        # other content was changed after it was written.
-        for name, data in files.items():
-            if not (run_dir / name).exists():
-                raise ValueError(f"{run_dir} lacks {name}: it was changed after it was written")
-            if content_sha256(name, (run_dir / name).read_bytes()) != content_sha256(name, data):
-                raise ValueError(f"{run_dir / name} differs from what this run writes (changed on disk, or "
-                                 f"the step is not deterministic)")
-        if sorted(p.name for p in run_dir.iterdir()) != sorted(files):
-            raise ValueError(f"{run_dir} holds files a run does not write")
+        # The run id digests the manifest, which hashes every file, so a directory of this id holds
+        # this run unless it was changed after it was written.
+        verify_run(run_dir)
     # Only after CURRENT, the previous run and this run's own directory are found sound: a run
     # that fails its checks leaves the root as it was, a pending diff included.
     settle_diffs(root, previous_id)
@@ -292,7 +289,10 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
         # directory, which the next run removes.
         # Under the lock no other run is writing, so every scratch directory is a dead run's.
         for dead in root.glob(".*.partial"):
-            shutil.rmtree(dead) if dead.is_dir() else dead.unlink()
+            if dead.is_dir():
+                shutil.rmtree(dead)
+            else:
+                dead.unlink()
         scratch = root / f".{run_id}.partial"
         scratch.mkdir(parents=True)
         for name, data in files.items():
