@@ -100,7 +100,7 @@ def test_each_mention_gets_one_row_that_says_what_it_resolved_to_or_why_not(auth
     row = r["met-1", "subregion", "Thebes"]
     assert {k: row[k] for k in ("museum", "entity_type", "evidence_role", "mention_text")} == {
         "museum": "met", "entity_type": "site", "evidence_role": "From Egypt:subregion", "mention_text": "Thebes"}
-    json.dumps(rows)  # every row is plain JSON, as step 2 writes it
+    assert json.loads(json.dumps(rows)) == rows  # every row is plain JSON, as step 2 writes it
 
 
 def test_the_literal_mode_is_the_plain_text_baseline() -> None:
@@ -153,20 +153,33 @@ def test_bad_input_fails_loud(authority) -> None:
 
 
 def test_the_resolver_version_covers_every_module_and_file_the_resolution_reads(authority) -> None:
-    """Every `pipeline.authority` and `pipeline.enrich` module a fresh interpreter imports to
-    extract mentions, load the authority and resolve, and every data file the modules name, is
-    hashed."""
-    code = ("import sys, json; from pipeline.enrich import mentions, authority_links as al; al.load_authority(); "
-            "print(json.dumps(sorted(m.__file__ for n, m in sys.modules.items() if getattr(m, '__file__', None) "
-            "and n.startswith(('pipeline.authority', 'pipeline.enrich')))))")
-    loaded = json.loads(subprocess.run([sys.executable, "-c", code], check=True, capture_output=True, text=True,
-                                       cwd=al.REPO / "pipeline").stdout)
+    """A fresh interpreter extracts mentions, loads the authority and resolves one mention of
+    each resolved type; every `pipeline.authority` and `pipeline.enrich` module it imports and
+    every repository file it opens is hashed into the version."""
+    code = """
+import json, sys
+from pathlib import Path
+repo = Path.cwd().parent
+opened = set()
+def hook(event, args):
+    if event == "open" and isinstance(args[0], (str, Path)):
+        path = Path(args[0]).resolve()
+        if path.is_relative_to(repo) and path.suffix not in (".py", ".pyc"):
+            opened.add(str(path.relative_to(repo)))
+sys.addaudithook(hook)
+from pipeline.enrich import mentions, authority_links as al
+mentions_ = json.loads(sys.stdin.read())
+al.resolve_mentions(mentions_, "authority", al.load_authority())
+modules = sorted(str(Path(m.__file__).relative_to(repo)) for n, m in sys.modules.items()
+                 if getattr(m, "__file__", None) and n.startswith(("pipeline.authority", "pipeline.enrich")))
+print(json.dumps({"modules": modules, "opened": sorted(opened)}))
+"""
+    sample = [MENTIONS[0], MENTIONS[2], MENTIONS[3], MENTIONS[8]]  # a king, a site, a queen, a tomb
+    out = json.loads(subprocess.run([sys.executable, "-c", code], input=json.dumps(sample), check=True,
+                                    capture_output=True, text=True, cwd=al.REPO / "pipeline").stdout)
     files = authority.snapshot["files"]
-    assert sorted(str(Path(f).relative_to(al.REPO)) for f in loaded) == sorted(
-        f for f in files if f.endswith(".py"))
-    for path in (resolver.GRAPH, resolver.IDAI, resolver.PM_THEBAN, resolver.PM_MEMPHIS, royal_women.DODSON_HILTON,
-                 royal_women.SAME_WOMAN, royal_women.FEMALE_RULERS, tla_links.TLA, tla_links.LINKS_DIR / "decisions.jsonl"):
-        assert str(path.relative_to(al.REPO)) in files
+    assert out["modules"] == sorted(f for f in files if f.endswith(".py"))
+    assert out["opened"] == sorted(f for f in files if not f.endswith(".py"))
     assert (authority.snapshot["mode"], authority.snapshot["unicode"]) == ("authority", unicodedata.unidata_version)
     assert sorted(al.snapshot("literal")["files"]) == [
         "pipeline/pipeline/authority/resolver.py", "pipeline/pipeline/enrich/authority_links.py",
@@ -174,12 +187,20 @@ def test_the_resolver_version_covers_every_module_and_file_the_resolution_reads(
 
 
 def test_the_qualified_scopes_are_the_evaluations_verdicts() -> None:
-    assert al.QUALIFIED_SCOPES == {
-        "site": {("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard")},
-        "ruler": {("met", "brooklyn")},
-        "tomb_monument": set(),
-    }
+    """`QUALIFIED_SCOPES` is the union of the scopes #337 and #361 published as qualifying
+    (`decision_rule.qualifying_scopes`); #361's ruler Met–Brooklyn supersedes #337's, which did
+    not qualify. Every other scope of a resolved type is unevaluated."""
+    evaluations = al.REPO / "docs/evaluations"
+    published = set()
+    for run in ("authority-independent-control-2026-10-11", "ruler-reregistration-2026-10-15"):
+        score = json.loads((evaluations / run / "results/real-adjudicated-score.json").read_text(encoding="utf-8"))
+        assert score["decision_rule"]["verdict"] == "CONTINUE"
+        published |= {tuple(scope.split("__")) for scope in score["decision_rule"]["qualifying_scopes"]}
+    ours = {(t, *pair) for t, pairs in al.QUALIFIED_SCOPES.items() for pair in pairs}
+    assert ours == published == {("site", "met", "brooklyn"), ("site", "met", "harvard"),
+                                 ("site", "brooklyn", "harvard"), ("ruler", "met", "brooklyn")}
     assert set(al.QUALIFIED_SCOPES) == set(al.RESOLVED_TYPES)
+    assert all(pair in al.MUSEUM_PAIRS for pairs in al.QUALIFIED_SCOPES.values() for pair in pairs)
 
 
 def test_the_committed_promotion_check_holds_and_is_of_the_frozen_inputs() -> None:

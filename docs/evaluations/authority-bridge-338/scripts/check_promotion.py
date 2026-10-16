@@ -108,21 +108,29 @@ def check(archive: Path, run: Path) -> dict:
         return row["status"], row["resolution"]["target_ids"] if row["resolution"] else row["target_ids"]
 
     # 2. Rulers against #361's current-authority arm; #369's records against #369's measurement.
-    after_369 = {c["artifact_id"]: c["after"] for c in json.loads(RESOLVER_CHANGE.read_text(encoding="utf-8"))
-                 ["royal_woman_cued_mentions"]["changes"]}
+    # #369 records its changes by record (one cued mention each); each must be met exactly once,
+    # from its recorded before to its recorded after.
+    changes_369 = {c["artifact_id"]: c for c in json.loads(RESOLVER_CHANGE.read_text(encoding="utf-8"))
+                   ["royal_woman_cued_mentions"]["changes"]}
     arm = [r for r in gz_rows((run / "current-authority-arm.ndjson.gz").read_bytes()) if r["entity_type"] == "ruler"]
     differ_369, differ_otherwise = [], []
     for old in arm:
         new = by_id[old["mention_id"]]
         if (old["status"], old["target_ids"]) == answer(new):
             continue
-        expected = after_369.get(old["artifact_id"])
+        change = changes_369.get(old["artifact_id"])
         cued = royal_women.royal_woman_cued(mention_by_id[old["mention_id"]]["field_value"],
                                             mention_by_id[old["mention_id"]]["span_start"])
-        if cued and expected and (expected["status"], expected["target_ids"]) == answer(new):
-            differ_369.append(old["mention_id"])
+        if (cued and change and (change["before"]["status"], change["before"]["target_ids"]) == (old["status"], old["target_ids"])
+                and (change["after"]["status"], change["after"]["target_ids"], change["after"]["context_rule"])
+                == (*answer(new), new["resolution"]["context_rule"])):
+            differ_369.append((old["artifact_id"], old["mention_id"]))
         else:
             differ_otherwise.append(old["mention_id"])
+    met = collections.Counter(artifact for artifact, _ in differ_369)
+    if set(met) != set(changes_369) or set(met.values()) != {1}:
+        raise ValueError(f"#369's changes are not each met exactly once: {dict(met)}")
+    differ_369 = [mention_id for _, mention_id in differ_369]
 
     # 3. Sites and tombs against the linkability adapter's resolvers.
     linkability = graph_kings.load_linkability()

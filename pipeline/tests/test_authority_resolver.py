@@ -1,7 +1,7 @@
 """The production resolver (#338) is the evaluations' linkability adapter, promoted: the same
-targets and catalogs, and the same answer for every label the authority holds and for
-variants of them. (`docs/evaluations/authority-bridge-338/results/promotion-check.json` holds
-the same on every site mention of the frozen corpus.)"""
+targets, indexes and catalogs, and the same answer for every ruler, site and tomb label the
+authority holds and for variants of them. (`docs/evaluations/authority-bridge-338/results/
+promotion-check.json` holds the same on every site and tomb mention of the frozen corpus.)"""
 
 from __future__ import annotations
 
@@ -30,7 +30,8 @@ def variants(label: str) -> list[str]:
 
 
 def test_the_paths_are_the_adapters(adapter) -> None:
-    assert (resolver.GRAPH, resolver.IDAI) == (adapter.GRAPH, adapter.IDAI)
+    assert (resolver.GRAPH, resolver.IDAI, resolver.PM_THEBAN, resolver.PM_MEMPHIS) == (
+        adapter.GRAPH, adapter.IDAI, adapter.PM_THEBAN, adapter.PM_MEMPHIS)
     assert resolver.NAME_PREDICATES == adapter.NAME_PREDICATES
 
 
@@ -54,6 +55,18 @@ def test_the_site_resolver_is_the_adapters(adapter) -> None:
     theirs, their_catalog = adapter.build_site_resolver(adapter.load_jsonl(adapter.IDAI))
     assert our_catalog == their_catalog and len(our_catalog) == 1000
     labels = sorted({label for r in rows if r.get("kind") == "site" for label in (r["display"], *(r.get("alt_labels") or []))})
+    for label in labels:
+        for text in variants(label):
+            assert ours.resolve(text, resolver.place_norm_set) == theirs.resolve(text, adapter.place_norm_set), text
+
+
+def test_the_tomb_resolver_is_the_adapters(adapter) -> None:
+    ours, our_catalog = resolver.build_pm_resolver()
+    theirs, their_catalog = adapter.build_pm_resolver()
+    assert our_catalog == their_catalog and len(our_catalog) > 1000
+    assert (dict(ours.exact), dict(ours.normalized)) == (dict(theirs.exact), dict(theirs.normalized))
+    labels = sorted({label for path in (resolver.PM_THEBAN, resolver.PM_MEMPHIS) for r in resolver.load_jsonl(path)
+                     for label in (r["tomb_id"], *(r.get("tomb_aliases") or []))})
     for label in labels:
         for text in variants(label):
             assert ours.resolve(text, resolver.place_norm_set) == theirs.resolve(text, adapter.place_norm_set), text

@@ -8,7 +8,7 @@ exact surface (NFC, whitespace, casefold) first; only if it meets no label, the 
 keys (rulers: the claim graph's transliteration and phonetic keys, never its lossy skeleton;
 sites and tombs: letters and digits only, diacritics removed). One target is resolved, several are
 ambiguous, none is unmatched. `pipeline/tests/test_authority_resolver.py` holds it equal to
-the adapter on every label of the authority; `docs/evaluations/authority-bridge-338/results/
+the adapter on every ruler, site and tomb label of the authority; `docs/evaluations/authority-bridge-338/results/
 promotion-check.json` on every mention of the frozen corpus.
 """
 

@@ -66,7 +66,7 @@
         "pipeline/pipeline/authority/claimgraph/__init__.py": "248fc97beda726422b79607951e359e9d06859f63b57d7a452a04ffc2f5ebab0",
         "pipeline/pipeline/authority/claimgraph/normalize.py": "ca59b734db3f67511c9e58f16eaf8769e998c5e480d18c8be49a575390b16939",
         "pipeline/pipeline/authority/graph_kings.py": "1acb266ad4f869ee3a1e271989b6d616a38701da85ca6785b1de7ec45f4ffd79",
-        "pipeline/pipeline/authority/resolver.py": "289d5473464b095719cad27755168ada538f4f6be51246dda442f5f6f86bf173",
+        "pipeline/pipeline/authority/resolver.py": "38c8ac8834b362be11a6c6a95bcf3f6eee7cb16bfac4a76dd609b40c0768d5d9",
         "pipeline/pipeline/authority/royal_women.py": "21315b743ff224a221b3f08aff7b6a1d3f11259e7b814622388ded56ada57d89",
         "pipeline/pipeline/authority/sources/dodson-hilton-queens/female-rulers.json": "c2927337d0370082c5cd375ea10df7b162974555d1b252343a3a6eda3dc3157d",
         "pipeline/pipeline/authority/sources/dodson-hilton-queens/reconciled.jsonl": "0daa6e20a9ff2a754de665524941727125a19d8402cff22ee1031f7162b15da6",
@@ -84,17 +84,17 @@
         "web-claimgraph/data/claim-graph.json": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66"
       },
       "mode": "authority",
-      "resolver_version": "b48b544a44a42735112ec051168046b71c48e2fe73954eff7aa87ed33c4f6b70",
+      "resolver_version": "72a60c4dd928ad31bb8f1a1843dc866042f37077c27b9da82ac1072ce9c147bc",
       "unicode": "15.0.0"
     },
     "literal": {
       "files": {
-        "pipeline/pipeline/authority/resolver.py": "289d5473464b095719cad27755168ada538f4f6be51246dda442f5f6f86bf173",
+        "pipeline/pipeline/authority/resolver.py": "38c8ac8834b362be11a6c6a95bcf3f6eee7cb16bfac4a76dd609b40c0768d5d9",
         "pipeline/pipeline/enrich/authority_links.py": "c6bae72f5aca520c72bb49aed81f4361b4c569ca388d5a908e8b25fa4e5a9231",
         "pipeline/pipeline/enrich/mentions.py": "68c06dd7db1530ee0fa3056ac6f393b4ddc52df5aad0dc96d24d79027c41d978"
       },
       "mode": "literal",
-      "resolver_version": "8c80de3e089d9e0b1822ce873e7739878de4cff8f20f451bc742983907425119",
+      "resolver_version": "b0172dc3cbbf65a4f43edb6fd0a5d24b6c1f29772d141ac82e5ddac1f996114b",
       "unicode": "15.0.0"
     }
   }
