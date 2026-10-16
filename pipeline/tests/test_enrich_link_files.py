@@ -4,6 +4,7 @@ inputs and code, byte for byte; a withdrawn decision removes its link, and the d
 from __future__ import annotations
 
 import copy
+import fcntl
 import hashlib
 import json
 import os
@@ -157,7 +158,7 @@ def test_a_run_interrupted_mid_write_leaves_no_run_and_the_next_run_completes(in
     monkeypatch.setattr(Path, "write_bytes", real)
     assert [p.name for p in tmp_path.iterdir() if not p.name.startswith(".")] == []
     manifest = lf.write_run(canonical, raw, tmp_path, authority)
-    assert sorted(p.name for p in tmp_path.iterdir()) == [lf.CURRENT, manifest["run_id"]]
+    assert sorted(p.name for p in tmp_path.iterdir()) == sorted([lf.LOCK, lf.CURRENT, manifest["run_id"]])
     assert len(list((tmp_path / manifest["run_id"]).iterdir())) == 6
 
 
@@ -254,3 +255,20 @@ def test_every_museum_has_a_field_inventory_the_extractor_reads() -> None:
                      "brooklyn": ["geographicalLocations[0].name"], "harvard": ["places[0].displayname", "title"]}
     with pytest.raises(KeyError, match="louvre"):
         extract_mentions([{**canonical[0], "source_museum": "louvre"}], {"louvre": {canonical[0]["source_id"]: {}}})
+
+
+def test_a_run_while_another_holds_the_root_fails_loud_and_changes_nothing(inputs, authority, tmp_path) -> None:
+    canonical, raw = inputs
+    first = lf.write_run(canonical, raw, tmp_path, authority)
+    raw2 = copy.deepcopy(raw)
+    raw2["met"]["900001"]["title"] = "Scarab"
+    before = sorted(p.name for p in tmp_path.iterdir())
+    with open(tmp_path / lf.LOCK, "a") as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(RuntimeError, match="another run holds .*runs under one root must not overlap"):
+            lf.write_run(canonical, raw2, tmp_path, authority)
+        fcntl.flock(handle, fcntl.LOCK_UN)
+    assert sorted(p.name for p in tmp_path.iterdir()) == before
+    assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
+    # Released, the next run goes ahead.
+    assert lf.write_run(canonical, raw2, tmp_path, authority)["run_id"] != first["run_id"]

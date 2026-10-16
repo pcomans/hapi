@@ -19,7 +19,8 @@ timestamp). A run whose directory exists is checked byte for byte, never overwri
 `<root>/diffs/<previous>-to-<run>.json`: for each mode, every link added, removed (with why) or
 changed (its mentions changed, with how each lost one now resolves). A run is written beside
 its place and renamed into it, and `CURRENT` is replaced in one step, so a crash leaves no
-half-written run.
+half-written run. Runs under one root hold a lock (`.lock`); a second one at the same time fails
+loud.
 
 A link is removed when its source decision is withdrawn: re-running on the new inputs or
 authority makes no such link, and the diff says whether the record is gone, its mentions are
@@ -30,6 +31,8 @@ are the store for now (owner, 2026-10-16); a database table comes later.
 from __future__ import annotations
 
 import collections
+import contextlib
+import fcntl
 import gzip
 import hashlib
 import io
@@ -42,6 +45,7 @@ from pipeline.authority import royal_women
 from pipeline.enrich import authority_links, mentions
 
 CURRENT = "CURRENT"
+LOCK = ".lock"
 # What a target is, by the authority that resolved it. A royal woman who reigned resolves to
 # her king's cluster, which is a king.
 TARGET_KINDS = {"kings": "king", "royal_women": "royal_woman", "idai": "site", "porter_moss": "tomb",
@@ -195,6 +199,29 @@ def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], ro
     }
     files["manifest.json"] = (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
+    root.mkdir(parents=True, exist_ok=True)
+    with run_lock(root):
+        return _write(root, run_id, files, manifest, canonical, by_mode)
+
+
+@contextlib.contextmanager
+def run_lock(root: Path):
+    """One run at a time under a root: a second one fails loud instead of racing for CURRENT
+    (two runs diffing against the same CURRENT would leave a withdrawal between them
+    unrecorded). The operating system releases the lock if the process dies."""
+    with open(root / LOCK, "a") as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise RuntimeError(f"another run holds {root / LOCK}; runs under one root must not overlap") from exc
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, canonical: list[dict],
+           by_mode: dict) -> dict:
     run_dir = root / run_id
     if run_dir.exists():
         # A run directory appears whole (renamed into place), so one that lacks a file or holds

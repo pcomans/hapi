@@ -99,8 +99,8 @@ The CI tests need no private data:
   - These files are a working store, not durable storage; the database table comes later.
   - This devcontainer has no database, so the asset itself has not run, only its core. It
     should run once against a real Postgres before anything relies on it.
-  - Two materializations at once would both diff against the same `CURRENT`; the last one wins.
-    No file is corrupted, but the diffs are then the only record of the order.
+  - Runs under one root hold an exclusive lock; a second materialization at the same time
+    fails loud and changes nothing. The operating system releases the lock if a run dies.
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 
