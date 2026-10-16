@@ -6,7 +6,7 @@ scripts. This work moves that logic into the pipeline package, so production can
 links. Per the owner's decision of 2026-10-16, the links are written to files first; a
 database table comes later.
 
-## Step 1 (this PR): promote and prove
+## Step 1 (#372): promote and prove
 
 - **`pipeline/pipeline/enrich/mentions.py`**: #361's mention extractor, copied verbatim (its
   grammar and `extract_mentions`). A test fails on the first edit to any copied definition.
@@ -76,10 +76,14 @@ The CI tests need no private data:
   checked against it, never rewritten.
   - A test runs `write_run` in two interpreters with different `PYTHONHASHSEED`s and requires
     the same manifest and file contents.
-- **Writes are crash-safe.** A run is written beside its place and renamed into it, and
-  `CURRENT` is replaced in one step, so a crash leaves no half-written run, only a scratch
-  directory that the next run replaces. A run directory that lacks a file, holds a stray one or
-  differs in content fails loud, with a message saying which.
+- **Writes survive a process crash.** A run is written beside its place and renamed into it,
+  and `CURRENT` is replaced in one step, so a crashed process leaves no half-written run, only a
+  scratch directory, which the next run removes. (There is no fsync, so a power loss can leave
+  one; these files are a working store.)
+  - A run directory that lacks a file, holds a stray one or differs in content fails loud,
+    with a message saying which.
+  - Before writing anything, a run checks `CURRENT` and the previous run's link files against
+    that run's manifest. A mismatch fails loud and leaves the root as it was.
 - **Withdrawal.** `<root>/CURRENT` names the run in force. When a new run replaces it,
   `<root>/diffs/<previous>-to-<run>.json` lists, for each mode, the links added, removed and
   changed.
@@ -101,12 +105,11 @@ The CI tests need no private data:
     should run once against a real Postgres before anything relies on it.
   - Runs under one root hold an exclusive lock; a second materialization at the same time
     fails loud and changes nothing. The operating system releases the lock if a run dies.
-  - The asset takes the lock before it reads the tables and reads them all in one
-    `REPEATABLE READ` transaction. A run therefore cannot read older inputs than a run that
-    became current before it, and its canonical rows and raw payloads come from the same
-    moment.
-  - A new run checks the previous run's link files against that run's manifest before it
-    writes the diff.
+  - `write_run` takes the lock before it calls the caller's `read_inputs`. A run therefore
+    cannot read older inputs than a run that became current before it, and no entry point
+    writes without the lock.
+  - The asset's `read_inputs` reads all the tables in one `REPEATABLE READ` transaction, so
+    its canonical rows and raw payloads come from the same moment.
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 

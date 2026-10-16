@@ -7,7 +7,7 @@ from pathlib import Path
 import sqlalchemy as sa
 from dagster import AssetExecutionContext, asset
 
-from pipeline.enrich.link_files import run_lock, write_run_locked
+from pipeline.enrich.link_files import write_run
 from pipeline.resources import DatabaseResource
 from pipeline.types.models import artifacts_table, raw_brooklyn_table, raw_harvard_table, raw_met_table
 
@@ -25,17 +25,18 @@ def authority_links(context: AssetExecutionContext, database: DatabaseResource) 
     """Resolve every mention of every canonical record in both modes and write the run under
     HAPI_AUTHORITY_LINKS_DIR (default `data/authority-links/`)."""
     engine = database.get_engine()
-    root = Path(os.environ.get("HAPI_AUTHORITY_LINKS_DIR", DEFAULT_ROOT))
-    # The lock is taken before the tables are read, so a run cannot read older inputs than one
-    # that becomes current before it; one REPEATABLE READ transaction reads every table from one
-    # snapshot, so canonical rows and raw payloads are of the same moment.
-    with run_lock(root):
+
+    def read_inputs():
+        # Called with the run lock held. One REPEATABLE READ transaction reads every table from
+        # one snapshot, so canonical rows and raw payloads are of the same moment.
         with engine.connect().execution_options(isolation_level="REPEATABLE READ") as conn, conn.begin():
             canonical = [dict(row) for row in conn.execute(sa.select(artifacts_table)).mappings()]
             raw = {museum: {row["object_id"]: json.loads(row["data"])
                             for row in conn.execute(sa.select(table)).mappings()}
                    for museum, table in RAW_TABLES.items()}
-        manifest = write_run_locked(canonical, raw, root)
+        return canonical, raw
+
+    manifest = write_run(Path(os.environ.get("HAPI_AUTHORITY_LINKS_DIR", DEFAULT_ROOT)), read_inputs)
     context.log.info(f"authority links run {manifest['run_id']}: {manifest['files']['links-authority.ndjson.gz']['rows']} links")
     context.add_output_metadata({
         "run_id": manifest["run_id"],

@@ -42,7 +42,7 @@ def links(run: Path, mode: str = "authority") -> list[dict]:
 
 def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_resolved(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    manifest = lf.write_run(canonical, raw, tmp_path, authority)
+    manifest = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     run = tmp_path / manifest["run_id"]
     assert (tmp_path / lf.CURRENT).read_text() == manifest["run_id"] + "\n"
     assert sorted(p.name for p in run.iterdir()) == [
@@ -54,6 +54,8 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
     assert (manifest["records"], manifest["inputs_sha256"], manifest["writer_sha256"]) == (
         len(canonical), lf.input_digest(canonical, raw), hashlib.sha256(Path(lf.__file__).read_bytes()).hexdigest())
     assert manifest["snapshots"] == {"authority": authority.snapshot, "literal": al.snapshot("literal")}
+    assert manifest["extraction"] == extract_mentions(canonical, raw)[1]
+    assert {k: manifest["extraction"][k] for k in ("records_scanned", "mentions")} == {"records_scanned": 18, "mentions": 60}
     assert manifest["outcomes"]["authority"] == {
         "excavation|abstained|unsupported:excavation": 4, "ruler|abstained|expression:multi_or_range": 5,
         "ruler|abstained|expression:uncertain_identity": 1, "ruler|resolved|": 4,
@@ -109,40 +111,43 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
 
 def test_the_same_inputs_and_code_give_the_same_run_byte_for_byte(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    first = lf.write_run(canonical, raw, tmp_path / "a", authority)
-    second = lf.write_run(list(reversed(canonical)), raw, tmp_path / "b", authority)
+    first = lf.write_run(tmp_path / "a", lambda: (canonical, raw), authority)
+    second = lf.write_run(tmp_path / "b", lambda: (list(reversed(canonical)), raw), authority)
     assert first == second
     for name in first["files"]:
         assert (tmp_path / "a" / first["run_id"] / name).read_bytes() == (tmp_path / "b" / first["run_id"] / name).read_bytes()
     # Again into the same root: checked, not rewritten, and no diff.
-    assert lf.write_run(canonical, raw, tmp_path / "a", authority) == first
+    assert lf.write_run(tmp_path / "a", lambda: (canonical, raw), authority) == first
     assert not (tmp_path / "a" / "diffs").exists()
 
 
 def test_a_run_that_differs_from_its_files_on_disk_fails_loud_and_says_how(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    manifest = lf.write_run(canonical, raw, tmp_path, authority)
+    manifest = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     run = tmp_path / manifest["run_id"]
     good = (run / "links-authority.ndjson.gz").read_bytes()
     (run / "links-authority.ndjson.gz").write_bytes(lf.gzip_rows([]))
-    with pytest.raises(ValueError, match="links-authority.ndjson.gz differs from a re-run"):
-        lf.write_run(canonical, raw, tmp_path, authority)
+    with pytest.raises(ValueError, match="links-authority.ndjson.gz differs from what this run writes"):
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "links-authority.ndjson.gz").write_bytes(good)
     manifest_bytes = (run / "manifest.json").read_bytes()
     (run / "manifest.json").unlink()
     with pytest.raises(ValueError, match="lacks manifest.json: it was changed after it was written"):
-        lf.write_run(canonical, raw, tmp_path, authority)
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "manifest.json").write_bytes(manifest_bytes)
     (run / "stray.txt").write_text("x")
     with pytest.raises(ValueError, match="holds files a run does not write"):
-        lf.write_run(canonical, raw, tmp_path, authority)
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "stray.txt").unlink()
     (tmp_path / lf.CURRENT).write_text("")
     with pytest.raises(ValueError, match="CURRENT names '', which is not a run"):
-        lf.write_run(canonical, raw, tmp_path, authority)
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    (tmp_path / lf.CURRENT).write_text("f" * 64 + "\n")
+    with pytest.raises(ValueError, match="CURRENT names 'f{64}', which is not a run"):
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
 
 
-def test_a_run_interrupted_mid_write_leaves_no_run_and_the_next_run_completes(inputs, authority, tmp_path, monkeypatch) -> None:
+def test_a_run_interrupted_mid_write_leaves_no_run_and_the_next_run_clears_it(inputs, authority, tmp_path, monkeypatch) -> None:
     canonical, raw = inputs
     real = Path.write_bytes
     calls = []
@@ -154,10 +159,16 @@ def test_a_run_interrupted_mid_write_leaves_no_run_and_the_next_run_completes(in
         return real(self, data)
     monkeypatch.setattr(Path, "write_bytes", crash)
     with pytest.raises(OSError, match="disk full"):
-        lf.write_run(canonical, raw, tmp_path, authority)
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     monkeypatch.setattr(Path, "write_bytes", real)
-    assert [p.name for p in tmp_path.iterdir() if not p.name.startswith(".")] == []
-    manifest = lf.write_run(canonical, raw, tmp_path, authority)
+    (scratch,) = [p.name for p in tmp_path.iterdir() if p.name.endswith(".partial")]
+    assert sorted(p.name for p in tmp_path.iterdir()) == sorted([lf.LOCK, scratch])
+    # The retry reads other inputs (the tables changed meanwhile), so another run id: the dead
+    # run's scratch directory is removed all the same.
+    raw2 = copy.deepcopy(raw)
+    raw2["met"]["900001"]["title"] = "Scarab"
+    manifest = lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
+    assert scratch != f".{manifest['run_id']}.partial"
     assert sorted(p.name for p in tmp_path.iterdir()) == sorted([lf.LOCK, lf.CURRENT, manifest["run_id"]])
     assert len(list((tmp_path / manifest["run_id"]).iterdir())) == 6
 
@@ -166,7 +177,7 @@ def test_two_interpreters_with_different_hash_seeds_write_the_same_run(tmp_path)
     """Determinism across processes: string-set ordering varies with PYTHONHASHSEED."""
     code = ("import sys, json; from pathlib import Path; sys.path.insert(0, 'tests'); "
             "from test_enrich_mentions import corpus, EXTRA; from pipeline.enrich import link_files as lf; "
-            "c, r = corpus(EXTRA); print(json.dumps(lf.write_run(c, r, Path(sys.argv[1]))))")
+            "c, r = corpus(EXTRA); print(json.dumps(lf.write_run(Path(sys.argv[1]), lambda: (c, r))))")
     manifests = []
     for seed in ("1", "2"):
         out = subprocess.run([sys.executable, "-c", code, str(tmp_path / seed)], check=True, capture_output=True,
@@ -181,7 +192,7 @@ def test_two_interpreters_with_different_hash_seeds_write_the_same_run(tmp_path)
 
 def test_a_withdrawn_decision_removes_its_link_and_the_diff_says_why(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    first = lf.write_run(canonical, raw, tmp_path, authority)
+    first = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     before = {(l["artifact_id"], l["target_id"]) for l in links(tmp_path / first["run_id"])}
     assert {("met-546960", THEBES), ("brooklyn-4035", "idai:2042907"), ("met-900001", "dodson_hilton:Ahmes B")} <= before
 
@@ -192,7 +203,7 @@ def test_a_withdrawn_decision_removes_its_link_and_the_diff_says_why(inputs, aut
     canonical2 = [r for r in canonical if r["id"] != "brooklyn-4035"]
     raw2 = copy.deepcopy(raw)
     raw2["met"]["900001"]["title"] = "Scarab"
-    second = lf.write_run(canonical2, raw2, tmp_path, withdrawn)
+    second = lf.write_run(tmp_path, lambda: (canonical2, raw2), withdrawn)
     assert second["run_id"] != first["run_id"]
     assert (tmp_path / lf.CURRENT).read_text() == second["run_id"] + "\n"
     diff = json.loads((tmp_path / "diffs" / f"{first['run_id']}-to-{second['run_id']}.json").read_text())
@@ -212,7 +223,7 @@ def test_a_withdrawn_decision_removes_its_link_and_the_diff_says_why(inputs, aut
         ("brooklyn-4035", "record_gone"), ("met-900001", "mentions_gone")}
     assert diff["authority"]["changed"] == []
     # Going back to the first inputs makes the first run current again, with its own diff.
-    assert lf.write_run(canonical, raw, tmp_path, authority) == first
+    assert lf.write_run(tmp_path, lambda: (canonical, raw), authority) == first
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     back = json.loads((tmp_path / "diffs" / f"{second['run_id']}-to-{first['run_id']}.json").read_text())
     assert sorted((a["artifact_id"], a["target_id"]) for a in back["authority"]["added"]) == sorted(removed)
@@ -226,11 +237,11 @@ def test_a_mention_withdrawn_from_a_link_another_still_makes_is_a_change(inputs,
     canonical, raw = inputs
     raw1 = copy.deepcopy(raw)
     raw1["met"]["900001"]["title"] = "Relief of King Amenhotep III"
-    first = lf.write_run(canonical, raw1, tmp_path, authority)
+    first = lf.write_run(tmp_path, lambda: (canonical, raw1), authority)
     king = next(l for l in links(tmp_path / first["run_id"]) if l["target_id"] == "cluster-beckerath-18.09"
                 and l["artifact_id"] == "met-900001")
     assert len(king["mention_ids"]) == 2
-    second = lf.write_run(canonical, raw, tmp_path, authority)
+    second = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     diff = json.loads((tmp_path / "diffs" / f"{first['run_id']}-to-{second['run_id']}.json").read_text())
     (title_mention,) = set(king["mention_ids"]) - {
         l for l in next(l for l in links(tmp_path / second["run_id"]) if l["target_id"] == "cluster-beckerath-18.09"
@@ -259,30 +270,30 @@ def test_every_museum_has_a_field_inventory_the_extractor_reads() -> None:
 
 def test_a_run_while_another_holds_the_root_fails_loud_and_changes_nothing(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    first = lf.write_run(canonical, raw, tmp_path, authority)
+    first = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     raw2 = copy.deepcopy(raw)
     raw2["met"]["900001"]["title"] = "Scarab"
     before = sorted(p.name for p in tmp_path.iterdir())
     with open(tmp_path / lf.LOCK, "a") as handle:
         fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         with pytest.raises(RuntimeError, match="another run holds .*runs under one root must not overlap"):
-            lf.write_run(canonical, raw2, tmp_path, authority)
+            lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
         fcntl.flock(handle, fcntl.LOCK_UN)
     assert sorted(p.name for p in tmp_path.iterdir()) == before
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     # Released, the next run goes ahead.
-    assert lf.write_run(canonical, raw2, tmp_path, authority)["run_id"] != first["run_id"]
+    assert lf.write_run(tmp_path, lambda: (canonical, raw2), authority)["run_id"] != first["run_id"]
 
 
 def test_a_previous_run_whose_links_were_changed_is_not_diffed_against(inputs, authority, tmp_path) -> None:
     canonical, raw = inputs
-    first = lf.write_run(canonical, raw, tmp_path, authority)
+    first = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     path = tmp_path / first["run_id"] / "links-authority.ndjson.gz"
     path.write_bytes(lf.gzip_rows(lf.read_rows(path)[1:]))
     raw2 = copy.deepcopy(raw)
     raw2["met"]["900001"]["title"] = "Scarab"
     with pytest.raises(ValueError, match="links-authority.ndjson.gz is not what that run wrote"):
-        lf.write_run(canonical, raw2, tmp_path, authority)
+        lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     assert not (tmp_path / "diffs").exists()
     assert sorted(p.name for p in tmp_path.iterdir() if not p.name.startswith(".")) == [lf.CURRENT, first["run_id"]]
@@ -301,11 +312,11 @@ def lock_held(root: Path) -> bool:
 class RecordingConnection:
     """A stand-in for the asset's database connection, over the fixture corpus as the tables
     hold it (canonical rows; raw payloads as JSON text keyed by object id). It records, at each
-    read, whether the run lock is held, whether a transaction is open and its isolation level."""
+    read, whether the run lock is held, which transaction it is in and its isolation level."""
 
     def __init__(self, tables: dict[str, list[dict]], root: Path, log: list) -> None:
         self.tables, self.root, self.log = tables, root, log
-        self.isolation, self.in_transaction = None, False
+        self.isolation, self.transaction, self.transactions = None, None, 0
 
     def execution_options(self, isolation_level=None, **_):
         self.isolation = isolation_level
@@ -322,16 +333,17 @@ class RecordingConnection:
 
         class Transaction:
             def __enter__(self):
-                conn.in_transaction = True
+                conn.transactions += 1
+                conn.transaction = conn.transactions
 
             def __exit__(self, *exc):
-                conn.in_transaction = False
+                conn.transaction = None
                 return False
         return Transaction()
 
     def execute(self, statement):
         (table,) = statement.get_final_froms()
-        self.log.append(("read", table.name, lock_held(self.root), self.in_transaction, self.isolation, id(self)))
+        self.log.append(("read", table.name, lock_held(self.root), self.transaction, self.isolation))
         rows = self.tables[table.name]
 
         class Result:
@@ -342,9 +354,9 @@ class RecordingConnection:
 
 def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, authority, tmp_path, monkeypatch) -> None:
     """The asset cannot reach a database here; over a recording connection it reads every table
-    inside one REPEATABLE READ transaction, holds the run lock through every read and the write,
-    and writes the run its inputs make. (That PostgreSQL gives REPEATABLE READ one snapshot is
-    PostgreSQL's to keep; that the reads are inside it is pinned here.)"""
+    in one REPEATABLE READ transaction, with the run lock held, and writes the run its inputs
+    make. (That PostgreSQL gives that transaction one snapshot is PostgreSQL's to keep; that all
+    reads are in it is pinned here.)"""
     from dagster import build_asset_context
     from pipeline.assets.enrich import authority_links_asset as asset
     from pipeline.resources import DatabaseResource
@@ -353,31 +365,33 @@ def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, aut
     tables = {"artifacts": canonical, **{f"raw_{museum}": [{"object_id": source_id, "data": json.dumps(payload)}
                                                           for source_id, payload in rows.items()]
                                          for museum, rows in raw.items()}}
+    root = tmp_path / "asset"
     log: list = []
     connections: list[RecordingConnection] = []
 
     class Engine:
         def connect(self):
-            connections.append(RecordingConnection(tables, tmp_path, log))
+            connections.append(RecordingConnection(tables, root, log))
             return connections[-1]
 
     class Database(DatabaseResource):
         def get_engine(self):
             return Engine()
 
-    real = asset.write_run_locked
-
-    def write(*args, **kwargs):
-        log.append(("write", lock_held(tmp_path)))
-        return real(*args, **kwargs)
-    monkeypatch.setattr(asset, "write_run_locked", write)
     monkeypatch.setattr(lf.authority_links, "load_authority", lambda: authority)
-    monkeypatch.setenv("HAPI_AUTHORITY_LINKS_DIR", str(tmp_path))
-    asset.authority_links(context=build_asset_context(), database=Database())
+    monkeypatch.setenv("HAPI_AUTHORITY_LINKS_DIR", str(root))
+    context = build_asset_context()
+    asset.authority_links(context=context, database=Database())
 
     (conn,) = connections
-    assert log == [("read", name, True, True, "REPEATABLE READ", id(conn))
-                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard")] + [("write", True)]
-    assert not lock_held(tmp_path)
-    expected = lf.write_run(canonical, raw, tmp_path / "direct", authority)
-    assert (tmp_path / lf.CURRENT).read_text() == expected["run_id"] + "\n"
+    assert conn.transactions == 1
+    assert log == [("read", name, True, 1, "REPEATABLE READ")
+                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard")]
+    assert not lock_held(root)
+    expected = lf.write_run(tmp_path / "direct", lambda: (canonical, raw), authority)
+    assert (root / lf.CURRENT).read_text() == expected["run_id"] + "\n"
+    assert json.loads((root / expected["run_id"] / "manifest.json").read_text()) == expected
+    assert context.get_output_metadata("result") == {
+        "run_id": expected["run_id"], "records": 18,
+        "links_authority": expected["files"]["links-authority.ndjson.gz"]["rows"],
+        "links_literal": expected["files"]["links-literal.ndjson.gz"]["rows"]}

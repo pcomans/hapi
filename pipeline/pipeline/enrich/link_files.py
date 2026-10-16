@@ -12,14 +12,14 @@ them in both modes (`authority_links.MODES`) and writes, under `<root>/<run_id>/
 The manifest hashes each file's content (a gzip file's decompressed NDJSON). The run id is
 the SHA-256 over the inputs' digest, both modes' resolver versions and this
 module's own SHA-256 (it types the rows and writes the files), so the
-same inputs and code give the same id and the same bytes (rows sorted, gzip without a
-timestamp). A run whose directory exists is checked byte for byte, never overwritten.
+same inputs and code give the same id and the same content (rows sorted). A run whose
+directory exists is checked against it, never overwritten.
 
 `<root>/CURRENT` names the run in force. When a run replaces another there, it writes
 `<root>/diffs/<previous>-to-<run>.json`: for each mode, every link added, removed (with why) or
 changed (its mentions changed, with how each lost one now resolves). A run is written beside
-its place and renamed into it, and `CURRENT` is replaced in one step, so a crash leaves no
-half-written run. Runs under one root hold a lock (`.lock`); a second one at the same time fails
+its place and renamed into it, and `CURRENT` is replaced in one step, so a crashed process
+leaves no half-written run (there is no fsync: a power loss can). Runs under one root hold a lock (`.lock`); a second one at the same time fails
 loud.
 
 A link is removed when its source decision is withdrawn: re-running on the new inputs or
@@ -39,6 +39,7 @@ import io
 import json
 import os
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 
 from pipeline.authority import royal_women
@@ -159,19 +160,19 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
             "kept": len(set(old) & set(new)) - len(changed)}
 
 
-def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], root: Path,
+def write_run(root: Path, read_inputs: Callable[[], tuple[list[dict], dict[str, dict[str, dict]]]],
               authority: authority_links.Authority | None = None) -> dict:
-    """Write one run under `root` and point `root/CURRENT` at it; return its manifest. The
-    caller has read the inputs already; a caller that reads them from a live store takes
-    `run_lock(root)` first and calls `write_run_locked`, so that no run can read older inputs
-    than a run that becomes current before it."""
+    """Write one run under `root` and point `root/CURRENT` at it; return its manifest.
+    `read_inputs` gives the canonical records and the raw payloads by museum and source id; it
+    is called with the run lock held, so no run can read older inputs than a run that became
+    current before it."""
     with run_lock(root):
-        return write_run_locked(canonical, raw_indexes, root, authority)
+        canonical, raw_indexes = read_inputs()
+        return _run(root, canonical, raw_indexes, authority)
 
 
-def write_run_locked(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], root: Path,
-                     authority: authority_links.Authority | None = None) -> dict:
-    """`write_run`, for a caller that holds `run_lock(root)`."""
+def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dict]],
+         authority: authority_links.Authority | None) -> dict:
     authority = authority or authority_links.load_authority()
     found, extraction = mentions.extract_mentions(canonical, raw_indexes)
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
@@ -202,7 +203,7 @@ def write_run_locked(canonical: list[dict], raw_indexes: dict[str, dict[str, dic
         "extraction": extraction,
         # The SHA-256 of each file's content: a gzip file's decompressed NDJSON, which does not
         # depend on the zlib build that compressed it.
-        "files": {name: {"content_sha256": content_sha256(name, data), "rows": counts.get(name)}
+        "files": {name: {"content_sha256": content_sha256(name, data), "rows": counts[name]}
                   for name, data in sorted(files.items())},
         "outcomes": {mode: outcomes(by_mode[mode][0]) for mode in authority_links.MODES},
         "inventory": inventory(by_mode["authority"][0]),
@@ -258,15 +259,17 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
             if not (run_dir / name).exists():
                 raise ValueError(f"{run_dir} lacks {name}: it was changed after it was written")
             if content_sha256(name, (run_dir / name).read_bytes()) != content_sha256(name, data):
-                raise ValueError(f"{run_dir / name} differs from a re-run on the same inputs and code")
+                raise ValueError(f"{run_dir / name} differs from what this run writes (changed on disk, or "
+                                 f"the step is not deterministic)")
         if sorted(p.name for p in run_dir.iterdir()) != sorted(files):
             raise ValueError(f"{run_dir} holds files a run does not write")
     else:
-        # Written beside it and renamed into place, so a crash leaves only the scratch directory,
-        # which the next run replaces.
+        # Written beside it and renamed into place, so a crashed process leaves only a scratch
+        # directory, which the next run removes.
+        # Under the lock no other run is writing, so every scratch directory is a dead run's.
+        for dead in root.glob(".*.partial"):
+            shutil.rmtree(dead) if dead.is_dir() else dead.unlink()
         scratch = root / f".{run_id}.partial"
-        if scratch.exists():
-            shutil.rmtree(scratch)
         scratch.mkdir(parents=True)
         for name, data in files.items():
             (scratch / name).write_bytes(data)
