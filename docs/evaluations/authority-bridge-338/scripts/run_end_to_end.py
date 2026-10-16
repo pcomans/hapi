@@ -55,9 +55,25 @@ def evaluation_headline(name: str) -> dict:
             for arm in ("typed_literal", "current_authority")}
 
 
-def ahmes_b_records(run: Path) -> dict[str, list[str]]:
-    by_target = cross_museum.target_records(cross_museum.load_links(run, "authority"))
-    return {museum: sorted(records) for museum, records in sorted(by_target[("ruler", "dodson_hilton:Ahmes B")].items())}
+def ahmes_b_records(run: Path) -> dict:
+    """The records #369's one new shared Met-Brooklyn ruler target joins, by museum, each with the
+    other shared Met-Brooklyn ruler targets it is on with the authority (none means Ahmes B is
+    what connects it) and whether plain text connects it (so it was one of #361's losses)."""
+    by_mode = {mode: cross_museum.target_records(cross_museum.load_links(run, mode)) for mode in ("authority", "literal")}
+
+    def shared(by_target: dict) -> dict[str, set[str]]:
+        out: dict[str, set[str]] = {}
+        for (entity, target), sides in by_target.items():
+            if entity == "ruler" and "met" in sides and "brooklyn" in sides:
+                for museum in ("met", "brooklyn"):
+                    for record in sides[museum]:
+                        out.setdefault(record, set()).add(target)
+        return out
+    on, off = shared(by_mode["authority"]), shared(by_mode["literal"])
+    return {museum: {record: {"other_shared_authority_targets": sorted(on[record] - {"dodson_hilton:Ahmes B"}),
+                              "connected_by_plain_text": record in off}
+                     for record in sorted(records)}
+            for museum, records in sorted(by_mode["authority"][("ruler", "dodson_hilton:Ahmes B")].items())}
 
 
 def end_to_end(archive: Path) -> dict:

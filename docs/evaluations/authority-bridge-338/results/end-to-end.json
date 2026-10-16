@@ -1,12 +1,21 @@
 {
   "ahmes_b_records": {
-    "brooklyn": [
-      "brooklyn-3634"
-    ],
-    "met": [
-      "met-547683",
-      "met-566763"
-    ]
+    "brooklyn": {
+      "brooklyn-3634": {
+        "connected_by_plain_text": true,
+        "other_shared_authority_targets": []
+      }
+    },
+    "met": {
+      "met-547683": {
+        "connected_by_plain_text": true,
+        "other_shared_authority_targets": []
+      },
+      "met-566763": {
+        "connected_by_plain_text": true,
+        "other_shared_authority_targets": []
+      }
+    }
   },
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "evaluation_headlines": {
@@ -1194,7 +1203,7 @@
     }
   },
   "report_sha256": {
-    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "7d6c150384e82cdba62dd928fbb9dbc841b48e70ad84fe7135468cc5321494a8",
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "3033152a38254ef7f36ca90a9d32788c6fc6c4368aafc6765985715ec3c097af",
     "pipeline/pipeline/enrich/cross_museum.py": "e1d8280b6d5994ea01ac8f1cea259a456e7931fde79c5d857b83be24ea0a197c"
   },
   "resolver_versions": {

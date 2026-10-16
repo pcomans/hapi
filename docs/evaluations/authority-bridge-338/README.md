@@ -217,7 +217,9 @@ matters is whether these are the populations that were reviewed.
       her;
     - a third Met record, met-547683, which #369 did not change. It resolved to her before but
       had no Brooklyn record to share her with.
-  - **Those three records are #361's reviewed losses that now connect:** Met's losses go from
+  - **Those three records are #361's reviewed losses that now connect.** Each is connected
+    through Ahmes B alone and was connected by plain text, and the authority only grows from
+    #361's (step 1). Counts: Met's losses go from
     59 to 57 and Brooklyn's from 2 to 1. The gains are #361's in number (Met 33, Brooklyn 2).
   - **The change is unreviewed,** found on #361's deciding case. The scope's qualified flag
     rests on #361's review of the population before it.
@@ -240,6 +242,13 @@ matters is whether these are the populations that were reviewed.
   first). Deployed lift needs the asset run against the live database (see #374 and #375) and a
   matcher in the web layer that reads the links.
 
-The proof above covers the code it recorded only: `snapshot` for the resolution and
-`check_inputs.code_sha256` for the input check (`results/promotion-check.json`). Any later edit
-to a file in either needs a new `check_promotion` run before the proof covers it.
+The proofs cover the code they recorded only:
+- `results/promotion-check.json` records `snapshot` for the resolution and
+  `check_inputs.code_sha256` for the input check;
+- `results/end-to-end.json` records `resolver_versions`, `writer_sha256` and `report_sha256`.
+
+Any later edit to a file in them needs a new run before the proof covers it, of
+`scripts/check_promotion.py` or `scripts/run_end_to_end.py --archive <corpus archive> --out
+results/end-to-end.json`. Tests compare the committed results with the evaluations' files, not
+with the live code, so an edit does not turn main red; it leaves the result describing the code
+it recorded.

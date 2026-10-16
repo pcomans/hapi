@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import ast
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -129,9 +131,38 @@ def test_the_site_links_are_337s_record_for_record() -> None:
     assert sum(ledger["added_by_royal_woman_cue"].values()) == ledger["added"] == 93
     assert ledger["v10_mentions"] + ledger["added"] == ledger["new_mentions"] == 148964
     proof = json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
+    assert proof["mentions"] == {"ledger_361": 148964, "production": 148964, "rows_equal": True}
     assert proof["places_vs_linkability_adapter"] == {
         "compared": {"site": 113738, "tomb_monument": 4863}, "differ": {"site": [], "tomb_monument": []}}
     assert proof["places_vs_337_literal_arm"]["differ"] == []
+    # The adapter the proof compared against resolves as #337's did: its resolution code is #337's
+    # (the file has changed since only in how it finds its repository), and the gazetteer, the
+    # Porter & Moss rows and the normalizer are the bytes #337 pinned.
+    adapter = "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
+    then = subprocess.run(["git", "-C", str(al.REPO), "show", f"97f2e61:{adapter}"], check=True, capture_output=True,
+                          text=True).stdout
+    assert __import__("hashlib").sha256(then.encode("utf-8")).hexdigest() == (
+        "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0")  # #337's CURRENT_INPUTS
+
+    def definitions(source: str) -> dict[str, str]:
+        return {n.name: ast.dump(n) for n in ast.parse(source).body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
+    now = definitions((al.REPO / adapter).read_text(encoding="utf-8"))
+    for name in ("build_site_resolver", "build_pm_resolver", "place_norm", "place_norm_set", "surface_key",
+                 "Resolver", "Target", "load_jsonl"):
+        assert definitions(then)[name] == now[name], name
+    arms_337 = (EVALUATIONS / "authority-independent-control-2026-10-11/scripts/compare_arms.py").read_text(encoding="utf-8")
+    files = proof["snapshot"]["authority"]["files"]
+    for path in ("pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl",
+                 "pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl",
+                 "pipeline/pipeline/authority/sources/porter-moss-memphis/reconciled.jsonl",
+                 "pipeline/pipeline/authority/claimgraph/normalize.py"):
+        assert f'"{path}":\n        "{files[path]}"' in arms_337, path
+
+
+def test_the_end_to_end_run_is_of_the_proven_corpus_and_code(result) -> None:
+    proof = json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
+    assert result["corpus_archive_sha256"] == proof["corpus_archive_sha256"]
+    assert result["resolver_versions"] == {m: proof["snapshot"][m]["resolver_version"] for m in al.MODES}
 
 
 def test_the_site_scopes_are_337s_evaluated_population(result) -> None:
@@ -181,7 +212,13 @@ def test_the_ruler_scope_is_361s_population_with_369s_ahmes_b(result) -> None:
     # It joins the two Queen Ahmose records (#369's tuned-on change) and met-547683, which #369 did
     # not change (it is not among #369's changed records): it resolved to Ahmes B before, without a
     # Brooklyn record to share her with. Those are the Met +2 and Brooklyn +1.
-    assert result["ahmes_b_records"] == {"brooklyn": ["brooklyn-3634"], "met": ["met-547683", "met-566763"]}
+    # Each is connected through Ahmes B alone and was connected by plain text, so with the
+    # authority only growing from #361 (the step-1 proof), these three are exactly the losses
+    # that now connect.
+    assert result["ahmes_b_records"] == {
+        "brooklyn": {"brooklyn-3634": {"other_shared_authority_targets": [], "connected_by_plain_text": True}},
+        "met": {"met-547683": {"other_shared_authority_targets": [], "connected_by_plain_text": True},
+                "met-566763": {"other_shared_authority_targets": [], "connected_by_plain_text": True}}}
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(
         encoding="utf-8"))["royal_woman_cued_mentions"]["changes"]
     changed = {c["artifact_id"] for c in changes}
@@ -212,7 +249,12 @@ def test_the_site_top_targets_are_337s(result) -> None:
                     sites = [t for t in ranked if t.startswith("idai:")]
                     assert set(sites) <= set(shared), (a, b, museum)
                 else:
-                    # A literal id does not say its type; #337's site ids are those shared now.
+                    # A literal id hashes its type, so it is of one type; literal links only grew
+                    # since #337, so every id #337 ranked is shared now under some type, and the
+                    # site ones under site.
+                    any_type = {t for e in al.RESOLVED_TYPES
+                                for t in result["matching"]["by_museum_pair"][f"{e}|{a}|{b}"]["shared_target_ids"][mode]}
+                    assert set(ranked) <= any_type, (a, b, museum)
                     sites = [t for t in ranked if t in shared]
                 for k in ("1", "5"):
                     assert ours[museum][k]["target_ids"] == sites[:int(k)], (arm, a, b, museum, k)
