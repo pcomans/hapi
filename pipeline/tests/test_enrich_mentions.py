@@ -1,12 +1,15 @@
-"""The production mention extractor (#338) is #361's, promoted: on the museum fixtures and on
-records written to reach every branch, it gives exactly what the frozen #361 script gives.
+"""The production mention extractor (#338) is #361's, promoted: every definition it shares with
+the frozen #361 script has the same source, and on the museum fixtures and records written to
+reach its branches it gives exactly what that script gives.
 (`docs/evaluations/authority-bridge-338/results/promotion-check.json` holds the same on the
 whole frozen corpus: 148,964 mentions, row for row.)"""
 
 from __future__ import annotations
 
 import importlib.util
+import inspect
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -78,3 +81,22 @@ def test_the_production_extractor_gives_what_361s_gives(frozen) -> None:
     assert by_text["met-900003", "reign of Taharqa to Tanutamun"]["expression_type"] == "multi_or_range"
     assert by_text["met-900003", "Shepenwepet"]["expression_type"] == "single_identity"
     assert {m["museum"] for m in found} == {"met", "brooklyn", "harvard"}
+
+
+def test_every_definition_is_361s_verbatim(frozen) -> None:
+    """The promotion is a copy: the first edit to a promoted definition fails here, and must
+    also change this test and the claim of identity in `mentions.py` and the #338 README."""
+    imported = {"annotations", "hashlib", "re", "Counter", "Iterable"}
+    names = [n for n in vars(production) if not n.startswith("_") and n not in imported]
+    assert sorted(names) == sorted([
+        "ROYAL_CUE", "TOMB_CODE", "TEMPLE_CUE", "UNCERTAIN", "RANGE_OR_MULTI", "TEMPORAL_CONTEXT", "LEADING_REIGN",
+        "LEADING_UNCERTAIN_REIGN", "TRAILING_PHASE", "NAME_TOKEN", "TEXT_STOP", "classify_reign_expression",
+        "candidate_after_royal_cue", "component_spans", "component_variants", "make_mention", "extract_mentions"])
+    for name in names:
+        ours, theirs = getattr(production, name), getattr(frozen, name)
+        if isinstance(ours, re.Pattern):
+            assert (ours.pattern, ours.flags) == (theirs.pattern, theirs.flags), name
+        elif inspect.isfunction(ours):
+            assert inspect.getsource(ours) == inspect.getsource(theirs), name
+        else:
+            assert ours == theirs, name

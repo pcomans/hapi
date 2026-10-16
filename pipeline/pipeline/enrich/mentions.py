@@ -3,7 +3,8 @@
 Promoted for production (#338) from the #361 ruler re-registration's extractor
 (`docs/evaluations/ruler-reregistration-2026-10-15/scripts/extract_mentions.py`), whose file
 stays as it is because #361 pins it by hash; `pipeline/tests/test_enrich_mentions.py` holds the
-two equal. Detection and span boundaries come from museum field structure and fixed syntax
+source of each shared definition identical, so the first change here must also change that
+test and this paragraph. Detection and span boundaries come from museum field structure and fixed syntax
 rules; authority labels, aliases, identifiers and resolver results are not inputs. Each
 museum's evidence fields are named in `extract_mentions` (the per-museum field inventory).
 """
@@ -15,7 +16,6 @@ import re
 from collections import Counter
 from collections.abc import Iterable
 
-WS = re.compile(r"\s+")
 # #361: the royal-woman cues (`royal_women.ROYAL_WOMAN_CUE_BEFORE`) are cues too, longest first,
 # so that "Queen Mother Tiye" and "King's Wife Ahhotep" are cued as wholes ("mother" and "wife"
 # are stop words after a bare "queen" or "king").
@@ -52,8 +52,6 @@ TEXT_STOP = {
     "with", "wearing", "possibly", "probably", "perhaps", "mother", "wife", "daughter", "son", "statue",
     "head", "god", "goddess", "priest", "scribe", "servant", "sky", "upper", "lower", "new", "old",
 }
-
-
 
 
 def classify_reign_expression(value: str) -> tuple[str, str | None, tuple[int, int] | None]:

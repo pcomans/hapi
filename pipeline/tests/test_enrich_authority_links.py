@@ -4,6 +4,9 @@ it resolved to or why not, and a link joins a record to a target only on resolve
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+import unicodedata
 from pathlib import Path
 
 import pytest
@@ -16,6 +19,7 @@ KING_AMENHOTEP_III = "cluster-beckerath-18.09"
 KING_HATSHEPSUT = "cluster-beckerath-18.05"
 SITE_THEBES = "idai:2042921"
 SITE_DEIR_EL_BAHRI = "idai:2110510"
+TOMB_KV62 = "pm_theban:KV62"
 
 
 @pytest.fixture(scope="module")
@@ -59,61 +63,56 @@ def test_each_mention_gets_one_row_that_says_what_it_resolved_to_or_why_not(auth
     assert [r["mention_id"] for r in rows] == [m["mention_id"] for m in MENTIONS]
     version = authority.snapshot["resolver_version"]
     assert {r["resolver_version"] for r in rows} == {version} and {r["mode"] for r in rows} == {"authority"}
-    got = {k: {f: r[f] for f in ("status", "reason", "authority", "resolution_method", "target_ids", "candidate_ids",
-                                  "context_rule", "stated_kin_king_ids")}
-           for k, r in by_text(rows).items()}
+    got = {k: (r["status"], r["reason"], r["authority"], r["target_ids"]) for k, r in by_text(rows).items()}
     assert got == {
-        ("met-1", "reign", "Amenhotep III"): {
-            "status": "resolved", "reason": None, "authority": "kings", "resolution_method": "raw_exact",
-            "target_ids": [KING_AMENHOTEP_III], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("met-1", "title", "Amenhotep III"): {
-            "status": "resolved", "reason": None, "authority": "kings", "resolution_method": "raw_exact",
-            "target_ids": [KING_AMENHOTEP_III], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("met-1", "subregion", "Thebes"): {
-            "status": "resolved", "reason": None, "authority": "idai", "resolution_method": "raw_exact",
-            "target_ids": [SITE_THEBES], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        # The field's stated kin names her family king (#369).
-        ("met-2", "title", "Ahmose"): {
-            "status": "resolved", "reason": None, "authority": "royal_women", "resolution_method": "weak_sign_skeleton",
-            "target_ids": ["dodson_hilton:Ahmes B"], "candidate_ids": [], "context_rule": "family",
-            "stated_kin_king_ids": [KING_HATSHEPSUT]},
-        # Two Dynasty 20 Tiyes: ambiguous, the alternatives kept.
-        ("met-3", "title", "Tiye"): {
-            "status": "ambiguous", "reason": "authority_ambiguous", "authority": "royal_women",
-            "resolution_method": "raw_exact", "target_ids": [],
-            "candidate_ids": ["dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"], "context_rule": None,
-            "stated_kin_king_ids": []},
-        ("met-4", "locale", "Atlantis"): {
-            "status": "unmatched", "reason": "authority_unmatched", "authority": "idai", "resolution_method": None,
-            "target_ids": [], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("brooklyn-5", "geographicalLocations[0].name", "Deir el-Bahri"): {
-            "status": "resolved", "reason": None, "authority": "idai", "resolution_method": "raw_exact",
-            "target_ids": [SITE_DEIR_EL_BAHRI], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("brooklyn-5", "title", "Akhenaten"): {
-            "status": "abstained", "reason": "expression:multi_or_range", "authority": None, "resolution_method": None,
-            "target_ids": [], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("brooklyn-5", "geographicalLocations[0].name", "KV 62"): {
-            "status": "abstained", "reason": "unsupported:tomb_monument", "authority": None, "resolution_method": None,
-            "target_ids": [], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("brooklyn-5", "geographicalLocations[1].name", "Temple of Amun"): {
-            "status": "abstained", "reason": "unsupported:temple", "authority": None, "resolution_method": None,
-            "target_ids": [], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
-        ("brooklyn-5", "excavation", "Carter"): {
-            "status": "abstained", "reason": "unsupported:excavation", "authority": None, "resolution_method": None,
-            "target_ids": [], "candidate_ids": [], "context_rule": None, "stated_kin_king_ids": []},
+        ("met-1", "reign", "Amenhotep III"): ("resolved", None, "kings", [KING_AMENHOTEP_III]),
+        ("met-1", "title", "Amenhotep III"): ("resolved", None, "kings", [KING_AMENHOTEP_III]),
+        ("met-1", "subregion", "Thebes"): ("resolved", None, "idai", [SITE_THEBES]),
+        ("met-2", "title", "Ahmose"): ("resolved", None, "royal_women", ["dodson_hilton:Ahmes B"]),
+        ("met-3", "title", "Tiye"): ("ambiguous", "authority_ambiguous", "royal_women", []),
+        ("met-4", "locale", "Atlantis"): ("unmatched", "authority_unmatched", "idai", []),
+        ("brooklyn-5", "geographicalLocations[0].name", "Deir el-Bahri"): ("resolved", None, "idai", [SITE_DEIR_EL_BAHRI]),
+        ("brooklyn-5", "title", "Akhenaten"): ("abstained", "expression:multi_or_range", None, []),
+        ("brooklyn-5", "geographicalLocations[0].name", "KV 62"): ("resolved", None, "porter_moss", [TOMB_KV62]),
+        ("brooklyn-5", "geographicalLocations[1].name", "Temple of Amun"): ("abstained", "unsupported:temple", None, []),
+        ("brooklyn-5", "excavation", "Carter"): ("abstained", "unsupported:excavation", None, []),
     }
-    row = by_text(rows)["met-1", "subregion", "Thebes"]
+    r = by_text(rows)
+    # The resolver's own answer is kept whole: the keys it tried, how it chose, what it left.
+    assert r["met-1", "subregion", "Thebes"]["resolution"] == {
+        "raw_exact_status": "unique", "raw_exact_target_ids": [SITE_THEBES], "normalized_keys": ["thebes"],
+        "resolution_method": "raw_exact", "status": "resolved", "target_ids": [SITE_THEBES], "authority": "idai"}
+    assert r["brooklyn-5", "geographicalLocations[0].name", "KV 62"]["resolution"] == {
+        "raw_exact_status": "unmatched", "raw_exact_target_ids": [], "normalized_keys": ["kv62"],
+        "resolution_method": "committed_normalized", "status": "resolved", "target_ids": [TOMB_KV62],
+        "authority": "porter_moss"}
+    ahmose = r["met-2", "title", "Ahmose"]["resolution"]
+    assert {k: ahmose[k] for k in ("resolution_method", "candidate_ids", "context_rule", "stated_kin_king_ids",
+                                   "royal_woman_id")} == {
+        "resolution_method": "weak_sign_skeleton", "candidate_ids": ["dodson_hilton:Ahmes A", "dodson_hilton:Ahmes B"],
+        "context_rule": "family", "stated_kin_king_ids": [KING_HATSHEPSUT], "royal_woman_id": "dodson_hilton:Ahmes B"}
+    # Two Dynasty 20 Tiyes: the alternatives the record's dynasty leaves are kept.
+    tiye = r["met-3", "title", "Tiye"]["resolution"]
+    assert (tiye["status"], tiye["target_ids"], tiye["candidate_ids"]) == (
+        "ambiguous", ["dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"],
+        ["dodson_hilton:Tiye A", "dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"])
+    assert r["brooklyn-5", "title", "Akhenaten"]["resolution"] is None
+    row = r["met-1", "subregion", "Thebes"]
     assert {k: row[k] for k in ("museum", "entity_type", "evidence_role", "mention_text")} == {
         "museum": "met", "entity_type": "site", "evidence_role": "From Egypt:subregion", "mention_text": "Thebes"}
+    json.dumps(rows)  # every row is plain JSON, as step 2 writes it
 
 
 def test_the_literal_mode_is_the_plain_text_baseline() -> None:
     rows = by_text(al.resolve_mentions(MENTIONS, "literal", None))
     reign, title = rows["met-1", "reign", "Amenhotep III"], rows["met-1", "title", "Amenhotep III"]
     assert reign["target_ids"] == title["target_ids"] == [al.literal_target("ruler", "amenhotep  III")]
-    assert (reign["status"], reign["resolution_method"], reign["resolver_version"], reign["mode"]) == (
-        "resolved", al.LITERAL_METHOD, None, "literal")
-    assert rows["met-2", "title", "Ahmose"]["target_ids"] != [al.literal_target("site", "Ahmose")]
+    assert (reign["status"], reign["authority"], reign["resolver_version"], reign["mode"], reign["resolution"]) == (
+        "resolved", "literal", al.snapshot("literal")["resolver_version"], "literal", None)
+    assert rows["met-2", "title", "Ahmose"]["target_ids"] == [al.literal_target("ruler", "Ahmose")]
+    assert al.literal_target("ruler", "Ahmose") != al.literal_target("site", "Ahmose")
+    assert rows["brooklyn-5", "geographicalLocations[0].name", "KV 62"]["target_ids"] == [
+        al.literal_target("tomb_monument", "kv 62")]
     # Abstentions do not depend on the mode.
     assert (rows["brooklyn-5", "title", "Akhenaten"]["status"], rows["brooklyn-5", "title", "Akhenaten"]["reason"]) == (
         "abstained", "expression:multi_or_range")
@@ -128,6 +127,9 @@ def test_a_link_joins_a_record_to_a_target_on_its_resolved_mentions(authority) -
          "relation": "identity", "mode": "authority", "resolver_version": version,
          "mention_ids": [ids["brooklyn-5", "geographicalLocations[0].name", "Deir el-Bahri"]],
          "evidence_roles": ["Excavation Site"]},
+        {"artifact_id": "brooklyn-5", "museum": "brooklyn", "entity_type": "tomb_monument", "target_id": TOMB_KV62,
+         "relation": "identity", "mode": "authority", "resolver_version": version,
+         "mention_ids": [ids["brooklyn-5", "geographicalLocations[0].name", "KV 62"]], "evidence_roles": ["role"]},
         {"artifact_id": "met-1", "museum": "met", "entity_type": "ruler", "target_id": KING_AMENHOTEP_III,
          "relation": "identity", "mode": "authority", "resolver_version": version,
          "mention_ids": sorted([ids["met-1", "reign", "Amenhotep III"], ids["met-1", "title", "Amenhotep III"]]),
@@ -150,32 +152,58 @@ def test_bad_input_fails_loud(authority) -> None:
         al.resolve_mentions([{**MENTIONS[0], "entity_type": "dynasty"}], "literal", None)
 
 
-def test_the_resolver_version_covers_the_files_the_resolution_reads(authority, monkeypatch, tmp_path) -> None:
+def test_the_resolver_version_covers_every_module_and_file_the_resolution_reads(authority) -> None:
+    """Every `pipeline.authority` and `pipeline.enrich` module a fresh interpreter imports to
+    extract mentions, load the authority and resolve, and every data file the modules name, is
+    hashed."""
+    code = ("import sys, json; from pipeline.enrich import mentions, authority_links as al; al.load_authority(); "
+            "print(json.dumps(sorted(m.__file__ for n, m in sys.modules.items() if getattr(m, '__file__', None) "
+            "and n.startswith(('pipeline.authority', 'pipeline.enrich')))))")
+    loaded = json.loads(subprocess.run([sys.executable, "-c", code], check=True, capture_output=True, text=True,
+                                       cwd=al.REPO / "pipeline").stdout)
     files = authority.snapshot["files"]
-    for path in (resolver.GRAPH, resolver.IDAI, royal_women.DODSON_HILTON, royal_women.SAME_WOMAN,
-                 royal_women.FEMALE_RULERS, tla_links.TLA, tla_links.LINKS_DIR / "decisions.jsonl"):
+    assert sorted(str(Path(f).relative_to(al.REPO)) for f in loaded) == sorted(
+        f for f in files if f.endswith(".py"))
+    for path in (resolver.GRAPH, resolver.IDAI, resolver.PM_THEBAN, resolver.PM_MEMPHIS, royal_women.DODSON_HILTON,
+                 royal_women.SAME_WOMAN, royal_women.FEMALE_RULERS, tla_links.TLA, tla_links.LINKS_DIR / "decisions.jsonl"):
         assert str(path.relative_to(al.REPO)) in files
-    assert len(files) == len(al.SNAPSHOT_FILES) == 15
-    # Any file's change changes the version.
-    changed = tmp_path / "claim-graph.json"
-    changed.write_text(json.dumps({"changed": True}), encoding="utf-8")
-    real = al.sha256_path
-    monkeypatch.setattr(al, "sha256_path", lambda p: real(changed) if Path(p) == resolver.GRAPH else real(p))
-    assert al.authority_snapshot()["resolver_version"] != authority.snapshot["resolver_version"]
+    assert (authority.snapshot["mode"], authority.snapshot["unicode"]) == ("authority", unicodedata.unidata_version)
+    assert sorted(al.snapshot("literal")["files"]) == [
+        "pipeline/pipeline/authority/resolver.py", "pipeline/pipeline/enrich/authority_links.py",
+        "pipeline/pipeline/enrich/mentions.py"]
+
+
+def test_the_qualified_scopes_are_the_evaluations_verdicts() -> None:
+    assert al.QUALIFIED_SCOPES == {
+        "site": {("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard")},
+        "ruler": {("met", "brooklyn")},
+        "tomb_monument": set(),
+    }
+    assert set(al.QUALIFIED_SCOPES) == set(al.RESOLVED_TYPES)
 
 
 def test_the_committed_promotion_check_holds_and_is_of_the_frozen_inputs() -> None:
     """`docs/evaluations/authority-bridge-338/results/promotion-check.json`: the production step
-    on the frozen corpus gives #361's mentions and resolutions, but for #369's changes."""
+    on the frozen corpus gives #361's mentions and resolutions but for #369's changes, which it
+    gives as #369 measured them, and #337's site and tomb resolutions and literal targets. The
+    run files it compared against are the ones #361's run manifest pins. (The snapshot it records
+    names the code it measured; the live guards against drift are the identity tests.)"""
     evaluations = al.REPO / "docs/evaluations"
     result = json.loads((evaluations / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
-    ledger = json.loads((evaluations / "ruler-reregistration-2026-10-15/results/ledger-diff.json").read_text(
-        encoding="utf-8"))
+    proof = json.loads((evaluations / "ruler-reregistration-2026-10-15/results/real-run-manifest.json").read_text(
+        encoding="utf-8"))["identical_mentions_proof"]
+    assert result["run_361_files"] == {
+        "mentions.ndjson.gz": proof["mention_ledger"]["gzip_sha256"],
+        "current-authority-arm.ndjson.gz": proof["current_authority_arm"]["gzip_sha256"],
+        "typed-literal-arm.ndjson.gz": proof["typed_literal_arm"]["gzip_sha256"]}
     changes_369 = json.loads((evaluations / "resolver-gaps-369/results/resolver-change.json").read_text(
         encoding="utf-8"))["royal_woman_cued_mentions"]
-    assert result["run_361_files"]["mentions.ndjson.gz"] == ledger["ledger_gzip_sha256"]
     assert result["mentions"] == {"production": 148964, "ledger_361": 148964, "rows_equal": True}
-    assert result["rulers_vs_361_authority_arm"] == {
-        "compared": 11648, "differ": changes_369["changed"], "differ_outside_369_changed_records": []}
-    assert result["sites_vs_linkability_adapter"] == {"compared": 113738, "differ": []}
+    rulers = result["rulers_vs_361_authority_arm"]
+    assert (rulers["compared"], len(rulers["differ_as_369_measured"]), rulers["differ_otherwise"]) == (
+        11648, changes_369["changed"], [])
+    assert result["places_vs_linkability_adapter"] == {
+        "compared": {"site": 113738, "tomb_monument": 4863}, "differ": {"site": [], "tomb_monument": []}}
     assert result["rulers_vs_361_literal_arm"] == {"compared": 11648, "differ": []}
+    assert result["places_vs_337_literal_arm"] == {"compared": 118601, "differ": []}
+    assert set(result["snapshot"]) == {"authority", "literal"}

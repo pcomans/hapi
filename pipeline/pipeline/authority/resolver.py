@@ -1,12 +1,12 @@
 """The authority resolvers for museum mentions: rulers on the claim graph's identity clusters,
-sites on the reconciled iDAI gazetteer rows.
+sites on the reconciled iDAI gazetteer rows, tombs on Porter & Moss's reconciled tomb rows.
 
 Promoted for production (#338) from the evaluations' linkability adapter
 (`docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py`), whose file
 stays as it is because earlier evaluations pin it by hash. The rule is the same: a mention's
 exact surface (NFC, whitespace, casefold) first; only if it meets no label, the normalized
 keys (rulers: the claim graph's transliteration and phonetic keys, never its lossy skeleton;
-sites: letters and digits only, diacritics removed). One target is resolved, several are
+sites and tombs: letters and digits only, diacritics removed). One target is resolved, several are
 ambiguous, none is unmatched. `pipeline/tests/test_authority_resolver.py` holds it equal to
 the adapter on every label of the authority; `docs/evaluations/authority-bridge-338/results/
 promotion-check.json` on every mention of the frozen corpus.
@@ -26,7 +26,10 @@ from .claimgraph.normalize import NameForm, keys_for_form
 
 REPO = Path(__file__).resolve().parents[3]
 GRAPH = REPO / "web-claimgraph" / "data" / "claim-graph.json"
-IDAI = Path(__file__).resolve().parent / "sources" / "idai-gazetteer" / "reconciled.jsonl"
+SOURCES = Path(__file__).resolve().parent / "sources"
+IDAI = SOURCES / "idai-gazetteer" / "reconciled.jsonl"
+PM_THEBAN = SOURCES / "porter-moss-theban-necropolis" / "reconciled.jsonl"
+PM_MEMPHIS = SOURCES / "porter-moss-memphis" / "reconciled.jsonl"
 NAME_PREDICATES = {"hapi:display_name", "hapi:prenomen", "hapi:horus_name", "hapi:nomen"}
 WS = re.compile(r"\s+")
 
@@ -162,4 +165,26 @@ def build_site_resolver(rows: list[dict]) -> tuple[Resolver, dict]:
             "parent_in_file": row.get("parent_in_file"),
             "cross_refs": row.get("cross_refs") or {},
         }
+    return resolver, catalog
+
+
+def build_pm_resolver() -> tuple[Resolver, dict]:
+    """One target per Porter & Moss tomb row (Theban necropolis, Memphis), labelled by its tomb
+    id and tomb aliases only: never its occupants, areas or notes."""
+    resolver = Resolver()
+    catalog = {}
+    for source, path in (("pm_theban", PM_THEBAN), ("pm_memphis", PM_MEMPHIS)):
+        for row in sorted(load_jsonl(path), key=lambda r: r["tomb_id"]):
+            target_id = f"{source}:{row['tomb_id']}"
+            resolver.add(Target(target_id, row["tomb_id"], "tomb_monument", f"{source}_reconciled_source_row"),
+                         [row["tomb_id"], *(row.get("tomb_aliases") or [])], place_norm_set)
+            catalog[target_id] = {
+                "label": row["tomb_id"],
+                "entity_type": "tomb_monument",
+                "representation": f"{source}_reconciled_source_row",
+                "aliases": row.get("tomb_aliases") or [],
+                "occupant_name": row.get("occupant_name"),
+                "area": row.get("theban_area") or row.get("memphite_area"),
+                "source_citation": row.get("source_citation"),
+            }
     return resolver, catalog
