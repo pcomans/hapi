@@ -37,7 +37,28 @@ def write_once(archive: Path, root: Path) -> dict:
     return link_files.write_run(root, lambda: (canonical, raw))
 
 
+EVALUATIONS = REPO / "docs/evaluations"
+# The records #369's fixes were found on and changed (`resolver-gaps-369/README.md`, "Tuned on
+# #361's deciding case"): the two Queen Ahmose records and #361's Neferu d. A next registration
+# must flag them; this report gives every scope with and without them.
+TUNED_ON_369 = frozenset({"brooklyn-3634", "met-566763", "brooklyn-3599"})
+# The code the report itself runs.
+REPORT_CODE = (REPO / "pipeline/pipeline/enrich/cross_museum.py", Path(__file__).resolve())
+
+
+def evaluation_headline(name: str) -> dict:
+    """An evaluation's committed headline, as its `real-run-report.json` gives it: each arm's
+    records on targets shared by any two museums, by museum."""
+    report = json.loads((EVALUATIONS / name / "results/real-run-report.json").read_text(encoding="utf-8"))
+    return {arm: {museum: values["records_on_any_two_museum_shared_useful_nodes"]
+                  for museum, values in report["arms"][arm]["per_museum"].items()}
+            for arm in ("typed_literal", "current_authority")}
+
+
 def end_to_end(archive: Path) -> dict:
+    changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(encoding="utf-8"))
+    if not TUNED_ON_369 <= {c["artifact_id"] for c in changes["royal_woman_cued_mentions"]["changes"]}:
+        raise ValueError("a tuned-on record is not among #369's changes")
     with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
         manifests = []
         for seed, root in (("1", first), ("2", second)):
@@ -45,24 +66,34 @@ def end_to_end(archive: Path) -> dict:
                                  check=True, capture_output=True, text=True,
                                  env={**os.environ, "PYTHONHASHSEED": seed})
             manifests.append(json.loads(out.stdout))
-        contents = [{name: link_files.content_sha256(name, (Path(root) / m["run_id"] / name).read_bytes())
-                     for name in m["files"]} for root, m in ((first, manifests[0]), (second, manifests[1]))]
-        if manifests[0] != manifests[1] or contents[0] != contents[1]:
+        runs = [Path(root) / m["run_id"] for root, m in ((first, manifests[0]), (second, manifests[1]))]
+        contents = [{name: link_files.content_sha256(name, (run / name).read_bytes()) for name in m["files"]}
+                    for run, m in zip(runs, manifests)]
+        reports = [cross_museum.report(run) for run in runs]
+        if manifests[0] != manifests[1] or contents[0] != contents[1] or reports[0] != reports[1]:
             raise ValueError("two runs on the same inputs and code differ")
         manifest = manifests[0]
-        measured = cross_museum.report(Path(first) / manifest["run_id"])
+        without_tuned_on = cross_museum.report(runs[0], exclude=TUNED_ON_369)
     return {
-        "schema_version": "hapi-338-end-to-end/1",
+        "schema_version": "hapi-338-end-to-end/2",
         "corpus_archive_sha256": ARCHIVE_SHA256,
-        "run_id": manifest["run_id"],
+        "run_ids": [m["run_id"] for m in manifests],
         "inputs_sha256": manifest["inputs_sha256"],
         "writer_sha256": manifest["writer_sha256"],
         "resolver_versions": {mode: s["resolver_version"] for mode, s in manifest["snapshots"].items()},
-        "two_runs": {"python_hash_seeds": ["1", "2"], "same_manifest_and_contents": True},
+        "report_sha256": {str(p.relative_to(REPO)): link_files.hashlib.sha256(p.read_bytes()).hexdigest()
+                          for p in REPORT_CODE},
+        "two_runs": {"python_hash_seeds": ["1", "2"], "same_manifest_contents_and_report": True},
         "files": manifest["files"],
         "outcomes": manifest["outcomes"],
         "inventory": manifest["inventory"],
-        "matching": measured,
+        "matching": reports[0],
+        "tuned_on_369": sorted(TUNED_ON_369),
+        "matching_without_tuned_on_369": without_tuned_on,
+        # What #337 (sites, rulers and tombs; its own mention ledger and code of 2026-10-11) and #361
+        # (rulers only; this mention ledger) reported, to set beside this run.
+        "evaluation_headlines": {"337": evaluation_headline("authority-independent-control-2026-10-11"),
+                                 "361": evaluation_headline("ruler-reregistration-2026-10-15")},
     }
 
 
@@ -75,6 +106,8 @@ def main() -> None:
     if args.write_once:
         print(json.dumps(write_once(args.archive, args.write_once)))
         return
+    if args.out is None:
+        parser.error("--out is required")
     result = end_to_end(args.archive)
     args.out.write_text(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 

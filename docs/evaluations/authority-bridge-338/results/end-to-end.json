@@ -1,5 +1,31 @@
 {
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "evaluation_headlines": {
+    "337": {
+      "current_authority": {
+        "brooklyn": 1156,
+        "harvard": 8,
+        "met": 14502
+      },
+      "typed_literal": {
+        "brooklyn": 2894,
+        "harvard": 534,
+        "met": 27330
+      }
+    },
+    "361": {
+      "current_authority": {
+        "brooklyn": 19,
+        "harvard": 2,
+        "met": 1955
+      },
+      "typed_literal": {
+        "brooklyn": 19,
+        "harvard": 2,
+        "met": 1981
+      }
+    }
+  },
   "files": {
     "links-authority.ndjson.gz": {
       "content_sha256": "1dd11f6a011c046a3e9aef3da3663d8e1c4cc6eb5c41c6459aac61cd90e3773e",
@@ -174,25 +200,69 @@
         },
         "shared_targets_authority": 2,
         "shared_targets_literal": 2,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "brooklyn": {
-              "1": 0.8333,
-              "5": 1.0
+              "1": {
+                "share": 0.8333,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
             },
             "harvard": {
-              "1": 0.5,
-              "5": 1.0
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
             }
           },
           "literal": {
             "brooklyn": {
-              "1": 0.8333,
-              "5": 1.0
+              "1": {
+                "share": 0.8333,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
             },
             "harvard": {
-              "1": 0.5,
-              "5": 1.0
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              }
             }
           }
         }
@@ -215,25 +285,81 @@
         },
         "shared_targets_authority": 14,
         "shared_targets_literal": 13,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "brooklyn": {
-              "1": 0.25,
-              "5": 0.55
+              "1": {
+                "share": 0.25,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 0.55,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "cluster-beckerath-19.03",
+                  "dodson_hilton:Nefertiti",
+                  "cluster-beckerath-05.06",
+                  "cluster-beckerath-12.05"
+                ]
+              }
             },
             "met": {
-              "1": 0.4686,
-              "5": 0.9683
+              "1": {
+                "share": 0.4686,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 0.9683,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "cluster-beckerath-19.03",
+                  "cluster-beckerath-19.07",
+                  "cluster-beckerath-26.04",
+                  "cluster-beckerath-18.15"
+                ]
+              }
             }
           },
           "literal": {
             "brooklyn": {
-              "1": 0.2632,
-              "5": 0.5789
+              "1": {
+                "share": 0.2632,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 0.5789,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+                  "literal:d1de1bd67c1c69141d8bcf6d6adda93792c71de2a381e17bd0d816ca696defc0",
+                  "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
             },
             "met": {
-              "1": 0.4629,
-              "5": 0.9566
+              "1": {
+                "share": 0.4629,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 0.9566,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+                  "literal:29755d9013fc60a88e5aca3a361a4b61f48fb3f566a1e4e7f84f1e5ff41bb5ff",
+                  "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+                  "literal:91cb6d55c55a8c9fddcbb7bd47aa3672a0d47d022afd199d75fa5c8fc79c2727"
+                ]
+              }
             }
           }
         }
@@ -256,25 +382,69 @@
         },
         "shared_targets_authority": 2,
         "shared_targets_literal": 2,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "harvard": {
-              "1": 0.5,
-              "5": 1.0
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
             },
             "met": {
-              "1": 0.9967,
-              "5": 1.0
+              "1": {
+                "share": 0.9967,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
             }
           },
           "literal": {
             "harvard": {
-              "1": 0.5,
-              "5": 1.0
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              }
             },
             "met": {
-              "1": 0.9957,
-              "5": 1.0
+              "1": {
+                "share": 0.9957,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
             }
           }
         }
@@ -297,25 +467,79 @@
         },
         "shared_targets_authority": 4,
         "shared_targets_literal": 6,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "brooklyn": {
-              "1": 0.9639,
-              "5": 1.0
+              "1": {
+                "share": 0.9639,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
             },
             "harvard": {
-              "1": 0.5714,
-              "5": 1.0
+              "1": {
+                "share": 0.5714,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
             }
           },
           "literal": {
             "brooklyn": {
-              "1": 1.0,
-              "5": 1.0
+              "1": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ]
+              }
             },
             "harvard": {
-              "1": 0.9808,
-              "5": 0.9981
+              "1": {
+                "share": 0.9808,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9981,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ]
+              }
             }
           }
         }
@@ -338,25 +562,81 @@
         },
         "shared_targets_authority": 47,
         "shared_targets_literal": 58,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "brooklyn": {
-              "1": 0.278,
-              "5": 0.7785
+              "1": {
+                "share": 0.278,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 0.7785,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877"
+                ]
+              }
             },
             "met": {
-              "1": 0.7932,
-              "5": 0.7936
+              "1": {
+                "share": 0.7932,
+                "target_ids": [
+                  "idai:2379505"
+                ]
+              },
+              "5": {
+                "share": 0.7936,
+                "target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494"
+                ]
+              }
             }
           },
           "literal": {
             "brooklyn": {
-              "1": 0.9969,
-              "5": 0.9969
+              "1": {
+                "share": 0.9969,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9969,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                  "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4"
+                ]
+              }
             },
             "met": {
-              "1": 0.977,
-              "5": 0.9838
+              "1": {
+                "share": 0.977,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9838,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                  "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c"
+                ]
+              }
             }
           }
         }
@@ -379,25 +659,77 @@
         },
         "shared_targets_authority": 3,
         "shared_targets_literal": 6,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "harvard": {
-              "1": 0.6667,
-              "5": 1.0
+              "1": {
+                "share": 0.6667,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ]
+              }
             },
             "met": {
-              "1": 0.9012,
-              "5": 1.0
+              "1": {
+                "share": 0.9012,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ]
+              }
             }
           },
           "literal": {
             "harvard": {
-              "1": 1.0,
-              "5": 1.0
+              "1": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ]
+              }
             },
             "met": {
-              "1": 0.9979,
-              "5": 1.0
+              "1": {
+                "share": 0.9979,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ]
+              }
             }
           }
         }
@@ -420,25 +752,49 @@
         },
         "shared_targets_authority": 0,
         "shared_targets_literal": 0,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "brooklyn": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             },
             "harvard": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             }
           },
           "literal": {
             "brooklyn": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             },
             "harvard": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             }
           }
         }
@@ -461,25 +817,49 @@
         },
         "shared_targets_authority": 0,
         "shared_targets_literal": 0,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "brooklyn": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             },
             "met": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             }
           },
           "literal": {
             "brooklyn": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             },
             "met": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             }
           }
         }
@@ -502,42 +882,919 @@
         },
         "shared_targets_authority": 0,
         "shared_targets_literal": 0,
-        "top_target_share": {
+        "top_targets": {
           "authority": {
             "harvard": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             },
             "met": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             }
           },
           "literal": {
             "harvard": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             },
             "met": {
-              "1": null,
-              "5": null
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
             }
           }
         }
       }
     },
-    "connected_records_by_entity_type": {
-      "ruler": {
-        "authority": 1979,
-        "literal": 2002
+    "records_on_shared_targets_any_type": {
+      "authority": {
+        "brooklyn": 1159,
+        "harvard": 9,
+        "met": 14523
       },
-      "site": {
-        "authority": 15552,
-        "literal": 30622
+      "literal": {
+        "brooklyn": 2894,
+        "harvard": 534,
+        "met": 27330
+      }
+    }
+  },
+  "matching_without_tuned_on_369": {
+    "by_museum": {
+      "brooklyn|ruler": {
+        "authority": {
+          "connected_records": 19,
+          "linked_records": 23
+        },
+        "literal": {
+          "connected_records": 17,
+          "linked_records": 54
+        }
       },
-      "tomb_monument": {
-        "authority": 0,
-        "literal": 0
+      "brooklyn|site": {
+        "authority": {
+          "connected_records": 1150,
+          "linked_records": 1233
+        },
+        "literal": {
+          "connected_records": 2888,
+          "linked_records": 2976
+        }
+      },
+      "brooklyn|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 22
+        }
+      },
+      "harvard|ruler": {
+        "authority": {
+          "connected_records": 2,
+          "linked_records": 3
+        },
+        "literal": {
+          "connected_records": 2,
+          "linked_records": 3
+        }
+      },
+      "harvard|site": {
+        "authority": {
+          "connected_records": 7,
+          "linked_records": 267
+        },
+        "literal": {
+          "connected_records": 534,
+          "linked_records": 540
+        }
+      },
+      "harvard|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "met|ruler": {
+        "authority": {
+          "connected_records": 1955,
+          "linked_records": 8868
+        },
+        "literal": {
+          "connected_records": 1923,
+          "linked_records": 9164
+        }
+      },
+      "met|site": {
+        "authority": {
+          "connected_records": 14392,
+          "linked_records": 15018
+        },
+        "literal": {
+          "connected_records": 27197,
+          "linked_records": 27888
+        }
+      },
+      "met|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 3199
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 4780
+        }
+      }
+    },
+    "by_museum_pair": {
+      "ruler|brooklyn|harvard": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 6,
+            "connected_literal": 6,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 2,
+            "connected_literal": 2,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_targets_authority": 2,
+        "shared_targets_literal": 2,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.8333,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 0.8333,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ruler|met|brooklyn": {
+        "qualified": true,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 19,
+            "connected_literal": 17,
+            "gained": 2,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 1955,
+            "connected_literal": 1923,
+            "gained": 33,
+            "lost": 1
+          }
+        },
+        "shared_targets_authority": 13,
+        "shared_targets_literal": 11,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.2632,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 0.5789,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "cluster-beckerath-19.03",
+                  "dodson_hilton:Nefertiti",
+                  "cluster-beckerath-05.06",
+                  "cluster-beckerath-12.05"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.4691,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 0.9693,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "cluster-beckerath-19.03",
+                  "cluster-beckerath-19.07",
+                  "cluster-beckerath-26.04",
+                  "cluster-beckerath-18.15"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 0.2941,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 0.6471,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+                  "literal:d1de1bd67c1c69141d8bcf6d6adda93792c71de2a381e17bd0d816ca696defc0",
+                  "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.4769,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 0.9813,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+                  "literal:29755d9013fc60a88e5aca3a361a4b61f48fb3f566a1e4e7f84f1e5ff41bb5ff",
+                  "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+                  "literal:a7570b9e0fb995dda1cbc808bdd5e39293e58342522345b00bab63b8aa3dafce"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ruler|met|harvard": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 2,
+            "connected_literal": 2,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 920,
+            "connected_literal": 921,
+            "gained": 0,
+            "lost": 1
+          }
+        },
+        "shared_targets_authority": 2,
+        "shared_targets_literal": 2,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9967,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9957,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "site|brooklyn|harvard": {
+        "qualified": true,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 332,
+            "connected_literal": 2879,
+            "gained": 0,
+            "lost": 2547
+          },
+          "harvard": {
+            "connected_authority": 7,
+            "connected_literal": 520,
+            "gained": 1,
+            "lost": 514
+          }
+        },
+        "shared_targets_authority": 4,
+        "shared_targets_literal": 6,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.9639,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.5714,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.9808,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9981,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "site|met|brooklyn": {
+        "qualified": true,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 1149,
+            "connected_literal": 2888,
+            "gained": 0,
+            "lost": 1739
+          },
+          "met": {
+            "connected_authority": 14392,
+            "connected_literal": 27197,
+            "gained": 136,
+            "lost": 12941
+          }
+        },
+        "shared_targets_authority": 47,
+        "shared_targets_literal": 58,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.2785,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 0.7781,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.7932,
+                "target_ids": [
+                  "idai:2379505"
+                ]
+              },
+              "5": {
+                "share": 0.7936,
+                "target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 0.9969,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9969,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                  "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.977,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9838,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                  "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "site|met|harvard": {
+        "qualified": true,
+        "records": {
+          "harvard": {
+            "connected_authority": 6,
+            "connected_literal": 534,
+            "gained": 0,
+            "lost": 528
+          },
+          "met": {
+            "connected_authority": 506,
+            "connected_literal": 26627,
+            "gained": 1,
+            "lost": 26122
+          }
+        },
+        "shared_targets_authority": 3,
+        "shared_targets_literal": 6,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": 0.6667,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9012,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9979,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|brooklyn|harvard": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|met|brooklyn": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|met|harvard": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "records_on_shared_targets_any_type": {
+      "authority": {
+        "brooklyn": 1157,
+        "harvard": 9,
+        "met": 14522
+      },
+      "literal": {
+        "brooklyn": 2892,
+        "harvard": 534,
+        "met": 27328
       }
     }
   },
@@ -575,18 +1832,30 @@
       "tomb_monument|resolved|": 4863
     }
   },
+  "report_sha256": {
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "7d4e2e65e826749a412c554d2d36784de5b1a90881daaa6714b46937e095f47d",
+    "pipeline/pipeline/enrich/cross_museum.py": "6a3e5e4c67a6486c821d1e93b13271bed11acac472f04e85da0f706d11bca513"
+  },
   "resolver_versions": {
     "authority": "72a60c4dd928ad31bb8f1a1843dc866042f37077c27b9da82ac1072ce9c147bc",
     "literal": "b0172dc3cbbf65a4f43edb6fd0a5d24b6c1f29772d141ac82e5ddac1f996114b"
   },
-  "run_id": "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6",
-  "schema_version": "hapi-338-end-to-end/1",
+  "run_ids": [
+    "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6",
+    "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6"
+  ],
+  "schema_version": "hapi-338-end-to-end/2",
+  "tuned_on_369": [
+    "brooklyn-3599",
+    "brooklyn-3634",
+    "met-566763"
+  ],
   "two_runs": {
     "python_hash_seeds": [
       "1",
       "2"
     ],
-    "same_manifest_and_contents": true
+    "same_manifest_contents_and_report": true
   },
   "writer_sha256": "8a7521a39f8d8d32832052fce0b8e2e146a3f705a15db928c6d8c081b03bba50"
 }

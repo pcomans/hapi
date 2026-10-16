@@ -1,93 +1,166 @@
-"""Cross-museum matching over a run's links, authority on or off (#338 step 3)."""
+"""Cross-museum connections over a run's links, authority on or off (#338 step 3)."""
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 
 from pipeline.enrich import authority_links as al, cross_museum as cm, link_files as lf
 
+EVALUATIONS = al.REPO / "docs/evaluations"
+
 
 def link(artifact_id: str, entity_type: str, target: str, mode: str = "authority") -> dict:
     return {"artifact_id": artifact_id, "museum": artifact_id.split("-")[0], "entity_type": entity_type,
-            "target_id": target, "mode": mode, "relation": "identity", "mention_ids": [f"m-{artifact_id}"],
+            "target_id": target, "mode": mode, "relation": "identity", "mention_ids": [f"m-{artifact_id}-{target}"],
             "evidence_roles": ["r"], "resolver_version": "v", "target_kind": "x"}
 
 
-# Authority: met-1 and brooklyn-1 share Thebes (both modes would); met-2 and brooklyn-2 share a
-# king that plain text splits (gained); plain text joins met-3 and harvard-3 on a broad literal
-# the authority leaves unresolved (lost).
-AUTHORITY = [link("met-1", "site", "idai:thebes"), link("brooklyn-1", "site", "idai:thebes"),
-             link("met-2", "ruler", "king:horemheb"), link("brooklyn-2", "ruler", "king:horemheb"),
-             link("harvard-3", "site", "idai:abydos")]
+def write_run(root: Path, authority: list[dict], literal: list[dict]) -> Path:
+    """A run directory as `link_files` writes one (the manifest digests to its name), holding
+    these links."""
+    files = {"links-authority.ndjson.gz": lf.gzip_rows(authority), "links-literal.ndjson.gz": lf.gzip_rows(literal)}
+    body = {"files": {n: {"content_sha256": lf.content_sha256(n, d), "rows": None} for n, d in files.items()}}
+    run_id = lf.manifest_digest(body)
+    run = root / run_id
+    run.mkdir(parents=True)
+    for name, data in files.items():
+        (run / name).write_bytes(data)
+    (run / "manifest.json").write_text(json.dumps({**body, "run_id": run_id}))
+    return run
+
+
+# Sites: Thebes is shared by all three museums (met-1, met-4, brooklyn-1, harvard-1), Abydos by
+# Met and Brooklyn (met-1, met-2, met-5, met-6, brooklyn-2); met-1 carries both. Plain text joins
+# met-3 and harvard-3 on a broad literal the authority leaves unresolved, and splits Abydos.
+# Rulers: met-7 and brooklyn-7 share a king that plain text spells apart.
+AUTHORITY = [link("met-1", "site", "idai:thebes"), link("met-4", "site", "idai:thebes"),
+             link("brooklyn-1", "site", "idai:thebes"), link("harvard-1", "site", "idai:thebes"),
+             link("met-1", "site", "idai:abydos"), link("met-2", "site", "idai:abydos"),
+             link("met-5", "site", "idai:abydos"), link("met-6", "site", "idai:abydos"),
+             link("brooklyn-2", "site", "idai:abydos"), link("harvard-3", "site", "idai:saqqara"),
+             link("met-7", "ruler", "king:horemheb"), link("brooklyn-7", "ruler", "king:horemheb")]
 LITERAL = [link("met-1", "site", "literal:thebes", "literal"), link("brooklyn-1", "site", "literal:thebes", "literal"),
-           link("met-2", "ruler", "literal:haremhab", "literal"), link("brooklyn-2", "ruler", "literal:horemheb", "literal"),
-           link("met-3", "site", "literal:egypt", "literal"), link("harvard-3", "site", "literal:egypt", "literal")]
+           link("met-2", "site", "literal:abydos", "literal"), link("brooklyn-2", "site", "literal:abydos-1", "literal"),
+           link("met-3", "site", "literal:egypt", "literal"), link("harvard-3", "site", "literal:egypt", "literal"),
+           link("met-7", "ruler", "literal:haremhab", "literal"), link("brooklyn-7", "ruler", "literal:horemheb", "literal")]
 
 
 @pytest.fixture
 def run(tmp_path) -> Path:
-    (tmp_path / "links-authority.ndjson.gz").write_bytes(lf.gzip_rows(AUTHORITY))
-    (tmp_path / "links-literal.ndjson.gz").write_bytes(lf.gzip_rows(LITERAL))
-    return tmp_path
+    return write_run(tmp_path, AUTHORITY, LITERAL)
 
 
-def test_a_record_matches_the_records_of_other_museums_on_its_targets(run) -> None:
-    assert cm.matches(cm.load_links(run, "authority"), "met-2") == {
-        "ruler": [{"target_id": "king:horemheb", "records": {"brooklyn": ["brooklyn-2"]}}]}
-    assert cm.matches(cm.load_links(run, "literal"), "met-2") == {}
-    assert cm.matches(cm.load_links(run, "literal"), "met-3") == {
-        "site": [{"target_id": "literal:egypt", "records": {"harvard": ["harvard-3"]}}]}
-    with pytest.raises(ValueError, match="unknown mode"):
-        cm.load_links(run, "fuzzy")
-
-
-def test_the_report_counts_what_the_authority_gains_and_loses_by_pair_and_type(run) -> None:
+def test_the_report_counts_connections_by_pair_type_and_side(run) -> None:
     r = cm.report(run)
-    assert r["by_museum_pair"]["ruler|met|brooklyn"] == {
-        "qualified": True, "shared_targets_authority": 1, "shared_targets_literal": 0,
-        "records": {"met": {"connected_authority": 1, "connected_literal": 0, "gained": 1, "lost": 0},
-                    "brooklyn": {"connected_authority": 1, "connected_literal": 0, "gained": 1, "lost": 0}},
-        "top_target_share": {"authority": {"met": {"1": 1.0, "5": 1.0}, "brooklyn": {"1": 1.0, "5": 1.0}},
-                             "literal": {"met": {"1": None, "5": None}, "brooklyn": {"1": None, "5": None}}}}
-    assert r["by_museum_pair"]["site|met|brooklyn"]["records"] == {
-        "met": {"connected_authority": 1, "connected_literal": 1, "gained": 0, "lost": 0},
-        "brooklyn": {"connected_authority": 1, "connected_literal": 1, "gained": 0, "lost": 0}}
-    assert r["by_museum_pair"]["site|met|harvard"]["records"] == {
-        "met": {"connected_authority": 0, "connected_literal": 1, "gained": 0, "lost": 1},
-        "harvard": {"connected_authority": 0, "connected_literal": 1, "gained": 0, "lost": 1}}
+    mb = r["by_museum_pair"]["site|met|brooklyn"]
+    assert (mb["qualified"], mb["shared_targets_authority"], mb["shared_targets_literal"]) == (True, 2, 1)
+    assert mb["records"] == {
+        "met": {"connected_authority": 5, "connected_literal": 1, "gained": 4, "lost": 0},
+        "brooklyn": {"connected_authority": 2, "connected_literal": 1, "gained": 1, "lost": 0}}
+    # Abydos carries four Met records, Thebes two; one record (met-1) is on both.
+    assert mb["top_targets"]["authority"]["met"] == {
+        "1": {"target_ids": ["idai:abydos"], "share": 0.8}, "5": {"target_ids": ["idai:abydos", "idai:thebes"], "share": 1.0}}
+    assert mb["top_targets"]["authority"]["brooklyn"] == {
+        "1": {"target_ids": ["idai:abydos"], "share": 0.5}, "5": {"target_ids": ["idai:abydos", "idai:thebes"], "share": 1.0}}
+    assert mb["top_targets"]["literal"]["met"] == {
+        "1": {"target_ids": ["literal:thebes"], "share": 1.0}, "5": {"target_ids": ["literal:thebes"], "share": 1.0}}
+    mh = r["by_museum_pair"]["site|met|harvard"]
+    assert mh["records"] == {
+        "met": {"connected_authority": 2, "connected_literal": 1, "gained": 2, "lost": 1},
+        "harvard": {"connected_authority": 1, "connected_literal": 1, "gained": 1, "lost": 1}}
+    assert r["by_museum_pair"]["ruler|met|brooklyn"]["records"]["met"] == {
+        "connected_authority": 1, "connected_literal": 0, "gained": 1, "lost": 0}
     assert r["by_museum_pair"]["ruler|met|harvard"]["qualified"] is False
     assert r["by_museum_pair"]["tomb_monument|met|brooklyn"]["qualified"] is False
     assert set(r["by_museum_pair"]) == {f"{t}|{a}|{b}" for t in al.RESOLVED_TYPES for a, b in al.MUSEUM_PAIRS}
-    assert r["by_museum"]["met|site"] == {"authority": {"linked_records": 1, "connected_records": 1},
-                                          "literal": {"linked_records": 2, "connected_records": 2}}
-    assert r["by_museum"]["harvard|site"] == {"authority": {"linked_records": 1, "connected_records": 0},
+    # A Met record is counted once though it is connected to Brooklyn and to Harvard.
+    assert r["by_museum"]["met|site"] == {"authority": {"linked_records": 5, "connected_records": 5},
+                                          "literal": {"linked_records": 3, "connected_records": 2}}
+    assert r["by_museum"]["harvard|site"] == {"authority": {"linked_records": 2, "connected_records": 1},
                                               "literal": {"linked_records": 1, "connected_records": 1}}
-    assert r["connected_records_by_entity_type"] == {
-        "ruler": {"authority": 2, "literal": 0}, "site": {"authority": 2, "literal": 4},
-        "tomb_monument": {"authority": 0, "literal": 0}}
+    assert r["records_on_shared_targets_any_type"] == {
+        "authority": {"brooklyn": 3, "harvard": 1, "met": 6}, "literal": {"brooklyn": 1, "harvard": 1, "met": 2}}
 
 
-def test_the_committed_end_to_end_run_is_consistent_and_flags_scopes_as_the_evaluations_did() -> None:
-    """`docs/evaluations/authority-bridge-338/results/end-to-end.json`: two runs in two
-    interpreters agreed, and each scope is flagged qualified exactly as `QUALIFIED_SCOPES` says."""
-    import json
-    result = json.loads((al.REPO / "docs/evaluations/authority-bridge-338/results/end-to-end.json").read_text(
-        encoding="utf-8"))
-    assert result["two_runs"] == {"python_hash_seeds": ["1", "2"], "same_manifest_and_contents": True}
+def test_excluded_records_leave_both_modes(run) -> None:
+    r = cm.report(run, exclude=frozenset({"brooklyn-2", "brooklyn-7"}))
+    assert r["by_museum_pair"]["site|met|brooklyn"]["records"]["met"] == {
+        "connected_authority": 2, "connected_literal": 1, "gained": 1, "lost": 0}
+    assert r["by_museum_pair"]["ruler|met|brooklyn"]["shared_targets_authority"] == 0
+
+
+def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> None:
+    with pytest.raises(ValueError, match="unknown mode"):
+        cm.load_links(run, "fuzzy")
+    (run / "links-literal.ndjson.gz").write_bytes(lf.gzip_rows(LITERAL[:1]))
+    with pytest.raises(ValueError, match="is not what that run wrote"):
+        cm.report(run)
+    other = write_run(tmp_path / "other", AUTHORITY + [link("louvre-1", "site", "idai:thebes")], LITERAL)
+    with pytest.raises(ValueError, match=r"links of museums no pair covers: \['louvre'\]"):
+        cm.report(other)
+
+
+@pytest.fixture(scope="module")
+def result() -> dict:
+    return json.loads((EVALUATIONS / "authority-bridge-338/results/end-to-end.json").read_text(encoding="utf-8"))
+
+
+def test_the_end_to_end_run_was_stable_and_of_the_proven_code(result) -> None:
+    """Two interpreters wrote the same run, and its resolver versions are the ones the step-1
+    proof (`promotion-check.json`) measured against #337 and #361."""
+    assert result["run_ids"][0] == result["run_ids"][1]
+    assert result["two_runs"] == {"python_hash_seeds": ["1", "2"], "same_manifest_contents_and_report": True}
+    promotion = json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
+    assert result["resolver_versions"] == {m: promotion["snapshot"][m]["resolver_version"] for m in al.MODES}
+    assert sorted(result["report_sha256"]) == [
+        "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py", "pipeline/pipeline/enrich/cross_museum.py"]
     assert {name: f["rows"] for name, f in result["files"].items()} == {
         "links-authority.ndjson.gz": 48994, "links-literal.ndjson.gz": 127711, "mentions.ndjson.gz": 148964,
         "resolutions-authority.ndjson.gz": 148964, "resolutions-literal.ndjson.gz": 148964}
-    pairs = result["matching"]["by_museum_pair"]
-    for key, row in pairs.items():
+    for key, row in result["matching"]["by_museum_pair"].items():
         entity, a, b = key.split("|")
         assert row["qualified"] == ((a, b) in al.QUALIFIED_SCOPES[entity]), key
-    assert pairs["ruler|met|brooklyn"]["records"] == {
-        "met": {"connected_authority": 1957, "connected_literal": 1981, "gained": 33, "lost": 57},
-        "brooklyn": {"connected_authority": 20, "connected_literal": 19, "gained": 2, "lost": 1}}
-    assert pairs["site|met|brooklyn"]["records"]["met"] == {
-        "connected_authority": 14393, "connected_literal": 27198, "gained": 136, "lost": 12941}
-    assert result["matching"]["connected_records_by_entity_type"] == {
-        "ruler": {"authority": 1979, "literal": 2002}, "site": {"authority": 15552, "literal": 30622},
-        "tomb_monument": {"authority": 0, "literal": 0}}
+
+
+def test_the_site_scopes_are_337s_evaluated_population(result) -> None:
+    """Every museum's site records connected in each mode equal #337 v10's committed report, so
+    the population #337 reviewed is the one the pipeline makes."""
+    arms = json.loads((EVALUATIONS / "authority-independent-control-2026-10-11/results/real-run-report.json").read_text(
+        encoding="utf-8"))["arms"]
+    for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
+        for museum in cm.MUSEUMS:
+            assert result["matching"]["by_museum"][f"{museum}|site"][mode]["connected_records"] == (
+                arms[arm]["per_museum"][museum]["by_entity_type"]["site"]["records_on_shared_useful_nodes"]), (arm, museum)
+    assert result["evaluation_headlines"]["337"]["typed_literal"] == result["matching"]["records_on_shared_targets_any_type"]["literal"]
+
+
+def test_the_ruler_scope_without_369s_tuned_on_records_is_361s(result) -> None:
+    """With #369's tuned-on records left out, the authority's Met-Brooklyn ruler connections are
+    #361's committed ones; with them, #369 adds one shared target (Ahmes B)."""
+    arm = json.loads((EVALUATIONS / "ruler-reregistration-2026-10-15/results/real-run-report.json").read_text(
+        encoding="utf-8"))["arms"]["current_authority"]["per_pair"]["met__brooklyn"]
+    without = result["matching_without_tuned_on_369"]["by_museum_pair"]["ruler|met|brooklyn"]
+    assert (without["shared_targets_authority"], without["records"]["met"]["connected_authority"],
+            without["records"]["brooklyn"]["connected_authority"]) == (
+        arm["shared_useful_node_count"], arm["records_by_museum_side"]["met"], arm["records_by_museum_side"]["brooklyn"])
+    with_ = result["matching"]["by_museum_pair"]["ruler|met|brooklyn"]
+    assert with_["shared_targets_authority"] == without["shared_targets_authority"] + 1
+    assert result["tuned_on_369"] == ["brooklyn-3599", "brooklyn-3634", "met-566763"]
+
+
+def test_the_largest_plain_text_site_targets_are_egypt_and_africa(result) -> None:
+    """Bound by the literal target's hash, no museum text committed: plain text's largest Met
+    target in Met-Brooklyn and Met-Harvard is "Egypt", Harvard's in Met-Harvard is "Africa"; the
+    authority resolves neither."""
+    pairs = result["matching"]["by_museum_pair"]
+    egypt, africa = al.literal_target("site", "Egypt"), al.literal_target("site", "Africa")
+    assert pairs["site|met|brooklyn"]["top_targets"]["literal"]["met"]["1"] == {"target_ids": [egypt], "share": 0.977}
+    assert pairs["site|met|brooklyn"]["top_targets"]["literal"]["brooklyn"]["1"]["target_ids"] == [egypt]
+    assert pairs["site|met|harvard"]["top_targets"]["literal"]["met"]["1"]["target_ids"] == [egypt]
+    assert pairs["site|met|harvard"]["top_targets"]["literal"]["harvard"]["1"] == {"target_ids": [africa], "share": 1.0}
+    authority = al.load_authority()
+    for place in ("Egypt", "Africa"):
+        assert authority.sites.resolve(place, al.resolver.place_norm_set)["status"] == "unmatched", place

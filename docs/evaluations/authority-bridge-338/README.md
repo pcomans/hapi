@@ -150,26 +150,34 @@ The CI tests need no private data:
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 
-## Step 3: cross-museum matching, authority on and off
+## Step 3: cross-museum connections, authority on and off
 
-- **`pipeline/pipeline/enrich/cross_museum.py`** reads a run's links in one mode; the mode is
-  the switch. Two records of different museums match when each is linked to the same target.
-  - `matches(links, artifact_id)` gives a record's matches.
-  - `report(run)` measures both modes and the change between them, by museum, museum pair and
-    entity type. For each pair it gives the shared targets, the records connected on each side,
-    the records the authority connects that plain text does not (`gained`) and the reverse
-    (`lost`), and how much of each side the largest 1 and 5 shared targets carry.
-  - Each scope is flagged `qualified` per `QUALIFIED_SCOPES`.
-- **`scripts/run_end_to_end.py`** writes `results/end-to-end.json`. It runs `write_run` twice
-  on the frozen corpus, in two interpreters with different `PYTHONHASHSEED`s and into fresh
-  directories. It requires both runs to have the same manifest and file contents, then reports
-  on the run.
+- **`pipeline/pipeline/enrich/cross_museum.py`, `report(run)`.** It reads a verified run's
+  links in both modes; the mode is the switch. Two records of different museums are connected
+  when each is linked to the same target. It gives, by museum, museum pair and entity type:
+  - the shared targets, and the records connected on each side;
+  - the records the authority connects that plain text does not (`gained`), and the reverse
+    (`lost`);
+  - the largest 1 and 5 shared targets (by ID) and their share of each side;
+  - #337's headline measure: each museum's records on a target shared with any other museum.
+
+  Each scope is flagged `qualified` per `QUALIFIED_SCOPES`. This is the measurement; no deployed
+  matcher reads these links yet. Matching is the web query layer's (ADR-008), and that
+  integration comes with the database step.
+- **`scripts/run_end_to_end.py`** writes `results/end-to-end.json`. It runs `write_run` twice on
+  the frozen corpus, in two interpreters with different `PYTHONHASHSEED`s and into fresh
+  directories, then reports on each. The two runs must have the same manifest, file contents and
+  report; both run IDs are recorded.
+  - The result also records the hashes of the report code. A test binds its resolver versions to
+    the ones the step 1 proof measured.
+  - The result also gives every scope without the links of #369's tuned-on records
+    (brooklyn-3634, met-566763, brooklyn-3599), and #337's and #361's committed headlines.
 
 ### Result on the frozen corpus
 
 148,964 mentions; 48,994 authority links; 127,711 literal links. Both runs were identical.
 
-| Scope | Qualified | Shared targets (authority / literal) | Records connected, first museum (authority / literal; gained, lost) | Second museum |
+| Scope | Qualified | Shared targets (authority / literal) | First museum: connected (authority / literal); gained, lost | Second museum |
 |---|---|---|---|---|
 | ruler, Met–Brooklyn | yes | 14 / 13 | Met 1,957 / 1,981; +33, −57 | Brooklyn 20 / 19; +2, −1 |
 | ruler, Met–Harvard | no (unevaluated) | 2 / 2 | Met 920 / 921; +0, −1 | Harvard 2 / 2 |
@@ -179,27 +187,43 @@ The CI tests need no private data:
 | site, Brooklyn–Harvard | yes | 4 / 6 | Brooklyn 332 / 2,881; +0, −2,549 | Harvard 7 / 520; +1, −514 |
 | tomb, any pair | no (unevaluated) | 0 / 0 | none | none |
 
-Reading it:
+### Against what the evaluations reviewed
 
-- **These are counts of connections, not of right ones.** Whether a change is better was
-  judged by review in #337 (sites) and #361 (rulers), on the same resolutions. Step 1 shows the
-  pipeline makes those resolutions exactly, apart from #369's 11 changes. So the reviewed
-  verdicts carry over to the qualified scopes here. Nothing here judges the unqualified scopes.
-- **Most site "losses" are one plain-text target, "Egypt".**
-  - It joins 26,573 Met records with 2,881 Brooklyn and 510 Harvard records. In plain text it
-    carries 97.7% of Met's and 99.7% of Brooklyn's connected site records in Met–Brooklyn.
-  - The authority leaves "Egypt" unmatched (30,161 mentions): the iDAI site layer holds sites,
-    not countries.
-  - #337's reviewers judged links of that breadth not useful (its e class). The next largest are
-    "Upper Egypt" and "Thebes" (Met–Brooklyn) and "Saqqara" (Met–Harvard).
-- **Rulers, Met–Brooklyn.** The authority connects 33 Met and 2 Brooklyn records that plain
-  text does not, and drops 57 and 1 that it does. #361 reviewed those changes and scored the
-  scope as qualifying.
-- **This is the pipeline code's lift on a frozen export of the museum tables, not a deployed
+The counts here are of connections, not of right ones. Rightness was judged by review, so what
+matters is whether these are the populations that were reviewed.
+
+- **Sites: yes, exactly.** In both modes, every museum's connected site records equal #337 v10's
+  committed report:
+  - plain text: Met 27,198, Brooklyn 2,890, Harvard 534;
+  - authority: Met 14,393, Brooklyn 1,152, Harvard 7.
+
+  A test compares them with that file. #337's own headline (Met 14,502 / Brooklyn 1,156 /
+  Harvard 8 with the authority) mixes in rulers, which have changed since. The site scopes
+  #337 qualified are therefore the population the pipeline makes, and the review's verdicts
+  apply to it as they stand.
+- **Rulers, Met–Brooklyn: #361's population plus #369.** Without #369's tuned-on records, the
+  authority's connections equal #361's committed ones: 13 shared targets, Met 1,955, Brooklyn 19
+  (a test compares them). With those records, #369 adds one shared target, D&H's Ahmes B. It
+  joins the two Queen Ahmose records and a third Met record that already resolved to her but had
+  no Brooklyn counterpart.
+  - That target was found on #361's deciding case and has not been reviewed.
+  - It must not be counted as a reviewed gain. The scope's qualified flag rests on #361's
+    population, which is the one without it.
+- **Ruler and tomb scopes not qualified** are unevaluated. Nothing here judges them.
+- **The large site "losses" are mostly broad plain-text targets the authority does not hold.**
+  These are bound by their literal target hashes, so no museum text is committed. The authority
+  resolves neither name.
+  - Plain text's largest site target in Met–Brooklyn and Met–Harvard is "Egypt". In
+    Met–Brooklyn it holds 97.7% of Met's connected site records.
+  - Harvard's largest in Met–Harvard is "Africa", which holds all 534 of them.
+
+  Whether such a loss is good or bad is #337's review's to say. Its losses were 17 judged
+  correct and useful (d) and 16 wrong or not useful (e); it named the Fayum, a whole region, as
+  too broad to be useful. That review, not this count, is the evidence.
+- **This is the pipeline code's result on a frozen export of the museum tables, not a deployed
   run.** The asset reads the database, which this environment lacks (owner, 2026-10-16: files
-  first). #337 measured potential lift with evaluation scripts; this measures the same lift
-  through the production code. Deployed lift needs the asset run against the live database
-  (#375 and #374 apply there).
+  first). Deployed lift needs the asset run against the live database (see #374 and #375) and a
+  matcher in the web layer that reads the links.
 
 The proof above covers the code it recorded only: `snapshot` for the resolution and
 `check_inputs.code_sha256` for the input check (`results/promotion-check.json`). Any later edit
