@@ -12,9 +12,10 @@ a link of that type to a target that also has a record of B. The measures are co
 records the authority connects that plain text does not (`gained`), and the reverse (`lost`).
 Whether a connection is right is what the evaluations reviewed; a scope's `qualified` flag says
 whether one found the authority's changes there to be better (`QUALIFIED_SCOPES`), and an
-unqualified scope's changes are unevaluated, not proven. The flag is policy: it does not say the
-review saw the population measured. Whoever reports a run says which connected records the
-review did not see (`run_end_to_end.py`, `scope_status`).
+unqualified scope's changes are unevaluated, not proven. The flag is policy; each qualified row
+also says which review qualified it and which of its connected records that review did not see
+(`review_covers_population`, `unreviewed_connected_records`): those whose connection depends on
+a record whose resolution changed after the review (`CHANGED_SINCE_REVIEW`).
 """
 
 from __future__ import annotations
@@ -25,6 +26,12 @@ from pathlib import Path
 from pipeline.enrich import authority_links, link_files
 
 MUSEUMS = tuple(sorted({m for pair in authority_links.MUSEUM_PAIRS for m in pair}))
+# The review that qualified each entity type's scopes (`authority_links.QUALIFIED_SCOPES`).
+QUALIFIED_BY = {"site": "#337 v10", "ruler": "#361"}
+# Records whose resolution of that entity type changed after the review that qualified it: #369's
+# fixes, found on #361's deciding case (`docs/evaluations/resolver-gaps-369/README.md`, "Tuned on
+# #361's deciding case"), which a next registration must flag. Their site links are #337's.
+CHANGED_SINCE_REVIEW = {"ruler": frozenset({"brooklyn-3634", "met-566763", "brooklyn-3599"})}
 TOP = (1, 5)
 
 
@@ -78,6 +85,10 @@ def report(run: Path) -> dict:
     links = {mode: load_links(run, mode) for mode in authority_links.MODES}
     by_target = {mode: target_records(links[mode]) for mode in authority_links.MODES}
     state = {mode: connected(by_target[mode]) for mode in authority_links.MODES}
+    # The authority's connections as they stand without the links of records changed since review:
+    # a record connected now but not then depends on such a change (used only to name records).
+    reviewed = connected(target_records([l for l in links["authority"] if l["artifact_id"] not in
+                                         CHANGED_SINCE_REVIEW.get(l["entity_type"], frozenset())]))
     empty = {"targets": set(), "records": set()}
     pairs = {}
     for entity in authority_links.RESOLVED_TYPES:
@@ -90,8 +101,15 @@ def report(run: Path) -> dict:
                     "gained": len(on["records"] - off["records"]), "lost": len(off["records"] - on["records"]),
                 }
             targets = {mode: state[mode].get((entity, *pair), empty)["targets"] for mode in authority_links.MODES}
+            qualified = pair in authority_links.QUALIFIED_SCOPES[entity]
+            unreviewed = sorted(r for a, b in (pair, pair[::-1])
+                                for r in state["authority"].get((entity, a, b), empty)["records"]
+                                - reviewed.get((entity, a, b), empty)["records"])
             pairs[f"{entity}|{pair[0]}|{pair[1]}"] = {
-                "qualified": pair in authority_links.QUALIFIED_SCOPES[entity],
+                "qualified": qualified,
+                "qualified_by": QUALIFIED_BY[entity] if qualified else None,
+                "unreviewed_connected_records": unreviewed if qualified else None,
+                "review_covers_population": (not unreviewed) if qualified else None,
                 "shared_targets_authority": len(targets["authority"]),
                 "shared_targets_literal": len(targets["literal"]),
                 "shared_target_ids": {mode: sorted(targets[mode]) for mode in authority_links.MODES},

@@ -41,7 +41,7 @@ EVALUATIONS = REPO / "docs/evaluations"
 # The records #369's fixes were found on and changed (`resolver-gaps-369/README.md`, "Tuned on
 # #361's deciding case"): the two Queen Ahmose records and #361's Neferu d. A next registration
 # must flag them; this result names them, and the README sets this run beside #361's report.
-TUNED_ON_369 = frozenset({"brooklyn-3634", "met-566763", "brooklyn-3599"})
+TUNED_ON_369 = cross_museum.CHANGED_SINCE_REVIEW["ruler"]
 # The code the report itself runs.
 REPORT_CODE = (REPO / "pipeline/pipeline/enrich/cross_museum.py", Path(__file__).resolve())
 
@@ -74,22 +74,6 @@ def ahmes_b_records(run: Path) -> dict:
                               "connected_by_plain_text": record in off}
                      for record in sorted(records)}
             for museum, records in sorted(by_mode["authority"][("ruler", "dodson_hilton:Ahmes B")].items())}
-
-
-def scope_status(report: dict, ahmes_b: dict) -> dict:
-    """Per qualified scope: the review that qualified it, and the connected records it did not
-    review. Sites are #337's population record for record (the identity test); Met-Brooklyn
-    rulers are #361's but for the records #369's Ahmes B connects, found on #361's deciding case."""
-    status = {}
-    for key, row in sorted(report["by_museum_pair"].items()):
-        if not row["qualified"]:
-            continue
-        entity = key.split("|")[0]
-        unreviewed = sorted(r for side in ahmes_b.values() for r in side) if key == "ruler|met|brooklyn" else []
-        status[key] = {"qualified_by": {"site": "#337 v10", "ruler": "#361"}[entity],
-                       "unreviewed_connected_records": unreviewed,
-                       "review_covers_population": not unreviewed}
-    return status
 
 
 def end_to_end(archive: Path) -> dict:
@@ -128,9 +112,6 @@ def end_to_end(archive: Path) -> dict:
         "tuned_on_369": sorted(TUNED_ON_369),
         # The records #369's one new shared ruler target joins, by museum (authority mode).
         "ahmes_b_records": ahmes_b,
-        # `qualified` in the report is the policy flag; this says, per qualified scope, which review
-        # qualified it and which connected records that review did not see.
-        "scope_status": scope_status(reports[0], ahmes_b),
         # What #337 (sites, rulers and tombs; its own mention ledger and code of 2026-10-11) and #361
         # (rulers only; this mention ledger) reported, to set beside this run.
         "evaluation_headlines": {"337": evaluation_headline("authority-independent-control-2026-10-11"),
