@@ -1,4 +1,4 @@
-"""The inputs of an authority-links run must be one pipeline generation (#338).
+"""The inputs of an authority-links run must be the normalize step's output for the raw rows read (#338).
 
 A run reads the canonical records and the raw payloads they were normalized from. The ingest
 assets commit raw rows batch by batch and the normalize assets write canonical rows later, so
@@ -6,8 +6,12 @@ tables read while either is running can pair a new raw payload with an old canon
 raw rows not yet normalized; one database snapshot does not prevent that. `check_inputs`
 refuses such inputs: every canonical row must be exactly what its museum's normalize step makes
 of its raw payload (its mapper's row, of a payload the step keeps), and every raw row the step
-keeps must have its canonical row.
-(On the frozen corpus of 2026-08-27, all 36,245 canonical rows are.)
+keeps must have its canonical row. That is what is checked; whether the raw rows read are a
+complete ingest is not (a half re-ingested raw table, fully normalized, passes). A refused run
+fails; nothing retries it, and the operator re-materializes it once upstream is done (in a job
+with the normalize assets, `deps` already orders it after them). On the frozen corpus of
+2026-08-27, all 36,245 canonical rows pass (`docs/evaluations/authority-bridge-338/results/
+promotion-check.json`, `check_inputs`).
 """
 
 from __future__ import annotations
@@ -63,5 +67,6 @@ def check_inputs(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]])
     if pending:
         problems.append(f"{len(pending)} raw rows are not normalized yet (e.g. {pending[:SHOWN]})")
     if problems:
-        raise ValueError("the inputs are not one pipeline generation (ingest or normalize mid-run?): "
+        raise ValueError("the canonical rows are not the normalize step's output for the raw rows read "
+                         "(ingest or normalize mid-run?): "
                          + "; ".join(problems))

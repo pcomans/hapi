@@ -12,6 +12,8 @@ On the frozen corpus archive (`hapi-museum-corpus-2026-08-27`):
    (#337 v10's resolvers, `run_linkability.build_site_resolver` and `build_pm_resolver`).
 4. In the literal mode, every ruler mention gets #361's typed-literal target, and every site
    and tomb mention the target #337's typed-literal arm gives (its `resolve_mentions`).
+5. The frozen tables pass `pipeline.enrich.inputs.check_inputs`: every canonical row is what its
+   museum's normalize step makes of its raw payload, and every kept raw row is normalized.
 
 Writes counts, and the mention ids of any difference; no museum text.
 
@@ -36,6 +38,7 @@ REPO = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO / "pipeline"))
 from pipeline.authority import graph_kings, royal_women  # noqa: E402
 from pipeline.enrich import authority_links, mentions as production_mentions  # noqa: E402
+from pipeline.enrich.inputs import check_inputs  # noqa: E402
 ARCHIVE_SHA256 = "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
 PREFIX = "hapi-museum-corpus-2026-08-27/data/"
 EVALUATIONS = REPO / "docs/evaluations"
@@ -93,6 +96,9 @@ def check(archive: Path, run: Path) -> dict:
         if sha256_path(run / name) != expected:
             raise ValueError(f"{run / name} is not #361's (its run manifest pins {expected})")
     canonical, raw = load_corpus(archive)
+    # 5. The frozen tables are the normalize step's output for their raw rows (#338 step 2's
+    #    `check_inputs`, which every run applies): raises if not.
+    check_inputs(canonical, raw)
     ledger = gz_rows((run / "mentions.ndjson.gz").read_bytes())
     found, _ = production_mentions.extract_mentions(canonical, raw)
     mention_rows_equal = [canonical_line(r) for r in found] == [canonical_line(r) for r in ledger]
@@ -159,7 +165,7 @@ def check(archive: Path, run: Path) -> dict:
 
     statuses = collections.Counter((r["entity_type"], r["status"]) for r in by_id.values())
     return {
-        "schema_version": "hapi-338-promotion-check/2",
+        "schema_version": "hapi-338-promotion-check/3",
         "corpus_archive_sha256": ARCHIVE_SHA256,
         "run_361_files": files,
         "snapshot": {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")},
@@ -171,6 +177,7 @@ def check(archive: Path, run: Path) -> dict:
             "compared": dict(collections.Counter(m["entity_type"] for m in place_rows)), "differ": place_differ},
         "rulers_vs_361_literal_arm": {"compared": len(literal_arm), "differ": literal_differ},
         "places_vs_337_literal_arm": {"compared": len(places_337), "differ": literal_place_differ},
+        "check_inputs": {"canonical_records": len(canonical), "passed": True},
         "authority_mode_statuses": {f"{t}:{s}": n for (t, s), n in sorted(statuses.items())},
     }
 

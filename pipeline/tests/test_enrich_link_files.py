@@ -552,3 +552,36 @@ def test_the_normalizers_are_the_normalize_assets() -> None:
     assert NORMALIZERS["brooklyn"] == (brooklyn_asset.BrooklynMapper, brooklyn_asset.is_egyptian)
     assert not hasattr(met_asset, "is_egyptian") and not hasattr(harvard_asset, "is_egyptian")
     assert set(NORMALIZERS) == {s.value for s in _implemented_museums()}
+
+
+def test_every_link_field_but_the_key_and_three_is_diffed(inputs, authority, tmp_path) -> None:
+    """A link's fields are pinned, so a new one must be diffed or excluded on purpose; a change
+    to any diffed field, the relation and the target kind included, is a change."""
+    canonical, raw = inputs
+    manifest = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    (one,) = [l for l in links(tmp_path / manifest["run_id"]) if l["target_id"] == "pm_theban:KV62"]
+    assert sorted(one) == sorted(lf.LINK_KEY + lf.NOT_DIFFED + (
+        "relation", "target_kind", "mention_ids", "evidence_roles"))
+    for field, value in (("relation", "close_match"), ("target_kind", "site"), ("evidence_roles", ["x"])):
+        diff = lf.diff_links([one], [{**one, field: value}], [], {one["artifact_id"]})
+        assert diff["changed"] == [{**{f: one[f] for f in ("artifact_id", "museum", "entity_type", "target_id")},
+                                    f"previous_{field}": one[field], field: value, "lost": []}], field
+        assert (diff["kept"], diff["added"], diff["removed"]) == (0, [], [])
+    unchanged = lf.diff_links([one], [{**one, "resolver_version": "other", "mode": "authority"}], [], {one["artifact_id"]})
+    assert (unchanged["kept"], unchanged["changed"]) == (1, [])
+
+
+def test_a_malformed_pending_diff_fails_the_run_before_any_pending_diff_is_touched(inputs, authority, tmp_path) -> None:
+    canonical, raw = inputs
+    a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    raw_b = copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    b = lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+    final = tmp_path / "diffs" / f"{a['run_id']}-to-{b['run_id']}.json"
+    pending = final.with_name(f".{final.name}.partial")
+    final.rename(pending)
+    data = pending.read_bytes()
+    (tmp_path / "diffs" / ".zz-notes.partial").write_text("x")
+    with pytest.raises(ValueError, match="is not a pending diff this module writes"):
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert pending.read_bytes() == data and not final.exists()

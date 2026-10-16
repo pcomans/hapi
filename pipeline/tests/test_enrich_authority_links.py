@@ -228,3 +228,4 @@ def test_the_committed_promotion_check_holds_and_is_of_the_frozen_inputs() -> No
     assert result["rulers_vs_361_literal_arm"] == {"compared": 11648, "differ": []}
     assert result["places_vs_337_literal_arm"] == {"compared": 118601, "differ": []}
     assert set(result["snapshot"]) == {"authority", "literal"}
+    assert result["check_inputs"] == {"canonical_records": 36245, "passed": True}

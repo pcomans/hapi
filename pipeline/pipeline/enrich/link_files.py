@@ -49,6 +49,11 @@ from pipeline.authority import royal_women
 from pipeline.enrich import authority_links, mentions
 from pipeline.enrich.inputs import check_inputs
 
+# A link is the same link across runs by its key; every other field it carries is compared but
+# these: the version that made it (it changes with any code or authority change, and the run
+# id records it), the mode (the same on both sides of a diff) and the museum (the record's own).
+LINK_KEY = ("artifact_id", "entity_type", "target_id")
+NOT_DIFFED = ("resolver_version", "mode", "museum")
 CURRENT = "CURRENT"
 LOCK = ".lock"
 # What a target is, by the authority that resolved it. A royal woman who reigned resolves to
@@ -132,7 +137,7 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
     values and the mentions it lost and how each now resolves (or that it is gone), so a
     withdrawal inside a link backed by several mentions is seen too."""
     def key(link: dict) -> tuple:
-        return link["artifact_id"], link["entity_type"], link["target_id"]
+        return tuple(link[f] for f in LINK_KEY)
     old, new = {key(l): l for l in previous}, {key(l): l for l in links}
     by_mention = {r["mention_id"]: r for r in resolutions}
 
@@ -154,9 +159,8 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
         removed.append({**{f: link[f] for f in fields}, **why})
     changed = []
     for k in sorted(set(old) & set(new)):
-        # What a link says beyond its key and the version that made it: its mentions, their
-        # evidence roles (a role can change while the mention's text and span stay), its kind.
-        moved = [f for f in ("mention_ids", "evidence_roles", "target_kind") if old[k][f] != new[k][f]]
+        moved = [f for f in sorted(set(old[k]) | set(new[k])) if f not in LINK_KEY + NOT_DIFFED
+                 and old[k].get(f) != new[k].get(f)]
         if moved:
             lost = sorted(set(old[k]["mention_ids"]) - set(new[k]["mention_ids"]))
             changed.append({**{f: new[k][f] for f in fields if f != "mention_ids"},
@@ -308,9 +312,10 @@ def settle_diffs(root: Path, current: str | None) -> None:
     """A diff left pending by a run that died: published if its run became current (the run died
     after the commit), else removed (it died before; that transition never happened). Only this
     module writes pending diffs, so one it cannot read, or whose content names other runs than
-    its name, fails loud."""
+    its name, fails loud, and before any pending diff is touched."""
     if not (root / "diffs").is_dir():
         return
+    found = []
     for pending in sorted(p for p in (root / "diffs").iterdir() if p.name.startswith(".")):
         m = PENDING_DIFF.match(pending.name)
         if m is None:
@@ -318,6 +323,8 @@ def settle_diffs(root: Path, current: str | None) -> None:
         content = json.loads(pending.read_text(encoding="utf-8"))
         if (content["previous_run"], content["run"]) != (m["previous"], m["run"]):
             raise ValueError(f"{pending} holds the diff of {content['previous_run']} to {content['run']}")
+        found.append((pending, m))
+    for pending, m in found:
         if m["run"] == current:
             os.rename(pending, root / "diffs" / f"{m['previous']}-to-{m['run']}.json")
         else:

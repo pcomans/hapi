@@ -122,7 +122,10 @@ The CI tests need no private data:
     - a canonical row has no raw payload;
     - a raw row the step keeps has no canonical row yet.
 
-    All 36,245 records of the frozen corpus pass the check.
+    That is all it checks. Whether the raw rows read are a complete ingest is not checked: a
+    half re-ingested raw table, fully normalized, passes. All 36,245 records of the frozen corpus
+    pass (`results/promotion-check.json`, `check_inputs`). A refused run fails and nothing
+    retries it; the operator re-materializes it once upstream is done.
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 

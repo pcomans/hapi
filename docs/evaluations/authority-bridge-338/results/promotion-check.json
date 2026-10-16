@@ -12,6 +12,10 @@
     "tomb_monument:resolved": 3227,
     "tomb_monument:unmatched": 1636
   },
+  "check_inputs": {
+    "canonical_records": 36245,
+    "passed": true
+  },
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "mentions": {
     "ledger_361": 148964,
@@ -58,7 +62,7 @@
     "mentions.ndjson.gz": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
     "typed-literal-arm.ndjson.gz": "938a5fd1fe3a64a41257a0dad7d1b7627b79f04868143b573aca793b7f49aced"
   },
-  "schema_version": "hapi-338-promotion-check/2",
+  "schema_version": "hapi-338-promotion-check/3",
   "snapshot": {
     "authority": {
       "files": {
