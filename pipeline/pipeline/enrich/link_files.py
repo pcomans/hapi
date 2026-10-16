@@ -17,7 +17,9 @@ directory exists is checked against it, never overwritten.
 
 `<root>/CURRENT` names the run in force. When a run replaces another there, it writes
 `<root>/diffs/<previous>-to-<run>.json`: for each mode, every link added, removed (with why) or
-changed (its mentions changed, with how each lost one now resolves). A run is written beside
+changed (its mentions changed, with how each lost one now resolves). Replacing `CURRENT` is the
+commit: a diff is published only once its run is current, and one left pending by a run that
+died is published or removed by the next run, as the commit happened or not. A run is written beside
 its place and renamed into it, and `CURRENT` is replaced in one step, so a crashed process
 leaves no half-written run (there is no fsync: a power loss can). Runs under one root hold a lock (`.lock`); a second one at the same time fails
 loud.
@@ -232,9 +234,10 @@ def run_lock(root: Path):
 
 def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, canonical: list[dict],
            by_mode: dict) -> dict:
+    previous_id = (root / CURRENT).read_text(encoding="utf-8").strip() if (root / CURRENT).exists() else None
+    settle_diffs(root, previous_id)
     # The diff against the run in force first: if that run's files are not what it wrote, nothing
     # is written.
-    previous_id = (root / CURRENT).read_text(encoding="utf-8").strip() if (root / CURRENT).exists() else None
     if previous_id is not None and (not previous_id or not (root / previous_id).is_dir()):
         raise ValueError(f"{root / CURRENT} names {previous_id!r}, which is not a run under {root}")
     diff = None
@@ -275,11 +278,27 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
             (scratch / name).write_bytes(data)
         os.rename(scratch, run_dir)
 
+    # Replacing CURRENT is the commit: the diff is written beside its name first and takes it only
+    # after, so a diff of a transition that never happened is never published (`settle_diffs`).
+    pending = None
     if diff is not None:
         (root / "diffs").mkdir(exist_ok=True)
-        (root / "diffs" / f"{previous_id}-to-{run_id}.json").write_text(
-            json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        pending = root / "diffs" / f".{previous_id}-to-{run_id}.json.partial"
+        pending.write_text(json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     pointer = root / f".{CURRENT}.partial"
     pointer.write_text(run_id + "\n", encoding="utf-8")
     os.replace(pointer, root / CURRENT)
+    if pending is not None:
+        os.rename(pending, root / "diffs" / f"{previous_id}-to-{run_id}.json")
     return manifest
+
+
+def settle_diffs(root: Path, current: str | None) -> None:
+    """A diff left pending by a run that died: published if its run became current (the run died
+    after the commit), else removed (it died before; that transition never happened)."""
+    for pending in sorted((root / "diffs").glob(".*-to-*.json.partial")) if (root / "diffs").is_dir() else ():
+        run_id = pending.name[1:-len(".json.partial")].split("-to-")[1]
+        if run_id == current:
+            os.rename(pending, root / "diffs" / pending.name[1:-len(".partial")])
+        else:
+            pending.unlink()

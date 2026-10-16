@@ -91,6 +91,9 @@ The CI tests need no private data:
     each mention's new status and reason).
   - A kept link whose mentions changed is listed as `changed`, with each lost mention's new
     resolution, so a withdrawal inside a link that several mentions make is visible too.
+  - Replacing `CURRENT` is the commit. A diff is published only once its run is current; one
+    left pending by a run that died is published or removed by the next run, depending on
+    whether the commit happened.
   - `record_gone` cannot happen in production yet. The ingest and normalize assets upsert and
     never delete, so a record a museum withdraws stays in the tables.
 - **`target_kind`** keeps queens distinct from kings. The kinds are `king`, `royal_woman`,

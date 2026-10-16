@@ -296,7 +296,7 @@ def test_a_previous_run_whose_links_were_changed_is_not_diffed_against(inputs, a
         lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     assert not (tmp_path / "diffs").exists()
-    assert sorted(p.name for p in tmp_path.iterdir() if not p.name.startswith(".")) == [lf.CURRENT, first["run_id"]]
+    assert sorted(p.name for p in tmp_path.iterdir() if not p.name.startswith(".")) == sorted([lf.CURRENT, first["run_id"]])
 
 
 def lock_held(root: Path) -> bool:
@@ -395,3 +395,41 @@ def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, aut
         "run_id": expected["run_id"], "records": 18,
         "links_authority": expected["files"]["links-authority.ndjson.gz"]["rows"],
         "links_literal": expected["files"]["links-literal.ndjson.gz"]["rows"]}
+
+
+def test_a_diff_is_published_only_if_its_run_became_current(inputs, authority, tmp_path, monkeypatch) -> None:
+    canonical, raw = inputs
+    a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    raw_b, raw_c = copy.deepcopy(raw), copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    raw_c["met"]["900001"]["title"] = "Amulet"
+    real_replace, real_rename = os.replace, os.rename
+
+    # The process dies before CURRENT is replaced: B never became current.
+    def die_on_current(src, dst):
+        if Path(dst).name == lf.CURRENT:
+            raise OSError("killed")
+        return real_replace(src, dst)
+    monkeypatch.setattr(lf.os, "replace", die_on_current)
+    with pytest.raises(OSError, match="killed"):
+        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+    monkeypatch.setattr(lf.os, "replace", real_replace)
+    assert (tmp_path / lf.CURRENT).read_text() == a["run_id"] + "\n"
+    assert [p.name for p in (tmp_path / "diffs").iterdir()][0].endswith(".partial")
+    c = lf.write_run(tmp_path, lambda: (canonical, raw_c), authority)
+    assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == [f"{a['run_id']}-to-{c['run_id']}.json"]
+
+    # The process dies after CURRENT is replaced, before the diff takes its name: it did happen.
+    def die_on_diff(src, dst):
+        if Path(dst).parent.name == "diffs":
+            raise OSError("killed")
+        return real_rename(src, dst)
+    monkeypatch.setattr(lf.os, "rename", die_on_diff)
+    with pytest.raises(OSError, match="killed"):
+        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+    monkeypatch.setattr(lf.os, "rename", real_rename)
+    b_id = (tmp_path / lf.CURRENT).read_text().strip()
+    assert b_id != c["run_id"]
+    lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)  # the same run: no new diff, the pending one settles
+    assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == sorted([
+        f"{a['run_id']}-to-{c['run_id']}.json", f"{c['run_id']}-to-{b_id}.json"])
