@@ -215,7 +215,7 @@ matters is whether these are the populations that were reviewed.
     records:
     - the two Queen Ahmose records, brooklyn-3634 and met-566763, which #369 newly resolved to
       her;
-    - met-566763's fellow met-547683, which #369 did not change. It resolved to her before but
+    - a third Met record, met-547683, which #369 did not change. It resolved to her before but
       had no Brooklyn record to share her with.
   - **Those three records are #361's reviewed losses that now connect:** Met's losses go from
     59 to 57 and Brooklyn's from 2 to 1. The gains are #361's in number (Met 33, Brooklyn 2).
