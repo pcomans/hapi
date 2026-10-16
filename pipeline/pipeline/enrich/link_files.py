@@ -311,11 +311,14 @@ PENDING_DIFF = re.compile(
 
 
 def verify_run(run_dir: Path) -> None:
-    """A run directory holds exactly the files its manifest names, each with its recorded
-    content."""
+    """A run directory holds its own manifest (of the run its name is) and exactly the files the
+    manifest names, each with its recorded content."""
     if not (run_dir / "manifest.json").is_file():
         raise ValueError(f"{run_dir} has no manifest.json")
-    recorded = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))["files"]
+    manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+    if manifest["run_id"] != run_dir.name:
+        raise ValueError(f"{run_dir} holds the manifest of run {manifest['run_id']}")
+    recorded = manifest["files"]
     present = sorted(p.name for p in run_dir.iterdir())
     if present != sorted([*recorded, "manifest.json"]):
         raise ValueError(f"{run_dir} holds {present}, not the files its manifest names")

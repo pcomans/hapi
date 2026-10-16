@@ -529,6 +529,10 @@ def test_a_damaged_previous_run_is_not_accepted_as_history(inputs, authority, tm
     for damage, message in ((lambda: (run / "mentions.ndjson.gz").write_bytes(lf.gzip_rows([])),
                              "mentions.ndjson.gz is not what that run wrote"),
                             (lambda: (run / "resolutions-literal.ndjson.gz").unlink(), "not the files its manifest names"),
+                            (lambda: (run / "notes.txt").write_text("x"), "not the files its manifest names"),
+                            (lambda: (run / "manifest.json").write_text(json.dumps(
+                                {**json.loads((run / "manifest.json").read_text()), "run_id": "f" * 64})),
+                             "holds the manifest of run f{64}"),
                             (lambda: (run / "manifest.json").unlink(), "has no manifest.json")):
         saved = {p.name: p.read_bytes() for p in run.iterdir()}
         damage()
@@ -624,3 +628,29 @@ def test_a_malformed_pending_diff_fails_the_run_before_any_pending_diff_is_touch
     with pytest.raises(ValueError, match="is not a pending diff this module writes"):
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     assert pending.read_bytes() == data and not final.exists()
+
+
+def test_a_run_killed_while_naming_its_pending_diff_leaves_only_the_writing_file(inputs, authority, tmp_path, monkeypatch) -> None:
+    """The write order itself: the pending diff is written as `.writing` and named after, so a
+    process killed in between leaves only that file, CURRENT unmoved, and the next run discards it."""
+    canonical, raw = inputs
+    a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    raw_b = copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    real = os.rename
+
+    def die_naming(src, dst):
+        if Path(src).name.endswith(".writing"):
+            raise OSError("killed")
+        return real(src, dst)
+    monkeypatch.setattr(lf.os, "rename", die_naming)
+    with pytest.raises(OSError, match="killed"):
+        lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+    monkeypatch.setattr(lf.os, "rename", real)
+    (left,) = [p.name for p in (tmp_path / "diffs").iterdir()]
+    assert left.startswith(f".{a['run_id']}-to-") and left.endswith(".json.partial.writing")
+    assert (tmp_path / lf.CURRENT).read_text() == a["run_id"] + "\n"
+    raw_c = copy.deepcopy(raw)
+    raw_c["met"]["900001"]["title"] = "Amulet"
+    c = lf.write_run(tmp_path, lambda: (normalized(raw_c), raw_c), authority)
+    assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == [f"{a['run_id']}-to-{c['run_id']}.json"]
