@@ -1,0 +1,332 @@
+{
+  "inputs": {
+    "added_museum_profiles_raw_sha256": {
+      "cleveland": "dfbc8cbfa36bd310c41b0ba885fb94818a6a5af56952915c6b086a0a6eba0a62",
+      "walters": "2307c00225bbf510e33694a3969e43bec8fc8caac4bf704b29313e2b0f2de56e"
+    },
+    "added_museums_archive_sha256": "f9c353f6e5a7757533739210d94550d00091fde026ca3ca9ea2ede5d7c30186e",
+    "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
+  },
+  "make_run_sha256": "e302daa047dc5e4ef6a23ca915133d4fb36e3d7714d37b09557bfc51c70b75ff",
+  "manifest": {
+    "canonical_rows_set_aside": [],
+    "extraction": {
+      "mentions": 149216,
+      "mentions_by_entity_type": {
+        "excavation": 16403,
+        "ruler": 11900,
+        "site": 113738,
+        "temple": 2312,
+        "tomb_monument": 4863
+      },
+      "mentions_by_museum": {
+        "brooklyn": 5171,
+        "cleveland": 111,
+        "harvard": 1714,
+        "met": 142079,
+        "walters": 141
+      },
+      "records_scanned": 38451,
+      "records_with_at_least_one_mention": 31719,
+      "royal_cues_without_syntactic_candidate": {
+        "brooklyn|inscribed": 10,
+        "brooklyn|title": 72,
+        "harvard|commentary": 2,
+        "harvard|description": 4,
+        "harvard|labeltext": 3,
+        "harvard|title": 7,
+        "met|title": 145,
+        "walters|object.Title": 50
+      }
+    },
+    "files": {
+      "links-authority.ndjson.gz": {
+        "content_sha256": "70c9c8a36e13ea5038a1718c56e7c6e2101577af27813c966e91cc1ce91dbc4d",
+        "rows": 49133
+      },
+      "links-literal.ndjson.gz": {
+        "content_sha256": "86a6c983088c2b181643b061ec33d282550401fb5e3a299e28063f3b1a2aedf0",
+        "rows": 127902
+      },
+      "mentions.ndjson.gz": {
+        "content_sha256": "956154ae56894d45d37dcd2db8e7bb0c392ce087b1d5d509e8832d9f4ad0435a",
+        "rows": 149216
+      },
+      "resolutions-authority.ndjson.gz": {
+        "content_sha256": "fe613790931e7a68c862d0d29ba0c41fca960c84f2560792ffb969dd5a37aebb",
+        "rows": 149216
+      },
+      "resolutions-literal.ndjson.gz": {
+        "content_sha256": "7d64c39e3ae2d1e29cdba818943dc9e7e6fa32c20e4995c7a7a7398a505a59e6",
+        "rows": 149216
+      }
+    },
+    "inputs_sha256": "e0f16862394b203edc1e360e30e1c89c24e7778720b25a6f81c2761e1264cf8b",
+    "inventory": {
+      "unevaluated_scopes": {
+        "ruler": [
+          [
+            "met",
+            "harvard"
+          ],
+          [
+            "brooklyn",
+            "harvard"
+          ],
+          [
+            "met",
+            "cleveland"
+          ],
+          [
+            "brooklyn",
+            "cleveland"
+          ],
+          [
+            "harvard",
+            "cleveland"
+          ],
+          [
+            "met",
+            "walters"
+          ],
+          [
+            "brooklyn",
+            "walters"
+          ],
+          [
+            "harvard",
+            "walters"
+          ],
+          [
+            "cleveland",
+            "walters"
+          ]
+        ],
+        "site": [
+          [
+            "met",
+            "cleveland"
+          ],
+          [
+            "brooklyn",
+            "cleveland"
+          ],
+          [
+            "harvard",
+            "cleveland"
+          ],
+          [
+            "met",
+            "walters"
+          ],
+          [
+            "brooklyn",
+            "walters"
+          ],
+          [
+            "harvard",
+            "walters"
+          ],
+          [
+            "cleveland",
+            "walters"
+          ]
+        ],
+        "tomb_monument": [
+          [
+            "met",
+            "brooklyn"
+          ],
+          [
+            "met",
+            "harvard"
+          ],
+          [
+            "brooklyn",
+            "harvard"
+          ],
+          [
+            "met",
+            "cleveland"
+          ],
+          [
+            "brooklyn",
+            "cleveland"
+          ],
+          [
+            "harvard",
+            "cleveland"
+          ],
+          [
+            "met",
+            "walters"
+          ],
+          [
+            "brooklyn",
+            "walters"
+          ],
+          [
+            "harvard",
+            "walters"
+          ],
+          [
+            "cleveland",
+            "walters"
+          ]
+        ]
+      },
+      "unsupported": {
+        "excavation": {
+          "mentions": 16403,
+          "reason": "no committed canonical excavation authority"
+        },
+        "temple": {
+          "mentions": 2312,
+          "reason": "no committed canonical temple authority"
+        }
+      }
+    },
+    "outcomes": {
+      "authority": {
+        "excavation|abstained|unsupported:excavation": 16403,
+        "ruler|abstained|expression:multi_or_range": 890,
+        "ruler|abstained|expression:temporal_context": 63,
+        "ruler|abstained|expression:uncertain_identity": 201,
+        "ruler|abstained|expression:unparsed_structured_value": 1149,
+        "ruler|ambiguous|authority_ambiguous": 79,
+        "ruler|ambiguous|weak_sign_different_spellings": 5,
+        "ruler|resolved|": 9163,
+        "ruler|unmatched|authority_unmatched": 333,
+        "ruler|unmatched|record_dynasty_contradicts": 5,
+        "ruler|unmatched|unreadable_mention": 7,
+        "ruler|unmatched|unreadable_numeral": 1,
+        "ruler|unmatched|weak_sign_unconfirmed": 4,
+        "site|ambiguous|authority_ambiguous": 201,
+        "site|resolved|": 36827,
+        "site|unmatched|authority_unmatched": 76710,
+        "temple|abstained|unsupported:temple": 2312,
+        "tomb_monument|resolved|": 3227,
+        "tomb_monument|unmatched|authority_unmatched": 1636
+      },
+      "literal": {
+        "excavation|abstained|unsupported:excavation": 16403,
+        "ruler|abstained|expression:multi_or_range": 890,
+        "ruler|abstained|expression:temporal_context": 63,
+        "ruler|abstained|expression:uncertain_identity": 201,
+        "ruler|abstained|expression:unparsed_structured_value": 1149,
+        "ruler|resolved|": 9597,
+        "site|resolved|": 113738,
+        "temple|abstained|unsupported:temple": 2312,
+        "tomb_monument|resolved|": 4863
+      }
+    },
+    "records": 38451,
+    "run_id": "868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e",
+    "schema_version": "hapi-authority-links/2",
+    "snapshots": {
+      "authority": {
+        "files": {
+          "pipeline/pipeline/authority/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pipeline/pipeline/authority/claimgraph/__init__.py": "248fc97beda726422b79607951e359e9d06859f63b57d7a452a04ffc2f5ebab0",
+          "pipeline/pipeline/authority/claimgraph/normalize.py": "ca59b734db3f67511c9e58f16eaf8769e998c5e480d18c8be49a575390b16939",
+          "pipeline/pipeline/authority/graph_kings.py": "1acb266ad4f869ee3a1e271989b6d616a38701da85ca6785b1de7ec45f4ffd79",
+          "pipeline/pipeline/authority/resolver.py": "38c8ac8834b362be11a6c6a95bcf3f6eee7cb16bfac4a76dd609b40c0768d5d9",
+          "pipeline/pipeline/authority/royal_women.py": "21315b743ff224a221b3f08aff7b6a1d3f11259e7b814622388ded56ada57d89",
+          "pipeline/pipeline/authority/sources/dodson-hilton-queens/female-rulers.json": "c2927337d0370082c5cd375ea10df7b162974555d1b252343a3a6eda3dc3157d",
+          "pipeline/pipeline/authority/sources/dodson-hilton-queens/reconciled.jsonl": "0daa6e20a9ff2a754de665524941727125a19d8402cff22ee1031f7162b15da6",
+          "pipeline/pipeline/authority/sources/dodson-hilton-queens/same-woman-across-sub-periods.json": "f21be005cd2b9147bbb46042d432b9b50b334be18751b5505154da3a5d3f9492",
+          "pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl": "607c5d6f865b6afe89efc6d7c474a554caa756b3ad723a66ddbcf7ef3219dcfd",
+          "pipeline/pipeline/authority/sources/porter-moss-memphis/reconciled.jsonl": "fa497703c1d64a6d734f8255fe9a920cb9c61e44ceb811d4f86b2306fc22e343",
+          "pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl": "4414c5b4a3004c3b6d6669e45a4708bf2405e0c952620633cc155a6d4478a2ff",
+          "pipeline/pipeline/authority/sources/tla-2018-names/links/decisions.jsonl": "4430d6491f5d6585459795c2a164272bcd499876088f17e3bb08b6477ff64b48",
+          "pipeline/pipeline/authority/sources/tla-2018-names/reconciled.jsonl": "fbfedbf6adb996dff680b2cc3e44f2f9814adfbc83b7694ab3b3fb16f31c2c22",
+          "pipeline/pipeline/authority/tla_links.py": "e3e8a108cf62cd4f824912348c1f2738707a4ed86c1c94be7e05c630898081cd",
+          "pipeline/pipeline/authority/weak_sign_skeleton.py": "2f4066c9af7ce8a89c24c8b3ca77e89215d086f645084f84f816bd69cf126ac9",
+          "pipeline/pipeline/enrich/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pipeline/pipeline/enrich/authority_links.py": "da74b537cad6aac387b55c7e8efae619c257bc5106e3346079e2c7d75e1be01d",
+          "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2",
+          "web-claimgraph/data/claim-graph.json": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66"
+        },
+        "mode": "authority",
+        "resolver_version": "c5ed6250cd0d7319f5c41165029601855db036542502de9c76f6a0253b5430c8",
+        "unicode": "15.0.0"
+      },
+      "literal": {
+        "files": {
+          "pipeline/pipeline/authority/resolver.py": "38c8ac8834b362be11a6c6a95bcf3f6eee7cb16bfac4a76dd609b40c0768d5d9",
+          "pipeline/pipeline/enrich/authority_links.py": "da74b537cad6aac387b55c7e8efae619c257bc5106e3346079e2c7d75e1be01d",
+          "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2"
+        },
+        "mode": "literal",
+        "resolver_version": "f5dc6b01609a2d15045ade19a657daa42b9dc9beab3094ee062f16ea91846fdf",
+        "unicode": "15.0.0"
+      }
+    },
+    "writer_sha256": "7a50fe13c17b19a9f52ac58a7477783bd4d4454cb196ddd57b97208257a55a7d"
+  },
+  "run_id": "868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e",
+  "schema_version": "hapi-ruler-reregistration-2026-10-16-run/1",
+  "transition_counts": {
+    "brooklyn__cleveland": {
+      "authority_only_transition": 0,
+      "literal_only_transition": 0,
+      "retained_control": 5
+    },
+    "brooklyn__harvard": {
+      "authority_only_transition": 0,
+      "literal_only_transition": 0,
+      "retained_control": 2
+    },
+    "brooklyn__walters": {
+      "authority_only_transition": 1,
+      "literal_only_transition": 0,
+      "retained_control": 6
+    },
+    "cleveland__walters": {
+      "authority_only_transition": 1,
+      "literal_only_transition": 0,
+      "retained_control": 6
+    },
+    "harvard__cleveland": {
+      "authority_only_transition": 0,
+      "literal_only_transition": 0,
+      "retained_control": 1
+    },
+    "harvard__walters": {
+      "authority_only_transition": 0,
+      "literal_only_transition": 0,
+      "retained_control": 2
+    },
+    "met__brooklyn": {
+      "authority_only_transition": 2,
+      "literal_only_transition": 1,
+      "retained_control": 12
+    },
+    "met__cleveland": {
+      "authority_only_transition": 2,
+      "literal_only_transition": 0,
+      "retained_control": 11
+    },
+    "met__harvard": {
+      "authority_only_transition": 0,
+      "literal_only_transition": 0,
+      "retained_control": 2
+    },
+    "met__walters": {
+      "authority_only_transition": 7,
+      "literal_only_transition": 4,
+      "retained_control": 22
+    }
+  },
+  "two_runs": {
+    "python_hash_seeds": [
+      "1",
+      "2"
+    ],
+    "run_ids": [
+      "868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e",
+      "868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e"
+    ],
+    "same_manifest_and_contents": true
+  }
+}

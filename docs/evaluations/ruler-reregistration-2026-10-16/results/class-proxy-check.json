@@ -1,0 +1,108 @@
+{
+ "by_class": {
+  "authority_only_transition": {
+   "distinct_record_count": {
+    "max": 456,
+    "median": 2.0,
+    "min": 1
+   },
+   "entries": {
+    "max": 6,
+    "median": 1.0,
+    "min": 1
+   },
+   "example_urls": {
+    "max": 14,
+    "median": 2.0,
+    "min": 1
+   },
+   "largest_record_count": {
+    "max": 431,
+    "median": 2.0,
+    "min": 1
+   },
+   "mention_variants": {
+    "max": 2,
+    "median": 1.0,
+    "min": 1
+   },
+   "most_field_paths_per_entry": {
+    "max": 2,
+    "median": 1.0,
+    "min": 1
+   },
+   "sides": 26
+  },
+  "literal_only_transition": {
+   "distinct_record_count": {
+    "max": 27,
+    "median": 1.0,
+    "min": 1
+   },
+   "entries": {
+    "max": 20,
+    "median": 1.0,
+    "min": 1
+   },
+   "example_urls": {
+    "max": 27,
+    "median": 1.0,
+    "min": 1
+   },
+   "largest_record_count": {
+    "max": 5,
+    "median": 1.0,
+    "min": 1
+   },
+   "mention_variants": {
+    "max": 1,
+    "median": 1.0,
+    "min": 1
+   },
+   "most_field_paths_per_entry": {
+    "max": 1,
+    "median": 1.0,
+    "min": 1
+   },
+   "sides": 10
+  },
+  "retained_control": {
+   "distinct_record_count": {
+    "max": 2750,
+    "median": 3.0,
+    "min": 1
+   },
+   "entries": {
+    "max": 9,
+    "median": 1.5,
+    "min": 1
+   },
+   "example_urls": {
+    "max": 25,
+    "median": 3.0,
+    "min": 1
+   },
+   "largest_record_count": {
+    "max": 2749,
+    "median": 2.0,
+    "min": 1
+   },
+   "mention_variants": {
+    "max": 2,
+    "median": 1.0,
+    "min": 1
+   },
+   "most_field_paths_per_entry": {
+    "max": 3,
+    "median": 1.0,
+    "min": 1
+   },
+   "sides": 162
+  }
+ },
+ "largest_unit_characters": 6158,
+ "most_entries_on_one_side": 20,
+ "schema_version": "hapi-ruler-reregistration-2026-10-16-class-proxy-check/1",
+ "stage_1_queue_sha256": "963759f1a8f5c18e5ed42f2bd847720ac0c89537a3a3f1337feed34706c4681c",
+ "units": 99
+}

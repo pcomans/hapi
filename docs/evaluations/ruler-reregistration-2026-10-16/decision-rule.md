@@ -1,0 +1,93 @@
+# Ruler re-registration with Cleveland and the Walters — frozen decision rule
+
+**Approved by the project owner on 2026-10-16, before any model judged any case of this
+registration.**
+
+The rule is #361's (`../ruler-reregistration-2026-10-15/decision-rule.md`): #337 v10's rule, with
+#358's correction that a different-entity finding is labelled first. It is unchanged except for
+the four points below. This registration scores rulers only, so every scope is rulers × one
+museum pair. There are ten pairs: every pair of the Met, Brooklyn, Harvard, Cleveland and the
+Walters.
+
+## What differs from #361
+
+1. **Tuned-on records are counted apart.** #369's resolver fixes were found on three records of
+   #361's population:
+   - the two "Queen Ahmose" records, brooklyn-3634 and met-566763;
+   - Queen Neferu, brooklyn-3599.
+
+   Any case whose nodes hold one of them (`tuned_on_records`, in the private answer key) is
+   reviewed and labelled like every other case. It is left out of the **registered verdict**:
+   rule steps 1 to 3 below run on the other cases only. The same steps run on every case are
+   reported beside it (`decision_rule_including_tuned_on_cases`), as a sensitivity check that
+   decides nothing.
+   - In this population, two cases hold such records, both Met–Brooklyn: the Ahmes B retained
+     control and the Neferu literal-only loss.
+2. **More pairs, so more scopes.** The rule is applied per scope as before, and a scope still
+   needs at least 3 decided cases to qualify. A scope with fewer changed cases than that cannot
+   qualify here.
+3. **No scope starts qualified.** A case the matching was adjusted on cannot also be evidence
+   that the matching works.
+   - #361 qualified Met–Brooklyn on four cases, and its margin hung on the Ahmose case.
+   - #369 then changed the resolver using that case.
+   - So #361's result is not evidence for today's resolver.
+   - This registration therefore replaces #361's ruler qualification: after it, the qualified
+     ruler scopes are exactly those it qualifies.
+   - Met–Brooklyn has 2 changed cases once its tuned-on cases are left out, too few to qualify
+     here, so it ends unevaluated unless a later registration decides it.
+4. **What the verdict changes.** The scorer gives every scope one outcome
+   (`scope_dispositions` in `scripts/score_review.py`), from the registered verdict:
+
+   | Situation | Outcome |
+   |---|---|
+   | The verdict is INCONCLUSIVE | `no_decision`, every scope |
+   | The scope has a **b** | `unsafe` |
+   | The verdict is REDESIGN, for every scope without a b | `no_decision` |
+   | The scope qualifies (step 3 of the rule) | `qualified` |
+   | It has 3 or more decided cases and does not qualify | `not_qualifying` |
+   | It has fewer than 3 decided cases | `unevaluated` |
+
+   The qualified ruler scopes after this registration (`QUALIFIED_SCOPES` in
+   `pipeline/enrich/authority_links.py`) are the `qualified` ones and no others.
+   - A **b** in a tuned-on case would show in the sensitivity result only.
+   - This population has none: its two tuned-on cases are a control and a loss, and only an
+     authority gain can be a b.
+
+## Labels
+
+Every changed case (an authority-only or literal-only transition) receives one label from the
+adjudicated review (`scripts/score_review.py`, `classify_case`):
+
+| Label | Scorer category | Meaning |
+|---|---|---|
+| a | `a_authority_only_same_useful_exact_target` | authority gain: a correct, useful cross-museum match plain text misses |
+| b | `b_authority_only_useful_but_wrong_or_nonidentity` | authority gain: a **wrong** identity (false merge) |
+| c | `c_authority_only_false_or_not_useful_gain` | authority gain: not useful |
+| d | `d_literal_only_same_useful_connection_lost` | authority loss: lost a correct, useful match plain text makes |
+| e | `e_literal_only_false_or_not_useful_removal` | authority loss: removed a match that was wrong or not useful |
+| f | `f_transition_uncertainty` | uncertain |
+
+As in #361, a case whose two sides Stage 1 finds to be **different entities** is a wrong link,
+labelled before any uncertainty is considered. An authority gain is then **b**, a literal-only
+loss **e**, and a control `calibration_control_useful_but_wrong_or_nonidentity`.
+
+## Rule
+
+Applied in this order to the cases that hold no tuned-on record:
+
+1. **Calibration → INCONCLUSIVE.** If the adjudicated review calls more than 20% of the
+   retained (unchanged) control cases uncertain or wrong, the result is INCONCLUSIVE: reported,
+   with no decision. "Uncertain or wrong" is any `calibration_control_*` category other than
+   `calibration_control_same_useful_exact_target`.
+2. **Safety → REDESIGN.** Any **b** in a scope marks that scope unsafe. If **b ≥ 2** overall,
+   or **b > 10%** of all authority gains (a + b + c), the verdict is REDESIGN.
+3. **Utility → CONTINUE (targeted).** A scope with no **b** qualifies when all of these hold:
+   - **a + e > d**;
+   - at least **3** decided cases (labels other than f);
+   - **f ≤ ⅓** of the scope's changed cases.
+
+   If any scope qualifies, the verdict is CONTINUE, and it lists only the qualifying scopes.
+4. **Otherwise → STOP.**
+
+The numbers describe the production resolver's links on the frozen inputs (`results/run-manifest.json`):
+#337's corpus of 2026-08-27, and Cleveland's and the Walters' tables as ingested on 2026-10-16.

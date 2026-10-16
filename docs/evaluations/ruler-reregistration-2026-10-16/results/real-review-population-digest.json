@@ -1,0 +1,302 @@
+{
+  "arm_native_inventory": {
+    "different_membership_case_binding_set_sha256": "b4e772a9b7720dd3b9d29b1f48ae3fb98e0586ad4958457aa354bb2e28ecd4a0",
+    "distinct_accounting_case_binding_set_sha256": "b4e772a9b7720dd3b9d29b1f48ae3fb98e0586ad4958457aa354bb2e28ecd4a0",
+    "literal_nodes_represented_by_retained_controls": 69,
+    "multiple_literal_case_binding_set_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "retained_authority_control_cases": 69,
+    "retained_controls_requiring_distinct_arm_native_accounting": 11,
+    "retained_controls_with_different_arm_native_record_membership": 11,
+    "retained_controls_with_multiple_literal_nodes": 0,
+    "shared_node_cases_by_arm": {
+      "authority": 82,
+      "literal": 74
+    },
+    "shared_node_cases_by_pair_and_arm": {
+      "brooklyn__cleveland": {
+        "authority": 5,
+        "literal": 5
+      },
+      "brooklyn__harvard": {
+        "authority": 2,
+        "literal": 2
+      },
+      "brooklyn__walters": {
+        "authority": 7,
+        "literal": 6
+      },
+      "cleveland__walters": {
+        "authority": 7,
+        "literal": 6
+      },
+      "harvard__cleveland": {
+        "authority": 1,
+        "literal": 1
+      },
+      "harvard__walters": {
+        "authority": 2,
+        "literal": 2
+      },
+      "met__brooklyn": {
+        "authority": 14,
+        "literal": 13
+      },
+      "met__cleveland": {
+        "authority": 13,
+        "literal": 11
+      },
+      "met__harvard": {
+        "authority": 2,
+        "literal": 2
+      },
+      "met__walters": {
+        "authority": 29,
+        "literal": 26
+      }
+    }
+  },
+  "executable_check_counts": {
+    "actual_controls_numerator": 690,
+    "required_controls_numerator": 162,
+    "retained_controls": 69,
+    "stage_1_cross_side_group_token_matches": 0,
+    "stage_1_distinct_visible_structure_signatures": 1,
+    "stage_1_evidence_hash_mismatches": 0,
+    "stage_1_forbidden_key_occurrences": 0,
+    "stage_1_malformed_evidence_block_schemas": 0,
+    "stage_1_non_singleton_side_evidence_blocks": 0,
+    "stage_1_private_identifier_occurrences": 0,
+    "stage_2_custodian_duplicate_case_ids": 0,
+    "stage_2_evidence_hash_mismatches": 0,
+    "stage_2_insufficient_evidence_cases": 0,
+    "stage_2_missing_stage_1_review_units": 0,
+    "stage_2_recomputed_evidence_hash_mismatches": 0,
+    "stage_2_release_candidate_cases": 82,
+    "stage_2_stage_1_duplicate_case_ids": 0,
+    "transition_cases": 18,
+    "transition_expected": {
+      "authority_only_transition": {
+        "brooklyn__cleveland": 0,
+        "brooklyn__harvard": 0,
+        "brooklyn__walters": 1,
+        "cleveland__walters": 1,
+        "harvard__cleveland": 0,
+        "harvard__walters": 0,
+        "met__brooklyn": 2,
+        "met__cleveland": 2,
+        "met__harvard": 0,
+        "met__walters": 7
+      },
+      "literal_only_transition": {
+        "brooklyn__cleveland": 0,
+        "brooklyn__harvard": 0,
+        "brooklyn__walters": 0,
+        "cleveland__walters": 0,
+        "harvard__cleveland": 0,
+        "harvard__walters": 0,
+        "met__brooklyn": 1,
+        "met__cleveland": 0,
+        "met__harvard": 0,
+        "met__walters": 4
+      },
+      "retained_control": {
+        "brooklyn__cleveland": 5,
+        "brooklyn__harvard": 2,
+        "brooklyn__walters": 6,
+        "cleveland__walters": 6,
+        "harvard__cleveland": 1,
+        "harvard__walters": 2,
+        "met__brooklyn": 12,
+        "met__cleveland": 11,
+        "met__harvard": 2,
+        "met__walters": 22
+      }
+    },
+    "transition_observed": {
+      "authority_only_transition": {
+        "brooklyn__cleveland": 0,
+        "brooklyn__harvard": 0,
+        "brooklyn__walters": 1,
+        "cleveland__walters": 1,
+        "harvard__cleveland": 0,
+        "harvard__walters": 0,
+        "met__brooklyn": 2,
+        "met__cleveland": 2,
+        "met__harvard": 0,
+        "met__walters": 7
+      },
+      "literal_only_transition": {
+        "brooklyn__cleveland": 0,
+        "brooklyn__harvard": 0,
+        "brooklyn__walters": 0,
+        "cleveland__walters": 0,
+        "harvard__cleveland": 0,
+        "harvard__walters": 0,
+        "met__brooklyn": 1,
+        "met__cleveland": 0,
+        "met__harvard": 0,
+        "met__walters": 4
+      },
+      "retained_control": {
+        "brooklyn__cleveland": 5,
+        "brooklyn__harvard": 2,
+        "brooklyn__walters": 6,
+        "cleveland__walters": 6,
+        "harvard__cleveland": 1,
+        "harvard__walters": 2,
+        "met__brooklyn": 12,
+        "met__cleveland": 11,
+        "met__harvard": 2,
+        "met__walters": 22
+      }
+    }
+  },
+  "input_hashes": {
+    "review_population_builder_sha256": "7da041d07071a40013a58922278cf91eaf71a50bc489bdc412a26c509bce323f",
+    "review_protocol": {
+      "artifact_schema": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/review-artifact.schema.json",
+        "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
+      },
+      "browser_tool": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/open_page_server.py",
+        "sha256": "2ce814c976a3eaee31bf07614e6c82a65c8beb21453cc39b2bcc42e182264244"
+      },
+      "citable_sources": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/citable-sources.json",
+        "sha256": "4bd37e0670ecbeccd441b22e311a69e09cfe2925617a8fc1e00272396a4721d5"
+      },
+      "launcher_system_prompts": {
+        "review": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/launcher-instructions/review-system-v4.txt",
+          "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
+        }
+      },
+      "page_load_gate": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/page_load_gate.py",
+        "sha256": "3f1aeaa8c3d57e4bc17fd8964f5428c166c4f27c8fd0dc7a530adb08dde7c277"
+      },
+      "prompts": {
+        "stage_1_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-1-reconciler-v7.txt",
+          "sha256": "5deb06f3e6092a8b3b7e484978e862babe22f2b3f929a5730958034899bbe736"
+        },
+        "stage_1_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-1-reviewer-v7.txt",
+          "sha256": "c97e14ba4c13b2063483f0c9dc722cfc06ea1d0fb3223ab0fbd6b2474ef7b277"
+        },
+        "stage_2_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-2-reconciler-v7.txt",
+          "sha256": "9e086d2ff7e3bb6972fb85864dbfdf460b3d3778af62c9d7eba7306e3a64ab04"
+        },
+        "stage_2_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-2-reviewer-v7.txt",
+          "sha256": "1d6963146df04ace27102c3f7d90036f15004c984adcab2bf4aeb7996d654438"
+        }
+      },
+      "protocol_version": "hapi-337-reregistration-consensus/1",
+      "raw_response_contracts": {
+        "stage_1_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
+          "sha256": "f780f4b6f61225fae7511ea1374eae758ccfb9e31f522e1ba5c8873b5fd211a7"
+        },
+        "stage_1_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-1-reviewer-case-v4.schema.json",
+          "sha256": "0b94e388454cd8c56506aac4e9c2cb856471c9813ef103da59cedb97904490be"
+        },
+        "stage_2_reconciler": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
+          "sha256": "dd9535da0b94a9e3770f970dda666b77740f003a9e48c6c22aa6eee362257812"
+        },
+        "stage_2_reviewer": {
+          "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
+          "sha256": "b8fb1c959904bde658ae7a3a00d4a76aa788a90fc5ffe5275f2f9fea30e12ac3"
+        }
+      },
+      "runner": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/run_harness_review.py",
+        "sha256": "75f58315b9f3ac833b16b27670039616df36eefba795881e9d030c201881c5a8"
+      },
+      "scorer": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/score_review.py",
+        "sha256": "32e90079e6f5b5300fd9aa061b8aedb3b9bd8acc565ecc75b4873a59480aabf6"
+      },
+      "validator": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/review_protocol.py",
+        "sha256": "6eed55a85e01963119ea9ff0a21dfea17331808e6c0c7c57ac87cbc6d133d91a"
+      }
+    },
+    "run_file_content_sha256": {
+      "links-authority.ndjson.gz": "70c9c8a36e13ea5038a1718c56e7c6e2101577af27813c966e91cc1ce91dbc4d",
+      "links-literal.ndjson.gz": "86a6c983088c2b181643b061ec33d282550401fb5e3a299e28063f3b1a2aedf0",
+      "mentions.ndjson.gz": "956154ae56894d45d37dcd2db8e7bb0c392ce087b1d5d509e8832d9f4ad0435a",
+      "resolutions-authority.ndjson.gz": "fe613790931e7a68c862d0d29ba0c41fca960c84f2560792ffb969dd5a37aebb",
+      "resolutions-literal.ndjson.gz": "7d64c39e3ae2d1e29cdba818943dc9e7e6fa32c20e4995c7a7a7398a505a59e6"
+    },
+    "run_id": "868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e",
+    "run_manifest_sha256": "121e079dfd1d74343262ff28375f258e47101ce59cf80e34618edcb479f86b68"
+  },
+  "output_hashes": {
+    "private_answer_key_sha256": "d75d1a7c36be7729c2e9549d67a349c4230e7ba7f196722539bf7e4ec09fd50c",
+    "private_population_manifest_sha256": "5851c54d2e7b7fa7b5177224a8f6633d72969159c0dd1840044d4d3374c92eb1",
+    "review_protocol_manifest_sha256": "0822457a0d75e2f53df6081ab609a81438272d2fd114a13e18dfc583cae09e20",
+    "stage_1_queue_sha256": "963759f1a8f5c18e5ed42f2bd847720ac0c89537a3a3f1337feed34706c4681c",
+    "stage_2_custodian_sha256": "d531dcbfb9fca2b6eac6c21540aaadb11ebb1bea1f8a47c36be25a43c9eb7a25"
+  },
+  "population_counts": {
+    "by_class": {
+      "authority_only_transition": 13,
+      "literal_only_transition": 5,
+      "retained_control": 69
+    },
+    "by_entity_type": {
+      "ruler": 87
+    },
+    "by_pair_and_class": {
+      "brooklyn__cleveland": {
+        "retained_control": 5
+      },
+      "brooklyn__harvard": {
+        "retained_control": 2
+      },
+      "brooklyn__walters": {
+        "authority_only_transition": 1,
+        "retained_control": 6
+      },
+      "cleveland__walters": {
+        "authority_only_transition": 1,
+        "retained_control": 6
+      },
+      "harvard__cleveland": {
+        "retained_control": 1
+      },
+      "harvard__walters": {
+        "retained_control": 2
+      },
+      "met__brooklyn": {
+        "authority_only_transition": 2,
+        "literal_only_transition": 1,
+        "retained_control": 12
+      },
+      "met__cleveland": {
+        "authority_only_transition": 2,
+        "retained_control": 11
+      },
+      "met__harvard": {
+        "retained_control": 2
+      },
+      "met__walters": {
+        "authority_only_transition": 7,
+        "literal_only_transition": 4,
+        "retained_control": 22
+      }
+    },
+    "cases_holding_tuned_on_records": 2,
+    "stage_1_arm_native_review_units": 99,
+    "total": 87
+  },
+  "review": {
+    "protocol_manifest_sha256": "0822457a0d75e2f53df6081ab609a81438272d2fd114a13e18dfc583cae09e20"
+  },
+  "schema_version": "hapi-authority-independent-control-public-review-population-digest/5"
+}
