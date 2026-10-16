@@ -12,7 +12,9 @@ a link of that type to a target that also has a record of B. The measures are co
 records the authority connects that plain text does not (`gained`), and the reverse (`lost`).
 Whether a connection is right is what the evaluations reviewed; a scope's `qualified` flag says
 whether one found the authority's changes there to be better (`QUALIFIED_SCOPES`), and an
-unqualified scope's changes are unevaluated, not proven.
+unqualified scope's changes are unevaluated, not proven. The flag is policy: it does not say the
+review saw the population measured. Whoever reports a run says which connected records the
+review did not see (`run_end_to_end.py`, `scope_status`).
 """
 
 from __future__ import annotations

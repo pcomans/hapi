@@ -1203,8 +1203,8 @@
     }
   },
   "report_sha256": {
-    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "3033152a38254ef7f36ca90a9d32788c6fc6c4368aafc6765985715ec3c097af",
-    "pipeline/pipeline/enrich/cross_museum.py": "e1d8280b6d5994ea01ac8f1cea259a456e7931fde79c5d857b83be24ea0a197c"
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "6cc7b7cc67ccd2328fa48fa14b37b56608b2a6a332d20008e23d8ce459f31289",
+    "pipeline/pipeline/enrich/cross_museum.py": "d48017ed2195fbc4c194e18ac06d4de919213c64cac2a6f93bc174edb1871fe1"
   },
   "resolver_versions": {
     "authority": "72a60c4dd928ad31bb8f1a1843dc866042f37077c27b9da82ac1072ce9c147bc",
@@ -1215,6 +1215,32 @@
     "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6"
   ],
   "schema_version": "hapi-338-end-to-end/3",
+  "scope_status": {
+    "ruler|met|brooklyn": {
+      "qualified_by": "#361",
+      "review_covers_population": false,
+      "unreviewed_connected_records": [
+        "brooklyn-3634",
+        "met-547683",
+        "met-566763"
+      ]
+    },
+    "site|brooklyn|harvard": {
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|met|brooklyn": {
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|met|harvard": {
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    }
+  },
   "tuned_on_369": [
     "brooklyn-3599",
     "brooklyn-3634",

@@ -273,3 +273,17 @@ def test_the_largest_plain_text_site_targets_are_egypt_and_africa(result) -> Non
     authority = al.load_authority()
     for place in ("Egypt", "Africa"):
         assert authority.sites.resolve(place, al.resolver.place_norm_set)["status"] == "unmatched", place
+
+
+def test_each_qualified_scope_says_whether_its_review_covers_this_population(result) -> None:
+    """`qualified` is the policy flag; the scope status says which review qualified the scope and
+    which connected records it did not review: none for the sites, the three records #369's Ahmes
+    B connects for Met-Brooklyn rulers."""
+    assert result["scope_status"] == {
+        "ruler|met|brooklyn": {"qualified_by": "#361", "review_covers_population": False,
+                               "unreviewed_connected_records": ["brooklyn-3634", "met-547683", "met-566763"]},
+        **{f"site|{a}|{b}": {"qualified_by": "#337 v10", "review_covers_population": True,
+                             "unreviewed_connected_records": []} for a, b in al.MUSEUM_PAIRS},
+    }
+    assert sorted(result["scope_status"]["ruler|met|brooklyn"]["unreviewed_connected_records"]) == sorted(
+        r for side in result["ahmes_b_records"].values() for r in side)

@@ -161,7 +161,11 @@ The CI tests need no private data:
   - the largest 1 and 5 shared targets (by ID) and their share of each side;
   - #337's headline measure: each museum's records on a target shared with any other museum.
 
-  Each scope is flagged `qualified` per `QUALIFIED_SCOPES`. This is the measurement; no deployed
+  Each scope is flagged `qualified` per `QUALIFIED_SCOPES`, which is the policy flag. The
+  end-to-end result's `scope_status` says, per qualified scope, which review qualified it and
+  which connected records that review did not see. For Met–Brooklyn rulers these are the three
+  records #369's Ahmes B connects, so the review does not cover that population. This is the
+  measurement; no deployed
   matcher reads these links yet. Matching is the web query layer's (ADR-008), and that
   integration comes with the database step.
 - **`scripts/run_end_to_end.py`** writes `results/end-to-end.json`. It runs `write_run` twice on
@@ -179,7 +183,7 @@ The CI tests need no private data:
 
 | Scope | Qualified | Shared targets (authority / literal) | First museum: connected (authority / literal); gained, lost | Second museum |
 |---|---|---|---|---|
-| ruler, Met–Brooklyn | yes | 14 / 13 | Met 1,957 / 1,981; +33, −57 | Brooklyn 20 / 19; +2, −1 |
+| ruler, Met–Brooklyn | yes (#361), but 3 connected records unreviewed | 14 / 13 | Met 1,957 / 1,981; +33, −57 | Brooklyn 20 / 19; +2, −1 |
 | ruler, Met–Harvard | no (unevaluated) | 2 / 2 | Met 920 / 921; +0, −1 | Harvard 2 / 2 |
 | ruler, Brooklyn–Harvard | no (unevaluated) | 2 / 2 | Brooklyn 6 / 6 | Harvard 2 / 2 |
 | site, Met–Brooklyn | yes | 47 / 58 | Met 14,393 / 27,198; +136, −12,941 | Brooklyn 1,151 / 2,890; +0, −1,739 |

@@ -76,6 +76,22 @@ def ahmes_b_records(run: Path) -> dict:
             for museum, records in sorted(by_mode["authority"][("ruler", "dodson_hilton:Ahmes B")].items())}
 
 
+def scope_status(report: dict, ahmes_b: dict) -> dict:
+    """Per qualified scope: the review that qualified it, and the connected records it did not
+    review. Sites are #337's population record for record (the identity test); Met-Brooklyn
+    rulers are #361's but for the records #369's Ahmes B connects, found on #361's deciding case."""
+    status = {}
+    for key, row in sorted(report["by_museum_pair"].items()):
+        if not row["qualified"]:
+            continue
+        entity = key.split("|")[0]
+        unreviewed = sorted(r for side in ahmes_b.values() for r in side) if key == "ruler|met|brooklyn" else []
+        status[key] = {"qualified_by": {"site": "#337 v10", "ruler": "#361"}[entity],
+                       "unreviewed_connected_records": unreviewed,
+                       "review_covers_population": not unreviewed}
+    return status
+
+
 def end_to_end(archive: Path) -> dict:
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(encoding="utf-8"))
     if not TUNED_ON_369 <= {c["artifact_id"] for c in changes["royal_woman_cued_mentions"]["changes"]}:
@@ -112,6 +128,9 @@ def end_to_end(archive: Path) -> dict:
         "tuned_on_369": sorted(TUNED_ON_369),
         # The records #369's one new shared ruler target joins, by museum (authority mode).
         "ahmes_b_records": ahmes_b,
+        # `qualified` in the report is the policy flag; this says, per qualified scope, which review
+        # qualified it and which connected records that review did not see.
+        "scope_status": scope_status(reports[0], ahmes_b),
         # What #337 (sites, rulers and tombs; its own mention ledger and code of 2026-10-11) and #361
         # (rulers only; this mention ledger) reported, to set beside this run.
         "evaluation_headlines": {"337": evaluation_headline("authority-independent-control-2026-10-11"),
