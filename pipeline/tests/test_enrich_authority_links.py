@@ -228,4 +228,10 @@ def test_the_committed_promotion_check_holds_and_is_of_the_frozen_inputs() -> No
     assert result["rulers_vs_361_literal_arm"] == {"compared": 11648, "differ": []}
     assert result["places_vs_337_literal_arm"] == {"compared": 118601, "differ": []}
     assert set(result["snapshot"]) == {"authority", "literal"}
-    assert result["check_inputs"] == {"canonical_records": 36245, "passed": True}
+    check = result["check_inputs"]
+    assert (check["canonical_records"], check["passed"]) == (36245, True)
+    # It names the code it ran: the check and every mapper it applies. (Not compared with the
+    # live files: an edit to a mapper must not turn main red; every run re-checks its inputs.)
+    assert sorted(check["code_sha256"]) == [
+        "pipeline/pipeline/assets/normalize/brooklyn.py", "pipeline/pipeline/assets/normalize/harvard.py",
+        "pipeline/pipeline/assets/normalize/met.py", "pipeline/pipeline/enrich/inputs.py"]

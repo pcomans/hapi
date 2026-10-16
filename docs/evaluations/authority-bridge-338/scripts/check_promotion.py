@@ -39,6 +39,10 @@ sys.path.insert(0, str(REPO / "pipeline"))
 from pipeline.authority import graph_kings, royal_women  # noqa: E402
 from pipeline.enrich import authority_links, mentions as production_mentions  # noqa: E402
 from pipeline.enrich.inputs import check_inputs  # noqa: E402
+from pipeline.assets.normalize import brooklyn, harvard, met  # noqa: E402
+from pipeline.enrich import inputs as inputs_module  # noqa: E402
+
+CHECK_INPUTS_CODE = (inputs_module, met, brooklyn, harvard)
 ARCHIVE_SHA256 = "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
 PREFIX = "hapi-museum-corpus-2026-08-27/data/"
 EVALUATIONS = REPO / "docs/evaluations"
@@ -177,7 +181,10 @@ def check(archive: Path, run: Path) -> dict:
             "compared": dict(collections.Counter(m["entity_type"] for m in place_rows)), "differ": place_differ},
         "rulers_vs_361_literal_arm": {"compared": len(literal_arm), "differ": literal_differ},
         "places_vs_337_literal_arm": {"compared": len(places_337), "differ": literal_place_differ},
-        "check_inputs": {"canonical_records": len(canonical), "passed": True},
+        "check_inputs": {"canonical_records": len(canonical), "passed": True,
+                         # The code the check ran: its module and the normalize step's mappers.
+                         "code_sha256": {str(Path(m.__file__).relative_to(REPO)): sha256_path(Path(m.__file__))
+                                         for m in sorted(CHECK_INPUTS_CODE, key=lambda m: m.__name__)}},
         "authority_mode_statuses": {f"{t}:{s}": n for (t, s), n in sorted(statuses.items())},
     }
 

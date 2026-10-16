@@ -14,6 +14,12 @@
   },
   "check_inputs": {
     "canonical_records": 36245,
+    "code_sha256": {
+      "pipeline/pipeline/assets/normalize/brooklyn.py": "42b8d50a201aaeeda4de433ce7ed8bdfa1dc2724f0338c6d492ae91e2539c6bd",
+      "pipeline/pipeline/assets/normalize/harvard.py": "73aadf30fb49fcfdfff8f19a0c7bcc08f79a55b7f2ded0c405cfdda9aea5b61d",
+      "pipeline/pipeline/assets/normalize/met.py": "69ec2be6ad27425721193dffcab53bfe1e26296ff0331bf1ceed57134469e8d1",
+      "pipeline/pipeline/enrich/inputs.py": "a664698b3108dc14cd8b54d797a56ed2d5a778099ce5027397abd1d5a7768e09"
+    },
     "passed": true
   },
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
