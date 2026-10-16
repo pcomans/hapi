@@ -14,7 +14,7 @@ Field mapping notes (docs/museum-sources/cleveland.md):
 
 import re
 
-from pipeline.enrich.mentions import cleveland_reign_components, cleveland_reign_text, component_spans
+from pipeline.enrich.mentions import cleveland_reign_components, component_spans, without_trailing_dates
 from pipeline.types.canonical import CanonicalArtifact
 from pipeline.types.protocol import MapperProtocol
 from pipeline.types.sources import License, MuseumSource
@@ -99,7 +99,7 @@ def _ruler(raw: dict) -> str | None:
     reader's own), without its trailing dates and without a plain leading "reign of". Qualifiers,
     doubt marks and ranges stay as written ("probably reign of Senusret I", "Ramesses II(?)",
     "Tuthmosis III (1479–1425 BCE)–reign of Amenhotep III"). More than one raises."""
-    found = [cleveland_reign_text(c) for entry in raw.get("culture") or [] for c, _ in cleveland_reign_components(entry)]
+    found = [without_trailing_dates(c) for entry in raw.get("culture") or [] for c, _ in cleveland_reign_components(entry)]
     if len(found) > 1:
         raise ValueError(f"cleveland-{raw['id']}: {len(found)} reign components in culture: {found}")
     return _PLAIN_REIGN.sub("", found[0]) if found else None

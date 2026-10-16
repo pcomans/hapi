@@ -1,0 +1,141 @@
+{
+  "by_collection_id": {
+    "": 192,
+    "ANE": 3,
+    "ANE|EGY": 2,
+    "EGY": 913,
+    "EGYJWL": 1,
+    "EGY|ANE": 9,
+    "EGY|GRC": 30,
+    "EGY|GRC|JWL": 2,
+    "EGY|GRC|MSS": 1,
+    "EGY|GRC|ROM": 4,
+    "EGY|JWL": 113,
+    "EGY|MED": 2,
+    "EGY|MSS": 1,
+    "EGY|PRE": 6,
+    "EGY|ROM": 11,
+    "GRC": 2,
+    "GRC|EGY": 14,
+    "GRC|EGY|JWL": 1,
+    "GRC|ROM": 4,
+    "GRC|ROM|EGY": 1,
+    "ISL": 7,
+    "MED|EGY": 3,
+    "MED|EGY|BYZ": 1,
+    "ROM": 4,
+    "ROM|EGY": 11,
+    "ROM|EGY|JWL": 3
+  },
+  "code_sha256": {
+    "docs/museum-sources/walters-profile/profile.py": "eaf7b862c7923ee057f92b0735deff37b50a372f9e7e78792ca7e6c6fb5efad1",
+    "pipeline/pipeline/assets/ingest/walters.py": "9fbcd15b6825de2d349cc065fec22d96f48bf1309e79c4a0abd91d3b33071180",
+    "pipeline/pipeline/assets/normalize/walters.py": "239f74090f8e82aad93c41167af349b2f1b540c46a9f44e74d2a1c16800040a5",
+    "pipeline/pipeline/enrich/mentions.py": "2e41d6cb8b14e5c400d8f7f77ae37c26e7cd4bb69eef1dccbfbe3204fcb51e36"
+  },
+  "fixtures": {
+    "hyphenated_reign.json": {
+      "equals_ingested_record": true,
+      "object_id": "1605"
+    },
+    "modern_object.json": {
+      "equals_ingested_record": true,
+      "object_id": "24708"
+    },
+    "no_collection_egyptian_culture.json": {
+      "equals_ingested_record": true,
+      "object_id": "1200"
+    },
+    "no_primary_image.json": {
+      "equals_ingested_record": true,
+      "object_id": "37893"
+    },
+    "other_collection.json": {
+      "equals_ingested_record": true,
+      "object_id": "74"
+    },
+    "reign_list.json": {
+      "equals_ingested_record": true,
+      "object_id": "24458"
+    },
+    "rich_object.json": {
+      "equals_ingested_record": true,
+      "object_id": "481"
+    },
+    "run_together_codes.json": {
+      "equals_ingested_record": true,
+      "object_id": "24014"
+    },
+    "sparse_no_image.json": {
+      "equals_ingested_record": true,
+      "object_id": "1358"
+    },
+    "uncertain_reign.json": {
+      "equals_ingested_record": true,
+      "object_id": "5104"
+    }
+  },
+  "in_scope_by_culture": {
+    "": 152,
+    "Coptic": 4,
+    "Egyptian": 1145,
+    "Egyptian or modern": 1,
+    "Egyptian?": 1,
+    "Gnostic": 1,
+    "Greek": 3,
+    "Kushite": 2,
+    "Nubian": 3,
+    "Ptolemaic": 2,
+    "Roman": 6,
+    "Roman?": 1
+  },
+  "in_scope_by_reason": {
+    "collection includes EGY": 1129,
+    "no collection, culture Egyptian": 192
+  },
+  "in_scope_dated_after_1800": [
+    "14096",
+    "24708",
+    "32182",
+    "38790"
+  ],
+  "in_scope_image": {
+    "lowest rank": 6,
+    "marked primary": 1208,
+    "no image row": 107
+  },
+  "in_scope_records": 1321,
+  "in_scope_ruler_mentions": {
+    "by_field_and_expression": {
+      "object.DateText | single_identity": 11,
+      "object.Reign | multi_or_range": 4,
+      "object.Reign | single_identity": 91,
+      "object.Reign | uncertain_identity": 4,
+      "object.Title | multi_or_range": 10,
+      "object.Title | single_identity": 20,
+      "object.Title | uncertain_identity": 1
+    },
+    "cues_without_a_name": {
+      "walters|object.Title": 50
+    },
+    "total": 141
+  },
+  "in_scope_with_dynasty": 796,
+  "in_scope_with_geography_id": 0,
+  "in_scope_with_period": 0,
+  "in_scope_with_reign": 99,
+  "out_of_scope": {
+    "ANE | Egyptian": 3,
+    "GRC | Egyptian": 2,
+    "GRC|ROM | Egyptian": 4,
+    "ISL | Egyptian": 1,
+    "ISL | Egyptian (?)": 1,
+    "ISL | Egyptian-Islamic": 2,
+    "ISL | Syrian or Egyptian": 3,
+    "ROM | Egyptian": 2,
+    "ROM | Egypto-Roman": 1,
+    "ROM | Roman or Egyptian": 1
+  },
+  "raw_records": 1341,
+  "raw_sha256": "2307c00225bbf510e33694a3969e43bec8fc8caac4bf704b29313e2b0f2de56e"
+}

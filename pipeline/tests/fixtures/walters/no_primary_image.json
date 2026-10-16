@@ -1,0 +1,67 @@
+{
+  "object": {
+    "ObjectID": "37893",
+    "AccessionNumber": "22.347",
+    "ObjectName": "statues ; sculpture",
+    "DateBeginYear": "-412",
+    "DateEndYear": "-250",
+    "DateText": "ca. 380-250 BCE (Late Period (30th dynasty)-early Ptolemaic Period)",
+    "Title": "Statue of a Crocodile with the Head of a Falcon",
+    "Dimensions": "H: 3 1/4 x W: 3 1/2 x D: 10 9/16 in. (8.3 x 8.8 x 26.8 cm)",
+    "Medium": "steatite",
+    "Style": "",
+    "Culture": "Egyptian",
+    "Inscriptions": "",
+    "Classification": "Sculpture",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/22.347",
+    "Description": "<p>This may represent the god Horus the Elder, who is occasionally shown with a falcon head and a crocodile body, or a combination of the crocodile-god Sobek with the sun-god Re. A crowning element once completed the work.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/22.347' rel='external'>Statue of a Crocodile with the Head of a Falcon</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": " Walters Art Museum, 1931, by bequest.",
+    "Keywords": "",
+    "Provenance": "Dikran Kelekian, New York and Paris [date and mode of acquisition unknown]; Henry Walters, Baltimore, 1924, by purchase; Walters Art Museum, 1931, by bequest.",
+    "Dynasty": "30th-early Ptolemaic Dynasty",
+    "Reign": "",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "PS1_22.347_Rt_DD_T08.jpg|PS1_22.347_3QtrRt_DD_T08.jpg|PS1_22.347_Fnt_DD_T08.jpg",
+    "CollectionID": "EGY",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/22.347",
+    "Creators": "6182",
+    "Exhibitions": "3193"
+  },
+  "media": [
+    {
+      "ObjectID": "37893",
+      "AccessionNumber": "22.347",
+      "MediaXrefID": "7697",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS1_22.347_Rt_DD_T08.jpg",
+      "Filename": "PS1_22.347_Rt_DD_T08.jpg",
+      "MediaType": "Image",
+      "MediaView": "Right",
+      "Rank": "3",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "37893",
+      "AccessionNumber": "22.347",
+      "MediaXrefID": "7694",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS1_22.347_3QtrRt_DD_T08.jpg",
+      "Filename": "PS1_22.347_3QtrRt_DD_T08.jpg",
+      "MediaType": "Image",
+      "MediaView": "Three Quarter Right",
+      "Rank": "4",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "37893",
+      "AccessionNumber": "22.347",
+      "MediaXrefID": "7695",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS1_22.347_Fnt_DD_T08.jpg",
+      "Filename": "PS1_22.347_Fnt_DD_T08.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "5",
+      "IsPrimary": "0"
+    }
+  ]
+}

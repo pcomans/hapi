@@ -10,11 +10,11 @@ from dagster import AssetExecutionContext, asset
 from pipeline.enrich.link_files import write_run
 from pipeline.resources import DatabaseResource
 from pipeline.types.models import (
-    artifacts_table, raw_brooklyn_table, raw_cleveland_table, raw_harvard_table, raw_met_table,
+    artifacts_table, raw_brooklyn_table, raw_cleveland_table, raw_harvard_table, raw_met_table, raw_walters_table,
 )
 
 RAW_TABLES = {"met": raw_met_table, "brooklyn": raw_brooklyn_table, "harvard": raw_harvard_table,
-              "cleveland": raw_cleveland_table}
+              "cleveland": raw_cleveland_table, "walters": raw_walters_table}
 # Where the runs are written: files first, a database table later (owner, 2026-10-16).
 DEFAULT_ROOT = Path(__file__).resolve().parents[4] / "data" / "authority-links"
 
@@ -22,7 +22,7 @@ DEFAULT_ROOT = Path(__file__).resolve().parents[4] / "data" / "authority-links"
 @asset(
     group_name="enrich",
     kinds={"python"},
-    deps=["normalize_met", "normalize_harvard", "normalize_brooklyn", "normalize_cleveland"],
+    deps=["normalize_met", "normalize_harvard", "normalize_brooklyn", "normalize_cleveland", "normalize_walters"],
 )
 def authority_links(context: AssetExecutionContext, database: DatabaseResource) -> None:
     """Resolve every mention of every canonical record in both modes and write the run under

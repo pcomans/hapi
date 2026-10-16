@@ -1,0 +1,45 @@
+{
+  "object": {
+    "ObjectID": "1200",
+    "AccessionNumber": "54.2103",
+    "ObjectName": "statuettes (statues)",
+    "DateBeginYear": "-760",
+    "DateEndYear": "-343",
+    "DateText": "mid 8th-mid 4th century BCE (Late Period)",
+    "Title": "Kneeling King",
+    "Dimensions": "Overall: 6 7/8 in. (17.5 cm)",
+    "Medium": "bronze",
+    "Style": "",
+    "Culture": "Egyptian",
+    "Inscriptions": "",
+    "Classification": "",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/54.2103",
+    "Description": "<p>The king kneels with his torso inclined forward and his arms reaching to hold something that is now missing. He wears a striped royal head-cloth and uraeus. He wears a pleated kilt and a collar. Beneath his knees and feet are prongs for insertion into a base.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/54.2103' rel='external'>Kneeling King</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": " Walters Art Museum, 1931, by bequest.",
+    "Keywords": "",
+    "Provenance": "Dikran Kelekian, Paris and New York [date and mode of acquisition unknown] [said to have been found at the pyramids]; Henry Walters, Baltimore, 1911, by purchase; Walters Art Museum, 1931, by bequest.",
+    "Dynasty": "",
+    "Reign": "",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "ARG_54.2103_3Qtr_BW.jpg",
+    "CollectionID": "",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/54.2103",
+    "Creators": "6182",
+    "Exhibitions": ""
+  },
+  "media": [
+    {
+      "ObjectID": "1200",
+      "AccessionNumber": "54.2103",
+      "MediaXrefID": "788",
+      "ImageURL": "https://art.thewalters.org/images/raw/ARG_54.2103_3Qtr_BW.jpg",
+      "Filename": "ARG_54.2103_3Qtr_BW.jpg",
+      "MediaType": "Image",
+      "MediaView": "Three Quarter",
+      "Rank": "1",
+      "IsPrimary": "1"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "object": {
+    "ObjectID": "24708",
+    "AccessionNumber": "22.77",
+    "ObjectName": "figurines; statues",
+    "DateBeginYear": "1900",
+    "DateEndYear": "1930",
+    "DateText": "early 20th century (modern)",
+    "Title": "Head of Hatshepsut (?)",
+    "Dimensions": "H: 5 5/8 × W: 4 1/8 × D: 3 3/8 in. (14.3 × 10.5 × 8.5 cm)Mount: H: 10 5/8 × W: 6 5/16 × D: 4 1/16 in. (27 × 16 × 10.3 cm)",
+    "Medium": "limestone, red and black paint",
+    "Style": "",
+    "Culture": "Egyptian",
+    "Inscriptions": "",
+    "Classification": "",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/22.77",
+    "Description": "<p>This head is the portrait of a king, perhaps Hatshepsut. The figure wears a false beard, a royal head-cloth and a diadem with a uraeus at the front. The piece is broken flat at the back and probably was attached to a relief. There is a repaired break across the forehead. This head is a forgery, as indicated by stylistic inconsistencies and elements detected in the materials used.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/22.77' rel='external'>Head of Hatshepsut (?)</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": " Walters Art Museum, 1931, by bequest.",
+    "Keywords": "",
+    "Provenance": "Dikran Kelekian, New York and Paris [date and mode of acquisition unknown] [said to be from Deir el-Bahri]; Henry Walters, Baltimore, 1931, by purchase; Walters Art Museum, 1931, by bequest.",
+    "Dynasty": "18th Dynasty",
+    "Reign": "",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "PS4_22.77_Fnt3QtrLft_DD_AT23_44927-tms.jpg|PS4_22.77_Fnt3QtrRt_DD_AT23_44929-tms.jpg|PS4_22.77_Top_DD_AT23_44930-tms.jpg|PL7_22.77_Fnt_BW.jpg|PS4_22.77_DD_AT23_44924-tms.jpg",
+    "CollectionID": "EGY",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/22.77",
+    "Creators": "6182",
+    "Exhibitions": ""
+  },
+  "media": [
+    {
+      "ObjectID": "24708",
+      "AccessionNumber": "22.77",
+      "MediaXrefID": "100198",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS4_22.77_Fnt3QtrLft_DD_AT23_44927-tms.jpg",
+      "Filename": "PS4_22.77_Fnt3QtrLft_DD_AT23_44927-tms.jpg",
+      "MediaType": "Image",
+      "MediaView": "three quarter left",
+      "Rank": "2",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24708",
+      "AccessionNumber": "22.77",
+      "MediaXrefID": "100199",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS4_22.77_Fnt3QtrRt_DD_AT23_44929-tms.jpg",
+      "Filename": "PS4_22.77_Fnt3QtrRt_DD_AT23_44929-tms.jpg",
+      "MediaType": "Image",
+      "MediaView": "three quarter right",
+      "Rank": "3",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24708",
+      "AccessionNumber": "22.77",
+      "MediaXrefID": "100200",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS4_22.77_Top_DD_AT23_44930-tms.jpg",
+      "Filename": "PS4_22.77_Top_DD_AT23_44930-tms.jpg",
+      "MediaType": "Image",
+      "MediaView": "top",
+      "Rank": "4",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24708",
+      "AccessionNumber": "22.77",
+      "MediaXrefID": "19745",
+      "ImageURL": "https://art.thewalters.org/images/raw/PL7_22.77_Fnt_BW.jpg",
+      "Filename": "PL7_22.77_Fnt_BW.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "5",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24708",
+      "AccessionNumber": "22.77",
+      "MediaXrefID": "100197",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS4_22.77_DD_AT23_44924-tms.jpg",
+      "Filename": "PS4_22.77_DD_AT23_44924-tms.jpg",
+      "MediaType": "Image",
+      "MediaView": "",
+      "Rank": "1",
+      "IsPrimary": "1"
+    }
+  ]
+}

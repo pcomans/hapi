@@ -1,0 +1,45 @@
+{
+  "object": {
+    "ObjectID": "5104",
+    "AccessionNumber": "32.1",
+    "ObjectName": "ostraka; sketches",
+    "DateBeginYear": "-1292",
+    "DateEndYear": "-1268",
+    "DateText": "ca. 1280 BCE (New Kingdom, 19th dynasty)",
+    "Title": "Ostracon with a Royal Head",
+    "Dimensions": "H: 7 5/16 x W: 5 3/4 x D: 1 1/8 in. (18.5 x 14.6 x 2.9 cm)",
+    "Medium": "limestone with ink",
+    "Style": "early Ramesside",
+    "Culture": "Egyptian",
+    "Inscriptions": "[Number] 3111",
+    "Classification": "Painting & Drawing",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/32.1",
+    "Description": "<p>This sketch depicts a king wearing the \"blue crown,\" a collar, and two strings of gold beads. His stubble beard is a sign of mourning. The features of the king make it likely that Seti I is represented. The elaborate execution of the royal image, which is without doubt the work of a master painter, differs from the depiction of the two hands. This sketch was probably a model for trainees, and was later reused for other training purposes by an experienced artist. It is interesting that the painter of the royal head has chosen the topic of a stubble-bearded king, which was not part of the official motifs.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/32.1' rel='external'>Ostracon with a Royal Head</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": " Walters Art Museum, 1931, by bequest.",
+    "Keywords": "",
+    "Provenance": "Dikran Kelekian, Paris and New York [date and mode of acquisition unknown]; Henry Walters, Baltimore, 1923, by purchase; Walters Art Museum, 1931, by bequest.",
+    "Dynasty": "19th Dynasty",
+    "Reign": "Seti I (1290-1279/8) (?)",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "PS1_32.1_Fnt_DD_T07.jpg",
+    "CollectionID": "EGY",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/32.1",
+    "Creators": "6182",
+    "Exhibitions": ""
+  },
+  "media": [
+    {
+      "ObjectID": "5104",
+      "AccessionNumber": "32.1",
+      "MediaXrefID": "7824",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS1_32.1_Fnt_DD_T07.jpg",
+      "Filename": "PS1_32.1_Fnt_DD_T07.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "1",
+      "IsPrimary": "1"
+    }
+  ]
+}

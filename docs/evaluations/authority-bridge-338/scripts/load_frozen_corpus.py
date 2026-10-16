@@ -29,12 +29,13 @@ sys.path.insert(0, str(REPO / "pipeline"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_promotion import load_corpus  # noqa: E402  (verifies the archive's SHA-256)
 from pipeline.types.models import (  # noqa: E402
-    artifacts_table, raw_brooklyn_table, raw_cleveland_table, raw_harvard_table, raw_met_table,
+    artifacts_table, raw_brooklyn_table, raw_cleveland_table, raw_harvard_table, raw_met_table, raw_walters_table,
 )
 
-# Cleveland's table is in the check too: the corpus predates Cleveland, so it must stay empty.
+# The Cleveland and Walters tables are in the check too: the corpus predates both, so they must
+# stay empty.
 RAW_TABLES = {"met": raw_met_table, "brooklyn": raw_brooklyn_table, "harvard": raw_harvard_table,
-              "cleveland": raw_cleveland_table}
+              "cleveland": raw_cleveland_table, "walters": raw_walters_table}
 BATCH = 1000
 
 

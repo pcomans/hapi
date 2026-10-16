@@ -80,3 +80,8 @@ export const rawClevelandInCatalog = catalog.table("raw_cleveland", {
 	objectId: varchar("object_id").primaryKey().notNull(),
 	data: text().notNull(),
 });
+
+export const rawWaltersInCatalog = catalog.table("raw_walters", {
+	objectId: varchar("object_id").primaryKey().notNull(),
+	data: text().notNull(),
+});

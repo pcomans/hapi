@@ -49,15 +49,16 @@ UNSUPPORTED = {
     "excavation": "no committed canonical excavation authority",
 }
 MUSEUM_PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard"),
-                ("met", "cleveland"), ("brooklyn", "cleveland"), ("harvard", "cleveland"))
+                ("met", "cleveland"), ("brooklyn", "cleveland"), ("harvard", "cleveland"),
+                ("met", "walters"), ("brooklyn", "walters"), ("harvard", "walters"), ("cleveland", "walters"))
 # Where the authority beat plain text under review (`docs/evaluations/`):
 # * site, all three pairs: #337 v10 (`authority-independent-control-2026-10-11/README.md`);
 # * ruler, Met–Brooklyn: #361 (`ruler-reregistration-2026-10-15/README.md`). The Harvard pairs
 #   had no changed ruler case to review, so they are unevaluated, not failed.
 # Tombs are unevaluated: in #337 no tomb mention reached a node shared across museums in
 # either arm, so no tomb case was reviewed.
-# Every Cleveland pair is unevaluated: Cleveland was added after both reviews
-# (docs/museum-sources/cleveland.md).
+# Every Cleveland and Walters pair is unevaluated: both museums were added after both reviews
+# (docs/museum-sources/cleveland.md, walters.md).
 QUALIFIED_SCOPES = {
     "site": frozenset({("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard")}),
     "ruler": frozenset({("met", "brooklyn")}),

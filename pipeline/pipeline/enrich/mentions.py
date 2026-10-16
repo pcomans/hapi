@@ -8,9 +8,10 @@ test and this paragraph. Detection and span boundaries come from museum field st
 rules; authority labels, aliases, identifiers and resolver results are not inputs. Each
 museum's evidence fields are named in `extract_mentions` (the per-museum field inventory).
 
-Cleveland came after #361: its reader is `cleveland_mentions`, added beside #361's definitions
-rather than into them, and `extract_all_mentions` joins the two. A run calls that; without
-Cleveland records it gives exactly what `extract_mentions` gives (tested).
+Cleveland and the Walters came after #361: their readers are `cleveland_mentions` and
+`walters_mentions`, added beside #361's definitions rather than into them, and
+`extract_all_mentions` joins them. A run calls that; without Cleveland or Walters records it gives
+exactly what `extract_mentions` gives (tested).
 """
 
 from __future__ import annotations
@@ -333,11 +334,12 @@ def cleveland_reign_components(entry: str) -> list[tuple[str, int]]:
             if LEADING_REIGN.match(component) or LEADING_UNCERTAIN_REIGN.match(component) or JOINT_REIGN.match(component)]
 
 
-def cleveland_reign_text(component: str) -> str:
-    """A reign component without its trailing dates: the final parenthesis is cut only when it
-    holds a digit ("(1390–1352 BCE)"), so a doubt mark ("Ramesses II(?)") stays and the
-    expression classifies as uncertain. Only that last parenthesis is cut, so a range keeps both
-    ends ("reign of X (dates)–reign of Y")."""
+def without_trailing_dates(component: str) -> str:
+    """A reign without its trailing dates: the final parenthesis is cut only when it holds a
+    digit ("(1390–1352 BCE)"), so a doubt mark ("Ramesses II(?)") stays and the expression
+    classifies as uncertain. Only that last parenthesis is cut, so a range keeps both ends
+    ("reign of X (dates)–reign of Y"). Cleveland's reign components and the Walters' `Reign`
+    field are both read through it, by their mappers and by their mention readers."""
     if component.endswith(")"):
         cut = component.rfind("(")
         if re.search(r"\d", component[cut:]):
@@ -348,14 +350,14 @@ def cleveland_reign_text(component: str) -> str:
 def cleveland_mentions(artifact: dict, raw: dict) -> list[dict]:
     """Cleveland's ruler mentions: the reign components of each `culture` entry
     (`cleveland_reign_components`), its catalogued reign, read as the Met's `reign` field is
-    (`classify_reign_expression`) once their dates are cut (`cleveland_reign_text`). Ranges and
+    (`classify_reign_expression`) once their dates are cut (`without_trailing_dates`). Ranges and
     qualifiers ("or later", "probably", "(?)") classify as such and are not resolved to one ruler.
     Cleveland's other evidence (`find_spot`, places in `culture`, title cues) is not read yet
     (docs/museum-sources/cleveland.md)."""
     found = []
     for index, entry in enumerate(raw.get("culture") or []):
         for component, component_start in cleveland_reign_components(entry):
-            text = cleveland_reign_text(component)
+            text = without_trailing_dates(component)
             length = len(text)
             expression, candidate, span = classify_reign_expression(text)
             if expression == "single_identity" and candidate is not None and span is not None:
@@ -370,17 +372,123 @@ def cleveland_mentions(artifact: dict, raw: dict) -> list[dict]:
     return found
 
 
+def walters_reign_expression(value: str) -> tuple[str, str | None, tuple[int, int] | None]:
+    """The Walters' `Reign` field, which names its ruler with no leading "reign of" ("Ramesses II
+    (1279-1213 BC)"), read with the Met reign parser's own tests once its dates are cut
+    (`without_trailing_dates`): a doubt, a temporal phrase or a range or list is not one ruler.
+    A field of more than one top-level component lists several rulers ("Shabako (715-700 BC),
+    Psammetichus I") and is a list too. A hyphen without spaces is not a range, as in the parser
+    ("Psametik I-Necho II" stays one name, which no ruler matches)."""
+    text = without_trailing_dates(value.strip())
+    offset = value.find(text)
+    if not text:
+        return "empty", None, None
+    if UNCERTAIN.search(text):
+        return "uncertain_identity", None, None
+    if len(list(component_spans(text))) > 1:
+        return "multi_or_range", None, None
+    candidate = TRAILING_PHASE.sub("", text).strip()
+    if TEMPORAL_CONTEXT.search(candidate):
+        return "temporal_context", None, None
+    if RANGE_OR_MULTI.search(candidate):
+        return "multi_or_range", None, None
+    if not candidate:
+        return "unparsed_structured_value", None, None
+    return "single_identity", candidate, (offset, offset + len(candidate))
+
+
+def royal_cue_mentions(artifact: dict, field_path: str, value: str) -> tuple[list[dict], int]:
+    """The royal-cue mentions of one text field, by `extract_mentions`' own grammar for the
+    fields it reads (its loop, for one field), and the number of cues with no name after them. A
+    test holds it to `extract_mentions` on the museums that reads."""
+    found: list[dict] = []
+    missed = 0
+    seen: set[tuple[int, int]] = set()
+    for cue in ROYAL_CUE.finditer(value):
+        if value[cue.end():cue.end() + 2].startswith(("'", "\u2019")):
+            continue
+        candidate, start, end = candidate_after_royal_cue(value, cue)
+        if candidate is None:
+            missed += 1
+            continue
+        if (start, end) in seen:
+            continue
+        seen.add((start, end))
+        context = value[max(0, cue.start() - 15):min(len(value), end + 24)]
+        if UNCERTAIN.search(context):
+            expression = "uncertain_identity"
+        elif RANGE_OR_MULTI.search(context):
+            expression = "multi_or_range"
+        else:
+            expression = "single_identity"
+        found.append(make_mention(
+            artifact=artifact, entity_type="ruler", field_path=field_path, field_value=value,
+            start=start, end=end, extraction_method="explicit_royal_cue_grammar",
+            evidence_role="explicit_royal_text_cue", expression_type=expression,
+        ))
+    return found, missed
+
+
+WALTERS_REIGN_FIELD = "Reign"
+# Read with the royal-cue grammar, as Brooklyn's title and date fields are: `DateText` names a
+# reign on some records ("ca. 1250 BCE (New Kingdom, 19th dynasty, reign of Ramesses II)").
+WALTERS_CUE_FIELDS = ("Title", "DateText")
+
+
+def walters_mentions(artifact: dict, raw: dict) -> tuple[list[dict], Counter]:
+    """The Walters' ruler mentions: its catalogued reign (`Reign`, read by
+    `walters_reign_expression`), as the Met's `reign` is read, and royal cues in its title and
+    date text, as Brooklyn's title and dates are read. Its description and inscriptions are not
+    read. The Walters publishes no find place
+    (docs/museum-sources/walters.md). Returns the mentions and the cues with no name after them,
+    by field."""
+    obj = raw["object"]
+    found: list[dict] = []
+    value = obj[WALTERS_REIGN_FIELD]
+    if value.strip():
+        expression, candidate, span = walters_reign_expression(value)
+        if expression == "single_identity" and candidate is not None and span is not None:
+            start, end = span
+        else:
+            stripped = value.strip()
+            start, end = value.find(stripped), value.find(stripped) + len(stripped)
+        found.append(make_mention(
+            artifact=artifact, entity_type="ruler", field_path=f"object.{WALTERS_REIGN_FIELD}", field_value=value,
+            start=start, end=end, extraction_method="typed_structured_reign_parser",
+            evidence_role="catalogued_reign", expression_type=expression,
+        ))
+    missed: Counter = Counter()
+    for field in WALTERS_CUE_FIELDS:
+        if obj[field].strip():
+            cued, misses = royal_cue_mentions(artifact, f"object.{field}", obj[field])
+            found += cued
+            if misses:
+                missed[f"walters|object.{field}"] += misses
+    return found, missed
+
+
+# The museums whose readers came after #361's extractor.
+ADDED_MUSEUMS = ("cleveland", "walters")
+
+
 def extract_all_mentions(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]]) -> tuple[list[dict], dict]:
-    """`extract_mentions` (#361's, verbatim) for the museums it reads, `cleveland_mentions` for
-    Cleveland, in one order and with one set of diagnostics. Without Cleveland records it gives
-    exactly what `extract_mentions` gives."""
-    others = [row for row in canonical if row["source_museum"] != "cleveland"]
+    """`extract_mentions` (#361's, verbatim) for the museums it reads, `cleveland_mentions` and
+    `walters_mentions` for theirs, in one order and with one set of diagnostics. Without Cleveland
+    or Walters records it gives exactly what `extract_mentions` gives."""
+    others = [row for row in canonical if row["source_museum"] not in ADDED_MUSEUMS]
     found, diagnostics = extract_mentions(others, raw_indexes)
-    cleveland = [row for row in canonical if row["source_museum"] == "cleveland"]
-    if not cleveland:
+    added = [row for row in canonical if row["source_museum"] in ADDED_MUSEUMS]
+    if not added:
         return found, diagnostics
-    for artifact in cleveland:
-        found += cleveland_mentions(artifact, raw_indexes["cleveland"][artifact["source_id"]])
+    missed = Counter(diagnostics["royal_cues_without_syntactic_candidate"])
+    for artifact in added:
+        raw = raw_indexes[artifact["source_museum"]][artifact["source_id"]]
+        if artifact["source_museum"] == "cleveland":
+            found += cleveland_mentions(artifact, raw)
+        else:
+            rows, misses = walters_mentions(artifact, raw)
+            found += rows
+            missed.update(misses)
     found.sort(key=lambda row: (
         row["artifact_id"], row["entity_type"], row["field_path"], row["span_start"],
         row["span_end"], row["extraction_method"], row["mention_id"],
@@ -395,4 +503,5 @@ def extract_all_mentions(canonical: list[dict], raw_indexes: dict[str, dict[str,
         "mentions": len(found),
         "mentions_by_museum": dict(sorted(Counter(row["museum"] for row in found).items())),
         "mentions_by_entity_type": dict(sorted(Counter(row["entity_type"] for row in found).items())),
+        "royal_cues_without_syntactic_candidate": dict(sorted(missed.items())),
     }

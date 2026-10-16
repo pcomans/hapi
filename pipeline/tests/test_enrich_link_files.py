@@ -71,11 +71,9 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
         "unsupported": {"excavation": {"reason": "no committed canonical excavation authority", "mentions": 4},
                         "temple": {"reason": "no committed canonical temple authority", "mentions": 1}},
         "unevaluated_scopes": {
-            "ruler": [["met", "harvard"], ["brooklyn", "harvard"], ["met", "cleveland"], ["brooklyn", "cleveland"],
-                      ["harvard", "cleveland"]],
-            "site": [["met", "cleveland"], ["brooklyn", "cleveland"], ["harvard", "cleveland"]],
-            "tomb_monument": [["met", "brooklyn"], ["met", "harvard"], ["brooklyn", "harvard"], ["met", "cleveland"],
-                              ["brooklyn", "cleveland"], ["harvard", "cleveland"]]},
+            "ruler": [["met", "harvard"], ["brooklyn", "harvard"], *ADDED_PAIRS],
+            "site": ADDED_PAIRS,
+            "tomb_monument": [["met", "brooklyn"], ["met", "harvard"], ["brooklyn", "harvard"], *ADDED_PAIRS]},
     }
     for name, f in manifest["files"].items():
         assert lf.content_sha256(name, (run / name).read_bytes()) == f["content_sha256"]
@@ -271,17 +269,23 @@ def test_a_mention_withdrawn_from_a_link_another_still_makes_is_a_change(inputs,
     assert all(l["target_id"] != "cluster-beckerath-18.09" for l in diff["authority"]["removed"])
 
 
+# The pairs of the museums added after the reviews (Cleveland, the Walters), in `MUSEUM_PAIRS` order.
+ADDED_PAIRS = [["met", "cleveland"], ["brooklyn", "cleveland"], ["harvard", "cleveland"], ["met", "walters"],
+               ["brooklyn", "walters"], ["harvard", "walters"], ["cleveland", "walters"]]
+
+
 def test_every_museum_has_a_field_inventory_the_extractor_reads() -> None:
     """Each museum with an ingest asset (`test_structure`) has its evidence fields named in
     `extract_all_mentions`; its fixtures give mentions from exactly these fields. (A museum without
     an inventory fails loud there, on the lookup of its ruler fields.)"""
-    assert {s.value for s in _implemented_museums()} == set(MAPPERS) | {"cleveland"}
-    canonical, raw = corpus(with_cleveland=True)
+    assert {s.value for s in _implemented_museums()} == set(MAPPERS) | {"cleveland", "walters"}
+    canonical, raw = corpus(with_cleveland=True, with_walters=True)
     found, _ = extract_all_mentions(canonical, raw)
-    paths = {museum: sorted({m["field_path"] for m in found if m["museum"] == museum}) for museum in (*MAPPERS, "cleveland")}
+    paths = {museum: sorted({m["field_path"] for m in found if m["museum"] == museum})
+             for museum in (*MAPPERS, "cleveland", "walters")}
     assert paths == {"met": ["country", "excavation", "locale", "locus", "region", "reign", "subregion", "title"],
                      "brooklyn": ["geographicalLocations[0].name"], "harvard": ["places[0].displayname", "title"],
-                     "cleveland": ["culture[0]"]}
+                     "cleveland": ["culture[0]"], "walters": ["object.DateText", "object.Reign", "object.Title"]}
     with pytest.raises(KeyError, match="louvre"):
         extract_all_mentions([{**canonical[0], "source_museum": "louvre"}], {"louvre": {canonical[0]["source_id"]: {}}})
 
@@ -404,7 +408,7 @@ def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, aut
     (conn,) = connections
     assert conn.transactions == 1
     assert log == [("read", name, True, 1, "REPEATABLE READ")
-                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard", "raw_cleveland")]
+                   for name in ("artifacts", "raw_met", "raw_brooklyn", "raw_harvard", "raw_cleveland", "raw_walters")]
     assert not lock_held(root)
     expected = lf.write_run(tmp_path / "direct", lambda: (canonical, raw), authority)
     assert (root / lf.CURRENT).read_text() == expected["run_id"] + "\n"
@@ -762,3 +766,43 @@ def test_a_run_with_cleveland_links_its_catalogued_reigns(authority, tmp_path) -
     for mode in al.MODES:
         assert sorted((l["artifact_id"], l["entity_type"]) for l in links(run, mode) if l["museum"] == "cleveland") == [
             ("cleveland-101390", "ruler"), ("cleveland-130133", "ruler")], mode
+
+
+def test_a_run_with_the_walters_links_its_reigns_and_cues(authority, tmp_path) -> None:
+    """The Walters fixtures through a whole run. Its catalogued "Amenhotep III" and the same name
+    cued in its date text join the Met's record in both modes; a list, a doubt and a hyphenated
+    pair of rulers do not resolve to one ruler, so they link nowhere in the authority mode."""
+    _, raw = corpus(EXTRA, with_walters=True)
+    canonical = normalized(raw)
+    manifest = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert manifest["canonical_rows_set_aside"] == []
+    run = tmp_path / manifest["run_id"]
+
+    def ruler_links(mode: str, artifact_id: str) -> list[tuple]:
+        return sorted((l["target_id"], l["target_kind"], len(l["mention_ids"]))
+                      for l in links(run, mode) if l["artifact_id"] == artifact_id and l["entity_type"] == "ruler")
+
+    # walters-481: `Reign` "Amenhotep III" and `DateText` "… reign of Amenhotep III" (one link,
+    # two mentions); its title's "Queen Tiye" sits in a list ("… and Queen Tiye") and abstains.
+    assert ruler_links("authority", "walters-481") == [("cluster-beckerath-18.09", "king", 2)]
+    assert ("cluster-beckerath-18.09", "king", 1) in ruler_links("authority", "met-900001")
+    (amenhotep,) = ruler_links("literal", "walters-481")
+    assert amenhotep[0] in {target for target, _, _ in ruler_links("literal", "met-900001")}
+    # walters-1605: "Psamtek I" in its date text is Psamtik I (von Beckerath 26.01); its `Reign`
+    # "Psametik I-Necho II" matches no ruler.
+    assert ruler_links("authority", "walters-1605") == [("cluster-beckerath-26.01", "king", 1)]
+    for mode in al.MODES:
+        assert sorted({l["artifact_id"] for l in links(run, mode) if l["museum"] == "walters"}) == [
+            "walters-1605", "walters-481"], mode
+    # The list (24458) and the doubt (5104) abstain in both modes; no Walters site is read.
+    resolutions = {r["mention_id"]: r for r in lf.read_rows(run / "resolutions-authority.ndjson.gz")}
+    walters = [r for r in resolutions.values() if r["museum"] == "walters"]
+    assert sorted((r["artifact_id"], r["status"], r["reason"]) for r in walters) == [
+        ("walters-1605", "resolved", None),
+        ("walters-1605", "unmatched", "authority_unmatched"),
+        ("walters-24458", "abstained", "expression:multi_or_range"),
+        ("walters-481", "abstained", "expression:multi_or_range"),
+        ("walters-481", "resolved", None),
+        ("walters-481", "resolved", None),
+        ("walters-5104", "abstained", "expression:uncertain_identity"),
+    ]

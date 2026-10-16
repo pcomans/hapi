@@ -1,0 +1,45 @@
+{
+  "object": {
+    "ObjectID": "1605",
+    "AccessionNumber": "22.216",
+    "ObjectName": "reliefs",
+    "DateBeginYear": "-676",
+    "DateEndYear": "-638",
+    "DateText": "ca. 664-610 BCE (Late Period, 26th dynasty, reign of Psamtek I)",
+    "Title": "Relief Fragment Showing a Priest with an Incense Burner",
+    "Dimensions": "H: 13 3/16 x W: 14 in. (33.5 x 35.5 cm)",
+    "Medium": "limestone",
+    "Style": "Saite",
+    "Culture": "Egyptian",
+    "Inscriptions": "",
+    "Classification": "Sculpture",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/22.216",
+    "Description": "<p>A mortuary priest, traditionally clothed in animal skin and long kilt, performs the \"Opening of the Mouth\" ritual, an essential part of the funeral ceremony in which the mummy is restored to life. Behind the priest is a table with special tools for the rites. He makes an offering and burns incense before the upright mummy (missing). This finely sculpted fragment comes from the tomb of the vizier Nes-pa-ka-shuty, a government official whose power was second only to that of the king (TT 312). It demonstrates the elegant style of the 26th Dynasty.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/22.216' rel='external'>Relief Fragment Showing a Priest with an Incense Burner</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": " Walters Art Museum, 1931, by bequest. ",
+    "Keywords": "",
+    "Provenance": "Dikran Kelekian, New York and Paris [date and mode of acquisition unknown]; Henry Walters, Baltimore, 1929, by purchase; Walters Art Museum, 1931, by bequest. ",
+    "Dynasty": "26th Dynasty",
+    "Reign": "Psametik I-Necho II",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "PS1_22.216_Fnt_DD_T08.jpg",
+    "CollectionID": "EGY",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/22.216",
+    "Creators": "6182",
+    "Exhibitions": "2002|3193"
+  },
+  "media": [
+    {
+      "ObjectID": "1605",
+      "AccessionNumber": "22.216",
+      "MediaXrefID": "9709",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS1_22.216_Fnt_DD_T08.jpg",
+      "Filename": "PS1_22.216_Fnt_DD_T08.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "1",
+      "IsPrimary": "1"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "object": {
+    "ObjectID": "74",
+    "AccessionNumber": "71.562",
+    "ObjectName": "reliefs; plaques; ivories",
+    "DateBeginYear": "1001",
+    "DateEndYear": "1200",
+    "DateText": "11th-12th century (Fatimid)",
+    "Title": "Plaque with Figural Scene",
+    "Dimensions": "H: 2 7/8 x W: 3 1/4 x D: 3/8 in. (7.3 x 8.2 x 0.9 cm)",
+    "Medium": "ivory (elephant tusk)",
+    "Style": "Fatimid",
+    "Culture": "Egyptian-Islamic",
+    "Inscriptions": "",
+    "Classification": "Ivory & Bone",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/71.562",
+    "Description": "<p>This pentagonal plaque depicts a running man and his dog, and probably formed part of the decorative inlay of a piece of furniture. The animation of the running figures is typical of Islamic art in Egypt during the Fatimid period (909-1171), when objects of all kinds were decorated with very realistic representations.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/71.562' rel='external'>Plaque with Figural Scene</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": "  Walters Art Museum, 1931, by bequest.",
+    "Keywords": "",
+    "Provenance": "Dikran Kelekian, New York and Paris [date and mode of acquisition unknown];  Henry Walters, Baltimore [date of acquisition unknown], by purchase;  Walters Art Museum, 1931, by bequest.",
+    "Dynasty": "Fatimid Dynasty",
+    "Reign": "",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "PS4_71.562_DD_AT20_19489-tms.jpg|PS4_71.562_DD_AT20_19491-tms.jpg|PL1_71.562_Fnt_TR_T97.jpg",
+    "CollectionID": "ISL",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/71.562",
+    "Creators": "6182",
+    "Exhibitions": "2114"
+  },
+  "media": [
+    {
+      "ObjectID": "74",
+      "AccessionNumber": "71.562",
+      "MediaXrefID": "95228",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS4_71.562_DD_AT20_19489-tms.jpg",
+      "Filename": "PS4_71.562_DD_AT20_19489-tms.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "2",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "74",
+      "AccessionNumber": "71.562",
+      "MediaXrefID": "95229",
+      "ImageURL": "https://art.thewalters.org/images/raw/PS4_71.562_DD_AT20_19491-tms.jpg",
+      "Filename": "PS4_71.562_DD_AT20_19491-tms.jpg",
+      "MediaType": "Image",
+      "MediaView": "Back",
+      "Rank": "3",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "74",
+      "AccessionNumber": "71.562",
+      "MediaXrefID": "7528",
+      "ImageURL": "https://art.thewalters.org/images/raw/PL1_71.562_Fnt_TR_T97.jpg",
+      "Filename": "PL1_71.562_Fnt_TR_T97.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "1",
+      "IsPrimary": "1"
+    }
+  ]
+}

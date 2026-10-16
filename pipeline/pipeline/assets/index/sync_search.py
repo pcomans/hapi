@@ -56,7 +56,8 @@ def _get_typesense_client() -> typesense.Client:
 @asset(
     group_name="index",
     kinds={"python", "typesense"},
-    deps=["normalize_met", "normalize_harvard", "normalize_brooklyn", "normalize_cleveland"],
+    deps=["normalize_met", "normalize_harvard", "normalize_brooklyn", "normalize_cleveland",
+          "normalize_walters"],
 )
 def sync_search(context: AssetExecutionContext, database: DatabaseResource) -> None:
     """Sync all canonical artifacts from Postgres to Typesense.
