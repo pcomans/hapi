@@ -1,12 +1,10 @@
 """The committed claim graph's ruler resolver as a `royal_women.KingAuthority`.
 
-The resolver is the linkability resolver the evaluations load
-(`docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py`); this wraps it
-so that the royal-women index can resolve a woman's family kings and read the female rulers'
-king labels and dynasties from the same graph.
-
-An evaluation adapter, not enrichment: it executes the evaluations' linkability script, which
-puts the repository's `pipeline/` on `sys.path` and stays in `sys.modules`.
+The resolver is `resolver.build_ruler_resolver` (#338: promoted from the evaluations'
+linkability adapter, `docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/
+run_linkability.py`); this wraps it so that the royal-women index can resolve a woman's family
+kings and read the female rulers' king labels and dynasties from the same graph. An evaluation
+frozen on the adapter passes it in (`load_linkability`), which executes that script.
 
 One rule is added to that resolver (#369). A numeral in brackets is a source's own count of the
 bearers of a name. Leprohon's Dynasty 18 founder is "Ahmose (II)" (`leprohon-18.01`, Leprohon
@@ -33,6 +31,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from . import resolver
 
 REPO = Path(__file__).resolve().parents[3]
 RUN_LINKABILITY = REPO / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
@@ -72,7 +72,7 @@ class GraphKings:
     """`resolve`, `labels` and `dynasties` over the claim graph's ruler identity clusters."""
 
     def __init__(self, linkability=None, graph: dict | None = None) -> None:
-        mod = load_linkability() if linkability is None else linkability
+        mod = resolver if linkability is None else linkability
         graph = json.loads(mod.GRAPH.read_text(encoding="utf-8")) if graph is None else graph
         self._resolver, self._catalog = mod.build_ruler_resolver(graph)
         self._norm = mod.ruler_norm

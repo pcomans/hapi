@@ -1,0 +1,38 @@
+{
+  "authority_mode_statuses": {
+    "excavation:abstained": 16403,
+    "ruler:abstained": 2252,
+    "ruler:ambiguous": 83,
+    "ruler:resolved": 9015,
+    "ruler:unmatched": 298,
+    "site:ambiguous": 201,
+    "site:resolved": 36827,
+    "site:unmatched": 76710,
+    "temple:abstained": 2312,
+    "tomb_monument:abstained": 4863
+  },
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "mentions": {
+    "ledger_361": 148964,
+    "production": 148964,
+    "rows_equal": true
+  },
+  "resolver_version": "e4dd5339eec9d87358d2f3dddef74f8fefd4832f7c073c5b2abb23e9e0c81d06",
+  "rulers_vs_361_authority_arm": {
+    "compared": 11648,
+    "differ": 11,
+    "differ_outside_369_changed_records": []
+  },
+  "rulers_vs_361_literal_arm": {
+    "compared": 11648,
+    "differ": []
+  },
+  "run_361_files": {
+    "mentions.ndjson.gz": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26"
+  },
+  "schema_version": "hapi-338-promotion-check/1",
+  "sites_vs_linkability_adapter": {
+    "compared": 113738,
+    "differ": []
+  }
+}
