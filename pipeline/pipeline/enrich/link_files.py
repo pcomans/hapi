@@ -9,11 +9,12 @@ them in both modes (`authority_links.MODES`) and writes, under `<root>/<run_id>/
   count, the resolution outcomes by entity type, status and reason, and the inventory of what is
   not resolved (`unsupported`: the entity types with no authority, with their reason and
   count; `unevaluated_scopes`: the resolved types' museum pairs no evaluation qualified);
-The manifest hashes each file's content (a gzip file's decompressed NDJSON). The run id is
-the SHA-256 over the inputs' digest, both modes' resolver versions and this
-module's own SHA-256 (it types the rows and writes the files), so the
-same inputs and code give the same id and the same content (rows sorted). A run whose
-directory exists is checked against it, never overwritten.
+The manifest hashes each file's content (a gzip file's decompressed NDJSON), and the run id is
+the manifest's own digest: it covers the inputs' digest, both modes' resolver versions, this
+module's own SHA-256 (it types the rows and writes the files), the rows set aside and every
+file. The same inputs and code give the same id and the same content (rows sorted); a run whose
+directory exists is checked against it, never overwritten, and a manifest edited after it was
+written no longer names its directory.
 
 `<root>/CURRENT` names the run in force. When a run replaces another there, it writes
 `<root>/diffs/<previous>-to-<run>.json`: for each mode, every link added, removed (with why) or
@@ -190,11 +191,6 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
     inputs = input_digest(canonical, raw_indexes)
     writer = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    # The rows set aside are part of what the run is: they are in its manifest, so the same kept
-    # rows with other rows set aside are another run.
-    run_id = hashlib.sha256(json.dumps({"inputs": inputs, "writer": writer, "set_aside": set_aside,
-                                        "versions": {m: s["resolver_version"] for m, s in snapshots.items()}},
-                                       sort_keys=True).encode("utf-8")).hexdigest()
     files: dict[str, bytes] = {"mentions.ndjson.gz": gzip_rows(found)}
     counts: dict[str, int] = {"mentions.ndjson.gz": len(found)}
     by_mode = {}
@@ -206,11 +202,10 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
         files[f"links-{mode}.ndjson.gz"] = gzip_rows(links)
         counts[f"resolutions-{mode}.ndjson.gz"], counts[f"links-{mode}.ndjson.gz"] = len(resolutions), len(links)
 
-    manifest = {
-        "schema_version": "hapi-authority-links/1",
-        "run_id": run_id,
+    body = {
+        "schema_version": "hapi-authority-links/2",
         "inputs_sha256": inputs,
-        # This module types the rows and writes the files; its SHA-256 is in the run id too.
+        # This module types the rows and writes the files.
         "writer_sha256": writer,
         "records": len(canonical),
         # Canonical rows left out: the normalize step no longer keeps their raw payload (#374).
@@ -224,6 +219,11 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
         "outcomes": {mode: outcomes(by_mode[mode][0]) for mode in authority_links.MODES},
         "inventory": inventory(by_mode["authority"][0]),
     }
+    # The run id is the manifest's own digest: it covers the inputs, the versions, the writer,
+    # the rows set aside and every file's content, so a manifest edited after it was written no
+    # longer names its directory.
+    run_id = manifest_digest(body)
+    manifest = {**body, "run_id": run_id}
     files["manifest.json"] = (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
     return _write(root, run_id, files, manifest, canonical, by_mode)
@@ -314,6 +314,12 @@ PENDING_DIFF = re.compile(
     r"^\.(?P<previous>[0-9a-f]{64})-to-(?P<run>[0-9a-f]{64})\.json\.partial(?P<writing>\.writing)?$")
 
 
+def manifest_digest(body: dict) -> str:
+    """The SHA-256 of a manifest without its `run_id`, which is this digest."""
+    return hashlib.sha256(json.dumps({k: v for k, v in body.items() if k != "run_id"}, ensure_ascii=False,
+                                     sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
 def verify_run(run_dir: Path) -> None:
     """A run directory holds its own manifest (of the run its name is) and exactly the files the
     manifest names, each with its recorded content."""
@@ -322,6 +328,8 @@ def verify_run(run_dir: Path) -> None:
     manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
     if manifest["run_id"] != run_dir.name:
         raise ValueError(f"{run_dir} holds the manifest of run {manifest['run_id']}")
+    if manifest_digest(manifest) != run_dir.name:
+        raise ValueError(f"{run_dir / 'manifest.json'} was changed after it was written (it no longer digests to its run)")
     recorded = manifest["files"]
     present = sorted(p.name for p in run_dir.iterdir())
     if present != sorted([*recorded, "manifest.json"]):

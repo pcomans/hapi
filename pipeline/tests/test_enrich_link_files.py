@@ -56,6 +56,7 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
         "links-authority.ndjson.gz": 14, "links-literal.ndjson.gz": 48, "mentions.ndjson.gz": 59,
         "resolutions-authority.ndjson.gz": 59, "resolutions-literal.ndjson.gz": 59}
     assert manifest["canonical_rows_set_aside"] == []
+    assert manifest["run_id"] == lf.manifest_digest(manifest)
     assert (manifest["records"], manifest["inputs_sha256"], manifest["writer_sha256"]) == (
         len(canonical), lf.input_digest(canonical, raw), hashlib.sha256(Path(lf.__file__).read_bytes()).hexdigest())
     assert manifest["snapshots"] == {"authority": authority.snapshot, "literal": al.snapshot("literal")}
@@ -534,6 +535,9 @@ def test_a_damaged_previous_run_is_not_accepted_as_history(inputs, authority, tm
                             (lambda: (run / "manifest.json").write_text(json.dumps(
                                 {**json.loads((run / "manifest.json").read_text()), "run_id": "f" * 64})),
                              "holds the manifest of run f{64}"),
+                            (lambda: (run / "manifest.json").write_text(json.dumps(
+                                {**json.loads((run / "manifest.json").read_text()), "records": 1})),
+                             "manifest.json was changed after it was written"),
                             (lambda: (run / "manifest.json").unlink(), "has no manifest.json")):
         saved = {p.name: p.read_bytes() for p in run.iterdir()}
         damage()
