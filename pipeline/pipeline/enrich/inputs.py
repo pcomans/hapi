@@ -9,9 +9,10 @@ of its raw payload (its mapper's row, of a payload the step keeps), and every ra
 keeps must have its canonical row. That is what is checked; whether the raw rows read are a
 complete ingest is not (a half re-ingested raw table, fully normalized, passes). A refused run
 fails; nothing retries it, and the operator re-materializes it once upstream is done (in a job
-with the normalize assets, `deps` already orders it after them). On the frozen corpus of
-2026-08-27, all 36,245 canonical rows pass (`docs/evaluations/authority-bridge-338/results/
-promotion-check.json`, `check_inputs`).
+with the normalize assets, `deps` already orders it after them). With the code recorded in
+`docs/evaluations/authority-bridge-338/results/promotion-check.json` (`check_inputs.code_sha256`),
+all 36,245 canonical rows of the frozen corpus of 2026-08-27 passed; after an edit to a mapper or
+the canonical model, that holds only once the check is re-run.
 """
 
 from __future__ import annotations

@@ -123,9 +123,11 @@ The CI tests need no private data:
     - a raw row the step keeps has no canonical row yet.
 
     That is all it checks. Whether the raw rows read are a complete ingest is not checked: a
-    half re-ingested raw table, fully normalized, passes. All 36,245 records of the frozen corpus
-    pass (`results/promotion-check.json`, `check_inputs`). A refused run fails and nothing
-    retries it; the operator re-materializes it once upstream is done.
+    half re-ingested raw table, fully normalized, passes. With the code recorded in
+    `results/promotion-check.json` (`check_inputs.code_sha256`: every `pipeline` module the
+    check loads, plus the pydantic version and the `uv.lock` hash), all 36,245 records of the
+    frozen corpus passed. A refused run fails and nothing retries it; the operator
+    re-materializes it once upstream is done.
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 
@@ -134,6 +136,6 @@ The CI tests need no private data:
 - Cross-museum linking with the authority on and off, over a run's links, reported by museum,
   pair and entity type against `QUALIFIED_SCOPES`, and two hash-stable full-corpus runs.
 
-The proof above covers the code in its recorded snapshot only. Any later edit to a file in the
-snapshot (`results/promotion-check.json`, `snapshot`) needs a new `check_promotion` run before
-the proof covers it.
+The proof above covers the code it recorded only: `snapshot` for the resolution and
+`check_inputs.code_sha256` for the input check (`results/promotion-check.json`). Any later edit
+to a file in either needs a new `check_promotion` run before the proof covers it.

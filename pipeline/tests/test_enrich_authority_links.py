@@ -230,8 +230,14 @@ def test_the_committed_promotion_check_holds_and_is_of_the_frozen_inputs() -> No
     assert set(result["snapshot"]) == {"authority", "literal"}
     check = result["check_inputs"]
     assert (check["canonical_records"], check["passed"]) == (36245, True)
-    # It names the code it ran: the check and every mapper it applies. (Not compared with the
-    # live files: an edit to a mapper must not turn main red; every run re-checks its inputs.)
-    assert sorted(check["code_sha256"]) == [
-        "pipeline/pipeline/assets/normalize/brooklyn.py", "pipeline/pipeline/assets/normalize/harvard.py",
-        "pipeline/pipeline/assets/normalize/met.py", "pipeline/pipeline/enrich/inputs.py"]
+    # It names the code it ran, the whole closure a fresh interpreter loads to import the check
+    # (the mappers, the canonical model and source types, the package `__init__`s), and the
+    # libraries. (Not compared with the live files: an edit to a mapper must not turn main red;
+    # every run re-checks its inputs.)
+    assert {"pipeline/pipeline/__init__.py", "pipeline/pipeline/enrich/__init__.py", "pipeline/pipeline/enrich/inputs.py",
+            "pipeline/pipeline/assets/__init__.py", "pipeline/pipeline/assets/normalize/__init__.py",
+            "pipeline/pipeline/assets/normalize/met.py", "pipeline/pipeline/assets/normalize/brooklyn.py",
+            "pipeline/pipeline/assets/normalize/harvard.py", "pipeline/pipeline/types/__init__.py",
+            "pipeline/pipeline/types/canonical.py", "pipeline/pipeline/types/sources.py",
+            "pipeline/pipeline/types/protocol.py"} <= set(check["code_sha256"])
+    assert check["pydantic"] and len(check["uv_lock_sha256"]) == 64

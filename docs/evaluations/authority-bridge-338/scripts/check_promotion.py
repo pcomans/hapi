@@ -30,6 +30,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import subprocess
 import sys
 import tarfile
 from pathlib import Path
@@ -39,10 +40,20 @@ sys.path.insert(0, str(REPO / "pipeline"))
 from pipeline.authority import graph_kings, royal_women  # noqa: E402
 from pipeline.enrich import authority_links, mentions as production_mentions  # noqa: E402
 from pipeline.enrich.inputs import check_inputs  # noqa: E402
-from pipeline.assets.normalize import brooklyn, harvard, met  # noqa: E402
-from pipeline.enrich import inputs as inputs_module  # noqa: E402
 
-CHECK_INPUTS_CODE = (inputs_module, met, brooklyn, harvard)
+
+def check_inputs_code() -> dict:
+    """The code `check_inputs` runs: every `pipeline` module a fresh interpreter loads to import
+    it (the mappers, the canonical model and source types it dumps through, the package
+    `__init__`s), with its SHA-256; and the library versions its rows depend on."""
+    code = ("import sys, json, pydantic, pipeline.enrich.inputs; "
+            "print(json.dumps({'files': sorted(m.__file__ for n, m in sys.modules.items() "
+            "if (n == 'pipeline' or n.startswith('pipeline.')) and getattr(m, '__file__', None)), "
+            "'pydantic': pydantic.VERSION}))")
+    out = json.loads(subprocess.run([sys.executable, "-c", code], check=True, capture_output=True, text=True,
+                                    cwd=REPO / "pipeline").stdout)
+    return {"code_sha256": {str(Path(f).relative_to(REPO)): sha256_path(Path(f)) for f in out["files"]},
+            "pydantic": out["pydantic"], "uv_lock_sha256": sha256_path(REPO / "pipeline" / "uv.lock")}
 ARCHIVE_SHA256 = "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
 PREFIX = "hapi-museum-corpus-2026-08-27/data/"
 EVALUATIONS = REPO / "docs/evaluations"
@@ -181,10 +192,7 @@ def check(archive: Path, run: Path) -> dict:
             "compared": dict(collections.Counter(m["entity_type"] for m in place_rows)), "differ": place_differ},
         "rulers_vs_361_literal_arm": {"compared": len(literal_arm), "differ": literal_differ},
         "places_vs_337_literal_arm": {"compared": len(places_337), "differ": literal_place_differ},
-        "check_inputs": {"canonical_records": len(canonical), "passed": True,
-                         # The code the check ran: its module and the normalize step's mappers.
-                         "code_sha256": {str(Path(m.__file__).relative_to(REPO)): sha256_path(Path(m.__file__))
-                                         for m in sorted(CHECK_INPUTS_CODE, key=lambda m: m.__name__)}},
+        "check_inputs": {"canonical_records": len(canonical), "passed": True, **check_inputs_code()},
         "authority_mode_statuses": {f"{t}:{s}": n for (t, s), n in sorted(statuses.items())},
     }
 
