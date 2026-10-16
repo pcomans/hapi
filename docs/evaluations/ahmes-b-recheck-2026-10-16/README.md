@@ -1,9 +1,15 @@
 # A check of the one unreviewed Met–Brooklyn ruler link (2026-10-16)
 
-**Result: the link is right.** In Met–Brooklyn, the pipeline's ruler connections are #361's
-reviewed population plus one shared target #369 added: Dodson & Hilton's Ahmes B (#376). Ahmes B
-joins three records, met-566763, met-547683 and brooklyn-3634. Reviewed with #361's protocol,
-they are the same woman, and she is Ahmes B.
+**Result: the review found the link right, with moderate confidence.** In Met–Brooklyn, the
+pipeline's ruler connections are #361's reviewed population plus one shared target #369 added:
+Dodson & Hilton's Ahmes B (#376). Ahmes B joins three records, met-566763, met-547683 and
+brooklyn-3634.
+- **Stage 1.** Reviewed with #361's protocol, both reviewers found the three records to be one
+  woman.
+- **Stage 2.** The reconciler decided she is Ahmes B, a cited override of one reviewer's
+  "insufficient evidence". No page any call could open shows Dodson & Hilton's own "Ahmes B"
+  entry, so the identity rests on the target's family names (wife of Thutmose I, mother of
+  Hatshepsut). Those fit only one Ahmose the reviewers found.
 
 **This is a check, not evidence.** #369's fix was found on these records, which were #361's
 deciding case-016. So this check says the link is correct, but it does not count toward the
@@ -12,11 +18,14 @@ must still flag these records as tuned-on (#358).
 
 ## What was reviewed
 
-The case was built by `scripts/build_queues.py`, with #361's own case builder, on the
-pipeline's links from the frozen corpus.
+The case was built by `scripts/build_queues.py` with #361's case-building helpers
+(`arm_node`, `review_unit_evidence`, `released_stage_2_case`), on the pipeline's links from the
+frozen corpus (run `f13f590d…`, #376's). It does not run #361's release gates (the Stage 1
+blinding check, the Stage 2 forbidden-key scan, the consensus verification at release). Its own
+checks are a target-name guard on Stage 1, and the prompt auditor's reading of both queues.
 
 - **Stage 1** shows the three records' titles and links, with no target. The case ID is opaque,
-  and the builder refuses a case naming the target.
+  and the builder refuses a Stage 1 queue that contains the target's ID or name.
 - **Stage 2** shows Ahmes B as #361 showed a royal woman: label, dynasty 18, family names
   (Thutmose I, Hatshepsut), and the source.
 - The prompt auditor checked the case for answer leakage (Rule 14). It caught a case ID that

@@ -1,5 +1,6 @@
 {
   "case_id": "review-unit-001",
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "protocol": "#361's (docs/evaluations/ruler-reregistration-2026-10-15): prompts, runner and served model unchanged",
   "records_checked": {
     "brooklyn": [
@@ -10,6 +11,7 @@
       "met-566763"
     ]
   },
+  "run_id": "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6",
   "schema_version": "hapi-ahmes-b-recheck/1",
   "stages": {
     "1": {

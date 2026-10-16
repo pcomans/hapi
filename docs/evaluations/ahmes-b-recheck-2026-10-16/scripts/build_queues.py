@@ -76,7 +76,7 @@ def load_corpus(archive: Path) -> tuple[list[dict], dict]:
     return canonical, raw
 
 
-def stage_1(archive: Path, template: dict) -> dict:
+def stage_1(archive: Path, template: dict) -> tuple[dict, dict]:
     """The Stage 1 unit of the Ahmes B node, built as #361 builds one from its arm runs."""
     b = builder()
     canonical, raw = load_corpus(archive)

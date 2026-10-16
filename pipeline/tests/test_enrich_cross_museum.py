@@ -315,4 +315,4 @@ def test_the_ahmes_b_check_reviewed_the_three_unreviewed_records() -> None:
     assert check["stages"]["1"]["outcome"] == {"same_entity": "same_entity", "useful_granularity": "useful"}
     assert check["stages"]["2"]["outcome"] == {"canonical_identity": "exact_identity"}
     assert check["stages"]["2"]["resolution"]["canonical_identity"]["method"] == "explicit_cited_override"
-    assert all(len(h) == 64 for stage in check["stages"].values() for h in stage["stored_calls_sha256"].values())
+    assert check["run_id"] == result["run_ids"][0]  # the run whose link it checked
