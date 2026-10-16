@@ -409,5 +409,7 @@ def test_the_latest_rerun_and_the_museum_profiles_pin_the_same_code() -> None:
         for path, digest in pin.items():
             seen.setdefault(path, set()).add(digest)
     assert {path: digests for path, digests in seen.items() if len(digests) > 1} == {}
+    end_to_end = json.loads((results / "end-to-end.json").read_text(encoding="utf-8"))
+    assert end_to_end["resolver_versions"] == {m: promotion["snapshot"][m]["resolver_version"] for m in al.MODES}
     assert {"pipeline/pipeline/enrich/mentions.py", "pipeline/pipeline/assets/normalize/walters.py"} <= {
         path for path in seen if sum(path in pin for pin in pins) > 1}

@@ -28,8 +28,8 @@ EGYPT_COLLECTION = "EGY"
 # Codes written together without their "|" separator, as the file gives them (object 24014,
 # "Amulet of Horus the Child": "EGYJWL").
 RUN_TOGETHER_CODES = {"EGYJWL": ("EGY", "JWL")}
-# Objects in no collection are kept when the museum's culture is this (all 192 such candidates
-# on 2026-09-11 are ancient Egyptian objects).
+# Objects in no collection are kept when the museum's culture is this: 192 candidates on
+# 2026-09-11, 187 of them dated by 400 CE and five medieval textiles (walters-profile/profile.json).
 UNASSIGNED_EGYPTIAN_CULTURE = "Egyptian"
 # The `MediaType` values media.csv uses; only an image can be the record's image.
 MEDIA_TYPES = frozenset({"Image", "PDF"})

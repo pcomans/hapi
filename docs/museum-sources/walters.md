@@ -87,8 +87,8 @@ An object's `media.csv` rows are its images (and, once, a PDF).
 | Rule | Records (2026-10-16) | In scope |
 |---|---|---|
 | `CollectionID` includes `EGY` ("Ancient Egypt and Nubia"), alone or beside other codes ("EGY\|JWL", "GRC\|EGY") | 1,129 | yes |
-| No collection, `Culture` exactly "Egyptian" | 192 | yes: all are ancient Egyptian objects the museum has not assigned to a collection |
-| Only other collections (Islamic, Roman, Greek, Near Eastern), whatever the culture | 20 | **no**: the museum files them elsewhere. Eleven have culture "Egyptian": Greco-Roman figures (Harpokrates, Eros, a seated athlete), a Roman panel portrait whose `Reign` is "Marcus Aurelius", Near Eastern scarabs, Islamic-period fragments. Ids in `out_of_scope_ids` |
+| No collection, `Culture` exactly "Egyptian" | 192 | yes: objects the museum calls Egyptian but has not assigned to a collection. 187 are dated by 400 CE; five are medieval textiles (tiraz fragments, 8th–14th century), kept because the museum's culture says Egyptian (`in_scope_unassigned_by_date_end`) |
+| Only other collections (Islamic, Roman, Greek, Near Eastern), whatever the culture | 20 | **no**: the museum files them elsewhere. Twelve have culture exactly "Egyptian": Greco-Roman figures (Harpokrates, Eros, a seated athlete), a Roman panel portrait whose `Reign` is "Marcus Aurelius", Near Eastern scarabs and a camel figure, and one Islamic-period leather fragment. Ids in `out_of_scope_ids` |
 | **Total** | 1,341 (1,321 in scope) | |
 
 - `CollectionID` is a "|"-separated list of codes. Two quirks:

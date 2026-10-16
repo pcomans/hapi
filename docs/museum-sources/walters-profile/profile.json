@@ -28,9 +28,9 @@
     "ROM|EGY|JWL": 3
   },
   "code_sha256": {
-    "docs/museum-sources/walters-profile/profile.py": "910f435371b9466317a1708ed952cb7cf07951359f15e1f6a911f7f0318d7b92",
+    "docs/museum-sources/walters-profile/profile.py": "b1c82d03bf5f5d875c6adb18a755bae0918f5e6eb01a3b51c57011ca5d604aa7",
     "pipeline/pipeline/assets/ingest/walters.py": "9fbcd15b6825de2d349cc065fec22d96f48bf1309e79c4a0abd91d3b33071180",
-    "pipeline/pipeline/assets/normalize/walters.py": "4c3aa8633f9940212733e0fa62835ccd26ffe6116955f1464af38e137e78415b",
+    "pipeline/pipeline/assets/normalize/walters.py": "1e4f5bfe76bb99fc256227a7fd88cc0b52b4512af7fa90f06756bee3ba3fbc60",
     "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2"
   },
   "file_objects": 22193,
@@ -154,6 +154,19 @@
       "Tutankhamun-Horemheb"
     ],
     "total": 141
+  },
+  "in_scope_unassigned_by_date_end": {
+    "BCE": 162,
+    "CE, up to 0": 19,
+    "CE, up to 100": 3,
+    "CE, up to 1000": 1,
+    "CE, up to 1399": 1,
+    "CE, up to 1400": 1,
+    "CE, up to 200": 1,
+    "CE, up to 395": 1,
+    "CE, up to 400": 1,
+    "CE, up to 899": 1,
+    "CE, up to 999": 1
   },
   "in_scope_with_dynasty": 796,
   "in_scope_with_geography_id": 0,

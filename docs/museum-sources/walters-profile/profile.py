@@ -24,22 +24,19 @@ figures:
 from __future__ import annotations
 
 import collections
-import csv
 import hashlib
-import io
 import json
 import os
 import re
 import sys
 from pathlib import Path
 
-import requests
 import sqlalchemy as sa
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 sys.path.insert(0, str(REPO / "pipeline"))
-from pipeline.assets.ingest.walters import DATA_REPOSITORY, candidate_records  # noqa: E402
+from pipeline.assets.ingest.walters import DATA_REPOSITORY, candidate_records, read_csv  # noqa: E402
 from pipeline.assets.normalize.walters import WaltersMapper, collection_codes, is_egyptian  # noqa: E402
 from pipeline.enrich.mentions import walters_mentions  # noqa: E402
 from pipeline.types.models import raw_walters_table  # noqa: E402
@@ -58,12 +55,11 @@ LOAN = re.compile(r"\b(?:loan|lent|on deposit|courtesy)\b", re.I)
 
 
 def published(name: str) -> tuple[list[dict], str]:
-    resp = requests.get(f"https://raw.githubusercontent.com/{DATA_REPOSITORY}/{COMMIT}/{name}", timeout=300)
-    resp.raise_for_status()
-    digest = hashlib.sha256(resp.content).hexdigest()
+    """One published file at `COMMIT`, read by the ingest's own reader, and its checked SHA-256."""
+    rows, digest = read_csv(COMMIT, name)
     if digest != FILE_SHA256[name]:
         raise ValueError(f"{name} at {COMMIT} is not the file the ingest read")
-    return list(csv.DictReader(io.StringIO(resp.content.decode("utf-8"), newline=""))), digest
+    return rows, digest
 
 
 def image_rule(raw: dict) -> str:
@@ -126,6 +122,10 @@ def profile(url: str) -> dict:
         "in_scope_with_dynasty": sum(1 for r in in_scope if r["object"]["Dynasty"].strip()),
         "in_scope_with_period": sum(1 for r in in_scope if r["object"]["Period"].strip()),
         "in_scope_with_geography_id": sum(1 for r in in_scope if r["object"]["GeographyID"].strip()),
+        "in_scope_unassigned_by_date_end": count(
+            "no date" if not r["object"]["DateEndYear"].strip() else
+            "BCE" if int(r["object"]["DateEndYear"]) < 0 else f'CE, up to {r["object"]["DateEndYear"]}'
+            for r in in_scope if not collection_codes(r)),
         "in_scope_dated_after_1800": sorted(
             r["object"]["ObjectID"] for r in in_scope
             if r["object"]["DateBeginYear"].strip() and int(r["object"]["DateBeginYear"]) > 1800),
