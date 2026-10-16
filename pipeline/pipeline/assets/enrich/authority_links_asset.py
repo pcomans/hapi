@@ -18,7 +18,7 @@ DEFAULT_ROOT = Path(__file__).resolve().parents[4] / "data" / "authority-links"
 
 @asset(
     group_name="enrich",
-    kinds={"python", "postgres"},
+    kinds={"python"},
     deps=["normalize_met", "normalize_harvard", "normalize_brooklyn"],
 )
 def authority_links(context: AssetExecutionContext, database: DatabaseResource) -> None:

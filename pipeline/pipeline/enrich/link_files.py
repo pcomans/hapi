@@ -9,14 +9,17 @@ them in both modes (`authority_links.MODES`) and writes, under `<root>/<run_id>/
   count, the resolution outcomes by entity type, status and reason, and the inventory of what is
   not resolved (`unsupported`: the entity types with no authority, with their reason and
   count; `unevaluated_scopes`: the resolved types' museum pairs no evaluation qualified);
-The run id is the SHA-256 over the inputs' digest, both modes' resolver versions and this
+The manifest hashes each file's content (a gzip file's decompressed NDJSON). The run id is
+the SHA-256 over the inputs' digest, both modes' resolver versions and this
 module's own SHA-256 (it types the rows and writes the files), so the
 same inputs and code give the same id and the same bytes (rows sorted, gzip without a
 timestamp). A run whose directory exists is checked byte for byte, never overwritten.
 
 `<root>/CURRENT` names the run in force. When a run replaces another there, it writes
-`<root>/diffs/<previous>-to-<run>.json`: for each mode, every link added, and every link removed
-with why.
+`<root>/diffs/<previous>-to-<run>.json`: for each mode, every link added, removed (with why) or
+changed (its mentions changed, with how each lost one now resolves). A run is written beside
+its place and renamed into it, and `CURRENT` is replaced in one step, so a crash leaves no
+half-written run.
 
 A link is removed when its source decision is withdrawn: re-running on the new inputs or
 authority makes no such link, and the diff says whether the record is gone, its mentions are
@@ -31,6 +34,8 @@ import gzip
 import hashlib
 import io
 import json
+import os
+import shutil
 from pathlib import Path
 
 from pipeline.authority import royal_women
@@ -55,6 +60,10 @@ def gzip_rows(rows: list[dict]) -> bytes:
     return buffer.getvalue()
 
 
+def content_sha256(name: str, data: bytes) -> str:
+    return hashlib.sha256(gzip.decompress(data) if name.endswith(".gz") else data).hexdigest()
+
+
 def read_rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in gzip.decompress(path.read_bytes()).splitlines()]
 
@@ -73,6 +82,7 @@ def input_digest(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]])
 def target_kind(row: dict) -> str | None:
     if row["status"] != "resolved":
         return None
+    # A royal-woman target is a D&H woman's; a female ruler resolves to her king's cluster.
     if row["authority"] == "royal_women" and not row["target_ids"][0].startswith(royal_women.TARGET_PREFIX):
         return "king"
     return TARGET_KINDS[row["authority"]]
@@ -108,28 +118,41 @@ def inventory(resolutions: list[dict]) -> dict:
 
 
 def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict], artifact_ids: set[str]) -> dict:
-    """The links added and removed against a previous run, each removal with why."""
+    """The links added, removed and changed against a previous run. A removed link says why; a
+    kept link whose mentions changed is `changed`, with the mentions it lost and how each now
+    resolves (or that it is gone), so a withdrawal inside a link backed by several mentions is
+    seen too."""
     def key(link: dict) -> tuple:
         return link["artifact_id"], link["entity_type"], link["target_id"]
     old, new = {key(l): l for l in previous}, {key(l): l for l in links}
     by_mention = {r["mention_id"]: r for r in resolutions}
+
+    def now(mention_ids: list[str]) -> list[dict]:
+        return [{"mention_id": m, "status": by_mention[m]["status"], "reason": by_mention[m]["reason"],
+                 "target_ids": by_mention[m]["target_ids"]} if m in by_mention else {"mention_id": m, "status": "gone"}
+                for m in mention_ids]
+
+    fields = ("artifact_id", "museum", "entity_type", "target_id", "mention_ids")
     removed = []
     for k in sorted(set(old) - set(new)):
         link = old[k]
         if link["artifact_id"] not in artifact_ids:
             why = {"why": "record_gone"}
+        elif not any(m in by_mention for m in link["mention_ids"]):
+            why = {"why": "mentions_gone"}
         else:
-            present = [by_mention[m] for m in link["mention_ids"] if m in by_mention]
-            if not present:
-                why = {"why": "mentions_gone"}
-            else:
-                why = {"why": "resolves_otherwise",
-                       "now": [{"mention_id": r["mention_id"], "status": r["status"], "reason": r["reason"],
-                                "target_ids": r["target_ids"]} for r in present]}
-        removed.append({**{f: link[f] for f in ("artifact_id", "museum", "entity_type", "target_id", "mention_ids")}, **why})
-    added = [{f: new[k][f] for f in ("artifact_id", "museum", "entity_type", "target_id", "mention_ids")}
-             for k in sorted(set(new) - set(old))]
-    return {"added": added, "removed": removed, "kept": len(set(old) & set(new))}
+            why = {"why": "resolves_otherwise", "now": now(link["mention_ids"])}
+        removed.append({**{f: link[f] for f in fields}, **why})
+    changed = []
+    for k in sorted(set(old) & set(new)):
+        if old[k]["mention_ids"] != new[k]["mention_ids"]:
+            lost = sorted(set(old[k]["mention_ids"]) - set(new[k]["mention_ids"]))
+            changed.append({**{f: new[k][f] for f in fields if f != "mention_ids"},
+                            "previous_mention_ids": old[k]["mention_ids"], "mention_ids": new[k]["mention_ids"],
+                            "lost": now(lost)})
+    added = [{f: new[k][f] for f in fields} for k in sorted(set(new) - set(old))]
+    return {"added": added, "removed": removed, "changed": changed,
+            "kept": len(set(old) & set(new)) - len(changed)}
 
 
 def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], root: Path,
@@ -163,7 +186,9 @@ def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], ro
         "records": len(canonical),
         "snapshots": snapshots,
         "extraction": extraction,
-        "files": {name: {"sha256": hashlib.sha256(data).hexdigest(), "rows": counts.get(name)}
+        # The SHA-256 of each file's content: a gzip file's decompressed NDJSON, which does not
+        # depend on the zlib build that compressed it.
+        "files": {name: {"content_sha256": content_sha256(name, data), "rows": counts.get(name)}
                   for name, data in sorted(files.items())},
         "outcomes": {mode: outcomes(by_mode[mode][0]) for mode in authority_links.MODES},
         "inventory": inventory(by_mode["authority"][0]),
@@ -172,15 +197,29 @@ def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], ro
 
     run_dir = root / run_id
     if run_dir.exists():
+        # A run directory appears whole (renamed into place), so one that lacks a file or holds
+        # other content was changed after it was written.
         for name, data in files.items():
-            if (run_dir / name).read_bytes() != data:
+            if not (run_dir / name).exists():
+                raise ValueError(f"{run_dir} lacks {name}: it was changed after it was written")
+            if content_sha256(name, (run_dir / name).read_bytes()) != content_sha256(name, data):
                 raise ValueError(f"{run_dir / name} differs from a re-run on the same inputs and code")
+        if sorted(p.name for p in run_dir.iterdir()) != sorted(files):
+            raise ValueError(f"{run_dir} holds files a run does not write")
     else:
-        run_dir.mkdir(parents=True)
+        # Written beside it and renamed into place, so a crash leaves only the scratch directory,
+        # which the next run replaces.
+        scratch = root / f".{run_id}.partial"
+        if scratch.exists():
+            shutil.rmtree(scratch)
+        scratch.mkdir(parents=True)
         for name, data in files.items():
-            (run_dir / name).write_bytes(data)
+            (scratch / name).write_bytes(data)
+        os.rename(scratch, run_dir)
 
     previous_id = (root / CURRENT).read_text(encoding="utf-8").strip() if (root / CURRENT).exists() else None
+    if previous_id is not None and (not previous_id or not (root / previous_id).is_dir()):
+        raise ValueError(f"{root / CURRENT} names {previous_id!r}, which is not a run under {root}")
     if previous_id is not None and previous_id != run_id:
         artifact_ids = {row["id"] for row in canonical}
         diff = {"previous_run": previous_id, "run": run_id}
@@ -190,5 +229,7 @@ def write_run(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]], ro
         (root / "diffs").mkdir(exist_ok=True)
         (root / "diffs" / f"{previous_id}-to-{run_id}.json").write_text(
             json.dumps(diff, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    (root / CURRENT).write_text(run_id + "\n", encoding="utf-8")
+    pointer = root / f".{CURRENT}.partial"
+    pointer.write_text(run_id + "\n", encoding="utf-8")
+    os.replace(pointer, root / CURRENT)
     return manifest

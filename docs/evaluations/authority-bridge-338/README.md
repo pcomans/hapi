@@ -70,13 +70,25 @@ The CI tests need no private data:
     file's hash and row count, outcomes by entity type, status and reason, and the inventory of
     what is not resolved (temples and excavations with their reasons and counts, and the
     unevaluated scopes).
-- **The run ID** hashes the inputs, both resolver versions and the writer. The same inputs and
-  code give the same bytes; an existing run directory is checked byte for byte, never
-  rewritten.
+- **The run ID** hashes the inputs, both resolver versions and the writer. The manifest
+  hashes each file's content: a gzip file's decompressed NDJSON, so the hash does not depend on
+  the zlib build. The same inputs and code give the same content; an existing run directory is
+  checked against it, never rewritten.
+  - A test runs `write_run` in two interpreters with different `PYTHONHASHSEED`s and requires
+    the same manifest and file contents.
+- **Writes are crash-safe.** A run is written beside its place and renamed into it, and
+  `CURRENT` is replaced in one step, so a crash leaves no half-written run, only a scratch
+  directory that the next run replaces. A run directory that lacks a file, holds a stray one or
+  differs in content fails loud, with a message saying which.
 - **Withdrawal.** `<root>/CURRENT` names the run in force. When a new run replaces it,
-  `<root>/diffs/<previous>-to-<run>.json` lists, for each mode, the links added and the links
-  removed. A removal gives its reason: `record_gone`, `mentions_gone`, or `resolves_otherwise`
-  (with the mention's new status and reason).
+  `<root>/diffs/<previous>-to-<run>.json` lists, for each mode, the links added, removed and
+  changed.
+  - A removal gives its reason: `record_gone`, `mentions_gone`, or `resolves_otherwise` (with
+    each mention's new status and reason).
+  - A kept link whose mentions changed is listed as `changed`, with each lost mention's new
+    resolution, so a withdrawal inside a link that several mentions make is visible too.
+  - `record_gone` cannot happen in production yet. The ingest and normalize assets upsert and
+    never delete, so a record a museum withdraws stays in the tables.
 - **`target_kind`** keeps queens distinct from kings. The kinds are `king`, `royal_woman`,
   `site`, `tomb` and `literal`; a royal woman who reigned is her king. `relation` is `identity`
   only: no resolver produces containment or a close match. #333's vocabulary is needed when
@@ -84,11 +96,13 @@ The CI tests need no private data:
 - **The asset** is `pipeline/pipeline/assets/enrich/authority_links_asset.py`, after the three
   normalize assets. It reads the canonical and raw tables and writes to
   `HAPI_AUTHORITY_LINKS_DIR` (default `data/authority-links/`, which is gitignored).
-  - This devcontainer has no database, so the asset has run only through its core.
-  - Two full runs on the frozen corpus, in separate directories, gave byte-identical files in
-    11 s each: 148,964 mentions, 48,994 authority links and 127,711 literal links.
-- **Per-museum field inventory.** A test checks that every museum with an ingest asset has
-  its fields read by the extractor.
+  - These files are a working store, not durable storage; the database table comes later.
+  - This devcontainer has no database, so the asset itself has not run, only its core. It
+    should run once against a real Postgres before anything relies on it.
+  - Two materializations at once would both diff against the same `CURRENT`; the last one wins.
+    No file is corrupted, but the diffs are then the only record of the order.
+- **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
+  mentions from. A museum without an inventory fails loud in the extractor.
 
 ## Left for step 3
 
