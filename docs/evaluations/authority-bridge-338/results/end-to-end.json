@@ -202,7 +202,6 @@
     "by_museum_pair": {
       "ruler|brooklyn|harvard": {
         "qualified": false,
-        "qualified_by": null,
         "records": {
           "brooklyn": {
             "connected_authority": 6,
@@ -217,7 +216,6 @@
             "lost": 0
           }
         },
-        "review_covers_population": null,
         "shared_target_ids": {
           "authority": [
             "cluster-beckerath-18.10",
@@ -295,12 +293,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": null
+        }
       },
       "ruler|met|brooklyn": {
         "qualified": true,
-        "qualified_by": "#361",
         "records": {
           "brooklyn": {
             "connected_authority": 20,
@@ -315,7 +311,6 @@
             "lost": 57
           }
         },
-        "review_covers_population": false,
         "shared_target_ids": {
           "authority": [
             "cluster-beckerath-05.06",
@@ -428,16 +423,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": [
-          "brooklyn-3634",
-          "met-547683",
-          "met-566763"
-        ]
+        }
       },
       "ruler|met|harvard": {
         "qualified": false,
-        "qualified_by": null,
         "records": {
           "harvard": {
             "connected_authority": 2,
@@ -452,7 +441,6 @@
             "lost": 1
           }
         },
-        "review_covers_population": null,
         "shared_target_ids": {
           "authority": [
             "cluster-beckerath-18.10",
@@ -530,12 +518,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": null
+        }
       },
       "site|brooklyn|harvard": {
         "qualified": true,
-        "qualified_by": "#337 v10",
         "records": {
           "brooklyn": {
             "connected_authority": 332,
@@ -550,7 +536,6 @@
             "lost": 514
           }
         },
-        "review_covers_population": true,
         "shared_target_ids": {
           "authority": [
             "idai:2042797",
@@ -644,12 +629,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": []
+        }
       },
       "site|met|brooklyn": {
         "qualified": true,
-        "qualified_by": "#337 v10",
         "records": {
           "brooklyn": {
             "connected_authority": 1151,
@@ -664,7 +647,6 @@
             "lost": 12941
           }
         },
-        "review_covers_population": true,
         "shared_target_ids": {
           "authority": [
             "idai:2042789",
@@ -855,12 +837,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": []
+        }
       },
       "site|met|harvard": {
         "qualified": true,
-        "qualified_by": "#337 v10",
         "records": {
           "harvard": {
             "connected_authority": 6,
@@ -875,7 +855,6 @@
             "lost": 26123
           }
         },
-        "review_covers_population": true,
         "shared_target_ids": {
           "authority": [
             "idai:2042797",
@@ -966,12 +945,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": []
+        }
       },
       "tomb_monument|brooklyn|harvard": {
         "qualified": false,
-        "qualified_by": null,
         "records": {
           "brooklyn": {
             "connected_authority": 0,
@@ -986,7 +963,6 @@
             "lost": 0
           }
         },
-        "review_covers_population": null,
         "shared_target_ids": {
           "authority": [],
           "literal": []
@@ -1038,12 +1014,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": null
+        }
       },
       "tomb_monument|met|brooklyn": {
         "qualified": false,
-        "qualified_by": null,
         "records": {
           "brooklyn": {
             "connected_authority": 0,
@@ -1058,7 +1032,6 @@
             "lost": 0
           }
         },
-        "review_covers_population": null,
         "shared_target_ids": {
           "authority": [],
           "literal": []
@@ -1110,12 +1083,10 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": null
+        }
       },
       "tomb_monument|met|harvard": {
         "qualified": false,
-        "qualified_by": null,
         "records": {
           "harvard": {
             "connected_authority": 0,
@@ -1130,7 +1101,6 @@
             "lost": 0
           }
         },
-        "review_covers_population": null,
         "shared_target_ids": {
           "authority": [],
           "literal": []
@@ -1182,8 +1152,7 @@
               }
             }
           }
-        },
-        "unreviewed_connected_records": null
+        }
       }
     },
     "records_on_shared_targets_any_type": {
@@ -1234,12 +1203,38 @@
     }
   },
   "report_sha256": {
-    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "e70b6e7c07bbff9a08c653042231f48a59efd45d0ec9a4d2e8835a5e599db8fc",
-    "pipeline/pipeline/enrich/cross_museum.py": "ab3b35d67ecf82dc75bbc05dd1f1e1bf0d8f79f2a99a9dbe69828e615c35009f"
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "2ea29ce8e7fb2660ffedb435e6a4c7b2b48d83f291e90c2f6b9172ad3a4f5683",
+    "pipeline/pipeline/enrich/cross_museum.py": "01e4369be623a6799a735db9e412a8db30661f4d37367d0d115b5733e234b58d"
   },
   "resolver_versions": {
     "authority": "72a60c4dd928ad31bb8f1a1843dc866042f37077c27b9da82ac1072ce9c147bc",
     "literal": "b0172dc3cbbf65a4f43edb6fd0a5d24b6c1f29772d141ac82e5ddac1f996114b"
+  },
+  "review_coverage": {
+    "ruler|met|brooklyn": {
+      "qualified_by": "#361",
+      "review_covers_population": false,
+      "unreviewed_connected_records": [
+        "brooklyn-3634",
+        "met-547683",
+        "met-566763"
+      ]
+    },
+    "site|brooklyn|harvard": {
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|met|brooklyn": {
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|met|harvard": {
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    }
   },
   "run_ids": [
     "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6",

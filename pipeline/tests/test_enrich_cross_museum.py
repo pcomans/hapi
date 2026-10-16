@@ -275,36 +275,21 @@ def test_the_largest_plain_text_site_targets_are_egypt_and_africa(result) -> Non
         assert authority.sites.resolve(place, al.resolver.place_norm_set)["status"] == "unmatched", place
 
 
-def test_each_qualified_scope_says_whether_its_review_covers_this_population(result) -> None:
-    """`qualified` is the policy flag; each row also says which review qualified it and which of
-    its connected records that review did not see: none for the sites, the three records #369's
-    Ahmes B connects for Met-Brooklyn rulers."""
-    pairs = result["matching"]["by_museum_pair"]
-    coverage = {k: (r["qualified_by"], r["review_covers_population"], r["unreviewed_connected_records"])
-                for k, r in pairs.items() if r["qualified"]}
-    assert coverage == {
-        "ruler|met|brooklyn": ("#361", False, ["brooklyn-3634", "met-547683", "met-566763"]),
-        **{f"site|{a}|{b}": ("#337 v10", True, []) for a, b in al.MUSEUM_PAIRS}}
-    assert all((r["qualified_by"], r["review_covers_population"], r["unreviewed_connected_records"]) == (None, None, None)
-               for r in pairs.values() if not r["qualified"])
-    # Complete: every record #369 changed that the authority connects in Met-Brooklyn rulers is listed.
+def test_the_frozen_run_says_whether_each_qualified_scopes_review_covers_it(result) -> None:
+    """Review coverage is a fact about this frozen run, not something `report()` can know of any
+    run: the sites' reviews cover it; Met-Brooklyn rulers' does not cover the three records #369's
+    Ahmes B connects."""
+    assert result["review_coverage"] == {
+        "ruler|met|brooklyn": {"qualified_by": "#361", "review_covers_population": False,
+                               "unreviewed_connected_records": ["brooklyn-3634", "met-547683", "met-566763"]},
+        **{f"site|{a}|{b}": {"qualified_by": "#337 v10", "review_covers_population": True,
+                             "unreviewed_connected_records": []} for a, b in al.MUSEUM_PAIRS}}
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(
         encoding="utf-8"))["royal_woman_cued_mentions"]["changes"]
     changed = {c["artifact_id"] for c in changes}
-    assert cm.CHANGED_SINCE_REVIEW["ruler"] <= changed
-    connected = {r for side, records in result["ahmes_b_records"].items() for r in records}
-    assert changed & connected <= set(coverage["ruler|met|brooklyn"][2])
-
-
-def test_a_record_changed_since_review_marks_what_depends_on_it(tmp_path, monkeypatch) -> None:
-    """The coverage is computed, not keyed: a ruler record changed since review, and a record
-    connected only through a target it makes shared, are unreviewed; a site link of the same
-    record is not (its site resolution was not changed)."""
-    monkeypatch.setattr(cm, "CHANGED_SINCE_REVIEW", {"ruler": frozenset({"brooklyn-9"})})
-    run = write_run(tmp_path, AUTHORITY + [link("met-9", "ruler", "queen:x"), link("brooklyn-9", "ruler", "queen:x"),
-                                           link("brooklyn-9", "site", "idai:thebes")], LITERAL)
-    r = cm.report(run)["by_museum_pair"]
-    assert (r["ruler|met|brooklyn"]["unreviewed_connected_records"], r["ruler|met|brooklyn"]["review_covers_population"]) == (
-        ["brooklyn-9", "met-9"], False)
-    assert (r["site|met|brooklyn"]["unreviewed_connected_records"], r["site|met|brooklyn"]["review_covers_population"]) == (
-        [], True)
+    assert set(result["tuned_on_369"]) <= changed
+    connected = {r for records in result["ahmes_b_records"].values() for r in records}
+    assert changed & connected <= set(result["review_coverage"]["ruler|met|brooklyn"]["unreviewed_connected_records"])
+    # report() itself makes no coverage claim.
+    assert all(set(row) == {"qualified", "shared_targets_authority", "shared_targets_literal", "shared_target_ids",
+                            "records", "top_targets"} for row in result["matching"]["by_museum_pair"].values())

@@ -41,7 +41,8 @@ EVALUATIONS = REPO / "docs/evaluations"
 # The records #369's fixes were found on and changed (`resolver-gaps-369/README.md`, "Tuned on
 # #361's deciding case"): the two Queen Ahmose records and #361's Neferu d. A next registration
 # must flag them; this result names them, and the README sets this run beside #361's report.
-TUNED_ON_369 = cross_museum.CHANGED_SINCE_REVIEW["ruler"]
+TUNED_ON_369 = frozenset({"brooklyn-3634", "met-566763", "brooklyn-3599"})
+QUALIFIED_BY = {"site": "#337 v10", "ruler": "#361"}
 # The code the report itself runs.
 REPORT_CODE = (REPO / "pipeline/pipeline/enrich/cross_museum.py", Path(__file__).resolve())
 
@@ -76,6 +77,27 @@ def ahmes_b_records(run: Path) -> dict:
             for museum, records in sorted(by_mode["authority"][("ruler", "dodson_hilton:Ahmes B")].items())}
 
 
+def review_coverage(run: Path, report: dict) -> dict:
+    """For this frozen run only: per qualified scope, the review that qualified it and its connected
+    records that review did not see, i.e. those whose connection depends on a ruler record #369
+    changed (its site links are #337's). The tests show the rest of each population is the
+    reviewed one record for record (sites) or by the step-1 proof (rulers)."""
+    links = [l for l in cross_museum.load_links(run, "authority")
+             if not (l["entity_type"] == "ruler" and l["artifact_id"] in TUNED_ON_369)]
+    before = cross_museum.connected(cross_museum.target_records(links))
+    now = cross_museum.connected(cross_museum.target_records(cross_museum.load_links(run, "authority")))
+    empty = {"records": set()}
+    out = {}
+    for key, row in sorted(report["by_museum_pair"].items()):
+        if row["qualified"]:
+            entity, a, b = key.split("|")
+            unreviewed = sorted(r for x, y in ((a, b), (b, a))
+                                for r in now.get((entity, x, y), empty)["records"] - before.get((entity, x, y), empty)["records"])
+            out[key] = {"qualified_by": QUALIFIED_BY[entity], "unreviewed_connected_records": unreviewed,
+                        "review_covers_population": not unreviewed}
+    return out
+
+
 def end_to_end(archive: Path) -> dict:
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(encoding="utf-8"))
     if not TUNED_ON_369 <= {c["artifact_id"] for c in changes["royal_woman_cued_mentions"]["changes"]}:
@@ -95,6 +117,7 @@ def end_to_end(archive: Path) -> dict:
             raise ValueError("two runs on the same inputs and code differ")
         manifest = manifests[0]
         ahmes_b = ahmes_b_records(runs[0])
+        coverage = review_coverage(runs[0], reports[0])
     return {
         "schema_version": "hapi-338-end-to-end/3",
         "corpus_archive_sha256": ARCHIVE_SHA256,
@@ -112,6 +135,8 @@ def end_to_end(archive: Path) -> dict:
         "tuned_on_369": sorted(TUNED_ON_369),
         # The records #369's one new shared ruler target joins, by museum (authority mode).
         "ahmes_b_records": ahmes_b,
+        # For this frozen run only: whether the review that qualified each scope saw its population.
+        "review_coverage": coverage,
         # What #337 (sites, rulers and tombs; its own mention ledger and code of 2026-10-11) and #361
         # (rulers only; this mention ledger) reported, to set beside this run.
         "evaluation_headlines": {"337": evaluation_headline("authority-independent-control-2026-10-11"),

@@ -161,16 +161,14 @@ The CI tests need no private data:
   - the largest 1 and 5 shared targets (by ID) and their share of each side;
   - #337's headline measure: each museum's records on a target shared with any other museum.
 
-  Each scope is flagged `qualified` per `QUALIFIED_SCOPES`, which is the policy flag. Each
-  qualified row also gives:
-  - `qualified_by`: the review that qualified it;
-  - `unreviewed_connected_records`: its connected records that review did not see, meaning those
-    whose connection depends on a record whose resolution changed after the review
-    (`CHANGED_SINCE_REVIEW`: #369's tuned-on ruler records);
-  - `review_covers_population`.
+  Each scope is flagged `qualified` per `QUALIFIED_SCOPES`. That is the policy flag: an
+  evaluation found the authority helps there. It does not say a review saw the population
+  measured, which `report()` cannot know of an arbitrary run. For this frozen run, the result's
+  `review_coverage` says so per qualified scope:
+  - the sites' reviews cover it;
+  - #361's review does not cover the three Met–Brooklyn ruler records #369's Ahmes B connects.
 
-  For Met–Brooklyn rulers the unreviewed records are the three that #369's Ahmes B connects, so
-  the review does not cover that population. This is the measurement; no deployed
+  This is the measurement; no deployed
   matcher reads these links yet. Matching is the web query layer's (ADR-008), and that
   integration comes with the database step.
 - **`scripts/run_end_to_end.py`** writes `results/end-to-end.json`. It runs `write_run` twice on
