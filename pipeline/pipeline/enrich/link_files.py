@@ -160,12 +160,19 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
         removed.append({**{f: link[f] for f in fields}, **why})
     changed = []
     for k in sorted(set(old) & set(new)):
+        # A field one side lacks (a later writer added or dropped it) is a change too; the side
+        # that lacks it is left out of the entry rather than given a value it never had.
         moved = [f for f in sorted(set(old[k]) | set(new[k])) if f not in LINK_KEY + NOT_DIFFED
-                 and old[k].get(f) != new[k].get(f)]
+                 and (f in old[k], old[k].get(f)) != (f in new[k], new[k].get(f))]
         if moved:
             lost = sorted(set(old[k]["mention_ids"]) - set(new[k]["mention_ids"]))
             changed.append({**{f: new[k][f] for f in fields if f != "mention_ids"},
-                            **{f"previous_{f}": old[k][f] for f in moved}, **{f: new[k][f] for f in moved},
+                            **{f"previous_{f}": old[k][f] for f in moved if f in old[k]},
+                            **{f: new[k][f] for f in moved if f in new[k]},
+                            **({"fields_only_before": [f for f in moved if f not in new[k]]}
+                               if any(f not in new[k] for f in moved) else {}),
+                            **({"fields_only_after": [f for f in moved if f not in old[k]]}
+                               if any(f not in old[k] for f in moved) else {}),
                             "lost": now(lost)})
     added = [{f: new[k][f] for f in fields} for k in sorted(set(new) - set(old))]
     return {"added": added, "removed": removed, "changed": changed,

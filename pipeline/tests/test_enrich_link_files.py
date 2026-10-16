@@ -639,6 +639,15 @@ def test_every_link_field_but_the_key_and_three_is_diffed(inputs, authority, tmp
         assert diff["changed"] == [{**{f: one[f] for f in ("artifact_id", "museum", "entity_type", "target_id")},
                                     f"previous_{field}": one[field], field: value, "lost": []}], field
         assert (diff["kept"], diff["added"], diff["removed"]) == (0, [], [])
+    # A field a later writer adds, or drops, is a change, without a value invented for the side
+    # that lacks it.
+    added_field = lf.diff_links([one], [{**one, "certainty": "high"}], [], {one["artifact_id"]})["changed"]
+    assert added_field == [{**{f: one[f] for f in ("artifact_id", "museum", "entity_type", "target_id")},
+                            "certainty": "high", "fields_only_after": ["certainty"], "lost": []}]
+    dropped = {k: v for k, v in one.items() if k != "target_kind"}
+    dropped_field = lf.diff_links([one], [dropped], [], {one["artifact_id"]})["changed"]
+    assert dropped_field == [{**{f: one[f] for f in ("artifact_id", "museum", "entity_type", "target_id")},
+                              "previous_target_kind": "tomb", "fields_only_before": ["target_kind"], "lost": []}]
     unchanged = lf.diff_links([one], [{**one, "resolver_version": "other", "mode": "authority"}], [], {one["artifact_id"]})
     assert (unchanged["kept"], unchanged["changed"]) == (1, [])
 
