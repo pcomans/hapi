@@ -12,8 +12,9 @@ database table comes later.
   grammar and `extract_mentions`). A test fails on the first edit to any copied definition.
   - It reads the raw museum records and is authority-blind.
   - `extract_mentions` names the evidence fields of the three museums the evaluations measured.
-    Cleveland, added later (`docs/museum-sources/cleveland.md`), has its own reader beside it,
-    `cleveland_mentions`; `extract_all_mentions` joins the two, and a run calls that.
+    Cleveland and the Walters, added later (`docs/museum-sources/cleveland.md`, `walters.md`),
+    have their own readers beside it, `cleveland_mentions` and `walters_mentions`;
+    `extract_all_mentions` joins them, and a run calls that.
 - **`pipeline/pipeline/authority/resolver.py`**: the linkability adapter's ruler, site and
   Porter & Moss tomb resolvers.
   - `graph_kings` now builds on this module. A frozen evaluation still passes in the adapter.
@@ -290,10 +291,10 @@ It does not cover:
 To reproduce: `vercel env pull` in `web-claimgraph/` (linked to the project), then use
 `DATABASE_URL_UNPOOLED` as `DATABASE_URL` for Alembic, the loader and Dagster.
 
-The Neon database no longer holds the August export alone. On 2026-10-16, Cleveland was ingested
-into it live (`catalog.raw_cleveland` and its canonical rows). The loader refuses tables that
-already hold rows, Cleveland's included, so to repeat this run, load the export into an empty
-database.
+The Neon database no longer holds the August export alone. On 2026-10-16, Cleveland and the
+Walters were ingested into it live (`catalog.raw_cleveland`, `catalog.raw_walters` and their
+canonical rows). The loader refuses tables that already hold rows, Cleveland's and the Walters'
+included, so to repeat this run, load the export into an empty database.
 
 The proofs cover the code they recorded only:
 - `results/promotion-check.json` records `snapshot` for the resolution and
@@ -311,6 +312,10 @@ the output is in `results/rerun-after-cleveland/`. A test compares it with the c
 - what differs is only what names the code (hashes, resolver versions, run ids, the files whose
   rows carry the resolver version);
 - Cleveland's own rows are new and empty, since the corpus predates it.
+
+Adding the Walters edited them again, and `results/rerun-after-walters/` is the re-run with that
+code. The same test holds it to the committed results, with the Walters' pairs and rows new and
+empty beside Cleveland's.
 
 The committed `results/end-to-end.json` and `database-run.json` stay the records of the run they
 describe. Tests compare the committed results with the evaluations' files, not

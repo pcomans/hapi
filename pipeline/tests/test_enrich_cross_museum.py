@@ -86,8 +86,8 @@ def test_the_report_counts_connections_by_pair_type_and_side(run) -> None:
     assert r["by_museum"]["harvard|site"] == {"authority": {"linked_records": 2, "connected_records": 1},
                                               "literal": {"linked_records": 1, "connected_records": 1}}
     assert r["records_on_shared_targets_any_type"] == {
-        "authority": {"brooklyn": 3, "cleveland": 0, "harvard": 1, "met": 6},
-        "literal": {"brooklyn": 1, "cleveland": 0, "harvard": 1, "met": 2}}
+        "authority": {"brooklyn": 3, "cleveland": 0, "harvard": 1, "met": 6, "walters": 0},
+        "literal": {"brooklyn": 1, "cleveland": 0, "harvard": 1, "met": 2, "walters": 0}}
 
 
 def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> None:
@@ -102,7 +102,7 @@ def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> No
 
 
 # The frozen run (end-to-end.json) is of the 2026-08-27 corpus: these museums and pairs. Cleveland
-# came later (docs/museum-sources/cleveland.md), so tests of that run iterate over these, not
+# and the Walters came later (docs/museum-sources/), so tests of that run iterate over these, not
 # over today's `MUSEUM_PAIRS`.
 FROZEN_MUSEUMS = ("brooklyn", "harvard", "met")
 FROZEN_PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard"))
@@ -352,29 +352,64 @@ def _flat(value, path: str = "") -> dict:
     return {path: value}
 
 
-def test_adding_cleveland_changed_nothing_on_the_frozen_corpus() -> None:
-    """`results/rerun-after-cleveland/`: both proof scripts re-run on the frozen corpus with the
-    code that adds Cleveland. Every figure is the committed one; what differs is only what names
-    the code (hashes, resolver versions, run ids, the files whose rows carry the resolver version)
-    and Cleveland's own rows, all empty: the corpus predates it."""
+@pytest.mark.parametrize("rerun, added", [
+    ("rerun-after-cleveland", ("cleveland",)),
+    ("rerun-after-walters", ("cleveland", "walters")),
+])
+def test_adding_a_museum_changed_nothing_on_the_frozen_corpus(rerun, added) -> None:
+    """`results/<rerun>/`: both proof scripts re-run on the frozen corpus with the code that adds
+    a museum (Cleveland, then the Walters). Every figure is the committed one; what differs is only
+    what names the code (hashes, resolver versions, run ids, the files whose rows carry the
+    resolver version) and the added museums' own rows, all empty: the corpus predates them."""
     results = EVALUATIONS / "authority-bridge-338/results"
     code_named = ("code_sha256", "/files/", "resolver_version", "/run_ids", "/writer_sha256")
     for name in ("promotion-check.json", "end-to-end.json"):
         before = _flat(json.loads((results / name).read_text(encoding="utf-8")))
-        after = _flat(json.loads((results / "rerun-after-cleveland" / name).read_text(encoding="utf-8")))
+        after = _flat(json.loads((results / rerun / name).read_text(encoding="utf-8")))
         differ = {k for k in before.keys() | after.keys() if before.get(k) != after.get(k)}
         code = {k for k in differ if any(part in k for part in code_named)}
         differ -= code
-        cleveland = {k for k in differ if "cleveland" in k}
-        assert all(after[k] in (0, [], False) for k in cleveland if k in after), name
-        assert all(k not in before for k in cleveland), name
+        new = {k for k in differ if any(museum in k for museum in added)}
+        assert all(after[k] in (0, [], False) for k in new if k in after), name
+        assert all(k not in before for k in new), name
         unevaluated = {k for k in differ if k.startswith("/inventory/unevaluated_scopes/")}
         for key in unevaluated:
             assert after[key][:len(before[key])] == before[key]
-            assert all("cleveland" in pair for pair in after[key][len(before[key]):]), key
-        assert differ - cleveland - unevaluated == set(), name
-    after = json.loads((results / "rerun-after-cleveland/end-to-end.json").read_text(encoding="utf-8"))
+            assert all(set(pair) & set(added) for pair in after[key][len(before[key]):]), key
+        assert differ - new - unevaluated == set(), name
+    after = json.loads((results / rerun / "end-to-end.json").read_text(encoding="utf-8"))
     before = json.loads((results / "end-to-end.json").read_text(encoding="utf-8"))
+    # The rerun is of the code that adds them: each added museum's pairs are in it (empty), and its
+    # input check ran that museum's mapper.
+    frozen = {"met", "brooklyn", "harvard"}
+    pairs = {(a, b) for key in after["matching"]["by_museum_pair"] for a, b in [key.split("|")[1:]]}
+    assert {pair for pair in pairs if set(pair) - frozen} == {
+        pair for pair in al.MUSEUM_PAIRS if set(pair) - frozen and set(pair) <= frozen | set(added)}
+    promotion = json.loads((results / rerun / "promotion-check.json").read_text(encoding="utf-8"))
+    assert {f"pipeline/pipeline/assets/normalize/{museum}.py" for museum in added} <= set(
+        promotion["check_inputs"]["code_sha256"])
     # The mention ledger, which carries no resolver version, is byte for byte the same.
     assert after["files"]["mentions.ndjson.gz"] == before["files"]["mentions.ndjson.gz"]
     assert {n: f["rows"] for n, f in after["files"].items()} == {n: f["rows"] for n, f in before["files"].items()}
+
+
+def test_the_latest_rerun_and_the_museum_profiles_pin_the_same_code() -> None:
+    """The committed artifacts made after the Walters was added must describe one version of the
+    code they share: the rerun's input check, its resolver snapshot and the two museum profiles
+    pin each file they have in common to one hash. (Whether that version is the live code is
+    checked when they are made; an edit afterwards leaves them describing the code they record.)"""
+    results = EVALUATIONS / "authority-bridge-338/results/rerun-after-walters"
+    promotion = json.loads((results / "promotion-check.json").read_text(encoding="utf-8"))
+    pins = [promotion["check_inputs"]["code_sha256"], promotion["snapshot"]["authority"]["files"]]
+    for museum in ("cleveland", "walters"):
+        profile = EVALUATIONS.parent / "museum-sources" / f"{museum}-profile/profile.json"
+        pins.append(json.loads(profile.read_text(encoding="utf-8"))["code_sha256"])
+    seen: dict[str, set[str]] = {}
+    for pin in pins:
+        for path, digest in pin.items():
+            seen.setdefault(path, set()).add(digest)
+    assert {path: digests for path, digests in seen.items() if len(digests) > 1} == {}
+    end_to_end = json.loads((results / "end-to-end.json").read_text(encoding="utf-8"))
+    assert end_to_end["resolver_versions"] == {m: promotion["snapshot"][m]["resolver_version"] for m in al.MODES}
+    assert {"pipeline/pipeline/enrich/mentions.py", "pipeline/pipeline/assets/normalize/walters.py"} <= {
+        path for path in seen if sum(path in pin for pin in pins) > 1}

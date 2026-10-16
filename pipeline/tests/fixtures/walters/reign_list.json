@@ -1,0 +1,133 @@
+{
+  "object": {
+    "ObjectID": "24458",
+    "AccessionNumber": "42.48",
+    "ObjectName": "scarabs; amulets",
+    "DateBeginYear": "-712",
+    "DateEndYear": "-656",
+    "DateText": "ca. 700-656 BCE (Third Intermediate-Late Period)",
+    "Title": "Scarab with Cat and Title of Shepenwepet",
+    "Dimensions": "H: 3/8 x W: 9/16 x L: 11/16 in. (0.9 x 1.4 x 1.8 cm)",
+    "Medium": "light beige faience with green-blue glaze",
+    "Style": "",
+    "Culture": "Egyptian",
+    "Inscriptions": "[Translation] Name with cartouche and titles of the Divine Consort of Amun: Shepenwepet: Divine consort, divine worshipper: / Shep-en-wepet.",
+    "Classification": "Precious Stones & Gems",
+    "Period": "",
+    "ResourceURL": "https://purl.thewalters.org/art/42.48",
+    "Description": "<p>This scaraboid faience amulet is inscribed on the bottom with the name and title of the divine consort Shepenwepet. The top is carved with the three-dimensional representation of a cat facing the right with the head turned to the front. The workmanship is a little rough, but detailed. This piece functioned as an individualized amulet of the Divine Consort Shepenwepet II, and was originally mounted or threaded. The image of a cat with kittens conveys the idea of fertility, renewal, and protection, and the name of Shepenwepet the individualization. The amulet should secure the divine status, royal authority of the \"Divine Consort,\" as well as her presence and renewal. It is possible that the amulet was created for the personal use of Shepenwepet, but it is also likely that it was given to a private person to guarantee her patronage. The identification of the lying animal as a cat is possible by posture, content and comparision, but the round shapes of the ears are a litttle uncommon and seem more canine. Nevertheless, the attitude of the animal, and the context make identification as cat most likely.</p><p>For the latest information about this object, <cite><a href='https://purl.thewalters.org/art/42.48' rel='external'>Scarab with Cat and Title of Shepenwepet</a></cite>, visit the Online Collection of the Walters Art Museum.</p>",
+    "CreditLine": " Walters Art Museum, 1931, by bequest.",
+    "Keywords": "",
+    "Provenance": "Henry Walters, Baltimore [date and mode of acquisition unknown]; Walters Art Museum, 1931, by bequest.",
+    "Dynasty": "25th-26th Dynasty",
+    "Reign": "Shabako (715-700 BC), Psammetichus I (664-10 BC)",
+    "GeographyID": "",
+    "RelatedObjects": "",
+    "Images": "CUR_42.48_Back_DD_design_RS2009.jpg|CUR_42.48_BackVwA_DD_RS2009.jpg|CUR_42.48_DetA_DD_face_RS2009.jpg|CUR_42.48_Fnt_DD_RS2009.jpg|CUR_42.48_Bot_DD_RS2009.jpg|CUR_42.48_Bot_DD_design_RS2009.jpg|CUR_42.48_VwA_DD_hieroglyphictext_RS2009.jpg|CUR_42.48_VwA_DD_TranscriptionRS2009.jpg|CUR_42.48_Back_DD_RS2009.jpg",
+    "CollectionID": "EGY",
+    "MuseumLocation": "To learn whether this object is now on view, and in which gallery, visit https://purl.thewalters.org/art/42.48",
+    "Creators": "6182",
+    "Exhibitions": ""
+  },
+  "media": [
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20244",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_Back_DD_design_RS2009.jpg",
+      "Filename": "CUR_42.48_Back_DD_design_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Back",
+      "Rank": "2",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20246",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_BackVwA_DD_RS2009.jpg",
+      "Filename": "CUR_42.48_BackVwA_DD_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Back",
+      "Rank": "3",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20249",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_DetA_DD_face_RS2009.jpg",
+      "Filename": "CUR_42.48_DetA_DD_face_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Detail",
+      "Rank": "4",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20250",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_Fnt_DD_RS2009.jpg",
+      "Filename": "CUR_42.48_Fnt_DD_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Front",
+      "Rank": "5",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20248",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_Bot_DD_RS2009.jpg",
+      "Filename": "CUR_42.48_Bot_DD_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Bottom",
+      "Rank": "6",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20247",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_Bot_DD_design_RS2009.jpg",
+      "Filename": "CUR_42.48_Bot_DD_design_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Bottom",
+      "Rank": "7",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20251",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_VwA_DD_hieroglyphictext_RS2009.jpg",
+      "Filename": "CUR_42.48_VwA_DD_hieroglyphictext_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Impression Detail",
+      "Rank": "8",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20252",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_VwA_DD_TranscriptionRS2009.jpg",
+      "Filename": "CUR_42.48_VwA_DD_TranscriptionRS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Transcription",
+      "Rank": "9",
+      "IsPrimary": "0"
+    },
+    {
+      "ObjectID": "24458",
+      "AccessionNumber": "42.48",
+      "MediaXrefID": "20245",
+      "ImageURL": "https://art.thewalters.org/images/raw/CUR_42.48_Back_DD_RS2009.jpg",
+      "Filename": "CUR_42.48_Back_DD_RS2009.jpg",
+      "MediaType": "Image",
+      "MediaView": "Back",
+      "Rank": "1",
+      "IsPrimary": "1"
+    }
+  ]
+}

@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from pipeline.assets.normalize import cleveland
+from pipeline.assets.normalize import cleveland, walters
 from pipeline.assets.normalize.brooklyn import BrooklynMapper, is_egyptian
 from pipeline.assets.normalize.harvard import HarvardMapper
 from pipeline.assets.normalize.met import MetMapper
@@ -35,6 +35,7 @@ NORMALIZERS: dict[str, tuple[type, Callable[[dict], bool] | None]] = {
     "brooklyn": (BrooklynMapper, is_egyptian),
     "harvard": (HarvardMapper, None),
     "cleveland": (cleveland.ClevelandMapper, cleveland.is_egyptian),
+    "walters": (walters.WaltersMapper, walters.is_egyptian),
 }
 SHOWN = 5
 

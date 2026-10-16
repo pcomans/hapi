@@ -28,13 +28,11 @@ REPO = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO / "pipeline"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_promotion import load_corpus  # noqa: E402  (verifies the archive's SHA-256)
-from pipeline.types.models import (  # noqa: E402
-    artifacts_table, raw_brooklyn_table, raw_cleveland_table, raw_harvard_table, raw_met_table,
-)
+from pipeline.assets.enrich.authority_links_asset import RAW_TABLES  # noqa: E402
+from pipeline.types.models import artifacts_table  # noqa: E402
 
-# Cleveland's table is in the check too: the corpus predates Cleveland, so it must stay empty.
-RAW_TABLES = {"met": raw_met_table, "brooklyn": raw_brooklyn_table, "harvard": raw_harvard_table,
-              "cleveland": raw_cleveland_table}
+# Every museum's raw table is in the check, the asset's own list: the corpus predates the museums
+# added since (Cleveland, the Walters), so their tables must stay empty.
 BATCH = 1000
 
 

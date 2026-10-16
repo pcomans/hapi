@@ -112,6 +112,13 @@ raw_cleveland_table = Table(
     Column("data", Text, nullable=False),
 )
 
+raw_walters_table = Table(
+    "raw_walters",
+    metadata,
+    Column("object_id", String, primary_key=True),
+    Column("data", Text, nullable=False),
+)
+
 # Fuzzy match review queue (ADR-009)
 fuzzy_match_reviews_table = Table(
     "fuzzy_match_reviews",

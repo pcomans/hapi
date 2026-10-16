@@ -22,6 +22,7 @@ const MUSEUM_LABELS: Record<string, string> = {
   brooklyn: "Brooklyn Museum",
   harvard: "Harvard Art Museums",
   cleveland: "Cleveland Museum of Art",
+  walters: "Walters Art Museum",
 };
 
 export function ArtifactCard({
