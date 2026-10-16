@@ -184,7 +184,8 @@ def write_run(root: Path, read_inputs: Callable[[], tuple[list[dict], dict[str, 
     """Write one run under `root` and point `root/CURRENT` at it; return its manifest.
     `read_inputs` gives the canonical records and the raw payloads by museum and source id; it
     is called with the run lock held, so no run can read older inputs than a run that became
-    current before it. The inputs must be one pipeline generation (`inputs.check_inputs`)."""
+    current before it. The canonical rows must be the normalize step's output for the raw rows read,
+    as far as the mapper can see (`inputs.check_inputs`; a complete-ingest marker is #375)."""
     with run_lock(root):
         canonical, raw_indexes = read_inputs()
         canonical, set_aside = check_inputs(canonical, raw_indexes)

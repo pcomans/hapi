@@ -692,3 +692,15 @@ def test_a_run_killed_while_naming_its_pending_diff_leaves_only_the_writing_file
     raw_c["met"]["900001"]["title"] = "Amulet"
     c = lf.write_run(tmp_path, lambda: (normalized(raw_c), raw_c), authority)
     assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == [f"{a['run_id']}-to-{c['run_id']}.json"]
+
+
+def test_a_change_the_mapper_cannot_see_passes_the_input_check(inputs) -> None:
+    """The known gap (#375): a raw field the extractor reads but the mapper does not map
+    (Harvard `labeltext`) changes without the canonical row changing, so the check cannot tell a
+    re-ingest under way. #375's complete-ingest marker is to close it; this test then changes."""
+    from pipeline.enrich.inputs import check_inputs
+    canonical, raw = inputs
+    raw2 = copy.deepcopy(raw)
+    (source_id,) = [s for s in raw2["harvard"] if s == "303839"]
+    raw2["harvard"][source_id]["labeltext"] = "Relief of King Amenhotep III, re-ingested"
+    assert check_inputs(canonical, raw2) == (canonical, [])

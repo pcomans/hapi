@@ -4,12 +4,17 @@ A run reads the canonical records and the raw payloads they were normalized from
 assets commit raw rows batch by batch and the normalize assets write canonical rows later, so
 tables read while either is running can pair a new raw payload with an old canonical row, or hold
 raw rows not yet normalized; one database snapshot does not prevent that. `check_inputs`
-refuses such inputs: every canonical row must be exactly what its museum's normalize step makes
-of its raw payload (its mapper's row, of a payload the step keeps), and every raw row the step
-keeps must have its canonical row. That is what is checked; whether the raw rows read are a
-complete ingest is not (a half re-ingested raw table, fully normalized, passes). A refused run
-fails; nothing retries it, and the operator re-materializes it once upstream is done (in a job
-with the normalize assets, `deps` already orders it after them). With the code recorded in
+refuses what it can see of that: a canonical row that is not exactly what its museum's normalize
+step makes of its raw payload (its mapper's row, of a payload the step keeps), and a raw row the
+step keeps that has no canonical row.
+
+It sees a change only through the mapper. A change confined to raw fields the mention extractor
+reads but the mapper does not map (Harvard `labeltext`, `commentary`, `contextualtext`) leaves
+the mapped row equal, so such a payload, read before normalize re-runs, passes; so does a raw
+table half re-ingested and fully normalized. The raw tables carry no generation id or ingest
+time to tell; a complete-ingest marker is #375. A refused run fails; nothing retries it, and the
+operator re-materializes it once upstream is done (in a job with the normalize assets, `deps`
+already orders it after them). With the code recorded in
 `docs/evaluations/authority-bridge-338/results/promotion-check.json` (`check_inputs.code_sha256`),
 all 36,245 canonical rows of the frozen corpus of 2026-08-27 passed; after an edit to a mapper or
 the canonical model, that holds only once the check is re-run.

@@ -133,8 +133,12 @@ The CI tests need no private data:
     would otherwise block every run; it is left out instead and listed in the manifest
     (`canonical_rows_set_aside`).
 
-    That is all it checks. Whether the raw rows read are a complete ingest is not checked: a
-    half re-ingested raw table, fully normalized, passes. With the code recorded in
+    That is all it checks, and it sees a change only through the mapper. A change confined to
+    raw fields the extractor reads but the mapper does not map (Harvard `labeltext`,
+    `commentary`, `contextualtext`) leaves the mapped row equal. Such a payload, read before
+    normalize re-runs, passes, and so does a raw table half re-ingested and fully normalized. The
+    raw tables carry no generation id or ingest time to tell. A complete-ingest marker is #375
+    (database step); a test pins the gap so that #375 has to change it. With the code recorded in
     `results/promotion-check.json` (`check_inputs.code_sha256`: every `pipeline` module the
     check loads, plus the pydantic version and the `uv.lock` hash), all 36,245 records of the
     frozen corpus passed. A refused run fails and nothing retries it; the operator
