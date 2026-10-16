@@ -5,6 +5,7 @@ Registers all assets, resources, and schedules.
 
 from dagster import Definitions
 
+from pipeline.assets.enrich.authority_links_asset import authority_links
 from pipeline.assets.index.sync_search import sync_search
 from pipeline.assets.ingest.brooklyn import raw_brooklyn
 from pipeline.assets.ingest.harvard import raw_harvard
@@ -19,6 +20,7 @@ defs = Definitions(
         raw_met, normalize_met,
         raw_harvard, normalize_harvard,
         raw_brooklyn, normalize_brooklyn,
+        authority_links,
         sync_search,
     ],
     resources={

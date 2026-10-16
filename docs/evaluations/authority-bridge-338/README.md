@@ -60,25 +60,41 @@ The CI tests need no private data:
 - the resolvers are checked against the adapter on every authority label and variants of it;
 - the enrichment rows and links are checked on hand-built mentions.
 
-## Left for step 2
+## Step 2: versioned link files
 
-- Queens resolve as `entity_type: "ruler"` with Dodson & Hilton targets, as #361 scored them.
-  Whether the link file types them apart from kings (the owner kept queens distinct from kings
-  in the authority, 2026-10-14) is a schema decision for step 2, with the schema and CIDOC
-  reviewers. So is the vocabulary for `relation` (#333).
-- A structure test that every museum with an ingest asset has a field inventory in
-  `mentions.extract_mentions`. Until the asset exists, an unknown museum already fails loud
-  there (a `KeyError`).
+- **`pipeline/pipeline/enrich/link_files.py`, `write_run`**: one run writes these under
+  `<root>/<run_id>/`:
+  - the mentions;
+  - both modes' resolutions and links;
+  - a manifest. It holds the inputs' digest, both snapshots, this module's SHA-256, every
+    file's hash and row count, outcomes by entity type, status and reason, and the inventory of
+    what is not resolved (temples and excavations with their reasons and counts, and the
+    unevaluated scopes).
+- **The run ID** hashes the inputs, both resolver versions and the writer. The same inputs and
+  code give the same bytes; an existing run directory is checked byte for byte, never
+  rewritten.
+- **Withdrawal.** `<root>/CURRENT` names the run in force. When a new run replaces it,
+  `<root>/diffs/<previous>-to-<run>.json` lists, for each mode, the links added and the links
+  removed. A removal gives its reason: `record_gone`, `mentions_gone`, or `resolves_otherwise`
+  (with the mention's new status and reason).
+- **`target_kind`** keeps queens distinct from kings. The kinds are `king`, `royal_woman`,
+  `site`, `tomb` and `literal`; a royal woman who reigned is her king. `relation` is `identity`
+  only: no resolver produces containment or a close match. #333's vocabulary is needed when
+  one does.
+- **The asset** is `pipeline/pipeline/assets/enrich/authority_links_asset.py`, after the three
+  normalize assets. It reads the canonical and raw tables and writes to
+  `HAPI_AUTHORITY_LINKS_DIR` (default `data/authority-links/`, which is gitignored).
+  - This devcontainer has no database, so the asset has run only through its core.
+  - Two full runs on the frozen corpus, in separate directories, gave byte-identical files in
+    11 s each: 148,964 mentions, 48,994 authority links and 127,711 literal links.
+- **Per-museum field inventory.** A test checks that every museum with an ingest asset has
+  its fields read by the extractor.
 
-## Next
+## Left for step 3
 
-The proof covers the code in its recorded snapshot only. Any later edit to a file in the
+- Cross-museum linking with the authority on and off, over a run's links, reported by museum,
+  pair and entity type against `QUALIFIED_SCOPES`, and two hash-stable full-corpus runs.
+
+The proof above covers the code in its recorded snapshot only. Any later edit to a file in the
 snapshot (`results/promotion-check.json`, `snapshot`) needs a new `check_promotion` run before
 the proof covers it.
-
-- **Step 2:** a Dagster asset that writes versioned resolution and link files. It must make
-  deterministic re-runs, remove a link when its source decision is withdrawn, and inventory the
-  unsupported entity types.
-- **Step 3:** cross-museum linking with the authority switched on and off, run twice on the full
-  corpus with hash-stable results. Results go by museum, pair and entity type, and are reported
-  as the pipeline's lift on the frozen corpus. A deployed, database-backed run comes later.

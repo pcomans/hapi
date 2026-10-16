@@ -81,3 +81,6 @@ coverage/
 
 # Local-only working notes (not for publication)
 docs/PUBLISH-READINESS.md
+
+# Authority link runs (#338): written by the enrich asset, not committed
+data/authority-links/
