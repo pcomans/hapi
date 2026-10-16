@@ -12,6 +12,26 @@
     "tomb_monument:resolved": 3227,
     "tomb_monument:unmatched": 1636
   },
+  "check_inputs": {
+    "canonical_records": 36245,
+    "code_sha256": {
+      "pipeline/pipeline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipeline/pipeline/assets/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipeline/pipeline/assets/normalize/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipeline/pipeline/assets/normalize/brooklyn.py": "42b8d50a201aaeeda4de433ce7ed8bdfa1dc2724f0338c6d492ae91e2539c6bd",
+      "pipeline/pipeline/assets/normalize/harvard.py": "73aadf30fb49fcfdfff8f19a0c7bcc08f79a55b7f2ded0c405cfdda9aea5b61d",
+      "pipeline/pipeline/assets/normalize/met.py": "69ec2be6ad27425721193dffcab53bfe1e26296ff0331bf1ceed57134469e8d1",
+      "pipeline/pipeline/enrich/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipeline/pipeline/enrich/inputs.py": "6319d42f540bde8041425bcdd49529cc111cc469d072f98185035430ce1a1b88",
+      "pipeline/pipeline/types/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pipeline/pipeline/types/canonical.py": "b3143fdf66f5513e8a3287fff5efd1f28da3fda07856e5a1629d47fe075223b9",
+      "pipeline/pipeline/types/protocol.py": "a00c71187bcbad9d0e740e34d356b7db4bd66f066d3447c65ce82601d3fbd736",
+      "pipeline/pipeline/types/sources.py": "e92e22bbaadd1e7ad74863d6d67cddd007c2344bc8adbb5cda13b02eaa2ff836"
+    },
+    "passed": true,
+    "pydantic": "2.12.5",
+    "uv_lock_sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+  },
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "mentions": {
     "ledger_361": 148964,
@@ -58,7 +78,7 @@
     "mentions.ndjson.gz": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
     "typed-literal-arm.ndjson.gz": "938a5fd1fe3a64a41257a0dad7d1b7627b79f04868143b573aca793b7f49aced"
   },
-  "schema_version": "hapi-338-promotion-check/2",
+  "schema_version": "hapi-338-promotion-check/3",
   "snapshot": {
     "authority": {
       "files": {
