@@ -25,9 +25,11 @@ frozen corpus (run `f13f590d…`, #376's). Its checks:
 - #361's Stage 2 forbidden-key scan;
 - #361's `verify_consensus` on the Stage 1 consensus before Stage 2 is released.
 
-The last two were added after the run, at review. For the run itself, `verify` proves the order:
-the reviewed Stage 2 queue embeds the frozen Stage 1 consensus's hash, and it is exactly the
-queue released from it. #361's Stage 1 blinding check is not run.
+The last two were added after the run, at review. For the run itself, `verify` shows that the
+reviewed Stage 2 case is exactly what the frozen Stage 1 consensus releases. It cannot show that
+the Stage 2 calls were made after that consensus was frozen: the stored calls do not carry the
+consensus hash. The order (Stage 1 calls, frozen consensus, Stage 2 release, Stage 2 calls) is
+this session's operation record, not a proof. #361's Stage 1 blinding check is not run.
 
 - **Stage 1** shows the three records' titles and links, with no target. The case ID is opaque,
   and the builder refuses a Stage 1 queue that contains the target's ID or name.
@@ -67,6 +69,7 @@ corpus and #361's two queues) checks everything `check.json` publishes:
 - the outcomes and resolutions (method, reviewer outcomes, citations) are the consensus's;
 - the target, run and records are the private binding's, and the reviewed Stage 1 queue and
   that binding are exactly what the script builds from the frozen corpus (`--archive`);
-- the reviewed Stage 2 queue binds the frozen Stage 1 queue and consensus, and is their release.
+- the reviewed Stage 2 queue binds the frozen Stage 1 queue and consensus, and is their release
+  (which shows what was released, not when the Stage 2 calls were made).
 
 It passed on 2026-10-16.
