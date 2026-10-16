@@ -1,0 +1,74 @@
+{
+  "case_id": "review-unit-001",
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "protocol": "#361's (docs/evaluations/ruler-reregistration-2026-10-15): prompts, runner and served model unchanged",
+  "records_checked": {
+    "brooklyn": [
+      "brooklyn-3634"
+    ],
+    "met": [
+      "met-547683",
+      "met-566763"
+    ]
+  },
+  "run_id": "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6",
+  "schema_version": "hapi-ahmes-b-recheck/1",
+  "stages": {
+    "1": {
+      "consensus_sha256": "05b12c67ab172e51f95d47f057d6b8e1acd2564e0e468c12ce4abdec28f3e993",
+      "outcome": {
+        "same_entity": "same_entity",
+        "useful_granularity": "useful"
+      },
+      "queue_sha256": "8e6ba7c7ffbc41e6c6f84908f1635344552e8e16f89509373e071eca6e56d165",
+      "resolution": {
+        "same_entity": {
+          "method": "agreement",
+          "source_outcomes": [
+            "same_entity",
+            "same_entity"
+          ]
+        },
+        "useful_granularity": {
+          "method": "agreement",
+          "source_outcomes": [
+            "useful",
+            "useful"
+          ]
+        }
+      },
+      "stored_calls_sha256": {
+        "reviewer-A/review-unit-001.attempt-1.json": "a5679ab298f855d5431d6cc31740d2c2a2ce8c031d3ae9e6f0e3f7e87fa5512b",
+        "reviewer-B/review-unit-001.attempt-1.json": "d5bdc965e0ede8194df32eb4a0dbbf791cf2ad33f06e509a4f660c6cddc61809"
+      }
+    },
+    "2": {
+      "consensus_sha256": "4db8b10d8f9a707abcb59640cac6cd9b80d42b3f59c6dabda7d334af2d3db3fb",
+      "outcome": {
+        "canonical_identity": "exact_identity"
+      },
+      "queue_sha256": "ea0e5dd7a92bf9396c3767dd1dcbc3c673130cc935700d85ec13d99fb240ecc7",
+      "resolution": {
+        "canonical_identity": {
+          "citations": [
+            "https://www.brooklynmuseum.org/objects/3634",
+            "https://www.metmuseum.org/art/collection/search/566763",
+            "https://www.metmuseum.org/art/collection/search/547683",
+            "https://thebanmappingproject.com/tombs/qv-47-princess-ahmose"
+          ],
+          "method": "explicit_cited_override",
+          "source_outcomes": [
+            "exact_identity",
+            "insufficient_evidence"
+          ]
+        }
+      },
+      "stored_calls_sha256": {
+        "reconciler/review-unit-001.attempt-1.json": "c39cd4640008b26e059e21d87a1e6d9cece79f9e3ad94e1be208e5bdcaa8b007",
+        "reviewer-A/review-unit-001.attempt-1.json": "12f4c65261381c529adf7dfe2d76c89443b7d9d8a3e7fb36ba81316bd9bd29b5",
+        "reviewer-B/review-unit-001.attempt-1.json": "0ad87a694b46ba7ad92b44702125ccbcabcb7dc99dfccfdc3fd0d8dff4961b62"
+      }
+    }
+  },
+  "target_id": "dodson_hilton:Ahmes B"
+}

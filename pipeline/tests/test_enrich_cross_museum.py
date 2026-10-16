@@ -303,3 +303,16 @@ def test_the_frozen_run_says_whether_each_qualified_scopes_review_covers_it(resu
     # report() itself makes no coverage claim.
     assert all(set(row) == {"qualified", "shared_targets_authority", "shared_targets_literal", "shared_target_ids",
                             "records", "top_targets"} for row in result["matching"]["by_museum_pair"].values())
+
+
+def test_the_ahmes_b_check_reviewed_the_three_unreviewed_records() -> None:
+    """`docs/evaluations/ahmes-b-recheck-2026-10-16`: the check reviewed exactly the records #376
+    left unreviewed, and found them one woman, Ahmes B (a check, not evidence for the scope)."""
+    check = json.loads((EVALUATIONS / "ahmes-b-recheck-2026-10-16/results/check.json").read_text(encoding="utf-8"))
+    result = json.loads((EVALUATIONS / "authority-bridge-338/results/end-to-end.json").read_text(encoding="utf-8"))
+    checked = sorted(r for records in check["records_checked"].values() for r in records)
+    assert checked == result["review_coverage"]["ruler|met|brooklyn"]["unreviewed_connected_records"]
+    assert check["stages"]["1"]["outcome"] == {"same_entity": "same_entity", "useful_granularity": "useful"}
+    assert check["stages"]["2"]["outcome"] == {"canonical_identity": "exact_identity"}
+    assert check["stages"]["2"]["resolution"]["canonical_identity"]["method"] == "explicit_cited_override"
+    assert check["run_id"] == result["run_ids"][0]  # the run whose link it checked
