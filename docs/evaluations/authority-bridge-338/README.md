@@ -249,6 +249,32 @@ matters is whether these are the populations that were reviewed.
   first). Deployed lift needs the asset run against the live database (see #374 and #375) and a
   matcher in the web layer that reads the links.
 
+## The database run (2026-10-16)
+
+The `authority_links` asset has now run against a real database: Neon, provisioned through the
+Vercel integration on project `web-claim-graph-hapi`, Postgres 18.6. Local compose pins 16.
+- **Setup.** The `catalog` and `web` schemas were created (`docker/init-schemas.sql`) and Alembic
+  ran to head.
+- **Load.** `scripts/load_frozen_corpus.py` loaded the frozen corpus into the empty catalog
+  tables: 36,245 canonical rows, and 27,969 Met, 8,832 Brooklyn and 722 Harvard raw payloads.
+- **Run.** Dagster materialized the asset (`uv run dagster asset materialize -m
+  pipeline.definitions --select authority_links`, with `DATABASE_URL` set to the database) in
+  about 20 seconds.
+
+**It made the same run as the frozen one: run ID `f13f590d…`.** The run ID is the digest of the
+run's manifest, which covers the inputs, the resolver and writer versions, and every output
+file's content. So the asset, reading the tables, made exactly the mentions, resolutions and
+links measured above (`results/database-run.json`). This is the deployed result on the frozen
+data.
+
+It does not cover:
+- the search index (Typesense);
+- a web matcher reading the links;
+- live ingest (#374, #375).
+
+To reproduce: `vercel env pull` in `web-claimgraph/` (linked to the project), then use
+`DATABASE_URL_UNPOOLED` as `DATABASE_URL` for Alembic, the loader and Dagster.
+
 The proofs cover the code they recorded only:
 - `results/promotion-check.json` records `snapshot` for the resolution and
   `check_inputs.code_sha256` for the input check;
