@@ -192,29 +192,38 @@ The CI tests need no private data:
 The counts here are of connections, not of right ones. Rightness was judged by review, so what
 matters is whether these are the populations that were reviewed.
 
-- **Sites: the same as #337's reviewed population, by every committed measure.**
-  - In both modes, every museum's connected site records equal #337 v10's committed report:
+- **Sites: #337's reviewed population, record for record.**
+  - #361's mention ledger holds every one of #337 v10's 148,871 mentions unchanged, and adds 93
+    royal-woman-cued ruler mentions (`ruler-reregistration-2026-10-15/results/ledger-diff.json`).
+  - The step 1 proof found the pipeline's site resolutions equal to #337's resolver, and its
+    site literal targets equal to #337's own code, on every one of those mentions.
+  - So every site link, and every record it connects, is the one #337 made. The counts agree
+    accordingly, in both modes, with #337's committed report:
     - plain text: Met 27,198, Brooklyn 2,890, Harvard 534;
     - authority: Met 14,393, Brooklyn 1,152, Harvard 7.
-  - In every site pair, side and mode, the largest 1 and 5 shared targets are the site targets
-    #337 ranked first.
-  - Tests compare both with that file. Tomb connections are 0 in both. So #337's own authority
-    headline (Met 14,502 / Brooklyn 1,156 / Harvard 8) differs from this run's only through
-    rulers, which have changed since.
-  - The site scopes #337 qualified are therefore this population, and its review's verdicts
-    apply to it.
+
+    So do the largest 1 and 5 shared targets of every site pair, side and mode.
+  - Tests check all of this against those files. The site scopes #337 qualified are therefore
+    this population, and its review's verdicts apply to it.
+  - Tomb connections are 0 in both, so the difference between #337's authority headline (Met
+    14,502 / Brooklyn 1,156 / Harvard 8) and this run's is in rulers, which have changed since.
 - **Rulers, Met–Brooklyn: #361's reviewed population, plus one unreviewed target from #369.**
+  - The step 1 proof found every ruler resolution equal to #361's except #369's 11 measured
+    changes, and every literal target equal.
   - **Plain text is exactly #361's committed arm:** 13 shared targets, Met 1,981, Brooklyn 19.
-  - **The authority is #361's with one shared target more,** D&H's Ahmes B (#369's fix for the
-    Queen Ahmose records). Its connected records are Met 1,957 against #361's 1,955, and
-    Brooklyn 20 against 19.
-  - **#369's fix turns three of #361's reviewed losses into connections:** 2 Met and 1 Brooklyn
-    (Met's losses go from 59 to 57, Brooklyn's from 2 to 1). The gains are #361's: Met 33,
-    Brooklyn 2.
-  - **Those three changes are the unreviewed part,** found on #361's deciding case. The scope's
-    qualified flag rests on #361's review, of the population without them. A next registration
-    must flag them (#358).
-  - Tests compare all of this with #361's committed report, which does not name Ahmes B.
+  - **The authority is #361's with one shared target more,** D&H's Ahmes B. It joins three
+    records:
+    - the two Queen Ahmose records, brooklyn-3634 and met-566763, which #369 newly resolved to
+      her;
+    - met-566763's fellow met-547683, which #369 did not change. It resolved to her before but
+      had no Brooklyn record to share her with.
+  - **Those three records are #361's reviewed losses that now connect:** Met's losses go from
+    59 to 57 and Brooklyn's from 2 to 1. The gains are #361's in number (Met 33, Brooklyn 2).
+  - **The change is unreviewed,** found on #361's deciding case. The scope's qualified flag
+    rests on #361's review of the population before it.
+  - **A next registration must flag the tuned-on records (#358).** These are brooklyn-3634,
+    met-566763, and brooklyn-3599 (Neferu, which makes no link), and met-547683 with them.
+  - Tests check all of this against #361's committed report and #369's result.
 - **Ruler and tomb scopes not qualified** are unevaluated. Nothing here judges them.
 - **The large site "losses" are mostly broad plain-text targets the authority does not hold.**
   These are bound by their literal target hashes, so no museum text is committed. The authority

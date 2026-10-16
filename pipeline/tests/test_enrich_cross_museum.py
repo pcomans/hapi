@@ -118,6 +118,22 @@ def test_the_end_to_end_run_was_stable_and_of_the_proven_code(result) -> None:
         assert row["qualified"] == ((a, b) in al.QUALIFIED_SCOPES[entity]), key
 
 
+def test_the_site_links_are_337s_record_for_record() -> None:
+    """Identity, not only counts: #361's mention ledger holds every #337 v10 mention unchanged and
+    adds only royal-woman-cued ruler mentions (`ledger-diff.json`), and the step-1 proof found
+    the pipeline's site resolutions and site literal targets equal to #337's own code on every
+    one of those mentions (`promotion-check.json`). So every site link, and every record it
+    connects, is the one #337 made."""
+    ledger = json.loads((EVALUATIONS / "ruler-reregistration-2026-10-15/results/ledger-diff.json").read_text(encoding="utf-8"))
+    assert (ledger["lost"], ledger["changed_ignoring_record_dynasty"]) == (0, 0)
+    assert sum(ledger["added_by_royal_woman_cue"].values()) == ledger["added"] == 93
+    assert ledger["v10_mentions"] + ledger["added"] == ledger["new_mentions"] == 148964
+    proof = json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
+    assert proof["places_vs_linkability_adapter"] == {
+        "compared": {"site": 113738, "tomb_monument": 4863}, "differ": {"site": [], "tomb_monument": []}}
+    assert proof["places_vs_337_literal_arm"]["differ"] == []
+
+
 def test_the_site_scopes_are_337s_evaluated_population(result) -> None:
     """Every museum's site records connected in each mode equal #337 v10's committed report, so
     the population #337 reviewed is the one the pipeline makes."""
@@ -154,9 +170,26 @@ def test_the_ruler_scope_is_361s_population_with_369s_ahmes_b(result) -> None:
     for museum, delta in (("met", 2), ("brooklyn", 1)):
         assert now["records"][museum]["gained"] == change[museum]["authority_gained_records"], museum
         assert now["records"][museum]["lost"] == change[museum]["authority_lost_records"] - delta, museum
-    # The added target is Ahmes B: it is shared now, and #361's report names it nowhere.
+    # The added target is Ahmes B: it is shared now, and #361's report names it nowhere; every
+    # target #361's report lists for the pair (its top 10 per side) is shared now in its arm.
     assert "dodson_hilton:Ahmes B" in now["shared_target_ids"]["authority"]
     assert "Ahmes B" not in json.dumps(report)
+    for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
+        listed = {t for side in ("met", "brooklyn") for t in
+                  arms[arm]["per_pair"]["met__brooklyn"]["concentration_by_museum_side"][side]["top_k"]["10"]["selected_target_ids"]}
+        assert listed <= set(now["shared_target_ids"][mode]) - {"dodson_hilton:Ahmes B"}, mode
+    # It joins the two Queen Ahmose records (#369's tuned-on change) and met-547683, which #369 did
+    # not change (it is not among #369's changed records): it resolved to Ahmes B before, without a
+    # Brooklyn record to share her with. Those are the Met +2 and Brooklyn +1.
+    assert result["ahmes_b_records"] == {"brooklyn": ["brooklyn-3634"], "met": ["met-547683", "met-566763"]}
+    changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(
+        encoding="utf-8"))["royal_woman_cued_mentions"]["changes"]
+    changed = {c["artifact_id"] for c in changes}
+    assert {"brooklyn-3634", "met-566763"} <= changed and "met-547683" not in changed
+    # And the step-1 proof: every other ruler resolution is #361's.
+    proof = json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
+    assert (proof["rulers_vs_361_authority_arm"]["differ_otherwise"], len(proof["rulers_vs_361_authority_arm"]["differ_as_369_measured"])) == ([], 11)
+    assert proof["rulers_vs_361_literal_arm"]["differ"] == []
     assert result["tuned_on_369"] == ["brooklyn-3599", "brooklyn-3634", "met-566763"]
 
 
@@ -172,8 +205,15 @@ def test_the_site_top_targets_are_337s(result) -> None:
             for museum in (a, b):
                 # #337 ranks a pair's shared targets of every type together; its site targets, in
                 # its order, from its top 10.
-                sites = [t for t in theirs[museum]["top_k"]["10"]["selected_target_ids"]
-                         if t in result["matching"]["by_museum_pair"][f"site|{a}|{b}"]["shared_target_ids"][mode]]
+                ranked = theirs[museum]["top_k"]["10"]["selected_target_ids"]
+                shared = result["matching"]["by_museum_pair"][f"site|{a}|{b}"]["shared_target_ids"][mode]
+                if mode == "authority":
+                    # A site target is an iDAI id: every one #337 ranked must be shared now.
+                    sites = [t for t in ranked if t.startswith("idai:")]
+                    assert set(sites) <= set(shared), (a, b, museum)
+                else:
+                    # A literal id does not say its type; #337's site ids are those shared now.
+                    sites = [t for t in ranked if t in shared]
                 for k in ("1", "5"):
                     assert ours[museum][k]["target_ids"] == sites[:int(k)], (arm, a, b, museum, k)
 

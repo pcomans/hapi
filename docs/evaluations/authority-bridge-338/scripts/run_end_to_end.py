@@ -55,6 +55,11 @@ def evaluation_headline(name: str) -> dict:
             for arm in ("typed_literal", "current_authority")}
 
 
+def ahmes_b_records(run: Path) -> dict[str, list[str]]:
+    by_target = cross_museum.target_records(cross_museum.load_links(run, "authority"))
+    return {museum: sorted(records) for museum, records in sorted(by_target[("ruler", "dodson_hilton:Ahmes B")].items())}
+
+
 def end_to_end(archive: Path) -> dict:
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(encoding="utf-8"))
     if not TUNED_ON_369 <= {c["artifact_id"] for c in changes["royal_woman_cued_mentions"]["changes"]}:
@@ -73,6 +78,7 @@ def end_to_end(archive: Path) -> dict:
         if manifests[0] != manifests[1] or contents[0] != contents[1] or reports[0] != reports[1]:
             raise ValueError("two runs on the same inputs and code differ")
         manifest = manifests[0]
+        ahmes_b = ahmes_b_records(runs[0])
     return {
         "schema_version": "hapi-338-end-to-end/3",
         "corpus_archive_sha256": ARCHIVE_SHA256,
@@ -88,6 +94,8 @@ def end_to_end(archive: Path) -> dict:
         "inventory": manifest["inventory"],
         "matching": reports[0],
         "tuned_on_369": sorted(TUNED_ON_369),
+        # The records #369's one new shared ruler target joins, by museum (authority mode).
+        "ahmes_b_records": ahmes_b,
         # What #337 (sites, rulers and tombs; its own mention ledger and code of 2026-10-11) and #361
         # (rulers only; this mention ledger) reported, to set beside this run.
         "evaluation_headlines": {"337": evaluation_headline("authority-independent-control-2026-10-11"),

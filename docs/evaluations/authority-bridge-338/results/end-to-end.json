@@ -1,4 +1,13 @@
 {
+  "ahmes_b_records": {
+    "brooklyn": [
+      "brooklyn-3634"
+    ],
+    "met": [
+      "met-547683",
+      "met-566763"
+    ]
+  },
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "evaluation_headlines": {
     "337": {
@@ -1185,7 +1194,7 @@
     }
   },
   "report_sha256": {
-    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "f3c3eed5b307d23dae4a537204c6bdbbd887de5980b8ca4c06e2d4c27651a32c",
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "7d6c150384e82cdba62dd928fbb9dbc841b48e70ad84fe7135468cc5321494a8",
     "pipeline/pipeline/enrich/cross_museum.py": "e1d8280b6d5994ea01ac8f1cea259a456e7931fde79c5d857b83be24ea0a197c"
   },
   "resolver_versions": {
