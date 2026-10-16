@@ -267,7 +267,17 @@ Vercel integration on project `web-claim-graph-hapi`, Postgres 18.6. Local compo
 **It made the same run as the frozen one: run ID `f13f590d…`.** The run ID is the digest of the
 run's manifest, which covers the inputs, the resolver and writer versions, and every output
 file's content. So the asset, reading the tables, made exactly the mentions, resolutions and
-links measured above (`results/database-run.json`). It was a one-off run from the devcontainer
+links measured above (`results/database-run.json`).
+- **Committed evidence.** The run's own manifest is committed
+  (`results/database-run-manifest.json`; it holds hashes, counts and the authority code's
+  reasons, no museum text). A test recomputes its digest, which is the run ID. Dagster's record
+  of the materialization (its run `06010d54…`, with the asset's metadata) is in
+  `database-run.json`.
+- **What this does not prove.** By design, the manifest is the same as the frozen run's. These
+  files show what the run produced; they cannot by themselves prove that it ran against the
+  database. That rests on this record and can be repeated with the commands below.
+
+It was a one-off run from the devcontainer
 against a database loaded by hand with the August export, not a deployment: there is no deployed
 Dagster, no schedule and no live data, and the run went to local files.
 

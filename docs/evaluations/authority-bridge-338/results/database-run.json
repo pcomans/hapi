@@ -1,4 +1,16 @@
 {
+  "dagster": {
+    "asset": "authority_links",
+    "materialization_metadata": {
+      "canonical_rows_set_aside": [],
+      "links_authority": 48994,
+      "links_literal": 127711,
+      "records": 36245,
+      "run_id": "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6"
+    },
+    "run_id": "06010d54-298c-4281-a01a-6c2c01f05653",
+    "source": "the local Dagster instance's run storage (DAGSTER_HOME in the devcontainer scratchpad)"
+  },
   "database": {
     "alembic_head": "3a1c350217d9",
     "postgres": "18.6",
@@ -12,6 +24,7 @@
   },
   "date": "2026-10-16",
   "how": "load_frozen_corpus.py into empty catalog tables, then `uv run dagster asset materialize -m pipeline.definitions --select authority_links` with DATABASE_URL set to the database",
+  "manifest": "database-run-manifest.json",
   "run_id": "f13f590d349908a778f2e6a12b0ef7f45025100b2b1773d1bf115268f532b7a6",
   "schema_version": "hapi-338-database-run/1"
 }

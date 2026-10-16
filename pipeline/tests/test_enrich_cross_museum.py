@@ -324,5 +324,13 @@ def test_the_database_run_made_the_frozen_run() -> None:
     db = json.loads((EVALUATIONS / "authority-bridge-338/results/database-run.json").read_text(encoding="utf-8"))
     result = json.loads((EVALUATIONS / "authority-bridge-338/results/end-to-end.json").read_text(encoding="utf-8"))
     assert db["run_id"] == result["run_ids"][0]
+    # The run's own manifest (committed; it holds hashes, counts and the authority code's reasons,
+    # no museum text) digests to that run id, and carries the headline figures.
+    manifest = json.loads((EVALUATIONS / "authority-bridge-338/results" / db["manifest"]).read_text(encoding="utf-8"))
+    assert lf.manifest_digest(manifest) == manifest["run_id"] == db["run_id"] == db["dagster"]["materialization_metadata"]["run_id"]
+    assert (manifest["records"], manifest["canonical_rows_set_aside"]) == (36245, [])
+    assert {name: f["rows"] for name, f in manifest["files"].items()} == {name: f["rows"] for name, f in result["files"].items()}
+    assert (manifest["files"]["links-authority.ndjson.gz"]["rows"], manifest["files"]["links-literal.ndjson.gz"]["rows"]) == (
+        db["dagster"]["materialization_metadata"]["links_authority"], db["dagster"]["materialization_metadata"]["links_literal"])
     assert db["database"]["rows_loaded"] == {"catalog.artifacts": 36245, "catalog.raw_met": 27969,
                                              "catalog.raw_brooklyn": 8832, "catalog.raw_harvard": 722}
