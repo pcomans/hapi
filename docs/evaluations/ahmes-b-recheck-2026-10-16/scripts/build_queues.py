@@ -18,7 +18,7 @@ scripts/build_review_queue.py`), run by #361's runner and prompts unchanged:
     uv run python docs/evaluations/ahmes-b-recheck-2026-10-16/scripts/build_queues.py stage-1 \\
         --archive <corpus archive> --out <private dir>/stage-1/queue.json
     uv run python .../build_queues.py stage-2 --stage-1-queue <...> --consensus <...> --template <...> --out <...>
-    uv run python .../build_queues.py verify --private <private dir>
+    uv run python .../build_queues.py verify --private <private dir> --template <#361's released Stage 2 queue>
 """
 
 from __future__ import annotations
@@ -146,7 +146,7 @@ def stage_2(stage_1_queue: Path, consensus: Path, template: dict) -> dict:
         "question": template["cases"][0]["question"],
         "allowed_outcomes": template["cases"][0]["allowed_outcomes"],
     }
-    return {
+    released = {
         "schema_version": template["schema_version"],
         "task": template["task"],
         "review_protocol": template["review_protocol"],
@@ -155,14 +155,28 @@ def stage_2(stage_1_queue: Path, consensus: Path, template: dict) -> dict:
         "stage_2_custodian_sha256": None,
         "cases": [b.released_stage_2_case(custodian_case, case_1)],
     }
+    leaks = b.recursive_forbidden_keys(released, forbidden_keys=b.STAGE_2_FORBIDDEN_KEYS)
+    if leaks:
+        raise ValueError(f"the released Stage 2 queue carries private keys: {leaks}")
+    return released
 
 
-def verify(private: Path, check_path: Path) -> None:
-    """With the private records: both consensus files are what the stored calls make (#361's
-    `verify_consensus`), every stored call and file has the SHA-256 `check.json` records, and
-    `check.json`'s outcomes are the consensus decisions."""
+def verify(private: Path, check_path: Path, template: Path) -> None:
+    """With the private records, everything `check.json` publishes:
+    * both consensus files are what the stored calls make (#361's `verify_consensus`), and each
+      stage's outcome and resolution (method, reviewer outcomes, citations) in `check.json` are
+      the consensus's;
+    * every stored call and file has the SHA-256 `check.json` records;
+    * the reviewed Stage 2 queue binds the frozen Stage 1 queue and consensus by hash (a hash
+      that could not exist before Stage 1 was frozen), and is exactly the queue this script
+      releases from them (#361's scorer checks the same);
+    * the target, run and records checked are the private binding's."""
     rp = protocol()
     check = json.loads(check_path.read_text(encoding="utf-8"))
+    binding = json.loads((private / "stage-1/private-binding.json").read_text(encoding="utf-8"))
+    if (check["target_id"], check["run_id"], check["records_checked"]) != (
+            binding["target_id"], binding["run_id"], binding["artifact_ids_by_side"]):
+        raise ValueError("check.json's target, run or records are not the private binding's")
     for stage, recorded in check["stages"].items():
         d = private / f"stage-{stage}"
         consensus = rp.verify_consensus(stage, d / "consensus.json", d / "queue.json", d)
@@ -173,9 +187,21 @@ def verify(private: Path, check_path: Path) -> None:
             raise ValueError(f"stage {stage}: stored calls differ from check.json")
         (decision,) = consensus["decisions"]
         outcome = {k: v for k, v in decision.items() if k not in ("case_id", "evidence_sha256", "field_resolutions")}
-        if outcome != recorded["outcome"]:
-            raise ValueError(f"stage {stage}: check.json's outcome is not the consensus")
-    print("verified: consensus rebuilt from the stored calls, hashes and outcomes match check.json")
+        resolution = {k: {"method": v["method"], "source_outcomes": [o["outcome"] for o in v["source_outcomes"]],
+                          **({"citations": [c.get("url") if isinstance(c, dict) else c for c in v["citations"]]}
+                             if v.get("citations") else {})}
+                      for k, v in decision["field_resolutions"].items()}
+        if (outcome, resolution) != (recorded["outcome"], recorded["resolution"]):
+            raise ValueError(f"stage {stage}: check.json's outcome or resolution is not the consensus")
+    stage_1, stage_2_queue = private / "stage-1", json.loads((private / "stage-2/queue.json").read_text(encoding="utf-8"))
+    if (stage_2_queue["stage_1_queue_sha256"], stage_2_queue["frozen_stage_1_consensus_sha256"]) != (
+            sha256_path(stage_1 / "queue.json"), sha256_path(stage_1 / "consensus.json")):
+        raise ValueError("the reviewed Stage 2 queue does not bind the frozen Stage 1 queue and consensus")
+    released = stage_2(stage_1 / "queue.json", stage_1 / "consensus.json", json.loads(template.read_text(encoding="utf-8")))
+    if released != stage_2_queue:
+        raise ValueError("the reviewed Stage 2 queue is not the one released from the frozen Stage 1")
+    print("verified: both consensus files rebuilt from the stored calls; hashes, outcomes, resolutions and "
+          "bindings match check.json; the Stage 2 queue is the release of the frozen Stage 1")
 
 
 def write_new(path: Path, value: dict) -> None:
@@ -200,9 +226,10 @@ def main() -> None:
     check = commands.add_parser("verify")
     check.add_argument("--private", type=Path, required=True, help="the private records directory")
     check.add_argument("--check", type=Path, default=Path(__file__).resolve().parents[1] / "results/check.json")
+    check.add_argument("--template", type=Path, required=True, help="#361's private released Stage 2 queue")
     args = parser.parse_args()
     if args.command == "verify":
-        verify(args.private, args.check)
+        verify(args.private, args.check, args.template)
         return
     template = json.loads(args.template.read_text(encoding="utf-8"))
     if args.command == "stage-1":
