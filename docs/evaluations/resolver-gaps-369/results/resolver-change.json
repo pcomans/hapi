@@ -1,0 +1,268 @@
+{
+  "base_commit": "9fa4953a1fb9b61da628afed06ba0d376caae42f",
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "dh_family_names": {
+    "changed": 0,
+    "distinct": 102
+  },
+  "dynasty_values": {
+    "distinct": 696,
+    "newly_read_as_one_dynasty": 45,
+    "read_differently": 0,
+    "records_newly_read": 217
+  },
+  "king_mention_texts": {
+    "changed": 0,
+    "distinct": 232
+  },
+  "ledger_gzip_sha256": "98ec263a0aa2f295758d98e60676d830ea9dd698b66739134e3af275641ead26",
+  "measured_sha256": {
+    "pipeline/pipeline/authority/graph_kings.py": "0c96d750ee58256bc5350b30adee0d034d4a7b76458d337591b8884100b64afb",
+    "pipeline/pipeline/authority/royal_women.py": "0c360263f1970c14367cdfc38fe919f475ceab3de6cd0461b8dbef4891fd6555"
+  },
+  "royal_woman_cued_mentions": {
+    "changed": 11,
+    "changes": [
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C"
+          ]
+        },
+        "artifact_id": "met-571912",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C"
+          ]
+        },
+        "artifact_id": "met-554711",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E"
+          ]
+        },
+        "artifact_id": "met-557811",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Meryetamun A",
+            "dodson_hilton:Meryetamun B",
+            "dodson_hilton:Meryetamun C",
+            "dodson_hilton:Meryetamun D"
+          ]
+        },
+        "artifact_id": "met-554595",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Meryetamun A",
+            "dodson_hilton:Meryetamun B",
+            "dodson_hilton:Meryetamun C",
+            "dodson_hilton:Meryetamun D",
+            "dodson_hilton:Meryetamun E",
+            "dodson_hilton:Meryetamun F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C"
+          ]
+        },
+        "artifact_id": "met-560688",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E"
+          ]
+        },
+        "artifact_id": "met-549372",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Neferu B",
+            "dodson_hilton:Neferu I",
+            "dodson_hilton:Neferu II"
+          ]
+        },
+        "artifact_id": "brooklyn-3599",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Neferu A",
+            "dodson_hilton:Neferu B",
+            "dodson_hilton:Neferu I",
+            "dodson_hilton:Neferu II",
+            "dodson_hilton:Neferu III",
+            "dodson_hilton:Neferu Q"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E"
+          ]
+        },
+        "artifact_id": "met-549371",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      },
+      {
+        "after": {
+          "context_rule": "family",
+          "status": "resolved",
+          "target_ids": [
+            "dodson_hilton:Ahmes B"
+          ]
+        },
+        "artifact_id": "brooklyn-3634",
+        "before": {
+          "context_rule": "weak_sign_unconfirmed",
+          "status": "unmatched",
+          "target_ids": []
+        }
+      },
+      {
+        "after": {
+          "context_rule": "family",
+          "status": "resolved",
+          "target_ids": [
+            "dodson_hilton:Ahmes B"
+          ]
+        },
+        "artifact_id": "met-566763",
+        "before": {
+          "context_rule": "weak_sign_unconfirmed",
+          "status": "unmatched",
+          "target_ids": []
+        }
+      },
+      {
+        "after": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C"
+          ]
+        },
+        "artifact_id": "met-548854",
+        "before": {
+          "context_rule": null,
+          "status": "ambiguous",
+          "target_ids": [
+            "dodson_hilton:Nefertiry B",
+            "dodson_hilton:Nefertiry C",
+            "dodson_hilton:Nefertiry D Meryetmut",
+            "dodson_hilton:Nefertiry E",
+            "dodson_hilton:Nefertiry F"
+          ]
+        }
+      }
+    ],
+    "count": 194
+  },
+  "schema_version": "hapi-369-resolver-change/3",
+  "unread_kin": {
+    "cued_mentions_with_unread_kin_names": 2,
+    "of_which_a_name_resolves_among_the_kings": 2,
+    "results_reading_them_would_change": []
+  }
+}

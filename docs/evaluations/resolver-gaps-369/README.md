@@ -1,0 +1,84 @@
+# #369: the resolver gaps the #361 ruler re-registration found
+
+#361 (`../ruler-reregistration-2026-10-15/`) found three gaps and left them unfixed, so that
+the authority was not tuned on the cases it was judging. This change fixes them on `main`. The
+#361 result does not move, because #361's comparison runs on its frozen `BASE_COMMIT` tree.
+
+## The fixes
+
+1. **A phase of one dynasty is read as that dynasty** (`royal_women.single_dynasty`). For
+   example "second part of Dynasty 11", "mid-Dynasty 18" and "Dynasty 12, early-mid". The forms
+   accepted are those found in every dynasty value of the 2026-08-27 corpus. Ranges, doubts,
+   styles, approximations and named periods still give no dynasty.
+2. **A bracketed numeral can be a source's own count** (`graph_kings`). The rule applies when
+   the same king also bears the name under a different plain numeral. Leprohon's
+   "Ahmose (II)" for the Dynasty 18 founder is the only such label in the graph, and it no
+   longer matches a mention's "Ahmose II".
+   - Such a mention, which usually means Amasis, now stays unmatched. No claim-graph label
+     calls Amasis "Ahmose II": pharaoh.se's alt_labels do, but the graph does not take alt
+     labels. Adding that alias as a sourced label is #370.
+3. **A king named as the queen's relative in her own field counts as named by the record**
+   (`royal_women.stated_kin_names`, used by `resolve_ruler_mention`). Examples are "Queen
+   Ahmose, Mother of Hatshepsut" and "Hatshepsut's Mother, Queen Ahmose".
+
+The review added a fourth change, to how an ambiguous royal-woman result is reported. It now
+names only the women the record's family and dynasty leave, not every woman of the name. The
+exception is a key the authority spells differently for different women
+(`weak_sign_different_spellings`), which is ambiguous before any narrowing and still names them
+all. When
+the record's dynasty rules out every woman and the record names no family king, the result is
+unmatched (`record_dynasty_contradicts`), as it already was for a lone candidate. This
+narrowing never creates a link.
+
+## What it changes
+
+`results/resolver-change.json` was made by `scripts/measure_resolver_change.py`. It ran on the
+frozen corpus archive and #361's mention ledger, using #361's frozen tree (`BASE_COMMIT`
+9fa4953) and the working tree with
+all four changes in force together.
+
+| Inputs compared | Changed |
+|---|---|
+| Distinct dynasty values | 45 of 696, covering 217 records. Each went from no dynasty to one dynasty; no value is read differently. |
+| Distinct single-identity ruler mention texts, resolved among the kings | 0 of 232 |
+| Dodson & Hilton family names, resolved among the kings | 0 of 102 |
+| Royal-woman-cued single-identity ruler mentions | 11 of 194. Two go from unmatched to resolved (below). Nine stay ambiguous and now name fewer women. |
+
+## Tuned on #361's deciding case (disclosed)
+
+The two cued mentions that now resolve are Brooklyn 3634 and Met 566763. These are the two "Queen
+Ahmose" records, and they now resolve to Dodson & Hilton's Ahmes B through Hatshepsut.
+
+They belong to #361's Ahmose e case. #361's README says its verdict hangs on that case. The rule is
+general, but in this corpus its only effect is on that evaluated case. **The next registration
+on Met–Brooklyn must flag both records as tuned-on, or leave them out.** Counting the resulting
+queen-to-queen link as a gain would score the fix on the case it was found from.
+
+The Brooklyn Neferu record (brooklyn-3599, "second part of Dynasty 11") is #361's one d. It is
+among the nine narrowed results: it stays ambiguous, now among Neferu I and II (both of Dynasty
+11) and Neferu B (no dynasty given). Nothing on disk dates a woman within a dynasty. Because its
+status is unchanged it makes no link, but the next registration should still flag it as tuned-on
+alongside the two Ahmose records.
+
+## Known limits
+
+- **A stated relative counts only if the king authority resolves the name.** The claim graph has
+  no "Tao I", "Tao II" or "Taa II". So Queen Inhapi's stated relatives add nothing, and neither
+  do Dodson & Hilton's own "Taa II" family links.
+- **Some phrasings are not read.** The reviewers named these as common museum forms; they were
+  not found in this ledger. They are "Great Royal Wife of X", "wife and sister of X", "wife of
+  King X", "Mother of X, Queen Y", "Relief of X's Mother, Queen Y" (read as the name "Relief of
+  X") and a relative's name followed by a bracket.
+  - An unread relative can do more than lose a match: the family rule outranks the dynasty rule,
+    so hiding a family king can let the dynasty rule pick a different woman.
+  - The measurement counts this (`unread_kin`). It reads the whole field generously, trying
+    every run of capitalized words after a kin word as a name, so it over-reads; that makes its
+    zero the strong claim.
+    - It finds unread relatives in 2 of the 194 cued mentions, both Harvard prose on Maatkare
+      (harvard-292258).
+    - One is a cue ("God's Wife of Amun Maatkare"). The other is "daughter of the High Priest of
+      Amun Pinedjem I", which the graph spells "Pinudjem I", so "Pinedjem I" does not resolve.
+    - Read generously, some name in each resolves (for instance "Maatkare", which is also
+      Hatshepsut's throne name). Even so, adding every such king **changes no result**.
+- **The older resolver keeps the bug.** The linkability script's own resolver
+  (`run_linkability.py`, hash-pinned by earlier evaluations) does not have rule 2.

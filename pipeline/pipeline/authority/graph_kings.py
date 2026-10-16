@@ -7,6 +7,22 @@ king labels and dynasties from the same graph.
 
 An evaluation adapter, not enrichment: it executes the evaluations' linkability script, which
 puts the repository's `pipeline/` on `sys.path` and stays in `sys.modules`.
+
+One rule is added to that resolver (#369). A numeral in brackets is a source's own count of the
+bearers of a name. Leprohon's Dynasty 18 founder is "Ahmose (II)" (`leprohon-18.01`, Leprohon
+2013 p. 95), counting Senakhtenre "Ahmose (I)" (`leprohon-17.26`, p. 91;
+`sources/leprohon-2013-titulary/reconciled.jsonl`), where pharaoh.se and Beckerath call the
+founder "Ahmose I" / "Amosis I.". Such a count often agrees with the usual one ("Merenre (I)"),
+so it is not refused as such. But when the same king also bears the name under a different
+plain numeral, the graph itself shows that the bracketed count is not the usual one, and that
+label no longer keys on the normalized tier: a mention's "Ahmose II" (usually Amasis) does not
+reach the Dynasty 18 king. Its exact surface, brackets included, still does. No claim-graph
+label calls Amasis "Ahmose II" (pharaoh.se's alt_labels do, but the graph does not take alt
+labels), so the mention stays unmatched.
+
+The linkability script's own resolver, which earlier evaluations load directly and whose file
+is hash-pinned by their manifests, does not have this rule: it still sends "Ahmose II" to the
+Dynasty 18 king.
 """
 
 from __future__ import annotations
@@ -14,11 +30,32 @@ from __future__ import annotations
 import collections
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 RUN_LINKABILITY = REPO / "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
+# A name with a trailing regnal numeral, plain ("Ahmose I") or bracketed ("Ahmose (II)").
+NUMBERED_NAME = re.compile(r"^(?P<name>.*?\S)\s+(?:(?P<plain>[IVX]+)|\((?P<bracketed>[IVX]+)\))$")
+
+
+def counted_otherwise(labels: set[str]) -> set[str]:
+    """The bracketed-numeral labels of one king whose name the king also bears under a
+    different plain numeral."""
+    plain: dict[str, set[str]] = collections.defaultdict(set)
+    bracketed: dict[str, list[tuple[str, str]]] = collections.defaultdict(list)
+    for label in labels:
+        m = NUMBERED_NAME.match(label.strip())
+        if m is None:
+            continue
+        name = m["name"].casefold()
+        if m["plain"]:
+            plain[name].add(m["plain"])
+        else:
+            bracketed[name].append((label, m["bracketed"]))
+    return {label for name, found in bracketed.items() for label, numeral in found
+            if plain[name] - {numeral}}
 
 
 def load_linkability(path: Path = RUN_LINKABILITY, module_name: str = "_graph_kings_run_linkability"):
@@ -51,6 +88,11 @@ class GraphKings:
                 for claim in by_subject[member]:
                     names[target].update(v for v in (claim.get("value_text"), claim.get("value_translit")) if v)
         self._names = names
+        # The normalized keys each target keeps: those of every label but one counted otherwise.
+        self._counted_otherwise = {target: counted_otherwise(labels) for target, labels in names.items()}
+        self._kept_keys = {target: {key for label in labels - self._counted_otherwise[target]
+                                    for key in self._norm(label) if key}
+                           for target, labels in names.items()}
 
     @property
     def catalog(self) -> dict:
@@ -58,7 +100,16 @@ class GraphKings:
         return self._catalog
 
     def resolve(self, name: str) -> dict:
-        return self._resolver.resolve(name, self._norm)
+        found = self._resolver.resolve(name, self._norm)
+        if found["resolution_method"] != "committed_normalized":
+            return found
+        keys = set(found["normalized_keys"])
+        kept = [t for t in found["target_ids"] if keys & self._kept_keys[t]]
+        if kept == found["target_ids"]:
+            return found
+        status = "resolved" if len(kept) == 1 else "ambiguous" if kept else "unmatched"
+        return {**found, "resolution_method": "committed_normalized" if kept else None, "status": status,
+                "target_ids": kept, "counted_otherwise": sorted(set(found["target_ids"]) - set(kept))}
 
     def labels(self, target_id: str) -> list[str]:
         return sorted(self._names[target_id])

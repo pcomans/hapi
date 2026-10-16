@@ -72,9 +72,18 @@ def index(women) -> rw.RoyalWomenIndex:
 
 
 def resolve(index, text, *, cue=True, kings=frozenset(), dynasty=None):
-    found = rw.resolve_ruler_mention(index, KINGS, text, royal_woman_cue=cue, record_king_ids=set(kings),
-                                     record_dynasty=dynasty)
+    """`text` as a museum field gives it: after "Queen " when cued, alone when not."""
+    prefix = "Queen " if cue else ""
+    found = rw.resolve_ruler_mention(index, KINGS, prefix + text, len(prefix), len(prefix) + len(text),
+                                     record_king_ids=set(kings), record_dynasty=dynasty)
     return found["status"], found["target_ids"], found["context_rule"]
+
+
+def resolve_field(index, field, mention, *, kings=frozenset(), dynasty=None):
+    start = field.index(mention)
+    found = rw.resolve_ruler_mention(index, KINGS, field, start, start + len(mention),
+                                     record_king_ids=set(kings), record_dynasty=dynasty)
+    return found["status"], found["target_ids"], found["context_rule"], found.get("stated_kin_king_ids")
 
 
 def test_the_women_are_dodson_and_hiltons(women) -> None:
@@ -148,9 +157,12 @@ def test_a_bare_name_is_chosen_by_the_records_family_then_dynasty(index) -> None
     assert resolve(index, "Tiye", dynasty=18) == ("resolved", ["dodson_hilton:Tiye A"], "dynasty")
     assert resolve(index, "Tiye", kings={"king:setnakhte"}, dynasty=20) == (
         "resolved", ["dodson_hilton:Tiye B Mereniset"], "family")
-    # Two Dynasty 20 Tiyes and no family link: nothing chooses.
+    # Two Dynasty 20 Tiyes and no family link: nothing chooses. The result names the two the
+    # dynasty leaves, not Tiye A (Dynasty 18).
     assert resolve(index, "Tiye", dynasty=20) == (
-        "ambiguous", ["dodson_hilton:Tiye A", "dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"], None)
+        "ambiguous", ["dodson_hilton:Tiye B Mereniset", "dodson_hilton:Tiye C"], None)
+    # Every Tiye of another dynasty: refused, as a lone contradicted candidate is.
+    assert resolve(index, "Tiye", dynasty=26) == ("unmatched", [], "record_dynasty_contradicts")
 
 
 def test_ahhotep_i_is_chosen_by_her_husband_not_by_a_dynasty_she_lacks(index) -> None:
@@ -167,7 +179,52 @@ def test_ahhotep_i_is_chosen_by_her_husband_not_by_a_dynasty_she_lacks(index) ->
 def test_neferu_needs_her_husband_dynasty_11_has_two(index) -> None:
     assert resolve(index, "Neferu", kings={"king:mentuhotep-ii"}, dynasty=11) == (
         "resolved", ["dodson_hilton:Neferu II"], "family")
-    assert resolve(index, "Neferu", dynasty=11)[0] == "ambiguous"
+    # #369: Brooklyn's "Sunk Relief of Queen Neferu" gives "second part of Dynasty 11", now read
+    # as 11, but no king: Neferu I and II are both of Dynasty 11, and Neferu B has no dynasty to
+    # rule her out, so she stays ambiguous among those three. The phase does not choose between
+    # them: nothing on disk dates a woman within a dynasty.
+    assert resolve(index, "Neferu", dynasty=11) == (
+        "ambiguous", ["dodson_hilton:Neferu B", "dodson_hilton:Neferu I", "dodson_hilton:Neferu II"], None)
+
+
+def test_a_king_her_own_field_names_as_her_kin_is_named_by_the_record(index) -> None:
+    """#369: both "Queen Ahmose" records state her kin in the field (Brooklyn 3634, Met
+    566763). "Ahmose" meets D&H's Ahmes only on the three-consonant weak-sign key, which takes
+    a named family king; Hatshepsut is Ahmes B's child in D&H."""
+    assert resolve_field(index, "Queen Ahmose, Mother of Hatshepsut", "Ahmose", dynasty=18) == (
+        "resolved", ["dodson_hilton:Ahmes B"], "family", ["king:hatshepsut"])
+    assert resolve_field(index, "Hatshepsut's Mother, Queen Ahmose", "Ahmose", dynasty=18) == (
+        "resolved", ["dodson_hilton:Ahmes B"], "family", ["king:hatshepsut"])
+    # Without it, the record's dynasty does not confirm a three-consonant key.
+    assert resolve_field(index, "Queen Ahmose", "Ahmose", dynasty=18) == (
+        "unmatched", [], "weak_sign_unconfirmed", [])
+    # A stated kin the king authority does not resolve adds nothing.
+    assert resolve_field(index, "Queen Ahmose, Mother of the priest Imhotep", "Ahmose", dynasty=18) == (
+        "unmatched", [], "weak_sign_unconfirmed", [])
+    # An uncued mention is a king's, and its field's kin are not read.
+    assert resolve_field(index, "Hatshepsut's Mother, Ahmose I", "Ahmose I") == (
+        "resolved", ["king:ahmose-i"], None, None)
+
+
+def test_stated_kin_names_reads_the_appositive_forms_only() -> None:
+    def kin(field, mention):
+        start = field.index(mention)
+        return rw.stated_kin_names(field, start, start + len(mention))
+
+    assert kin("Queen Ahmose, Mother of Hatshepsut", "Ahmose") == ("Hatshepsut",)
+    assert kin("Hatshepsut's Mother, Queen Ahmose", "Ahmose") == ("Hatshepsut",)
+    assert kin("Mummy Cloth Fragment of Queen Inhapi, wife of Tao II, daughter of Tao I", "Inhapi") == (
+        "Tao II", "Tao I")
+    assert kin("Cylinder Seal of Princess Itakayt, Wife of Amunemhat II", "Itakayt") == ("Amunemhat II",)
+    assert kin("Shabti of the God's Wife Maatkare, daughter of Painedjem I", "Maatkare") == ("Painedjem I",)
+    assert kin("God's Wife Tagerem, daughter of the priest Imhotep", "Tagerem") == ("the priest Imhotep",)
+    # Not appositive kin: a second subject, a kin word with no "of", a name before a bracket.
+    assert kin("Statue of Queen Ankhnes-meryre II and Her Son, Pepy II", "Ankhnes-meryre II") == ()
+    assert kin("Queen Tiye, Mother", "Tiye") == ()
+    assert kin("Queen Tiye, Mother of Akhenaten (Amenhotep IV)", "Tiye") == ()
+    assert kin("Scarab of the King's Mother Queen Nebuhetepti", "Nebuhetepti") == ()
+    with pytest.raises(ValueError, match="no royal-woman cue"):
+        rw.stated_kin_names("Statue of Ahmose, Mother of Hatshepsut", 10, 16)
 
 
 def test_the_dynasty_narrows_among_several_family_matches(women) -> None:
@@ -180,6 +237,15 @@ def test_the_dynasty_narrows_among_several_family_matches(women) -> None:
     # A and B are family matches; of those only A is of the record's dynasty (C is not family).
     assert resolve(index, "Iset", kings={"king:amenhotep-iii"}, dynasty=18) == (
         "resolved", ["dodson_hilton:Iset A"], "dynasty")
+    # #369: two family matches and no dynasty: ambiguous between them, C (not family) left out.
+    assert resolve(index, "Iset", kings={"king:amenhotep-iii"}) == (
+        "ambiguous", ["dodson_hilton:Iset A", "dodson_hilton:Iset B"], None)
+    # A dynasty that rules out both family matches does not contradict them: a record naming her
+    # family king overrides its dynasty, so the family stay, ambiguous.
+    assert resolve(index, "Iset", kings={"king:amenhotep-iii"}, dynasty=20) == (
+        "ambiguous", ["dodson_hilton:Iset A", "dodson_hilton:Iset B"], None)
+    # Without the family king, the same dynasty rules out every Iset.
+    assert resolve(index, "Iset", dynasty=20) == ("unmatched", [], "record_dynasty_contradicts")
 
 
 def test_a_candidate_of_unknown_dynasty_is_not_ruled_out_by_the_records(women) -> None:
@@ -285,9 +351,7 @@ def test_the_weak_sign_tier_reaches_the_other_sources_renderings_of_a_dh_woman(i
     # PM I.2, 762 "Nefertari": D&H's Nefertiry D (wife) and E (daughter) are both Ramesses
     # II's and both Dynasty 19, so the record cannot choose; nothing is picked.
     assert found(index, "Nefertari", kings={"king:ramesses-ii"}, dynasty=19) == (
-        "ambiguous", "weak_sign_skeleton",
-        ["dodson_hilton:Nefertiry B", "dodson_hilton:Nefertiry C", "dodson_hilton:Nefertiry D Meryetmut",
-         "dodson_hilton:Nefertiry E", "dodson_hilton:Nefertiry F"], None)
+        "ambiguous", "weak_sign_skeleton", ["dodson_hilton:Nefertiry D Meryetmut", "dodson_hilton:Nefertiry E"], None)
     # An alternative name is keyed too: "Ankhesenamun" (D&H's alt for Ankhesenpaaten), rule 4.
     assert found(index, "Ankhesenamon", dynasty=18) == (
         "resolved", "weak_sign_skeleton", ["dodson_hilton:Ankhesenpaaten"], None)
@@ -505,6 +569,24 @@ def test_the_cue_and_the_records_dynasty_are_read_exactly() -> None:
     assert [rw.single_dynasty(v) for v in ("Dynasty 18", "late Dynasty 18", "Dynasty 12, late", "18th Dynasty",
                                            "Dynasty 19–20", "Dynasty 26, or later", "", None)] == [
         18, 18, 12, 18, None, None, None, None]
+    # #369: a phase of one dynasty, in every form the 2026-08-27 corpus writes one.
+    phased = {"second part of Dynasty 11": 11, "first part of Dynasty 13": 13, "first half of Dynasty 12": 12,
+              "Second half of Dynasty 26": 26, "end of Dynasty 5": 5, "middle of Dynasty 18": 18,
+              "mid-Dynasty 20": 20, "mid to late Dynasty 13": 13, "mid–late Dynasty 18": 18,
+              "early to mid-Dynasty 12": 12, "mid to end Dynasty 12": 12, "late 18 Dynasty": 18,
+              "late Dynasty18": 18, "Dynasty 2, second half": 2, "Dynasty 5, end": 5, "Dynasty 12, beginning": 12,
+              "Dynasty 12, early-mid": 12, "Dynasty 12, early - mid": 12, "Dynasty 12, mid–late": 12,
+              "Dynasty 26, mid to late": 26, "Dynasty 12, mid to second half": 12,
+              "mid-to-late Dynasty 18": 18, "mid\u2013Dynasty 18": 18, "mid\u2010Dynasty 18": 18}
+    assert {v: rw.single_dynasty(v) for v in phased} == phased
+    # Two dynasties, a doubt, a style, an approximation, a period, a reign or a bare number: none.
+    for value in ("late Dynasty 12–13", "Dynasty 12, late–early 13", "Dynasty 11–mid 12", "Dynasty 12, late–17",
+                  "late Dynasty 18 to early Dynasty 19", "Dynasty 12, mid - Dynasty 13", "Dynasty 13, late–18, early",
+                  "mid to late Dynasty 13–17", "Dynasty 18 (?)", "Dynasty 18 (probably)", "Dynasty 26, perhaps",
+                  "in the style of Dynasty 18", "ca. Dynasty 30", "original Dynasty 18", "after Dynasty 18",
+                  "Dynasty 25 (Kushite)", "Dynasty 18, Amarna period", "Dynasty 18, reign of Amenhotep III",
+                  "Dynasty 13–SIP", "18"):
+        assert rw.single_dynasty(value) is None, value
 
 
 def test_a_different_name_outside_dodson_and_hilton_can_still_meet_a_womans_key(index) -> None:
