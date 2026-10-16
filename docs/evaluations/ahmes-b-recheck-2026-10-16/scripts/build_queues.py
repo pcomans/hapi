@@ -18,7 +18,8 @@ scripts/build_review_queue.py`), run by #361's runner and prompts unchanged:
     uv run python docs/evaluations/ahmes-b-recheck-2026-10-16/scripts/build_queues.py stage-1 \\
         --archive <corpus archive> --out <private dir>/stage-1/queue.json
     uv run python .../build_queues.py stage-2 --stage-1-queue <...> --consensus <...> --template <...> --out <...>
-    uv run python .../build_queues.py verify --private <private dir> --template <#361's released Stage 2 queue>
+    uv run python .../build_queues.py verify --private <private dir> --template <#361's released Stage 2 queue> \\
+        --archive <corpus archive> --stage-1-template <#361's Stage 1 queue>
 """
 
 from __future__ import annotations
@@ -161,7 +162,7 @@ def stage_2(stage_1_queue: Path, consensus: Path, template: dict) -> dict:
     return released
 
 
-def verify(private: Path, check_path: Path, template: Path) -> None:
+def verify(private: Path, check_path: Path, template: Path, archive: Path, stage_1_template: Path) -> None:
     """With the private records, everything `check.json` publishes:
     * both consensus files are what the stored calls make (#361's `verify_consensus`), and each
       stage's outcome and resolution (method, reviewer outcomes, citations) in `check.json` are
@@ -170,8 +171,13 @@ def verify(private: Path, check_path: Path, template: Path) -> None:
     * the reviewed Stage 2 queue binds the frozen Stage 1 queue and consensus by hash (a hash
       that could not exist before Stage 1 was frozen), and is exactly the queue this script
       releases from them (#361's scorer checks the same);
-    * the target, run and records checked are the private binding's."""
+    * the target, run and records checked are the private binding's, and the reviewed Stage 1
+      queue and that binding are exactly what this script builds from the frozen corpus."""
     rp = protocol()
+    queue_1, binding_1 = stage_1(archive, json.loads(stage_1_template.read_text(encoding="utf-8")))
+    if (queue_1, binding_1) != (json.loads((private / "stage-1/queue.json").read_text(encoding="utf-8")),
+                                json.loads((private / "stage-1/private-binding.json").read_text(encoding="utf-8"))):
+        raise ValueError("the reviewed Stage 1 queue or private binding is not what the frozen corpus gives")
     check = json.loads(check_path.read_text(encoding="utf-8"))
     binding = json.loads((private / "stage-1/private-binding.json").read_text(encoding="utf-8"))
     if (check["target_id"], check["run_id"], check["records_checked"]) != (
@@ -193,11 +199,11 @@ def verify(private: Path, check_path: Path, template: Path) -> None:
                       for k, v in decision["field_resolutions"].items()}
         if (outcome, resolution) != (recorded["outcome"], recorded["resolution"]):
             raise ValueError(f"stage {stage}: check.json's outcome or resolution is not the consensus")
-    stage_1, stage_2_queue = private / "stage-1", json.loads((private / "stage-2/queue.json").read_text(encoding="utf-8"))
+    stage_1_dir, stage_2_queue = private / "stage-1", json.loads((private / "stage-2/queue.json").read_text(encoding="utf-8"))
     if (stage_2_queue["stage_1_queue_sha256"], stage_2_queue["frozen_stage_1_consensus_sha256"]) != (
-            sha256_path(stage_1 / "queue.json"), sha256_path(stage_1 / "consensus.json")):
+            sha256_path(stage_1_dir / "queue.json"), sha256_path(stage_1_dir / "consensus.json")):
         raise ValueError("the reviewed Stage 2 queue does not bind the frozen Stage 1 queue and consensus")
-    released = stage_2(stage_1 / "queue.json", stage_1 / "consensus.json", json.loads(template.read_text(encoding="utf-8")))
+    released = stage_2(stage_1_dir / "queue.json", stage_1_dir / "consensus.json", json.loads(template.read_text(encoding="utf-8")))
     if released != stage_2_queue:
         raise ValueError("the reviewed Stage 2 queue is not the one released from the frozen Stage 1")
     print("verified: both consensus files rebuilt from the stored calls; hashes, outcomes, resolutions and "
@@ -227,9 +233,11 @@ def main() -> None:
     check.add_argument("--private", type=Path, required=True, help="the private records directory")
     check.add_argument("--check", type=Path, default=Path(__file__).resolve().parents[1] / "results/check.json")
     check.add_argument("--template", type=Path, required=True, help="#361's private released Stage 2 queue")
+    check.add_argument("--archive", type=Path, required=True, help="the frozen corpus archive")
+    check.add_argument("--stage-1-template", type=Path, required=True, help="#361's private Stage 1 queue")
     args = parser.parse_args()
     if args.command == "verify":
-        verify(args.private, args.check, args.template)
+        verify(args.private, args.check, args.template, args.archive, args.stage_1_template)
         return
     template = json.loads(args.template.read_text(encoding="utf-8"))
     if args.command == "stage-1":

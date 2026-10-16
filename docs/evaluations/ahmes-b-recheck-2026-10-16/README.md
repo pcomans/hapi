@@ -58,12 +58,13 @@ Every call's full record (command, prompt, event log and answer) is kept private
 are, in `dropbox/hapi-ahmes-b-recheck-2026-10-16/`, for #361's reason: they quote museum text
 verbatim. Their SHA-256 hashes are in `results/check.json` (Rule 13).
 
-With the private records, `scripts/build_queues.py verify --private <dir> --template <#361's
-released Stage 2 queue>` checks everything `check.json` publishes:
+With the private records, `scripts/build_queues.py verify` (with the private dir, the frozen
+corpus and #361's two queues) checks everything `check.json` publishes:
 - both consensus files rebuild from the stored calls (#361's `verify_consensus`);
 - every hash matches;
 - the outcomes and resolutions (method, reviewer outcomes, citations) are the consensus's;
-- the target, run and records are the private binding's;
+- the target, run and records are the private binding's, and the reviewed Stage 1 queue and
+  that binding are exactly what the script builds from the frozen corpus (`--archive`);
 - the reviewed Stage 2 queue binds the frozen Stage 1 queue and consensus, and is their release.
 
 It passed on 2026-10-16.
