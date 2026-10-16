@@ -150,10 +150,56 @@ The CI tests need no private data:
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 
-## Left for step 3
+## Step 3: cross-museum matching, authority on and off
 
-- Cross-museum linking with the authority on and off, over a run's links, reported by museum,
-  pair and entity type against `QUALIFIED_SCOPES`, and two hash-stable full-corpus runs.
+- **`pipeline/pipeline/enrich/cross_museum.py`** reads a run's links in one mode; the mode is
+  the switch. Two records of different museums match when each is linked to the same target.
+  - `matches(links, artifact_id)` gives a record's matches.
+  - `report(run)` measures both modes and the change between them, by museum, museum pair and
+    entity type. For each pair it gives the shared targets, the records connected on each side,
+    the records the authority connects that plain text does not (`gained`) and the reverse
+    (`lost`), and how much of each side the largest 1 and 5 shared targets carry.
+  - Each scope is flagged `qualified` per `QUALIFIED_SCOPES`.
+- **`scripts/run_end_to_end.py`** writes `results/end-to-end.json`. It runs `write_run` twice
+  on the frozen corpus, in two interpreters with different `PYTHONHASHSEED`s and into fresh
+  directories. It requires both runs to have the same manifest and file contents, then reports
+  on the run.
+
+### Result on the frozen corpus
+
+148,964 mentions; 48,994 authority links; 127,711 literal links. Both runs were identical.
+
+| Scope | Qualified | Shared targets (authority / literal) | Records connected, first museum (authority / literal; gained, lost) | Second museum |
+|---|---|---|---|---|
+| ruler, Met–Brooklyn | yes | 14 / 13 | Met 1,957 / 1,981; +33, −57 | Brooklyn 20 / 19; +2, −1 |
+| ruler, Met–Harvard | no (unevaluated) | 2 / 2 | Met 920 / 921; +0, −1 | Harvard 2 / 2 |
+| ruler, Brooklyn–Harvard | no (unevaluated) | 2 / 2 | Brooklyn 6 / 6 | Harvard 2 / 2 |
+| site, Met–Brooklyn | yes | 47 / 58 | Met 14,393 / 27,198; +136, −12,941 | Brooklyn 1,151 / 2,890; +0, −1,739 |
+| site, Met–Harvard | yes | 3 / 6 | Met 506 / 26,628; +1, −26,123 | Harvard 6 / 534; +0, −528 |
+| site, Brooklyn–Harvard | yes | 4 / 6 | Brooklyn 332 / 2,881; +0, −2,549 | Harvard 7 / 520; +1, −514 |
+| tomb, any pair | no (unevaluated) | 0 / 0 | none | none |
+
+Reading it:
+
+- **These are counts of connections, not of right ones.** Whether a change is better was
+  judged by review in #337 (sites) and #361 (rulers), on the same resolutions. Step 1 shows the
+  pipeline makes those resolutions exactly, apart from #369's 11 changes. So the reviewed
+  verdicts carry over to the qualified scopes here. Nothing here judges the unqualified scopes.
+- **Most site "losses" are one plain-text target, "Egypt".**
+  - It joins 26,573 Met records with 2,881 Brooklyn and 510 Harvard records. In plain text it
+    carries 97.7% of Met's and 99.7% of Brooklyn's connected site records in Met–Brooklyn.
+  - The authority leaves "Egypt" unmatched (30,161 mentions): the iDAI site layer holds sites,
+    not countries.
+  - #337's reviewers judged links of that breadth not useful (its e class). The next largest are
+    "Upper Egypt" and "Thebes" (Met–Brooklyn) and "Saqqara" (Met–Harvard).
+- **Rulers, Met–Brooklyn.** The authority connects 33 Met and 2 Brooklyn records that plain
+  text does not, and drops 57 and 1 that it does. #361 reviewed those changes and scored the
+  scope as qualifying.
+- **This is the pipeline code's lift on a frozen export of the museum tables, not a deployed
+  run.** The asset reads the database, which this environment lacks (owner, 2026-10-16: files
+  first). #337 measured potential lift with evaluation scripts; this measures the same lift
+  through the production code. Deployed lift needs the asset run against the live database
+  (#375 and #374 apply there).
 
 The proof above covers the code it recorded only: `snapshot` for the resolution and
 `check_inputs.code_sha256` for the input check (`results/promotion-check.json`). Any later edit
