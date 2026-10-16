@@ -245,9 +245,9 @@ matters is whether these are the populations that were reviewed.
   correct and useful (d) and 15 wrong or not useful (e); it named the Fayum, a whole region, as
   too broad to be useful. That review, not this count, is the evidence.
 - **This is the pipeline code's result on a frozen export of the museum tables, not a deployed
-  run.** The asset reads the database, which this environment lacks (owner, 2026-10-16: files
-  first). Deployed lift needs the asset run against the live database (see #374 and #375) and a
-  matcher in the web layer that reads the links.
+  run.** The asset, run against a database holding that export, later reproduced it exactly (see
+  "The database run" below). Deployed lift still needs the asset to run on live, ingested data
+  (see #374 and #375) and a matcher in the web layer that reads the links.
 
 ## The database run (2026-10-16)
 
@@ -257,6 +257,9 @@ Vercel integration on project `web-claim-graph-hapi`, Postgres 18.6. Local compo
   ran to head.
 - **Load.** `scripts/load_frozen_corpus.py` loaded the frozen corpus into the empty catalog
   tables: 36,245 canonical rows, and 27,969 Met, 8,832 Brooklyn and 722 Harvard raw payloads.
+  - The archive holds the raw payloads parsed. Their `data` column is therefore `json.dumps` of
+    each payload, as the ingest assets write it, not the stored bytes themselves.
+  - The asset parses that column again, so the run does not depend on the bytes.
 - **Run.** Dagster materialized the asset (`uv run dagster asset materialize -m
   pipeline.definitions --select authority_links`, with `DATABASE_URL` set to the database) in
   about 20 seconds.
@@ -264,8 +267,9 @@ Vercel integration on project `web-claim-graph-hapi`, Postgres 18.6. Local compo
 **It made the same run as the frozen one: run ID `f13f590d…`.** The run ID is the digest of the
 run's manifest, which covers the inputs, the resolver and writer versions, and every output
 file's content. So the asset, reading the tables, made exactly the mentions, resolutions and
-links measured above (`results/database-run.json`). This is the deployed result on the frozen
-data.
+links measured above (`results/database-run.json`). It was a one-off run from the devcontainer
+against a database loaded by hand with the August export, not a deployment: there is no deployed
+Dagster, no schedule and no live data, and the run went to local files.
 
 It does not cover:
 - the search index (Typesense);
