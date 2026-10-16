@@ -1,0 +1,99 @@
+{
+  "by_collection": {
+    "Egypt - Early Dynastic": 5,
+    "Egypt - First Intermediate": 11,
+    "Egypt - Greco-Roman": 34,
+    "Egypt - Late Period": 227,
+    "Egypt - Middle Kingdom": 215,
+    "Egypt - Modern Forgery": 13,
+    "Egypt - New Kingdom": 211,
+    "Egypt - Old Kingdom": 26,
+    "Egypt - Predynastic": 31,
+    "Egypt - Ptolemaic Dynasty": 61,
+    "Egypt - Second Intermediate": 5,
+    "Egypt - Third Intermediate": 57,
+    "Egyptian": 2,
+    "Near Eastern Art": 172
+  },
+  "by_share_license_status": {
+    "CC0": 1069,
+    "Copyrighted": 1
+  },
+  "code_sha256": {
+    "docs/museum-sources/cleveland-profile/profile.py": "052543121dda8a03a76f9893cec42b6d388bcd846256b64f74750ad4843f5467",
+    "pipeline/pipeline/assets/normalize/cleveland.py": "05fde7b5359b0a59c8bfc47c41b27f878886e70d2a9e74f9d84d60ee9fad6638",
+    "pipeline/pipeline/enrich/mentions.py": "d28fb0909d57291dd5cde79f6ab72863673834be77db4eb47bbc6fcfa6c3d919"
+  },
+  "culture_entries_per_record": {
+    "0": 2,
+    "1": 1068
+  },
+  "fixtures": {
+    "copyrighted_no_image.json": {
+      "equals_ingested_record": true,
+      "object_id": "101400"
+    },
+    "find_spot_excavated.json": {
+      "equals_ingested_record": true,
+      "object_id": "94656"
+    },
+    "modern_forgery.json": {
+      "equals_ingested_record": true,
+      "object_id": "95006"
+    },
+    "near_eastern_collection.json": {
+      "equals_ingested_record": true,
+      "object_id": "135568"
+    },
+    "rich_object.json": {
+      "equals_ingested_record": true,
+      "object_id": "130133"
+    },
+    "sparse_no_image.json": {
+      "equals_ingested_record": true,
+      "object_id": "306809"
+    },
+    "two_dynasties.json": {
+      "equals_ingested_record": true,
+      "object_id": "94373"
+    },
+    "uncertain_place.json": {
+      "equals_ingested_record": true,
+      "object_id": "101390"
+    }
+  },
+  "guards": {
+    "provenance_entries_without_description": 0,
+    "records_with_several_wikidata_items": 0
+  },
+  "in_scope_records": 885,
+  "in_scope_records_whose_culture_does_not_start_with_egypt": [
+    145923,
+    153417,
+    306810,
+    306812
+  ],
+  "in_scope_records_with_find_spot": 6,
+  "in_scope_records_with_ruler_display_name": 111,
+  "in_scope_ruler_mentions": {
+    "by_expression_type": {
+      "multi_or_range": 21,
+      "single_identity": 79,
+      "temporal_context": 10,
+      "uncertain_identity": 1
+    },
+    "total": 111
+  },
+  "raw_records": 1070,
+  "raw_sha256": "dfbc8cbfa36bd310c41b0ba885fb94818a6a5af56952915c6b086a0a6eba0a62",
+  "records_with_find_spot": 9,
+  "records_with_images": 1066,
+  "reign_components": {
+    "by_ending": {
+      "final parenthesis with a digit": 106,
+      "no final parenthesis": 19
+    },
+    "department": 125,
+    "in_scope": 111
+  }
+}

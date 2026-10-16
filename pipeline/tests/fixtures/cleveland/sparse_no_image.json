@@ -1,0 +1,108 @@
+{
+  "id": 306809,
+  "accession_number": "1983.195",
+  "share_license_status": "CC0",
+  "tombstone": "Caryatid Mirror, c. 1479–1425 BCE. Egypt, New Kingdom (1540–1069 BCE), Dynasty 18. Bronze; 32.4 cm (12 3/4 in.). The Cleveland Museum of Art, Leonard C. Hanna Jr. Fund, 1983.195",
+  "current_location": null,
+  "title": "Caryatid Mirror",
+  "creation_date": "c. 1479–1425 BCE",
+  "creation_date_earliest": -1484,
+  "creation_date_latest": -1420,
+  "artists_tags": [],
+  "culture": [
+    "Egypt, New Kingdom (1540–1069 BCE), Dynasty 18"
+  ],
+  "technique": "bronze",
+  "support_materials": [],
+  "department": "Egyptian and Ancient Near Eastern Art",
+  "collection": "Egypt - New Kingdom",
+  "type": "Cosmetic Objects",
+  "measurements": "32.4 cm (12 3/4 in.)",
+  "dimensions": {
+    "No Extent Specified": {
+      "height": 0.324,
+      "height_inch": 12,
+      "height_inch_fraction": 0.75
+    }
+  },
+  "state_of_the_work": null,
+  "edition_of_the_work": null,
+  "copyright": null,
+  "inscriptions": [],
+  "exhibitions": {
+    "current": [
+      {
+        "id": 309669,
+        "title": "The Year in Review for 1983",
+        "description": "<i>The Year in Review for 1983</i>. The Cleveland Museum of Art, Cleveland, OH (organizer) (February 22-April 8, 1984).",
+        "opening_date": "1984-02-22T05:00:00"
+      },
+      {
+        "id": 309838,
+        "title": "Mirrors: Art and Symbol",
+        "description": "<i>Mirrors: Art and Symbol</i>. The Cleveland Museum of Art, Cleveland, OH (organizer) (July 3-November 18, 1984).",
+        "opening_date": "1984-07-03T04:00:00"
+      },
+      {
+        "id": 310042,
+        "title": "Images of the Mind",
+        "description": "<i>Images of the Mind</i>. The Cleveland Museum of Art, Cleveland, OH (organizer) (July 7-August 30, 1987).",
+        "opening_date": "1987-07-07T04:00:00"
+      }
+    ],
+    "legacy": []
+  },
+  "provenance": [],
+  "find_spot": null,
+  "related_works": [],
+  "former_accession_numbers": [],
+  "did_you_know": null,
+  "early_education_description": null,
+  "artlens_description": null,
+  "description": null,
+  "external_resources": {
+    "wikidata": [
+      "https://www.wikidata.org/wiki/Q60740239"
+    ],
+    "internet_archive": []
+  },
+  "citations": [
+    {
+      "citation": "Turner, Evan H. \"Year in Review for 1983.\" <em>The Bulletin of the Cleveland Museum of Art</em> 71, no. 2 (1984).",
+      "page_number": "no. 2, pp. 45 & 67",
+      "url": "https://www.jstor.org/stable/25159848"
+    },
+    {
+      "citation": "Kozloff, Arielle P. “Mirror, Mirror.” <em>The Bulletin of the Cleveland Museum of Art</em> 71, no. 8 (October 1984): 271–276.",
+      "page_number": "Mentioned and reproduced: p. 270-271, figs. 1-2",
+      "url": "http://www.jstor.org/stable/25159878"
+    }
+  ],
+  "url": "https://clevelandart.org/art/1983.195",
+  "images": {},
+  "alternate_images": [],
+  "creditline": "Leonard C. Hanna Jr. Fund",
+  "image_credit": null,
+  "sketchfab_id": null,
+  "sketchfab_url": null,
+  "gallery_donor_text": null,
+  "athena_id": 306809,
+  "creators": [],
+  "legal_status": "accessioned",
+  "accession_date": "1983-12-05T00:00:00-05:00",
+  "sortable_date": -1484,
+  "date_added_to_oa": null,
+  "date_text": "c. 1479–1425 BCE",
+  "collapse_artists": false,
+  "on_loan": false,
+  "recently_acquired": false,
+  "record_type": "object",
+  "conservation_statement": null,
+  "has_conservation_images": false,
+  "cover_accession_number": null,
+  "is_nazi_era_provenance": false,
+  "impression": null,
+  "alternate_titles": [],
+  "is_highlight": false,
+  "updated_at": "2026-06-20 11:04:23.365000"
+}

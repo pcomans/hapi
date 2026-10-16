@@ -16,7 +16,7 @@ if config.config_file_name is not None:
 
 import os
 
-from pipeline.types.models import CATALOG_SCHEMA, metadata
+from pipeline.types.models import CATALOG_SCHEMA, alembic_include_name, metadata
 
 target_metadata = metadata
 
@@ -24,6 +24,8 @@ target_metadata = metadata
 database_url = os.environ.get("DATABASE_URL")
 if database_url:
     config.set_main_option("sqlalchemy.url", database_url)
+
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -50,6 +52,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         include_schemas=True,
+        include_name=alembic_include_name,
         version_table_schema=CATALOG_SCHEMA,
     )
 
@@ -75,6 +78,7 @@ def run_migrations_online() -> None:
             connection=connection,
             target_metadata=target_metadata,
             include_schemas=True,
+            include_name=alembic_include_name,
             version_table_schema=CATALOG_SCHEMA,
         )
 

@@ -1,0 +1,193 @@
+{
+  "id": 135568,
+  "accession_number": "1958.95",
+  "share_license_status": "CC0",
+  "tombstone": "Statuette of a Bull with Curved Horns, late 2000s BCE. Egypt(?). Bronze; overall: 6.1 x 2.9 x 6.4 cm (2 3/8 x 1 1/8 x 2 1/2 in.); with base: 7.4 x 2.9 x 6.4 cm (2 15/16 x 1 1/8 x 2 1/2 in.). The Cleveland Museum of Art, Bequest of Leonard C. Hanna Jr., 1958.95",
+  "current_location": null,
+  "title": "Statuette of a Bull with Curved Horns",
+  "creation_date": "late 2000s BCE",
+  "creation_date_earliest": -2000,
+  "creation_date_latest": -1000,
+  "artists_tags": [],
+  "culture": [
+    "Egypt(?)"
+  ],
+  "technique": "bronze",
+  "support_materials": [],
+  "department": "Egyptian and Ancient Near Eastern Art",
+  "collection": "Near Eastern Art",
+  "type": "Sculpture",
+  "measurements": "Overall: 6.1 x 2.9 x 6.4 cm (2 3/8 x 1 1/8 x 2 1/2 in.); with base: 7.4 x 2.9 x 6.4 cm (2 15/16 x 1 1/8 x 2 1/2 in.)",
+  "dimensions": {
+    "overall": {
+      "height": 0.061,
+      "height_inch": 2,
+      "height_inch_fraction": 0.375,
+      "width": 0.029,
+      "width_inch": 1,
+      "width_inch_fraction": 0.125,
+      "depth": 0.064,
+      "depth_inch": 2,
+      "depth_inch_fraction": 0.5
+    },
+    "with base": {
+      "height": 0.074,
+      "height_inch": 2,
+      "height_inch_fraction": 0.9375,
+      "width": 0.029,
+      "width_inch": 1,
+      "width_inch_fraction": 0.125,
+      "depth": 0.064,
+      "depth_inch": 2,
+      "depth_inch_fraction": 0.5
+    }
+  },
+  "state_of_the_work": null,
+  "edition_of_the_work": null,
+  "copyright": null,
+  "inscriptions": [],
+  "exhibitions": {
+    "current": [],
+    "legacy": []
+  },
+  "provenance": [],
+  "find_spot": null,
+  "related_works": [],
+  "former_accession_numbers": [],
+  "did_you_know": null,
+  "early_education_description": null,
+  "artlens_description": null,
+  "description": null,
+  "external_resources": {
+    "wikidata": [
+      "https://www.wikidata.org/wiki/Q80028939"
+    ],
+    "internet_archive": [
+      "https://archive.org/details/clevelandart-1958.95-statuette-of-a-bull"
+    ]
+  },
+  "citations": [
+    {
+      "citation": "Cooney, John D. “A Medley of Bulls.” <em>The Bulletin of the Cleveland Museum of Art</em> 58, no. 1 (January 1971): 10–19.",
+      "page_number": "Mentioned and reproduced: p. 12-13, figs. 6, 7",
+      "url": "http://www.jstor.org/stable/25152357"
+    }
+  ],
+  "url": "https://clevelandart.org/art/1958.95",
+  "images": {
+    "annotation": null,
+    "web": {
+      "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_web.jpg",
+      "width": "955",
+      "height": "893",
+      "filesize": "85162",
+      "filename": "1958.95_web.jpg"
+    },
+    "print": {
+      "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_print.jpg",
+      "width": "3400",
+      "height": "3180",
+      "filesize": "928192",
+      "filename": "1958.95_print.jpg"
+    },
+    "full": {
+      "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_full.tif",
+      "width": "4304",
+      "height": "4026",
+      "filesize": "52013620",
+      "filename": "1958.95_full.tif"
+    }
+  },
+  "alternate_images": [
+    {
+      "web": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt0_web.jpg",
+        "width": "1150",
+        "height": "893",
+        "filesize": "105436"
+      },
+      "print": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt0_print.jpg",
+        "width": "3400",
+        "height": "2640",
+        "filesize": "843100"
+      },
+      "full": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt0_full.tif",
+        "width": "4984",
+        "height": "3871",
+        "filesize": "57917848"
+      },
+      "date_created": "2013-07-05T13:57:26",
+      "annotation": ""
+    },
+    {
+      "web": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt1_web.jpg",
+        "width": "753",
+        "height": "893",
+        "filesize": "53920"
+      },
+      "print": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt1_print.jpg",
+        "width": "2867",
+        "height": "3400",
+        "filesize": "683034"
+      },
+      "full": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt1_full.tif",
+        "width": "3432",
+        "height": "4070",
+        "filesize": "41938748"
+      },
+      "date_created": "2013-07-05T14:14:52",
+      "annotation": ""
+    },
+    {
+      "web": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt2_web.jpg",
+        "width": "781",
+        "height": "893",
+        "filesize": "54924"
+      },
+      "print": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt2_print.jpg",
+        "width": "2974",
+        "height": "3400",
+        "filesize": "682143"
+      },
+      "full": {
+        "url": "https://openaccess-cdn.clevelandart.org/1958.95/1958.95_alt2_full.tif",
+        "width": "3597",
+        "height": "4112",
+        "filesize": "44404304"
+      },
+      "date_created": "2013-07-05T14:26:19",
+      "annotation": ""
+    }
+  ],
+  "creditline": "Bequest of Leonard C. Hanna Jr.",
+  "image_credit": null,
+  "sketchfab_id": null,
+  "sketchfab_url": null,
+  "gallery_donor_text": null,
+  "athena_id": 135568,
+  "creators": [],
+  "legal_status": "accessioned",
+  "accession_date": "1958-11-29T00:00:00",
+  "sortable_date": -2000,
+  "date_added_to_oa": null,
+  "date_text": "late 2000s BCE",
+  "collapse_artists": false,
+  "on_loan": false,
+  "recently_acquired": false,
+  "record_type": "object",
+  "conservation_statement": null,
+  "has_conservation_images": false,
+  "cover_accession_number": null,
+  "is_nazi_era_provenance": false,
+  "impression": null,
+  "alternate_titles": [],
+  "is_highlight": false,
+  "updated_at": "2026-05-29 06:55:47.187000"
+}

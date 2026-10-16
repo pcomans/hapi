@@ -15,6 +15,7 @@ from pathlib import Path
 
 import pytest
 
+from pipeline.assets.normalize import cleveland
 from pipeline.assets.normalize.brooklyn import BrooklynMapper
 from pipeline.assets.normalize.harvard import HarvardMapper
 from pipeline.assets.normalize.met import MetMapper
@@ -35,11 +36,18 @@ def frozen():
     return module
 
 
-def corpus(extra: dict[str, list[dict]] | None = None) -> tuple[list[dict], dict[str, dict[str, dict]]]:
-    canonical, raw = [], {m: {} for m in MAPPERS}
-    for museum, mapper in MAPPERS.items():
+def corpus(extra: dict[str, list[dict]] | None = None,
+           with_cleveland: bool = False) -> tuple[list[dict], dict[str, dict[str, dict]]]:
+    """The museum fixtures as a corpus: #361's three museums, and Cleveland's fixtures that its
+    normalize step keeps when `with_cleveland` (else Cleveland's raw index is empty, as a run
+    reads an empty table)."""
+    canonical, raw = [], {m: {} for m in (*MAPPERS, "cleveland")}
+    museums = {**MAPPERS, "cleveland": cleveland.ClevelandMapper} if with_cleveland else MAPPERS
+    for museum, mapper in museums.items():
         payloads = [json.loads(p.read_text(encoding="utf-8")) for p in sorted((FIXTURES / museum).glob("*.json"))]
         for payload in payloads + (extra or {}).get(museum, []):
+            if museum == "cleveland" and not cleveland.is_egyptian(payload):
+                continue
             artifact = mapper().map_to_canonical(payload).model_dump()
             canonical.append(artifact)
             raw[museum][artifact["source_id"]] = payload
@@ -83,16 +91,22 @@ def test_the_production_extractor_gives_what_361s_gives(frozen) -> None:
     assert {m["museum"] for m in found} == {"met", "brooklyn", "harvard"}
 
 
+ADDED_FOR_CLEVELAND = ("JOINT_REIGN", "cleveland_reign_components", "cleveland_reign_text", "cleveland_mentions",
+                       "extract_all_mentions")
+
+
 def test_every_definition_is_361s_verbatim(frozen) -> None:
     """The promotion is a copy: the first edit to a promoted definition fails here, and must
-    also change this test and the claim of identity in `mentions.py` and the #338 README."""
+    also change this test and the claim of identity in `mentions.py` and the #338 README.
+    Cleveland's reader and the function that joins it to #361's are additions, not edits."""
     imported = {"annotations", "hashlib", "re", "Counter", "Iterable"}
     names = [n for n in vars(production) if not n.startswith("_") and n not in imported]
     assert sorted(names) == sorted([
         "ROYAL_CUE", "TOMB_CODE", "TEMPLE_CUE", "UNCERTAIN", "RANGE_OR_MULTI", "TEMPORAL_CONTEXT", "LEADING_REIGN",
         "LEADING_UNCERTAIN_REIGN", "TRAILING_PHASE", "NAME_TOKEN", "TEXT_STOP", "classify_reign_expression",
-        "candidate_after_royal_cue", "component_spans", "component_variants", "make_mention", "extract_mentions"])
-    for name in names:
+        "candidate_after_royal_cue", "component_spans", "component_variants", "make_mention", "extract_mentions",
+        *ADDED_FOR_CLEVELAND])
+    for name in sorted(set(names) - set(ADDED_FOR_CLEVELAND)):
         ours, theirs = getattr(production, name), getattr(frozen, name)
         if isinstance(ours, re.Pattern):
             assert (ours.pattern, ours.flags) == (theirs.pattern, theirs.flags), name
@@ -100,3 +114,68 @@ def test_every_definition_is_361s_verbatim(frozen) -> None:
             assert inspect.getsource(ours) == inspect.getsource(theirs), name
         else:
             assert ours == theirs, name
+
+
+def _cleveland(culture: str) -> dict:
+    payload = json.loads((FIXTURES / "cleveland" / "rich_object.json").read_text(encoding="utf-8"))
+    return {**payload, "culture": [culture]}
+
+
+def test_without_cleveland_records_the_join_is_361s_extractor() -> None:
+    canonical, raw = corpus(EXTRA)
+    assert production.extract_all_mentions(canonical, raw) == production.extract_mentions(canonical, raw)
+
+
+def test_cleveland_mentions_are_its_catalogued_reigns() -> None:
+    """Each fixture's reign component: the single identity's name, in its culture entry."""
+    canonical, raw = corpus(with_cleveland=True)
+    found, diagnostics = production.extract_all_mentions(canonical, raw)
+    ours = [(m["artifact_id"], m["field_path"], m["span_start"], m["span_end"], m["mention_text"], m["expression_type"],
+             m["extraction_method"], m["evidence_role"], m["record_dynasty"]) for m in found if m["museum"] == "cleveland"]
+    assert ours == [
+        ("cleveland-101390", "culture[0]", 68, 81, "Tuthmosis III", "single_identity",
+         "typed_structured_reign_parser", "catalogued_reign", "Dynasty 18"),
+        ("cleveland-130133", "culture[0]", 57, 70, "Amenhotep III", "single_identity",
+         "typed_structured_reign_parser", "catalogued_reign", "Dynasty 18"),
+    ]
+    others, other_diagnostics = production.extract_mentions(
+        [row for row in canonical if row["source_museum"] != "cleveland"], raw)
+    assert [m for m in found if m["museum"] != "cleveland"] == others
+    assert diagnostics == {**other_diagnostics, "records_scanned": len(canonical),
+                           "records_with_at_least_one_mention": other_diagnostics["records_with_at_least_one_mention"] + 2,
+                           "mentions": len(others) + 2,
+                           "mentions_by_museum": {**other_diagnostics["mentions_by_museum"], "cleveland": 2},
+                           "mentions_by_entity_type": {**other_diagnostics["mentions_by_entity_type"],
+                                                       "ruler": other_diagnostics["mentions_by_entity_type"]["ruler"] + 2}}
+
+
+@pytest.mark.parametrize("culture, text, expression", [
+    # A range keeps both ends: only the last parenthesis (the second reign's dates) is cut.
+    ("Egypt, New Kingdom (1540–1069 BCE), Dynasty 18, reign of Tuthmosis III (1479–1425 BCE)–reign of Amenhotep III "
+     "(1390–1352 BCE)", "reign of Tuthmosis III (1479–1425 BCE)–reign of Amenhotep III", "multi_or_range"),
+    ("Egypt, Old Kingdom (2647–2124 BCE), Dynasty 5, reign of Nyuserre (2445–2422 BCE) or later",
+     "reign of Nyuserre (2445–2422 BCE) or later", "temporal_context"),
+    ("Egypt, Middle Kingdom (2030–1650 BCE), Dynasty 12, probably reign of Senusret I",
+     "probably reign of Senusret I", "uncertain_identity"),
+    ("Egypt, Middle Kingdom (2030–1650 BCE), Dynasty 12, reign of Amenemhat II to Sesostris III",
+     "reign of Amenemhat II to Sesostris III", "multi_or_range"),
+    # A doubt mark is not dates: it stays, and the reign is uncertain.
+    ("Egypt, Dynasty 19, reign of Ramesses II(?)", "reign of Ramesses II(?)", "uncertain_identity"),
+    # A joint reign is read whole, never as one ruler.
+    ("Egypt, Dynasty 18, joint reign of Hatshepsut and Tuthmosis III",
+     "joint reign of Hatshepsut and Tuthmosis III", "unparsed_structured_value"),
+    # A doubtful place does not make the reign doubtful.
+    ("Egypt, Thebes(?), Dynasty 21, reign of Osorkon I (924–889 BCE)", "Osorkon I", "single_identity"),
+])
+def test_a_cleveland_reign_that_is_not_one_ruler_is_kept_whole(culture, text, expression) -> None:
+    payload = _cleveland(culture)
+    artifact = cleveland.ClevelandMapper().map_to_canonical(payload).model_dump()
+    (mention,) = production.cleveland_mentions(artifact, payload)
+    assert (mention["mention_text"], mention["expression_type"]) == (text, expression)
+    assert culture[mention["span_start"]:mention["span_end"]] == text
+
+
+def test_a_cleveland_record_without_a_reign_has_no_mention() -> None:
+    payload = json.loads((FIXTURES / "cleveland" / "sparse_no_image.json").read_text(encoding="utf-8"))
+    artifact = cleveland.ClevelandMapper().map_to_canonical(payload).model_dump()
+    assert production.cleveland_mentions(artifact, payload) == []

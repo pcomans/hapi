@@ -98,6 +98,9 @@ def load_corpus(archive: Path) -> tuple[list[dict], dict[str, dict[str, dict]]]:
         canonical = gz_rows(member("artifacts.ndjson.gz"))
         raw = {museum: {str(r["object_id"]): r["data"] for r in gz_rows(member(f"raw_{museum}.ndjson.gz"))}
                for museum in ("met", "brooklyn", "harvard")}
+    # The 2026-08-27 corpus predates Cleveland (docs/museum-sources/cleveland.md): its raw table
+    # is empty, as a run reads it from a database that holds this corpus alone.
+    raw["cleveland"] = {}
     return canonical, raw
 
 

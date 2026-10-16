@@ -1,0 +1,119 @@
+{
+  "id": 94373,
+  "accession_number": "1914.752",
+  "share_license_status": "CC0",
+  "tombstone": "Necklace, barrel beads: 1980–1801 BCE; eye beads: 1295–1186. Egypt, Middle Kingdom, Dynasty 12 (barrel beads) and New Kingdom, Dynasty 19 (eye beads). Glass and carnelian; overall: 23.8 cm (9 3/8 in.). The Cleveland Museum of Art, Gift of the John Huntington Art and Polytechnic Trust, 1914.752",
+  "current_location": null,
+  "title": "Necklace",
+  "creation_date": "barrel beads: 1980–1801 BCE; eye beads: 1295–1186",
+  "creation_date_earliest": -1980,
+  "creation_date_latest": -1186,
+  "artists_tags": [],
+  "culture": [
+    "Egypt, Middle Kingdom, Dynasty 12 (barrel beads) and New Kingdom, Dynasty 19 (eye beads)"
+  ],
+  "technique": "glass and carnelian",
+  "support_materials": [],
+  "department": "Egyptian and Ancient Near Eastern Art",
+  "collection": "Egypt - Middle Kingdom",
+  "type": "Jewelry",
+  "measurements": "Overall: 23.8 cm (9 3/8 in.)",
+  "dimensions": {
+    "overall": {
+      "length": 0.238,
+      "length_inch": 9,
+      "length_inch_fraction": 0.375
+    }
+  },
+  "state_of_the_work": null,
+  "edition_of_the_work": null,
+  "copyright": null,
+  "inscriptions": [],
+  "exhibitions": {
+    "current": [],
+    "legacy": []
+  },
+  "provenance": [
+    {
+      "description": "Purchased from Mohammed Mohasseb and Son, Luxor, by Lucy Olcott Perkins through Henry W. Kent",
+      "citations": [],
+      "footnotes": null,
+      "date": null,
+      "sortorder": null
+    }
+  ],
+  "find_spot": null,
+  "related_works": [],
+  "former_accession_numbers": [
+    "263.14"
+  ],
+  "did_you_know": null,
+  "early_education_description": null,
+  "artlens_description": null,
+  "description": null,
+  "external_resources": {
+    "wikidata": [
+      "https://www.wikidata.org/wiki/Q79474666"
+    ],
+    "internet_archive": [
+      "https://archive.org/details/clevelandart-1914.752-necklace"
+    ]
+  },
+  "citations": [
+    {
+      "citation": "Berman, Lawrence M., and Kenneth J. Bohač.<em> Catalogue of Egyptian Art: The Cleveland Museum of Art.</em> Cleveland, OH: Cleveland Museum of Art, 1999",
+      "page_number": "Reproduced and Mentioned: p. 538",
+      "url": null
+    }
+  ],
+  "url": "https://clevelandart.org/art/1914.752",
+  "images": {
+    "annotation": null,
+    "web": {
+      "url": "https://openaccess-cdn.clevelandart.org/1914.752/1914.752_web.jpg",
+      "width": "974",
+      "height": "893",
+      "filesize": "45114",
+      "filename": "1914.752_web.jpg"
+    },
+    "print": {
+      "url": "https://openaccess-cdn.clevelandart.org/1914.752/1914.752_print.jpg",
+      "width": "3400",
+      "height": "3116",
+      "filesize": "451692",
+      "filename": "1914.752_print.jpg"
+    },
+    "full": {
+      "url": "https://openaccess-cdn.clevelandart.org/1914.752/1914.752_full.tif",
+      "width": "5598",
+      "height": "5131",
+      "filesize": "86200940",
+      "filename": "1914.752_full.tif"
+    }
+  },
+  "alternate_images": [],
+  "creditline": "Gift of the John Huntington Art and Polytechnic Trust",
+  "image_credit": null,
+  "sketchfab_id": null,
+  "sketchfab_url": null,
+  "gallery_donor_text": null,
+  "athena_id": 94373,
+  "creators": [],
+  "legal_status": "accessioned",
+  "accession_date": "1914-01-01T00:00:00",
+  "sortable_date": -1980,
+  "date_added_to_oa": null,
+  "date_text": "barrel beads: 1980–1801 BCE; eye beads: 1295–1186",
+  "collapse_artists": false,
+  "on_loan": false,
+  "recently_acquired": false,
+  "record_type": "object",
+  "conservation_statement": null,
+  "has_conservation_images": false,
+  "cover_accession_number": null,
+  "is_nazi_era_provenance": false,
+  "impression": null,
+  "alternate_titles": [],
+  "is_highlight": false,
+  "updated_at": "2026-05-29 05:01:15.440000"
+}

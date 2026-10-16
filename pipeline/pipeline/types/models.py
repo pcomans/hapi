@@ -23,6 +23,16 @@ CATALOG_SCHEMA = "catalog"
 
 metadata = MetaData(schema=CATALOG_SCHEMA)
 
+
+def alembic_include_name(name: str | None, type_: str, parent_names: dict) -> bool:
+    """Alembic's `include_name` (alembic/env.py): compare only the `catalog` schema. Alembic owns
+    `catalog.*` alone (ADR-011): `web.*` is Drizzle's, and a hosted database has its own schemas
+    (Neon's `neon_auth`), which autogenerate would otherwise propose to drop."""
+    if type_ == "schema":
+        return name == CATALOG_SCHEMA
+    return True
+
+
 artifacts_table = Table(
     "artifacts",
     metadata,
@@ -90,6 +100,13 @@ raw_brooklyn_table = Table(
 
 raw_harvard_table = Table(
     "raw_harvard",
+    metadata,
+    Column("object_id", String, primary_key=True),
+    Column("data", Text, nullable=False),
+)
+
+raw_cleveland_table = Table(
+    "raw_cleveland",
     metadata,
     Column("object_id", String, primary_key=True),
     Column("data", Text, nullable=False),

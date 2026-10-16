@@ -281,6 +281,28 @@ def test_sync_search_depends_on_all_normalize_assets():
         )
 
 
+def test_alembic_compares_only_the_catalog_schema():
+    """Autogenerate must not see `web` (Drizzle's) or a host's own schemas (Neon's `neon_auth`)."""
+    from pipeline.types.models import alembic_include_name
+    assert [alembic_include_name(s, "schema", {}) for s in ("catalog", "web", "neon_auth", "public", None)] == [
+        True, False, False, False, False]
+    assert alembic_include_name("raw_cleveland", "table", {"schema_name": "catalog"}) is True
+    env = (PIPELINE_ROOT / "alembic" / "env.py").read_text(encoding="utf-8")
+    assert env.count("include_name=alembic_include_name") == 2  # offline and online
+
+
+def test_authority_links_depends_on_all_normalize_assets():
+    """authority_links reads every museum's canonical and raw rows, so it must run after every
+    museum's normalize asset (`pipeline/enrich/inputs.py` relies on `deps` for that order)."""
+    graph = importlib.import_module("pipeline.definitions").defs.resolve_asset_graph()
+    (key,) = [k for k in graph.get_all_asset_keys() if k.path[-1] == "authority_links"]
+    parent_keys = {k.path[-1] for k in graph.get(key).parent_keys}
+    assert parent_keys == {f"normalize_{source.value}" for source in _implemented_museums()}, (
+        "authority_links must depend on exactly every museum's normalize asset: add the missing one to "
+        "deps in pipeline/assets/enrich/authority_links_asset.py."
+    )
+
+
 CODE_SUFFIXES = (".py", ".ts", ".tsx", ".js", ".mjs", ".sh", ".toml", ".yml", ".yaml")
 
 

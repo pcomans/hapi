@@ -198,7 +198,7 @@ def write_run(root: Path, read_inputs: Callable[[], tuple[list[dict], dict[str, 
 def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dict]],
          authority: authority_links.Authority | None, set_aside: list[str]) -> dict:
     authority = authority or authority_links.load_authority()
-    found, extraction = mentions.extract_mentions(canonical, raw_indexes)
+    found, extraction = mentions.extract_all_mentions(canonical, raw_indexes)
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
     inputs = input_digest(canonical, raw_indexes)
     writer = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
