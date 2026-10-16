@@ -40,6 +40,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 from collections.abc import Callable
 from pathlib import Path
@@ -235,7 +236,6 @@ def run_lock(root: Path):
 def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, canonical: list[dict],
            by_mode: dict) -> dict:
     previous_id = (root / CURRENT).read_text(encoding="utf-8").strip() if (root / CURRENT).exists() else None
-    settle_diffs(root, previous_id)
     # The diff against the run in force first: if that run's files are not what it wrote, nothing
     # is written.
     if previous_id is not None and (not previous_id or not (root / previous_id).is_dir()):
@@ -253,6 +253,10 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
                 raise ValueError(f"{root / previous_id / name} is not what that run wrote (its manifest disagrees)")
             diff[mode] = diff_links([json.loads(line) for line in gzip.decompress(data).splitlines()],
                                     by_mode[mode][1], by_mode[mode][0], artifact_ids)
+
+    # Only after CURRENT and the previous run are found sound: a run that fails its checks leaves
+    # the root as it was, a pending diff included.
+    settle_diffs(root, previous_id)
 
     run_dir = root / run_id
     if run_dir.exists():
@@ -293,12 +297,24 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
     return manifest
 
 
+PENDING_DIFF = re.compile(r"^\.(?P<previous>[0-9a-f]{64})-to-(?P<run>[0-9a-f]{64})\.json\.partial$")
+
+
 def settle_diffs(root: Path, current: str | None) -> None:
     """A diff left pending by a run that died: published if its run became current (the run died
-    after the commit), else removed (it died before; that transition never happened)."""
-    for pending in sorted((root / "diffs").glob(".*-to-*.json.partial")) if (root / "diffs").is_dir() else ():
-        run_id = pending.name[1:-len(".json.partial")].split("-to-")[1]
-        if run_id == current:
-            os.rename(pending, root / "diffs" / pending.name[1:-len(".partial")])
+    after the commit), else removed (it died before; that transition never happened). Only this
+    module writes pending diffs, so one it cannot read, or whose content names other runs than
+    its name, fails loud."""
+    if not (root / "diffs").is_dir():
+        return
+    for pending in sorted(p for p in (root / "diffs").iterdir() if p.name.startswith(".")):
+        m = PENDING_DIFF.match(pending.name)
+        if m is None:
+            raise ValueError(f"{pending} is not a pending diff this module writes")
+        content = json.loads(pending.read_text(encoding="utf-8"))
+        if (content["previous_run"], content["run"]) != (m["previous"], m["run"]):
+            raise ValueError(f"{pending} holds the diff of {content['previous_run']} to {content['run']}")
+        if m["run"] == current:
+            os.rename(pending, root / "diffs" / f"{m['previous']}-to-{m['run']}.json")
         else:
             pending.unlink()

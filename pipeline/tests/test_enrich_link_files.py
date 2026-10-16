@@ -415,7 +415,8 @@ def test_a_diff_is_published_only_if_its_run_became_current(inputs, authority, t
         lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
     monkeypatch.setattr(lf.os, "replace", real_replace)
     assert (tmp_path / lf.CURRENT).read_text() == a["run_id"] + "\n"
-    assert [p.name for p in (tmp_path / "diffs").iterdir()][0].endswith(".partial")
+    (stale,) = [p.name for p in (tmp_path / "diffs").iterdir()]
+    assert stale.startswith(f".{a['run_id']}-to-") and stale.endswith(".json.partial")
     c = lf.write_run(tmp_path, lambda: (canonical, raw_c), authority)
     assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == [f"{a['run_id']}-to-{c['run_id']}.json"]
 
@@ -430,6 +431,59 @@ def test_a_diff_is_published_only_if_its_run_became_current(inputs, authority, t
     monkeypatch.setattr(lf.os, "rename", real_rename)
     b_id = (tmp_path / lf.CURRENT).read_text().strip()
     assert b_id != c["run_id"]
+    assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == sorted([
+        f"{a['run_id']}-to-{c['run_id']}.json", f".{c['run_id']}-to-{b_id}.json.partial"])
+    pending = json.loads((tmp_path / "diffs" / f".{c['run_id']}-to-{b_id}.json.partial").read_text())
     lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)  # the same run: no new diff, the pending one settles
     assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == sorted([
         f"{a['run_id']}-to-{c['run_id']}.json", f"{c['run_id']}-to-{b_id}.json"])
+    published = json.loads((tmp_path / "diffs" / f"{c['run_id']}-to-{b_id}.json").read_text())
+    assert published == pending and (published["previous_run"], published["run"]) == (c["run_id"], b_id)
+    # The same transition made cleanly gives the same diff.
+    clean = tmp_path / "clean"
+    lf.write_run(clean, lambda: (canonical, raw_c), authority)
+    lf.write_run(clean, lambda: (canonical, raw_b), authority)
+    assert json.loads((clean / "diffs" / f"{c['run_id']}-to-{b_id}.json").read_text()) == published
+
+
+def test_a_run_that_fails_its_checks_leaves_a_pending_diff_as_it_was(inputs, authority, tmp_path) -> None:
+    canonical, raw = inputs
+    a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    raw_b = copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    b = lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+    # As a run that died after its commit leaves it.
+    final = tmp_path / "diffs" / f"{a['run_id']}-to-{b['run_id']}.json"
+    pending = final.with_name(f".{final.name}.partial")
+    final.rename(pending)
+    data = pending.read_bytes()
+    (tmp_path / lf.CURRENT).write_text("")
+    with pytest.raises(ValueError, match="which is not a run"):
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert pending.read_bytes() == data and not final.exists()
+    (tmp_path / lf.CURRENT).write_text(b["run_id"] + "\n")
+    path = tmp_path / b["run_id"] / "links-authority.ndjson.gz"
+    good = path.read_bytes()
+    path.write_bytes(lf.gzip_rows(lf.read_rows(path)[1:]))
+    with pytest.raises(ValueError, match="is not what that run wrote"):
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert pending.read_bytes() == data and not final.exists()
+    path.write_bytes(good)
+    lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    assert final.read_bytes() == data and not pending.exists()
+
+
+def test_a_pending_diff_this_module_did_not_write_fails_loud(inputs, authority, tmp_path) -> None:
+    canonical, raw = inputs
+    lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    (tmp_path / "diffs").mkdir()
+    (tmp_path / "diffs" / ".notes.partial").write_text("x")
+    raw_b = copy.deepcopy(raw)
+    raw_b["met"]["900001"]["title"] = "Scarab"
+    with pytest.raises(ValueError, match="is not a pending diff this module writes"):
+        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+    (tmp_path / "diffs" / ".notes.partial").unlink()
+    (tmp_path / "diffs" / f".{'a' * 64}-to-{'b' * 64}.json.partial").write_text(
+        json.dumps({"previous_run": "c" * 64, "run": "b" * 64}))
+    with pytest.raises(ValueError, match="holds the diff of c{64} to b{64}"):
+        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
