@@ -70,11 +70,10 @@ def top_targets(by_target: dict, targets: set[str], entity: str, museum: str) ->
     return out
 
 
-def report(run: Path, exclude: frozenset[str] = frozenset()) -> dict:
-    """Both modes on one run, without the links of the records in `exclude`."""
+def report(run: Path) -> dict:
+    """Both modes on one run."""
     link_files.verify_run(run)
-    links = {mode: [l for l in load_links(run, mode) if l["artifact_id"] not in exclude]
-             for mode in authority_links.MODES}
+    links = {mode: load_links(run, mode) for mode in authority_links.MODES}
     by_target = {mode: target_records(links[mode]) for mode in authority_links.MODES}
     state = {mode: connected(by_target[mode]) for mode in authority_links.MODES}
     empty = {"targets": set(), "records": set()}
@@ -93,6 +92,7 @@ def report(run: Path, exclude: frozenset[str] = frozenset()) -> dict:
                 "qualified": pair in authority_links.QUALIFIED_SCOPES[entity],
                 "shared_targets_authority": len(targets["authority"]),
                 "shared_targets_literal": len(targets["literal"]),
+                "shared_target_ids": {mode: sorted(targets[mode]) for mode in authority_links.MODES},
                 "records": sides,
                 "top_targets": {mode: {museum: top_targets(by_target[mode], targets[mode], entity, museum)
                                        for museum in pair}

@@ -85,13 +85,6 @@ def test_the_report_counts_connections_by_pair_type_and_side(run) -> None:
         "authority": {"brooklyn": 3, "harvard": 1, "met": 6}, "literal": {"brooklyn": 1, "harvard": 1, "met": 2}}
 
 
-def test_excluded_records_leave_both_modes(run) -> None:
-    r = cm.report(run, exclude=frozenset({"brooklyn-2", "brooklyn-7"}))
-    assert r["by_museum_pair"]["site|met|brooklyn"]["records"]["met"] == {
-        "connected_authority": 2, "connected_literal": 1, "gained": 1, "lost": 0}
-    assert r["by_museum_pair"]["ruler|met|brooklyn"]["shared_targets_authority"] == 0
-
-
 def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> None:
     with pytest.raises(ValueError, match="unknown mode"):
         cm.load_links(run, "fuzzy")
@@ -135,20 +128,54 @@ def test_the_site_scopes_are_337s_evaluated_population(result) -> None:
             assert result["matching"]["by_museum"][f"{museum}|site"][mode]["connected_records"] == (
                 arms[arm]["per_museum"][museum]["by_entity_type"]["site"]["records_on_shared_useful_nodes"]), (arm, museum)
     assert result["evaluation_headlines"]["337"]["typed_literal"] == result["matching"]["records_on_shared_targets_any_type"]["literal"]
+    # Tombs connect nothing in either, so the authority headline's difference from #337's is rulers.
+    for museum in cm.MUSEUMS:
+        for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
+            assert result["matching"]["by_museum"][f"{museum}|tomb_monument"][mode]["connected_records"] == (
+                arms[arm]["per_museum"][museum]["by_entity_type"]["tomb_monument"]["records_on_shared_useful_nodes"]) == 0
 
 
-def test_the_ruler_scope_without_369s_tuned_on_records_is_361s(result) -> None:
-    """With #369's tuned-on records left out, the authority's Met-Brooklyn ruler connections are
-    #361's committed ones; with them, #369 adds one shared target (Ahmes B)."""
-    arm = json.loads((EVALUATIONS / "ruler-reregistration-2026-10-15/results/real-run-report.json").read_text(
-        encoding="utf-8"))["arms"]["current_authority"]["per_pair"]["met__brooklyn"]
-    without = result["matching_without_tuned_on_369"]["by_museum_pair"]["ruler|met|brooklyn"]
-    assert (without["shared_targets_authority"], without["records"]["met"]["connected_authority"],
-            without["records"]["brooklyn"]["connected_authority"]) == (
-        arm["shared_useful_node_count"], arm["records_by_museum_side"]["met"], arm["records_by_museum_side"]["brooklyn"])
-    with_ = result["matching"]["by_museum_pair"]["ruler|met|brooklyn"]
-    assert with_["shared_targets_authority"] == without["shared_targets_authority"] + 1
+def test_the_ruler_scope_is_361s_population_with_369s_ahmes_b(result) -> None:
+    """Met-Brooklyn rulers: plain text is exactly #361's committed arm; the authority is #361's
+    with one shared target more, D&H's Ahmes B (#369, tuned on #361's deciding case, unreviewed),
+    which turns 2 of #361's reviewed Met losses and 1 Brooklyn loss into connections."""
+    report = json.loads((EVALUATIONS / "ruler-reregistration-2026-10-15/results/real-run-report.json").read_text(
+        encoding="utf-8"))
+    arms, change = report["arms"], report["comparison"]["record_gains_and_losses"]["per_pair"]["met__brooklyn"]
+    now = result["matching"]["by_museum_pair"]["ruler|met|brooklyn"]
+    literal, authority = arms["typed_literal"]["per_pair"]["met__brooklyn"], arms["current_authority"]["per_pair"]["met__brooklyn"]
+    assert (now["shared_targets_literal"], now["records"]["met"]["connected_literal"],
+            now["records"]["brooklyn"]["connected_literal"]) == (
+        literal["shared_useful_node_count"], literal["records_by_museum_side"]["met"], literal["records_by_museum_side"]["brooklyn"])
+    assert (now["shared_targets_authority"], now["records"]["met"]["connected_authority"],
+            now["records"]["brooklyn"]["connected_authority"]) == (
+        authority["shared_useful_node_count"] + 1, authority["records_by_museum_side"]["met"] + 2,
+        authority["records_by_museum_side"]["brooklyn"] + 1)
+    for museum, delta in (("met", 2), ("brooklyn", 1)):
+        assert now["records"][museum]["gained"] == change[museum]["authority_gained_records"], museum
+        assert now["records"][museum]["lost"] == change[museum]["authority_lost_records"] - delta, museum
+    # The added target is Ahmes B: it is shared now, and #361's report names it nowhere.
+    assert "dodson_hilton:Ahmes B" in now["shared_target_ids"]["authority"]
+    assert "Ahmes B" not in json.dumps(report)
     assert result["tuned_on_369"] == ["brooklyn-3599", "brooklyn-3634", "met-566763"]
+
+
+def test_the_site_top_targets_are_337s(result) -> None:
+    """Beyond the counts: each site pair's largest 1 and 5 shared targets, per side and mode, are
+    the site targets #337 v10's committed report ranks first."""
+    arms = json.loads((EVALUATIONS / "authority-independent-control-2026-10-11/results/real-run-report.json").read_text(
+        encoding="utf-8"))["arms"]
+    for arm, mode in (("typed_literal", "literal"), ("current_authority", "authority")):
+        for a, b in al.MUSEUM_PAIRS:
+            theirs = arms[arm]["per_pair"][f"{a}__{b}"]["concentration_by_museum_side"]
+            ours = result["matching"]["by_museum_pair"][f"site|{a}|{b}"]["top_targets"][mode]
+            for museum in (a, b):
+                # #337 ranks a pair's shared targets of every type together; its site targets, in
+                # its order, from its top 10.
+                sites = [t for t in theirs[museum]["top_k"]["10"]["selected_target_ids"]
+                         if t in result["matching"]["by_museum_pair"][f"site|{a}|{b}"]["shared_target_ids"][mode]]
+                for k in ("1", "5"):
+                    assert ours[museum][k]["target_ids"] == sites[:int(k)], (arm, a, b, museum, k)
 
 
 def test_the_largest_plain_text_site_targets_are_egypt_and_africa(result) -> None:

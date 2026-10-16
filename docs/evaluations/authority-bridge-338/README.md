@@ -170,8 +170,8 @@ The CI tests need no private data:
   report; both run IDs are recorded.
   - The result also records the hashes of the report code. A test binds its resolver versions to
     the ones the step 1 proof measured.
-  - The result also gives every scope without the links of #369's tuned-on records
-    (brooklyn-3634, met-566763, brooklyn-3599), and #337's and #361's committed headlines.
+  - The result also names #369's tuned-on records (brooklyn-3634, met-566763, brooklyn-3599),
+    records each scope's shared target IDs, and includes #337's and #361's committed headlines.
 
 ### Result on the frozen corpus
 
@@ -192,23 +192,29 @@ The CI tests need no private data:
 The counts here are of connections, not of right ones. Rightness was judged by review, so what
 matters is whether these are the populations that were reviewed.
 
-- **Sites: yes, exactly.** In both modes, every museum's connected site records equal #337 v10's
-  committed report:
-  - plain text: Met 27,198, Brooklyn 2,890, Harvard 534;
-  - authority: Met 14,393, Brooklyn 1,152, Harvard 7.
-
-  A test compares them with that file. #337's own headline (Met 14,502 / Brooklyn 1,156 /
-  Harvard 8 with the authority) mixes in rulers, which have changed since. The site scopes
-  #337 qualified are therefore the population the pipeline makes, and the review's verdicts
-  apply to it as they stand.
-- **Rulers, Met–Brooklyn: #361's population plus #369.** Without #369's tuned-on records, the
-  authority's connections equal #361's committed ones: 13 shared targets, Met 1,955, Brooklyn 19
-  (a test compares them). With those records, #369 adds one shared target, D&H's Ahmes B. It
-  joins the two Queen Ahmose records and a third Met record that already resolved to her but had
-  no Brooklyn counterpart.
-  - That target was found on #361's deciding case and has not been reviewed.
-  - It must not be counted as a reviewed gain. The scope's qualified flag rests on #361's
-    population, which is the one without it.
+- **Sites: the same as #337's reviewed population, by every committed measure.**
+  - In both modes, every museum's connected site records equal #337 v10's committed report:
+    - plain text: Met 27,198, Brooklyn 2,890, Harvard 534;
+    - authority: Met 14,393, Brooklyn 1,152, Harvard 7.
+  - In every site pair, side and mode, the largest 1 and 5 shared targets are the site targets
+    #337 ranked first.
+  - Tests compare both with that file. Tomb connections are 0 in both. So #337's own authority
+    headline (Met 14,502 / Brooklyn 1,156 / Harvard 8) differs from this run's only through
+    rulers, which have changed since.
+  - The site scopes #337 qualified are therefore this population, and its review's verdicts
+    apply to it.
+- **Rulers, Met–Brooklyn: #361's reviewed population, plus one unreviewed target from #369.**
+  - **Plain text is exactly #361's committed arm:** 13 shared targets, Met 1,981, Brooklyn 19.
+  - **The authority is #361's with one shared target more,** D&H's Ahmes B (#369's fix for the
+    Queen Ahmose records). Its connected records are Met 1,957 against #361's 1,955, and
+    Brooklyn 20 against 19.
+  - **#369's fix turns three of #361's reviewed losses into connections:** 2 Met and 1 Brooklyn
+    (Met's losses go from 59 to 57, Brooklyn's from 2 to 1). The gains are #361's: Met 33,
+    Brooklyn 2.
+  - **Those three changes are the unreviewed part,** found on #361's deciding case. The scope's
+    qualified flag rests on #361's review, of the population without them. A next registration
+    must flag them (#358).
+  - Tests compare all of this with #361's committed report, which does not name Ahmes B.
 - **Ruler and tomb scopes not qualified** are unevaluated. Nothing here judges them.
 - **The large site "losses" are mostly broad plain-text targets the authority does not hold.**
   These are bound by their literal target hashes, so no museum text is committed. The authority

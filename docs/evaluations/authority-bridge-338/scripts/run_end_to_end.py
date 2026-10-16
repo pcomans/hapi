@@ -40,7 +40,7 @@ def write_once(archive: Path, root: Path) -> dict:
 EVALUATIONS = REPO / "docs/evaluations"
 # The records #369's fixes were found on and changed (`resolver-gaps-369/README.md`, "Tuned on
 # #361's deciding case"): the two Queen Ahmose records and #361's Neferu d. A next registration
-# must flag them; this report gives every scope with and without them.
+# must flag them; this result names them, and the README sets this run beside #361's report.
 TUNED_ON_369 = frozenset({"brooklyn-3634", "met-566763", "brooklyn-3599"})
 # The code the report itself runs.
 REPORT_CODE = (REPO / "pipeline/pipeline/enrich/cross_museum.py", Path(__file__).resolve())
@@ -73,9 +73,8 @@ def end_to_end(archive: Path) -> dict:
         if manifests[0] != manifests[1] or contents[0] != contents[1] or reports[0] != reports[1]:
             raise ValueError("two runs on the same inputs and code differ")
         manifest = manifests[0]
-        without_tuned_on = cross_museum.report(runs[0], exclude=TUNED_ON_369)
     return {
-        "schema_version": "hapi-338-end-to-end/2",
+        "schema_version": "hapi-338-end-to-end/3",
         "corpus_archive_sha256": ARCHIVE_SHA256,
         "run_ids": [m["run_id"] for m in manifests],
         "inputs_sha256": manifest["inputs_sha256"],
@@ -89,7 +88,6 @@ def end_to_end(archive: Path) -> dict:
         "inventory": manifest["inventory"],
         "matching": reports[0],
         "tuned_on_369": sorted(TUNED_ON_369),
-        "matching_without_tuned_on_369": without_tuned_on,
         # What #337 (sites, rulers and tombs; its own mention ledger and code of 2026-10-11) and #361
         # (rulers only; this mention ledger) reported, to set beside this run.
         "evaluation_headlines": {"337": evaluation_headline("authority-independent-control-2026-10-11"),
