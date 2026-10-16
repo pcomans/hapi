@@ -47,6 +47,7 @@ from pathlib import Path
 
 from pipeline.authority import royal_women
 from pipeline.enrich import authority_links, mentions
+from pipeline.enrich.inputs import check_inputs
 
 CURRENT = "CURRENT"
 LOCK = ".lock"
@@ -127,9 +128,9 @@ def inventory(resolutions: list[dict]) -> dict:
 
 def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict], artifact_ids: set[str]) -> dict:
     """The links added, removed and changed against a previous run. A removed link says why; a
-    kept link whose mentions changed is `changed`, with the mentions it lost and how each now
-    resolves (or that it is gone), so a withdrawal inside a link backed by several mentions is
-    seen too."""
+    kept link whose mentions, evidence roles or kind changed is `changed`, with the old and new
+    values and the mentions it lost and how each now resolves (or that it is gone), so a
+    withdrawal inside a link backed by several mentions is seen too."""
     def key(link: dict) -> tuple:
         return link["artifact_id"], link["entity_type"], link["target_id"]
     old, new = {key(l): l for l in previous}, {key(l): l for l in links}
@@ -153,10 +154,13 @@ def diff_links(previous: list[dict], links: list[dict], resolutions: list[dict],
         removed.append({**{f: link[f] for f in fields}, **why})
     changed = []
     for k in sorted(set(old) & set(new)):
-        if old[k]["mention_ids"] != new[k]["mention_ids"]:
+        # What a link says beyond its key and the version that made it: its mentions, their
+        # evidence roles (a role can change while the mention's text and span stay), its kind.
+        moved = [f for f in ("mention_ids", "evidence_roles", "target_kind") if old[k][f] != new[k][f]]
+        if moved:
             lost = sorted(set(old[k]["mention_ids"]) - set(new[k]["mention_ids"]))
             changed.append({**{f: new[k][f] for f in fields if f != "mention_ids"},
-                            "previous_mention_ids": old[k]["mention_ids"], "mention_ids": new[k]["mention_ids"],
+                            **{f"previous_{f}": old[k][f] for f in moved}, **{f: new[k][f] for f in moved},
                             "lost": now(lost)})
     added = [{f: new[k][f] for f in fields} for k in sorted(set(new) - set(old))]
     return {"added": added, "removed": removed, "changed": changed,
@@ -168,9 +172,10 @@ def write_run(root: Path, read_inputs: Callable[[], tuple[list[dict], dict[str, 
     """Write one run under `root` and point `root/CURRENT` at it; return its manifest.
     `read_inputs` gives the canonical records and the raw payloads by museum and source id; it
     is called with the run lock held, so no run can read older inputs than a run that became
-    current before it."""
+    current before it. The inputs must be one pipeline generation (`inputs.check_inputs`)."""
     with run_lock(root):
         canonical, raw_indexes = read_inputs()
+        check_inputs(canonical, raw_indexes)
         return _run(root, canonical, raw_indexes, authority)
 
 
@@ -254,10 +259,6 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
             diff[mode] = diff_links([json.loads(line) for line in gzip.decompress(data).splitlines()],
                                     by_mode[mode][1], by_mode[mode][0], artifact_ids)
 
-    # Only after CURRENT and the previous run are found sound: a run that fails its checks leaves
-    # the root as it was, a pending diff included.
-    settle_diffs(root, previous_id)
-
     run_dir = root / run_id
     if run_dir.exists():
         # A run directory appears whole (renamed into place), so one that lacks a file or holds
@@ -270,7 +271,10 @@ def _write(root: Path, run_id: str, files: dict[str, bytes], manifest: dict, can
                                  f"the step is not deterministic)")
         if sorted(p.name for p in run_dir.iterdir()) != sorted(files):
             raise ValueError(f"{run_dir} holds files a run does not write")
-    else:
+    # Only after CURRENT, the previous run and this run's own directory are found sound: a run
+    # that fails its checks leaves the root as it was, a pending diff included.
+    settle_diffs(root, previous_id)
+    if not run_dir.exists():
         # Written beside it and renamed into place, so a crashed process leaves only a scratch
         # directory, which the next run removes.
         # Under the lock no other run is writing, so every scratch directory is a dead run's.

@@ -17,6 +17,7 @@ import pytest
 
 from pipeline.authority import resolver
 from pipeline.enrich import authority_links as al, link_files as lf
+from pipeline.enrich.inputs import normalized
 from pipeline.enrich.mentions import extract_mentions
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -33,7 +34,10 @@ def authority() -> al.Authority:
 
 @pytest.fixture(scope="module")
 def inputs():
-    return corpus(EXTRA)
+    """The fixture corpus as the normalize step leaves the tables (Brooklyn keeps only Egyptian
+    records)."""
+    _, raw = corpus(EXTRA)
+    return normalized(raw), raw
 
 
 def links(run: Path, mode: str = "authority") -> list[dict]:
@@ -49,17 +53,17 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
         "links-authority.ndjson.gz", "links-literal.ndjson.gz", "manifest.json", "mentions.ndjson.gz",
         "resolutions-authority.ndjson.gz", "resolutions-literal.ndjson.gz"]
     assert {name: f["rows"] for name, f in manifest["files"].items()} == {
-        "links-authority.ndjson.gz": 14, "links-literal.ndjson.gz": 49, "mentions.ndjson.gz": 60,
-        "resolutions-authority.ndjson.gz": 60, "resolutions-literal.ndjson.gz": 60}
+        "links-authority.ndjson.gz": 14, "links-literal.ndjson.gz": 48, "mentions.ndjson.gz": 59,
+        "resolutions-authority.ndjson.gz": 59, "resolutions-literal.ndjson.gz": 59}
     assert (manifest["records"], manifest["inputs_sha256"], manifest["writer_sha256"]) == (
         len(canonical), lf.input_digest(canonical, raw), hashlib.sha256(Path(lf.__file__).read_bytes()).hexdigest())
     assert manifest["snapshots"] == {"authority": authority.snapshot, "literal": al.snapshot("literal")}
     assert manifest["extraction"] == extract_mentions(canonical, raw)[1]
-    assert {k: manifest["extraction"][k] for k in ("records_scanned", "mentions")} == {"records_scanned": 18, "mentions": 60}
+    assert {k: manifest["extraction"][k] for k in ("records_scanned", "mentions")} == {"records_scanned": 17, "mentions": 59}
     assert manifest["outcomes"]["authority"] == {
         "excavation|abstained|unsupported:excavation": 4, "ruler|abstained|expression:multi_or_range": 5,
         "ruler|abstained|expression:uncertain_identity": 1, "ruler|resolved|": 4,
-        "ruler|unmatched|authority_unmatched": 1, "site|resolved|": 9, "site|unmatched|authority_unmatched": 34,
+        "ruler|unmatched|authority_unmatched": 1, "site|resolved|": 9, "site|unmatched|authority_unmatched": 33,
         "temple|abstained|unsupported:temple": 1, "tomb_monument|resolved|": 1}
     assert manifest["inventory"] == {
         "unsupported": {"excavation": {"reason": "no committed canonical excavation authority", "mentions": 4},
@@ -167,7 +171,7 @@ def test_a_run_interrupted_mid_write_leaves_no_run_and_the_next_run_clears_it(in
     # run's scratch directory is removed all the same.
     raw2 = copy.deepcopy(raw)
     raw2["met"]["900001"]["title"] = "Scarab"
-    manifest = lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
+    manifest = lf.write_run(tmp_path, lambda: (normalized(raw2), raw2), authority)
     assert scratch != f".{manifest['run_id']}.partial"
     assert sorted(p.name for p in tmp_path.iterdir()) == sorted([lf.LOCK, lf.CURRENT, manifest["run_id"]])
     assert len(list((tmp_path / manifest["run_id"]).iterdir())) == 6
@@ -177,7 +181,8 @@ def test_two_interpreters_with_different_hash_seeds_write_the_same_run(tmp_path)
     """Determinism across processes: string-set ordering varies with PYTHONHASHSEED."""
     code = ("import sys, json; from pathlib import Path; sys.path.insert(0, 'tests'); "
             "from test_enrich_mentions import corpus, EXTRA; from pipeline.enrich import link_files as lf; "
-            "c, r = corpus(EXTRA); print(json.dumps(lf.write_run(Path(sys.argv[1]), lambda: (c, r))))")
+            "from pipeline.enrich.inputs import normalized; "
+            "_, r = corpus(EXTRA); print(json.dumps(lf.write_run(Path(sys.argv[1]), lambda: (normalized(r), r))))")
     manifests = []
     for seed in ("1", "2"):
         out = subprocess.run([sys.executable, "-c", code, str(tmp_path / seed)], check=True, capture_output=True,
@@ -200,9 +205,10 @@ def test_a_withdrawn_decision_removes_its_link_and_the_diff_says_why(inputs, aut
     rows = [r for r in resolver.load_jsonl(resolver.IDAI) if r.get("id") != THEBES]
     withdrawn = replace(authority, sites=resolver.build_site_resolver(rows)[0],
                         snapshot={**authority.snapshot, "resolver_version": "thebes-withdrawn"})
-    canonical2 = [r for r in canonical if r["id"] != "brooklyn-4035"]
     raw2 = copy.deepcopy(raw)
+    del raw2["brooklyn"]["4035"]
     raw2["met"]["900001"]["title"] = "Scarab"
+    canonical2 = normalized(raw2)
     second = lf.write_run(tmp_path, lambda: (canonical2, raw2), withdrawn)
     assert second["run_id"] != first["run_id"]
     assert (tmp_path / lf.CURRENT).read_text() == second["run_id"] + "\n"
@@ -237,7 +243,7 @@ def test_a_mention_withdrawn_from_a_link_another_still_makes_is_a_change(inputs,
     canonical, raw = inputs
     raw1 = copy.deepcopy(raw)
     raw1["met"]["900001"]["title"] = "Relief of King Amenhotep III"
-    first = lf.write_run(tmp_path, lambda: (canonical, raw1), authority)
+    first = lf.write_run(tmp_path, lambda: (normalized(raw1), raw1), authority)
     king = next(l for l in links(tmp_path / first["run_id"]) if l["target_id"] == "cluster-beckerath-18.09"
                 and l["artifact_id"] == "met-900001")
     assert len(king["mention_ids"]) == 2
@@ -250,6 +256,8 @@ def test_a_mention_withdrawn_from_a_link_another_still_makes_is_a_change(inputs,
     assert changed == [{"artifact_id": "met-900001", "museum": "met", "entity_type": "ruler",
                         "target_id": "cluster-beckerath-18.09", "previous_mention_ids": king["mention_ids"],
                         "mention_ids": sorted(set(king["mention_ids"]) - {title_mention}),
+                        "previous_evidence_roles": ["catalogued_reign", "explicit_royal_text_cue"],
+                        "evidence_roles": ["catalogued_reign"],
                         "lost": [{"mention_id": title_mention, "status": "gone"}]}]
     assert all(l["target_id"] != "cluster-beckerath-18.09" for l in diff["authority"]["removed"])
 
@@ -277,12 +285,12 @@ def test_a_run_while_another_holds_the_root_fails_loud_and_changes_nothing(input
     with open(tmp_path / lf.LOCK, "a") as handle:
         fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         with pytest.raises(RuntimeError, match="another run holds .*runs under one root must not overlap"):
-            lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
+            lf.write_run(tmp_path, lambda: (normalized(raw2), raw2), authority)
         fcntl.flock(handle, fcntl.LOCK_UN)
     assert sorted(p.name for p in tmp_path.iterdir()) == before
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     # Released, the next run goes ahead.
-    assert lf.write_run(tmp_path, lambda: (canonical, raw2), authority)["run_id"] != first["run_id"]
+    assert lf.write_run(tmp_path, lambda: (normalized(raw2), raw2), authority)["run_id"] != first["run_id"]
 
 
 def test_a_previous_run_whose_links_were_changed_is_not_diffed_against(inputs, authority, tmp_path) -> None:
@@ -293,7 +301,7 @@ def test_a_previous_run_whose_links_were_changed_is_not_diffed_against(inputs, a
     raw2 = copy.deepcopy(raw)
     raw2["met"]["900001"]["title"] = "Scarab"
     with pytest.raises(ValueError, match="links-authority.ndjson.gz is not what that run wrote"):
-        lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
+        lf.write_run(tmp_path, lambda: (normalized(raw2), raw2), authority)
     assert (tmp_path / lf.CURRENT).read_text() == first["run_id"] + "\n"
     assert not (tmp_path / "diffs").exists()
     assert sorted(p.name for p in tmp_path.iterdir() if not p.name.startswith(".")) == sorted([lf.CURRENT, first["run_id"]])
@@ -392,7 +400,7 @@ def test_the_asset_reads_its_inputs_under_the_lock_from_one_snapshot(inputs, aut
     assert (root / lf.CURRENT).read_text() == expected["run_id"] + "\n"
     assert json.loads((root / expected["run_id"] / "manifest.json").read_text()) == expected
     assert context.get_output_metadata("result") == {
-        "run_id": expected["run_id"], "records": 18,
+        "run_id": expected["run_id"], "records": 17,
         "links_authority": expected["files"]["links-authority.ndjson.gz"]["rows"],
         "links_literal": expected["files"]["links-literal.ndjson.gz"]["rows"]}
 
@@ -412,12 +420,12 @@ def test_a_diff_is_published_only_if_its_run_became_current(inputs, authority, t
         return real_replace(src, dst)
     monkeypatch.setattr(lf.os, "replace", die_on_current)
     with pytest.raises(OSError, match="killed"):
-        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+        lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
     monkeypatch.setattr(lf.os, "replace", real_replace)
     assert (tmp_path / lf.CURRENT).read_text() == a["run_id"] + "\n"
     (stale,) = [p.name for p in (tmp_path / "diffs").iterdir()]
     assert stale.startswith(f".{a['run_id']}-to-") and stale.endswith(".json.partial")
-    c = lf.write_run(tmp_path, lambda: (canonical, raw_c), authority)
+    c = lf.write_run(tmp_path, lambda: (normalized(raw_c), raw_c), authority)
     assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == [f"{a['run_id']}-to-{c['run_id']}.json"]
 
     # The process dies after CURRENT is replaced, before the diff takes its name: it did happen.
@@ -427,22 +435,22 @@ def test_a_diff_is_published_only_if_its_run_became_current(inputs, authority, t
         return real_rename(src, dst)
     monkeypatch.setattr(lf.os, "rename", die_on_diff)
     with pytest.raises(OSError, match="killed"):
-        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+        lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
     monkeypatch.setattr(lf.os, "rename", real_rename)
     b_id = (tmp_path / lf.CURRENT).read_text().strip()
     assert b_id != c["run_id"]
     assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == sorted([
         f"{a['run_id']}-to-{c['run_id']}.json", f".{c['run_id']}-to-{b_id}.json.partial"])
     pending = json.loads((tmp_path / "diffs" / f".{c['run_id']}-to-{b_id}.json.partial").read_text())
-    lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)  # the same run: no new diff, the pending one settles
+    lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)  # the same run: no new diff, the pending one settles
     assert sorted(p.name for p in (tmp_path / "diffs").iterdir()) == sorted([
         f"{a['run_id']}-to-{c['run_id']}.json", f"{c['run_id']}-to-{b_id}.json"])
     published = json.loads((tmp_path / "diffs" / f"{c['run_id']}-to-{b_id}.json").read_text())
     assert published == pending and (published["previous_run"], published["run"]) == (c["run_id"], b_id)
     # The same transition made cleanly gives the same diff.
     clean = tmp_path / "clean"
-    lf.write_run(clean, lambda: (canonical, raw_c), authority)
-    lf.write_run(clean, lambda: (canonical, raw_b), authority)
+    lf.write_run(clean, lambda: (normalized(raw_c), raw_c), authority)
+    lf.write_run(clean, lambda: (normalized(raw_b), raw_b), authority)
     assert json.loads((clean / "diffs" / f"{c['run_id']}-to-{b_id}.json").read_text()) == published
 
 
@@ -451,7 +459,7 @@ def test_a_run_that_fails_its_checks_leaves_a_pending_diff_as_it_was(inputs, aut
     a = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     raw_b = copy.deepcopy(raw)
     raw_b["met"]["900001"]["title"] = "Scarab"
-    b = lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+    b = lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
     # As a run that died after its commit leaves it.
     final = tmp_path / "diffs" / f"{a['run_id']}-to-{b['run_id']}.json"
     pending = final.with_name(f".{final.name}.partial")
@@ -469,6 +477,13 @@ def test_a_run_that_fails_its_checks_leaves_a_pending_diff_as_it_was(inputs, aut
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     assert pending.read_bytes() == data and not final.exists()
     path.write_bytes(good)
+    # A retry of the current run itself (no diff of its own) whose files were changed: its own
+    # directory fails the check before the pending diff is settled.
+    path.write_bytes(lf.gzip_rows(lf.read_rows(path)[1:]))
+    with pytest.raises(ValueError, match="links-authority.ndjson.gz differs from what this run writes"):
+        lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+    assert pending.read_bytes() == data and not final.exists()
+    path.write_bytes(good)
     lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     assert final.read_bytes() == data and not pending.exists()
 
@@ -481,9 +496,59 @@ def test_a_pending_diff_this_module_did_not_write_fails_loud(inputs, authority, 
     raw_b = copy.deepcopy(raw)
     raw_b["met"]["900001"]["title"] = "Scarab"
     with pytest.raises(ValueError, match="is not a pending diff this module writes"):
-        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+        lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
     (tmp_path / "diffs" / ".notes.partial").unlink()
     (tmp_path / "diffs" / f".{'a' * 64}-to-{'b' * 64}.json.partial").write_text(
         json.dumps({"previous_run": "c" * 64, "run": "b" * 64}))
     with pytest.raises(ValueError, match="holds the diff of c{64} to b{64}"):
-        lf.write_run(tmp_path, lambda: (canonical, raw_b), authority)
+        lf.write_run(tmp_path, lambda: (normalized(raw_b), raw_b), authority)
+
+
+def test_an_evidence_role_change_alone_is_a_change(inputs, authority, tmp_path) -> None:
+    """The role is not part of a mention's id: a record can move its place from one role to
+    another with the same text and span, and the link's evidence changes."""
+    canonical, raw = inputs
+    first = lf.write_run(tmp_path, lambda: (canonical, raw), authority)
+    raw2 = copy.deepcopy(raw)
+    raw2["met"]["900001"]["geographyType"] = "Findspot"
+    second = lf.write_run(tmp_path, lambda: (normalized(raw2), raw2), authority)
+    diff = json.loads((tmp_path / "diffs" / f"{first['run_id']}-to-{second['run_id']}.json").read_text())
+    thebes = [c for c in diff["authority"]["changed"] if c["target_id"] == THEBES and c["artifact_id"] == "met-900001"]
+    assert thebes == [{"artifact_id": "met-900001", "museum": "met", "entity_type": "site", "target_id": THEBES,
+                       "previous_evidence_roles": ["From Egypt:subregion"], "evidence_roles": ["Findspot:subregion"],
+                       "lost": []}]
+    assert (diff["authority"]["added"], diff["authority"]["removed"]) == ([], [])
+
+
+def test_inputs_that_are_not_one_pipeline_generation_are_refused(inputs, authority, tmp_path) -> None:
+    from pipeline.enrich.inputs import check_inputs
+    canonical, raw = inputs
+    check_inputs(canonical, raw)
+    # A raw payload re-ingested after its canonical row was written.
+    raw2 = copy.deepcopy(raw)
+    raw2["met"]["900001"]["title"] = "Scarab"
+    with pytest.raises(ValueError, match=r"1 canonical rows are not what the normalize step makes .*'met-900001'"):
+        lf.write_run(tmp_path, lambda: (canonical, raw2), authority)
+    assert not (tmp_path / lf.CURRENT).exists()
+    # A raw row ingested and not normalized yet; a canonical row with no raw payload.
+    raw3 = copy.deepcopy(raw)
+    raw3["met"]["999999"] = {**raw["met"]["900001"], "objectID": 999999}
+    with pytest.raises(ValueError, match=r"1 raw rows are not normalized yet \(e.g. \['met:999999'\]\)"):
+        check_inputs(canonical, raw3)
+    raw4 = copy.deepcopy(raw)
+    del raw4["met"]["900001"]
+    with pytest.raises(ValueError, match=r"1 canonical rows have no raw payload"):
+        check_inputs(canonical, raw4)
+    # A canonical row the normalize step would not make: a non-Egyptian Brooklyn record.
+    _, full = corpus(EXTRA)
+    with pytest.raises(ValueError, match=r"'brooklyn-3198'"):
+        check_inputs(canonical + [r for r in corpus(EXTRA)[0] if r["id"] == "brooklyn-3198"], full)
+
+
+def test_the_normalizers_are_the_normalize_assets() -> None:
+    from pipeline.assets.normalize import brooklyn_asset, harvard_asset, met_asset
+    from pipeline.enrich.inputs import NORMALIZERS
+    assert NORMALIZERS["met"] == (met_asset.MetMapper, None) and NORMALIZERS["harvard"] == (harvard_asset.HarvardMapper, None)
+    assert NORMALIZERS["brooklyn"] == (brooklyn_asset.BrooklynMapper, brooklyn_asset.is_egyptian)
+    assert not hasattr(met_asset, "is_egyptian") and not hasattr(harvard_asset, "is_egyptian")
+    assert set(NORMALIZERS) == {s.value for s in _implemented_museums()}

@@ -89,8 +89,10 @@ The CI tests need no private data:
   changed.
   - A removal gives its reason: `record_gone`, `mentions_gone`, or `resolves_otherwise` (with
     each mention's new status and reason).
-  - A kept link whose mentions changed is listed as `changed`, with each lost mention's new
-    resolution, so a withdrawal inside a link that several mentions make is visible too.
+  - A kept link whose mentions, evidence roles or kind changed is listed as `changed`, with the
+    old and new values and each lost mention's new resolution. A withdrawal inside a link that
+    several mentions make is therefore visible, and so is a role change alone (a role is not
+    part of a mention's ID).
   - Replacing `CURRENT` is the commit. A diff is published only once its run is current; one
     left pending by a run that died is published or removed by the next run, depending on
     whether the commit happened.
@@ -113,6 +115,14 @@ The CI tests need no private data:
     writes without the lock.
   - The asset's `read_inputs` reads all the tables in one `REPEATABLE READ` transaction, so
     its canonical rows and raw payloads come from the same moment.
+  - One moment is not one pipeline generation: ingest commits raw rows batch by batch, and
+    normalize writes canonical rows later. So `write_run` checks the inputs
+    (`pipeline/pipeline/enrich/inputs.py`) and refuses inputs where:
+    - a canonical row is not what its museum's normalize step makes of its raw payload;
+    - a canonical row has no raw payload;
+    - a raw row the step keeps has no canonical row yet.
+
+    All 36,245 records of the frozen corpus pass the check.
 - **Per-museum field inventory.** A test pins the exact fields each museum's fixtures give
   mentions from. A museum without an inventory fails loud in the extractor.
 
