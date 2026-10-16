@@ -188,6 +188,13 @@ def verify(private: Path, check_path: Path, template: Path, archive: Path, stage
     check = json.loads(check_path.read_text(encoding="utf-8"))
     if set(check["stages"]) != {"1", "2"}:
         raise ValueError(f"check.json gives stages {sorted(check['stages'])}, not 1 and 2")
+    # Every top-level field it publishes is checked: these against the constants they state, the
+    # target, run and records against the binding regenerated below, the stages against the records.
+    expected = {"schema_version": "hapi-ahmes-b-recheck/1", "case_id": CASE_ID, "corpus_archive_sha256": ARCHIVE_SHA256,
+                "protocol": "#361's (docs/evaluations/ruler-reregistration-2026-10-15): prompts, runner and served model unchanged"}
+    if set(check) != {*expected, "target_id", "run_id", "records_checked", "stages"} or any(
+            check[k] != v for k, v in expected.items()):
+        raise ValueError("check.json's fields are not the ones this check publishes")
     queue_1, binding_1 = stage_1(archive, json.loads(stage_1_template.read_text(encoding="utf-8")))
     if (queue_1, binding_1) != (json.loads((private / "stage-1/queue.json").read_text(encoding="utf-8")),
                                 json.loads((private / "stage-1/private-binding.json").read_text(encoding="utf-8"))):
