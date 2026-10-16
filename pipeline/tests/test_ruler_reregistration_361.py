@@ -1468,16 +1468,20 @@ def test_the_royal_woman_cues_bound_the_name_after_them(text, candidate) -> None
     assert candidate in found, (text, found)
 
 
-def test_every_royal_woman_cue_of_the_resolver_is_a_cue_of_the_extractor() -> None:
+@pytest.mark.parametrize("live", [False, True], ids=["frozen_361_extractor", "pipeline_extractor"])
+def test_every_royal_woman_cue_of_the_resolver_is_a_cue_of_the_extractor(live: bool) -> None:
     """The extractor reads no authority module (its independence contract), so it keeps its own
-    copy of the cue phrases; every phrase the resolver treats as a royal-woman cue must be one."""
+    copy of the cue phrases; every phrase the resolver treats as a royal-woman cue must be one,
+    in #361's frozen extractor and in the pipeline's (#338), which production runs."""
     sys.path.insert(0, str(ROOT / "pipeline"))
     from pipeline.authority import royal_women as rw
+    from pipeline.enrich import mentions
+    cues = mentions.ROYAL_CUE if live else extractor.ROYAL_CUE
     for phrase in ("Queen", "Queen Mother", "Princess", "Great Royal Wife", "King's Great Wife", "King's Wife",
                    "King’s Mother", "King's Daughter", "God's Wife", "God's Wife of Amun", "Divine Adoratrice",
                    "Divine Adoratrice of Amun"):
         assert rw.ROYAL_WOMAN_CUE_BEFORE.search(phrase + " "), phrase
-        assert extractor.ROYAL_CUE.fullmatch(phrase), phrase
+        assert cues.fullmatch(phrase), phrase
 
 
 def _mention(artifact: str, text: str, field_value: str, dynasty: str | None, field_path: str = "title") -> dict:

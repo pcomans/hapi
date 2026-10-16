@@ -31,7 +31,7 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import royal_women as rw
+from . import resolver, royal_women as rw
 from .weak_sign_skeleton import weak_sign_skeleton
 
 TLA_DIR = Path(__file__).resolve().parent / "sources" / "tla-2018-names"
@@ -139,7 +139,7 @@ def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
         if row["subtype"] != "person_name" or FRAGMENT in row["transliteration"]:
             continue
         for form in renderings(row):
-            exact[rw.surface_key(form)].add(row["tla_id"])
+            exact[resolver.surface_key(form)].add(row["tla_id"])
             for key in rw.name_keys(form):
                 normalized[key].add(row["tla_id"])
             if skeleton := weak_sign_skeleton(form):
@@ -148,7 +148,7 @@ def candidate_pairs(women: list[rw.RoyalWoman], rows: list[dict]) -> list[Pair]:
     pairs: list[Pair] = []
     for name, targets in dh_names(women).items():
         by_tier: dict[str, str] = {}
-        for tla_id in exact.get(rw.surface_key(name), ()):
+        for tla_id in exact.get(resolver.surface_key(name), ()):
             by_tier.setdefault(tla_id, "raw_exact")
         for key in rw.name_keys(name):
             for tla_id in normalized.get(key, ()):

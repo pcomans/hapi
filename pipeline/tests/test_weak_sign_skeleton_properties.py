@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 
-from pipeline.authority import royal_women as rw
+from pipeline.authority import resolver, royal_women as rw
 from pipeline.authority.graph_kings import GraphKings
 from pipeline.authority import weak_sign_skeleton as module
 from pipeline.authority.claimgraph.normalize import translit_key
@@ -215,7 +215,7 @@ def _variant_only_the_third_tier_finds(index, label: str) -> str | None:
             if not repl:
                 continue
             variant = label[:i] + repl + label[i + 1:]
-            if rw.surface_key(variant) in index.exact:
+            if resolver.surface_key(variant) in index.exact:
                 continue
             if any(k in index.normalized for k in rw.name_keys(variant)):
                 continue
@@ -380,7 +380,7 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
         # written as a digraph's letters (s-h in "hmshntmp") from reading as one.
         text = re.sub(r"(?<=[sk])(?=h)|(?<=[dt])(?=j)", "-", key) + "a"
         assert weak_sign_skeleton(text) == key, (key, text)
-        if rw.surface_key(text) in index.exact or any(k in index.normalized for k in rw.name_keys(text)):
+        if resolver.surface_key(text) in index.exact or any(k in index.normalized for k in rw.name_keys(text)):
             outcomes["caught by an earlier tier"] += 1
             continue
         for dynasty in range(0, 34):

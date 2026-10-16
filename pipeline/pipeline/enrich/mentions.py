@@ -1,0 +1,317 @@
+"""Museum mentions of rulers, sites and other entities, read from the raw museum records.
+
+Promoted for production (#338) from the #361 ruler re-registration's extractor
+(`docs/evaluations/ruler-reregistration-2026-10-15/scripts/extract_mentions.py`), whose file
+stays as it is because #361 pins it by hash; `pipeline/tests/test_enrich_mentions.py` holds the
+source of each shared definition identical, so the first change here must also change that
+test and this paragraph. Detection and span boundaries come from museum field structure and fixed syntax
+rules; authority labels, aliases, identifiers and resolver results are not inputs. Each
+museum's evidence fields are named in `extract_mentions` (the per-museum field inventory).
+"""
+
+from __future__ import annotations
+
+import hashlib
+import re
+from collections import Counter
+from collections.abc import Iterable
+
+# #361: the royal-woman cues (`royal_women.ROYAL_WOMAN_CUE_BEFORE`) are cues too, longest first,
+# so that "Queen Mother Tiye" and "King's Wife Ahhotep" are cued as wholes ("mother" and "wife"
+# are stop words after a bare "queen" or "king").
+ROYAL_CUE = re.compile(
+    r"\b(queen\s+mother|great\s+royal\s+wife|king['\u2019]s\s+(?:great\s+wife|wife|mother|daughter)"
+    r"|god['\u2019]s\s+wife(?:\s+of\s+amun)?|divine\s+adoratrice(?:\s+of\s+amun)?|princess"
+    r"|reigns?\s+of|pontificate\s+of|pharaoh|king|queen|ruler)\b",
+    re.I,
+)
+TOMB_CODE = re.compile(
+    r"\b(?:KV|QV|TT)\s*\d+[A-Za-z]?\b|\bTomb\s+[A-Z]{1,4}[ .-]?\d+[A-Za-z]?\b",
+    re.I,
+)
+TEMPLE_CUE = re.compile(r"\btemple\b", re.I)
+UNCERTAIN = re.compile(r"\b(?:possibly|probably|perhaps|uncertain(?:ly)?|maybe|attributed)\b|\?", re.I)
+RANGE_OR_MULTI = re.compile(r"\s(?:-|\u2013|\u2014)\s|[\u2013\u2014]|\b(?:or|and|to|through)\b", re.I)
+TEMPORAL_CONTEXT = re.compile(r"\b(?:before|after|earliest|latest|later|earlier|death\s+of)\b", re.I)
+LEADING_REIGN = re.compile(
+    r"^\s*(?:(?:early|late|middle|mid|end\s+of|beginning\s+of|latter\s+part\s+of)\s+)?"
+    r"(?:reigns?\s+of|pontificate\s+of)\s+",
+    re.I,
+)
+LEADING_UNCERTAIN_REIGN = re.compile(
+    r"^\s*(?:possibly|probably|perhaps)\s+(?:the\s+)?(?:reigns?\s+of|pontificate\s+of)\s+",
+    re.I,
+)
+TRAILING_PHASE = re.compile(
+    r"\s*,?\s+(?:early|late|middle|mid|first\s+half|second\s+half|approximately|ca\.?|c\.?)$",
+    re.I,
+)
+NAME_TOKEN = re.compile(r"[^\W_\d][\w\u00c0-\u024f\u1e00-\u1eff'\u2019-]*|\d+", re.UNICODE)
+TEXT_STOP = {
+    "a", "an", "and", "as", "at", "by", "for", "from", "in", "into", "of", "on", "or", "the", "to",
+    "with", "wearing", "possibly", "probably", "perhaps", "mother", "wife", "daughter", "son", "statue",
+    "head", "god", "goddess", "priest", "scribe", "servant", "sky", "upper", "lower", "new", "old",
+}
+
+
+def classify_reign_expression(value: str) -> tuple[str, str | None, tuple[int, int] | None]:
+    text = value.strip()
+    offset = value.find(text)
+    if not text:
+        return "empty", None, None
+    if LEADING_UNCERTAIN_REIGN.match(text) or UNCERTAIN.search(text):
+        return "uncertain_identity", None, None
+    match = LEADING_REIGN.match(text)
+    if not match:
+        return "unparsed_structured_value", None, None
+    remainder = text[match.end():]
+    leading = len(remainder) - len(remainder.lstrip())
+    candidate = TRAILING_PHASE.sub("", remainder.strip()).strip()
+    start = offset + match.end() + leading
+    if TEMPORAL_CONTEXT.search(candidate):
+        return "temporal_context", None, None
+    if RANGE_OR_MULTI.search(candidate):
+        return "multi_or_range", None, None
+    if not candidate:
+        return "unparsed_structured_value", None, None
+    return "single_identity", candidate, (start, start + len(candidate))
+
+
+def candidate_after_royal_cue(text: str, cue: re.Match[str]) -> tuple[str | None, int, int]:
+    """Bound a cued name with syntax alone: at most three title-cased/name tokens."""
+    tail = text[cue.end():]
+    leading = len(tail) - len(tail.lstrip(" :-,\t"))
+    start = cue.end() + leading
+    tokens = list(NAME_TOKEN.finditer(text[start:]))
+    selected: list[re.Match[str]] = []
+    previous_end = 0
+    for token in tokens:
+        gap = text[start + previous_end:start + token.start()]
+        if selected and (re.search(r"[,;:()\[\]?!]", gap) or len(gap.split()) > 1):
+            break
+        word = token.group(0)
+        if word.casefold() in TEXT_STOP:
+            break
+        if not (word[0].isupper() or word.isdigit()):
+            break
+        selected.append(token)
+        previous_end = token.end()
+        if len(selected) == 3:
+            break
+    if not selected:
+        return None, start, start
+    end = start + selected[-1].end()
+    return text[start:end], start, end
+
+
+def component_spans(text: str) -> Iterable[tuple[str, int, int]]:
+    """Split top-level comma/semicolon components without cutting parentheses."""
+    last = 0
+    depth = 0
+    for index, character in enumerate(text):
+        if character == "(":
+            depth += 1
+        elif character == ")" and depth:
+            depth -= 1
+        elif character in ",;" and depth == 0:
+            raw = text[last:index]
+            leading = len(raw) - len(raw.lstrip())
+            trailing = len(raw.rstrip())
+            if raw.strip():
+                yield raw.strip(), last + leading, last + trailing
+            last = index + 1
+    raw = text[last:]
+    leading = len(raw) - len(raw.lstrip())
+    trailing = len(raw.rstrip())
+    if raw.strip():
+        yield raw.strip(), last + leading, last + trailing
+
+
+def component_variants(text: str) -> list[tuple[str, int, int, str]]:
+    variants = [(text, 0, len(text), "structured_location_component")]
+    position = text.find("(")
+    if position > 0 and text.endswith(")"):
+        child = text[:position].rstrip()
+        if child and child != text:
+            variants.append((child, 0, len(child), "structured_pre_parenthesis_component"))
+    return variants
+
+
+def make_mention(
+    *, artifact: dict, entity_type: str, field_path: str, field_value: str,
+    start: int, end: int, extraction_method: str, evidence_role: str,
+    expression_type: str,
+) -> dict:
+    if not (0 <= start < end <= len(field_value)):
+        raise ValueError(f"invalid span {start}:{end} for {artifact['id']} {field_path}")
+    text = field_value[start:end]
+    stable = "\x1f".join(
+        (artifact["id"], entity_type, field_path, str(start), str(end), text, extraction_method, expression_type)
+    )
+    return {
+        "mention_id": "mention-" + hashlib.sha256(stable.encode("utf-8")).hexdigest()[:20],
+        "artifact_id": artifact["id"],
+        "museum": artifact["source_museum"],
+        "source_id": artifact["source_id"],
+        "entity_type": entity_type,
+        "field_path": field_path,
+        "field_value": field_value,
+        "span_start": start,
+        "span_end": end,
+        "mention_text": text,
+        "extraction_method": extraction_method,
+        "evidence_role": evidence_role,
+        "expression_type": expression_type,
+        # #361: the record's dynasty as its canonical record gives it, for the royal-women
+        # resolver's dynasty check (`royal_women.single_dynasty` reads it).
+        "record_dynasty": artifact.get("dynasty"),
+    }
+
+
+def extract_mentions(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]]) -> tuple[list[dict], dict]:
+    mentions: list[dict] = []
+    cue_without_candidate = Counter()
+    records_with_mentions: set[str] = set()
+    for artifact in sorted(canonical, key=lambda row: row["id"]):
+        museum = artifact["source_museum"]
+        raw = raw_indexes[museum][artifact["source_id"]]
+        before = len(mentions)
+
+        if museum == "met" and isinstance(raw.get("reign"), str) and raw["reign"].strip():
+            field_value = raw["reign"]
+            expression, candidate, span = classify_reign_expression(field_value)
+            if expression == "single_identity" and candidate is not None and span is not None:
+                start, end = span
+            else:
+                stripped = field_value.strip()
+                start, end = field_value.find(stripped), field_value.find(stripped) + len(stripped)
+            mentions.append(make_mention(
+                artifact=artifact, entity_type="ruler", field_path="reign", field_value=field_value,
+                start=start, end=end, extraction_method="typed_structured_reign_parser",
+                evidence_role="catalogued_reign", expression_type=expression,
+            ))
+
+        ruler_text_fields = {
+            "met": ("title",),
+            "brooklyn": ("title", "inscribed", "dates", "objectDate", "provenance"),
+            "harvard": ("title", "description", "labeltext", "commentary", "dated", "contextualtext"),
+        }[museum]
+        seen_ruler_spans: set[tuple[str, int, int]] = set()
+        for field in ruler_text_fields:
+            value = raw.get(field)
+            if not isinstance(value, str) or not value.strip():
+                continue
+            for cue in ROYAL_CUE.finditer(value):
+                if value[cue.end():cue.end() + 2].startswith(("'", "\u2019")):
+                    continue
+                candidate, start, end = candidate_after_royal_cue(value, cue)
+                if candidate is None:
+                    cue_without_candidate[f"{museum}|{field}"] += 1
+                    continue
+                if (field, start, end) in seen_ruler_spans:
+                    continue
+                seen_ruler_spans.add((field, start, end))
+                context = value[max(0, cue.start() - 15):min(len(value), end + 24)]
+                if UNCERTAIN.search(context):
+                    expression = "uncertain_identity"
+                elif RANGE_OR_MULTI.search(context):
+                    expression = "multi_or_range"
+                else:
+                    expression = "single_identity"
+                mentions.append(make_mention(
+                    artifact=artifact, entity_type="ruler", field_path=field, field_value=value,
+                    start=start, end=end, extraction_method="explicit_royal_cue_grammar",
+                    evidence_role="explicit_royal_text_cue", expression_type=expression,
+                ))
+
+        site_values: list[tuple[str, str, str]] = []
+        if museum == "met":
+            role = raw.get("geographyType") or "unspecified"
+            for field in ("country", "region", "subregion", "locale", "locus"):
+                value = raw.get(field)
+                if isinstance(value, str) and value.strip():
+                    site_values.append((field, value, f"{role}:{field}"))
+            excavation = raw.get("excavation")
+            if isinstance(excavation, str) and excavation.strip():
+                stripped = excavation.strip()
+                start = excavation.find(stripped)
+                mentions.append(make_mention(
+                    artifact=artifact, entity_type="excavation", field_path="excavation",
+                    field_value=excavation, start=start, end=start + len(stripped),
+                    extraction_method="explicit_structured_value", evidence_role="excavation_credit",
+                    expression_type="single_identity",
+                ))
+        elif museum == "brooklyn":
+            for index, place in enumerate(raw.get("geographicalLocations") or []):
+                if not isinstance(place, dict):
+                    continue
+                role = place.get("type") or "unspecified"
+                value = place.get("name")
+                if isinstance(value, str) and value.strip():
+                    site_values.append((f"geographicalLocations[{index}].name", value, role))
+                else:
+                    for leaf in ("city", "country"):
+                        value = place.get(leaf)
+                        if isinstance(value, str) and value.strip():
+                            site_values.append((f"geographicalLocations[{index}].{leaf}", value, role))
+        else:
+            for index, place in enumerate(raw.get("places") or []):
+                if not isinstance(place, dict):
+                    continue
+                value = place.get("displayname")
+                if isinstance(value, str) and value.strip():
+                    site_values.append((
+                        f"places[{index}].displayname", value, place.get("type") or "unspecified"
+                    ))
+
+        for field_path, field_value, role in site_values:
+            for component, component_start, component_end in component_spans(field_value):
+                emitted_tomb_spans: set[tuple[int, int]] = set()
+                for text, relative_start, relative_end, method in component_variants(component):
+                    start, end = component_start + relative_start, component_start + relative_end
+                    if TEMPLE_CUE.search(text):
+                        entity_type = "temple"
+                    elif TOMB_CODE.fullmatch(text):
+                        entity_type = "tomb_monument"
+                    else:
+                        entity_type = "site"
+                    if entity_type == "tomb_monument":
+                        emitted_tomb_spans.add((start, end))
+                    mentions.append(make_mention(
+                        artifact=artifact, entity_type=entity_type, field_path=field_path,
+                        field_value=field_value, start=start, end=end, extraction_method=method,
+                        evidence_role=role, expression_type="single_identity",
+                    ))
+                for hit in TOMB_CODE.finditer(component):
+                    hit_span = (component_start + hit.start(), component_start + hit.end())
+                    if hit_span in emitted_tomb_spans:
+                        continue
+                    mentions.append(make_mention(
+                        artifact=artifact, entity_type="tomb_monument", field_path=field_path,
+                        field_value=field_value, start=hit_span[0], end=hit_span[1],
+                        extraction_method="explicit_tomb_code",
+                        evidence_role=role, expression_type="single_identity",
+                    ))
+
+        if len(mentions) > before:
+            records_with_mentions.add(artifact["id"])
+
+    mentions.sort(key=lambda row: (
+        row["artifact_id"], row["entity_type"], row["field_path"], row["span_start"],
+        row["span_end"], row["extraction_method"], row["mention_id"],
+    ))
+    ids = [row["mention_id"] for row in mentions]
+    if len(ids) != len(set(ids)):
+        raise ValueError("mention identifiers are not unique")
+    for row in mentions:
+        if row["field_value"][row["span_start"]:row["span_end"]] != row["mention_text"]:
+            raise ValueError(f"span/text mismatch for {row['mention_id']}")
+    diagnostics = {
+        "records_scanned": len(canonical),
+        "records_with_at_least_one_mention": len(records_with_mentions),
+        "mentions": len(mentions),
+        "mentions_by_museum": dict(sorted(Counter(row["museum"] for row in mentions).items())),
+        "mentions_by_entity_type": dict(sorted(Counter(row["entity_type"] for row in mentions).items())),
+        "royal_cues_without_syntactic_candidate": dict(sorted(cue_without_candidate.items())),
+    }
+    return mentions, diagnostics
