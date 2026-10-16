@@ -165,7 +165,7 @@ The CI tests need no private data:
   evaluation found the authority helps there. It does not say a review saw the population
   measured, which `report()` cannot know of an arbitrary run. For this frozen run, the result's
   `review_coverage` says so per qualified scope:
-  - the sites' reviews cover it;
+  - the sites' reviews cover it, by the identity test above;
   - #361's review does not cover the three Met–Brooklyn ruler records #369's Ahmes B connects.
 
   This is the measurement; no deployed
@@ -226,7 +226,7 @@ matters is whether these are the populations that were reviewed.
       had no Brooklyn record to share her with.
   - **Those three records are #361's reviewed losses that now connect.** Each is connected
     through Ahmes B alone and was connected by plain text, and the authority only grows from
-    #361's (step 1). Counts: Met's losses go from
+    #361's (step 1, and #369's result: none of its changes was resolved before). Counts: Met's losses go from
     59 to 57 and Brooklyn's from 2 to 1. The gains are #361's in number (Met 33, Brooklyn 2).
   - **The change is unreviewed,** found on #361's deciding case. The scope's qualified flag
     rests on #361's review of the population before it.
@@ -241,8 +241,8 @@ matters is whether these are the populations that were reviewed.
     Met–Brooklyn it holds 97.7% of Met's connected site records.
   - Harvard's largest in Met–Harvard is "Africa", which holds all 534 of them.
 
-  Whether such a loss is good or bad is #337's review's to say. Its losses were 17 judged
-  correct and useful (d) and 16 wrong or not useful (e); it named the Fayum, a whole region, as
+  Whether such a loss is good or bad is #337's review's to say. Its site losses were 12 judged
+  correct and useful (d) and 15 wrong or not useful (e); it named the Fayum, a whole region, as
   too broad to be useful. That review, not this count, is the evidence.
 - **This is the pipeline code's result on a frozen export of the museum tables, not a deployed
   run.** The asset reads the database, which this environment lacks (owner, 2026-10-16: files

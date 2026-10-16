@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -141,8 +143,10 @@ def test_the_site_links_are_337s_record_for_record() -> None:
     adapter = "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py"
     then = subprocess.run(["git", "-C", str(al.REPO), "show", f"97f2e61:{adapter}"], check=True, capture_output=True,
                           text=True).stdout
-    assert __import__("hashlib").sha256(then.encode("utf-8")).hexdigest() == (
-        "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0")  # #337's CURRENT_INPUTS
+    arms_337_source = (EVALUATIONS / "authority-independent-control-2026-10-11/scripts/compare_arms.py").read_text(
+        encoding="utf-8")
+    pinned = re.search(rf'"{re.escape(adapter)}":\s*"([0-9a-f]{{64}})"', arms_337_source).group(1)
+    assert hashlib.sha256(then.encode("utf-8")).hexdigest() == pinned  # #337's CURRENT_INPUTS
 
     def definitions(source: str) -> dict[str, str]:
         return {n.name: ast.dump(n) for n in ast.parse(source).body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
@@ -223,6 +227,10 @@ def test_the_ruler_scope_is_361s_population_with_369s_ahmes_b(result) -> None:
         encoding="utf-8"))["royal_woman_cued_mentions"]["changes"]
     changed = {c["artifact_id"] for c in changes}
     assert {"brooklyn-3634", "met-566763"} <= changed and "met-547683" not in changed
+    # #369 only adds links: none of its changes was resolved before, and the two that resolve now
+    # are the Queen Ahmose records (the rest stay ambiguous, which makes no link).
+    assert all(c["before"]["status"] != "resolved" for c in changes)
+    assert {c["artifact_id"] for c in changes if c["after"]["status"] == "resolved"} == {"brooklyn-3634", "met-566763"}
     # And the step-1 proof: every other ruler resolution is #361's.
     proof = json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(encoding="utf-8"))
     assert (proof["rulers_vs_361_authority_arm"]["differ_otherwise"], len(proof["rulers_vs_361_authority_arm"]["differ_as_369_measured"])) == ([], 11)
@@ -281,9 +289,11 @@ def test_the_frozen_run_says_whether_each_qualified_scopes_review_covers_it(resu
     Ahmes B connects."""
     assert result["review_coverage"] == {
         "ruler|met|brooklyn": {"qualified_by": "#361", "review_covers_population": False,
-                               "unreviewed_connected_records": ["brooklyn-3634", "met-547683", "met-566763"]},
+                               "unreviewed_connected_records": ["brooklyn-3634", "met-547683", "met-566763"],
+                               "by": "links of the mentions resolving differently from #361 removed (step-1 proof)"},
         **{f"site|{a}|{b}": {"qualified_by": "#337 v10", "review_covers_population": True,
-                             "unreviewed_connected_records": []} for a, b in al.MUSEUM_PAIRS}}
+                             "unreviewed_connected_records": [], "by": "site links identical to #337's (identity test)"}
+           for a, b in al.MUSEUM_PAIRS}}
     changes = json.loads((EVALUATIONS / "resolver-gaps-369/results/resolver-change.json").read_text(
         encoding="utf-8"))["royal_woman_cued_mentions"]["changes"]
     changed = {c["artifact_id"] for c in changes}

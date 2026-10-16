@@ -18,6 +18,7 @@ deployed run: the asset reads the database, which this environment does not have
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -78,23 +79,34 @@ def ahmes_b_records(run: Path) -> dict:
 
 
 def review_coverage(run: Path, report: dict) -> dict:
-    """For this frozen run only: per qualified scope, the review that qualified it and its connected
-    records that review did not see, i.e. those whose connection depends on a ruler record #369
-    changed (its site links are #337's). The tests show the rest of each population is the
-    reviewed one record for record (sites) or by the step-1 proof (rulers)."""
-    links = [l for l in cross_museum.load_links(run, "authority")
-             if not (l["entity_type"] == "ruler" and l["artifact_id"] in TUNED_ON_369)]
-    before = cross_museum.connected(cross_museum.target_records(links))
-    now = cross_museum.connected(cross_museum.target_records(cross_museum.load_links(run, "authority")))
+    """For this frozen run only: per qualified scope, the review that qualified it, the evidence,
+    and the connected records that review did not see.
+    * Sites: their links are #337's record for record (`test_the_site_links_are_337s_record_for_record`),
+      so nothing is unreviewed; nothing is computed here.
+    * Rulers: the links made from the mentions whose resolution differs from #361's (the step-1
+      proof's `differ_as_369_measured`) are removed; a record connected now but not without them
+      depends on a change #361's review did not see."""
+    changed = set(json.loads((EVALUATIONS / "authority-bridge-338/results/promotion-check.json").read_text(
+        encoding="utf-8"))["rulers_vs_361_authority_arm"]["differ_as_369_measured"])
+    links = cross_museum.load_links(run, "authority")
+    before = cross_museum.connected(cross_museum.target_records(
+        [l for l in links if not (l["entity_type"] == "ruler" and set(l["mention_ids"]) & changed)]))
+    now = cross_museum.connected(cross_museum.target_records(links))
     empty = {"records": set()}
     out = {}
     for key, row in sorted(report["by_museum_pair"].items()):
-        if row["qualified"]:
-            entity, a, b = key.split("|")
+        if not row["qualified"]:
+            continue
+        entity, a, b = key.split("|")
+        if entity == "site":
+            out[key] = {"qualified_by": QUALIFIED_BY[entity], "unreviewed_connected_records": [],
+                        "review_covers_population": True, "by": "site links identical to #337's (identity test)"}
+        else:
             unreviewed = sorted(r for x, y in ((a, b), (b, a))
                                 for r in now.get((entity, x, y), empty)["records"] - before.get((entity, x, y), empty)["records"])
             out[key] = {"qualified_by": QUALIFIED_BY[entity], "unreviewed_connected_records": unreviewed,
-                        "review_covers_population": not unreviewed}
+                        "review_covers_population": not unreviewed,
+                        "by": "links of the mentions resolving differently from #361 removed (step-1 proof)"}
     return out
 
 
@@ -125,7 +137,7 @@ def end_to_end(archive: Path) -> dict:
         "inputs_sha256": manifest["inputs_sha256"],
         "writer_sha256": manifest["writer_sha256"],
         "resolver_versions": {mode: s["resolver_version"] for mode, s in manifest["snapshots"].items()},
-        "report_sha256": {str(p.relative_to(REPO)): link_files.hashlib.sha256(p.read_bytes()).hexdigest()
+        "report_sha256": {str(p.relative_to(REPO)): hashlib.sha256(p.read_bytes()).hexdigest()
                           for p in REPORT_CODE},
         "two_runs": {"python_hash_seeds": ["1", "2"], "same_manifest_contents_and_report": True},
         "files": manifest["files"],

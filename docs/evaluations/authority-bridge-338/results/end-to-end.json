@@ -1203,7 +1203,7 @@
     }
   },
   "report_sha256": {
-    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "2ea29ce8e7fb2660ffedb435e6a4c7b2b48d83f291e90c2f6b9172ad3a4f5683",
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "e3a5a6123c5043d3be9415ad78686685f7f5bd81825f703498070236c6f4ac18",
     "pipeline/pipeline/enrich/cross_museum.py": "01e4369be623a6799a735db9e412a8db30661f4d37367d0d115b5733e234b58d"
   },
   "resolver_versions": {
@@ -1212,6 +1212,7 @@
   },
   "review_coverage": {
     "ruler|met|brooklyn": {
+      "by": "links of the mentions resolving differently from #361 removed (step-1 proof)",
       "qualified_by": "#361",
       "review_covers_population": false,
       "unreviewed_connected_records": [
@@ -1221,16 +1222,19 @@
       ]
     },
     "site|brooklyn|harvard": {
+      "by": "site links identical to #337's (identity test)",
       "qualified_by": "#337 v10",
       "review_covers_population": true,
       "unreviewed_connected_records": []
     },
     "site|met|brooklyn": {
+      "by": "site links identical to #337's (identity test)",
       "qualified_by": "#337 v10",
       "review_covers_population": true,
       "unreviewed_connected_records": []
     },
     "site|met|harvard": {
+      "by": "site links identical to #337's (identity test)",
       "qualified_by": "#337 v10",
       "review_covers_population": true,
       "unreviewed_connected_records": []
