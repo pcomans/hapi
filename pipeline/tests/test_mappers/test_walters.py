@@ -415,3 +415,20 @@ def test_a_row_that_does_not_fit_the_header_raises(monkeypatch, text):
     _files(monkeypatch, {"art.csv": text})
     with pytest.raises(ValueError, match="art.csv row 2 does not have the header's fields"):
         ingest.read_csv("abc123", "art.csv")
+
+
+@pytest.mark.parametrize("field, value, message", [
+    ("MediaType", "Video", r"walters-481: media row with MediaType 'Video', IsPrimary '1'"),
+    ("IsPrimary", "yes", r"walters-481: media row with MediaType 'Image', IsPrimary 'yes'"),
+])
+def test_a_media_value_outside_the_files_domain_raises(field, value, message):
+    raw = _load_fixture("rich_object.json")
+    raw = {**raw, "media": [{**raw["media"][0], field: value}]}
+    with pytest.raises(ValueError, match=message):
+        WaltersMapper().map_to_canonical(raw)
+
+
+def test_a_record_without_a_url_raises():
+    raw = _with_object(_load_fixture("rich_object.json"), ResourceURL="")
+    with pytest.raises(ValueError, match="walters-481: no record URL"):
+        WaltersMapper().map_to_canonical(raw)

@@ -379,6 +379,35 @@ def test_adding_a_museum_changed_nothing_on_the_frozen_corpus(rerun, added) -> N
         assert differ - new - unevaluated == set(), name
     after = json.loads((results / rerun / "end-to-end.json").read_text(encoding="utf-8"))
     before = json.loads((results / "end-to-end.json").read_text(encoding="utf-8"))
+    # The rerun is of the code that adds them: each added museum's pairs are in it (empty), and its
+    # input check ran that museum's mapper.
+    frozen = {"met", "brooklyn", "harvard"}
+    pairs = {(a, b) for key in after["matching"]["by_museum_pair"] for a, b in [key.split("|")[1:]]}
+    assert {pair for pair in pairs if set(pair) - frozen} == {
+        pair for pair in al.MUSEUM_PAIRS if set(pair) - frozen and set(pair) <= frozen | set(added)}
+    promotion = json.loads((results / rerun / "promotion-check.json").read_text(encoding="utf-8"))
+    assert {f"pipeline/pipeline/assets/normalize/{museum}.py" for museum in added} <= set(
+        promotion["check_inputs"]["code_sha256"])
     # The mention ledger, which carries no resolver version, is byte for byte the same.
     assert after["files"]["mentions.ndjson.gz"] == before["files"]["mentions.ndjson.gz"]
     assert {n: f["rows"] for n, f in after["files"].items()} == {n: f["rows"] for n, f in before["files"].items()}
+
+
+def test_the_latest_rerun_and_the_museum_profiles_pin_the_same_code() -> None:
+    """The committed artifacts made after the Walters was added must describe one version of the
+    code they share: the rerun's input check, its resolver snapshot and the two museum profiles
+    pin each file they have in common to one hash. (Whether that version is the live code is
+    checked when they are made; an edit afterwards leaves them describing the code they record.)"""
+    results = EVALUATIONS / "authority-bridge-338/results/rerun-after-walters"
+    promotion = json.loads((results / "promotion-check.json").read_text(encoding="utf-8"))
+    pins = [promotion["check_inputs"]["code_sha256"], promotion["snapshot"]["authority"]["files"]]
+    for museum in ("cleveland", "walters"):
+        profile = EVALUATIONS.parent / "museum-sources" / f"{museum}-profile/profile.json"
+        pins.append(json.loads(profile.read_text(encoding="utf-8"))["code_sha256"])
+    seen: dict[str, set[str]] = {}
+    for pin in pins:
+        for path, digest in pin.items():
+            seen.setdefault(path, set()).add(digest)
+    assert {path: digests for path, digests in seen.items() if len(digests) > 1} == {}
+    assert {"pipeline/pipeline/enrich/mentions.py", "pipeline/pipeline/assets/normalize/walters.py"} <= {
+        path for path in seen if sum(path in pin for pin in pins) > 1}

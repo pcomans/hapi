@@ -377,8 +377,9 @@ def walters_reign_expression(value: str) -> tuple[str, str | None, tuple[int, in
     (1279-1213 BC)"), read with the Met reign parser's own tests once its dates are cut
     (`without_trailing_dates`): a doubt, a temporal phrase or a range or list is not one ruler.
     A field of more than one top-level component lists several rulers ("Shabako (715-700 BC),
-    Psammetichus I") and is a list too. A hyphen without spaces is not a range, as in the parser
-    ("Psametik I-Necho II" stays one name, which no ruler matches)."""
+    Psammetichus I") and is a list too. A hyphen without spaces is not a range, as in the parser:
+    a hyphenated pair ("Psametik I-Necho II") classifies as `single_identity`, one name that no
+    ruler matches in the authority mode, and that the literal mode links by its text."""
     text = without_trailing_dates(value.strip())
     offset = value.find(text)
     if not text:
@@ -467,28 +468,30 @@ def walters_mentions(artifact: dict, raw: dict) -> tuple[list[dict], Counter]:
     return found, missed
 
 
-# The museums whose readers came after #361's extractor.
-ADDED_MUSEUMS = ("cleveland", "walters")
+def _cleveland_reader(artifact: dict, raw: dict) -> tuple[list[dict], Counter]:
+    return cleveland_mentions(artifact, raw), Counter()
+
+
+# The readers of the museums added after #361's extractor, each giving its mentions and its royal
+# cues with no name after them, by field.
+ADDED_READERS = {"cleveland": _cleveland_reader, "walters": walters_mentions}
 
 
 def extract_all_mentions(canonical: list[dict], raw_indexes: dict[str, dict[str, dict]]) -> tuple[list[dict], dict]:
     """`extract_mentions` (#361's, verbatim) for the museums it reads, `cleveland_mentions` and
     `walters_mentions` for theirs, in one order and with one set of diagnostics. Without Cleveland
     or Walters records it gives exactly what `extract_mentions` gives."""
-    others = [row for row in canonical if row["source_museum"] not in ADDED_MUSEUMS]
+    others = [row for row in canonical if row["source_museum"] not in ADDED_READERS]
     found, diagnostics = extract_mentions(others, raw_indexes)
-    added = [row for row in canonical if row["source_museum"] in ADDED_MUSEUMS]
+    added = [row for row in canonical if row["source_museum"] in ADDED_READERS]
     if not added:
         return found, diagnostics
     missed = Counter(diagnostics["royal_cues_without_syntactic_candidate"])
     for artifact in added:
-        raw = raw_indexes[artifact["source_museum"]][artifact["source_id"]]
-        if artifact["source_museum"] == "cleveland":
-            found += cleveland_mentions(artifact, raw)
-        else:
-            rows, misses = walters_mentions(artifact, raw)
-            found += rows
-            missed.update(misses)
+        museum = artifact["source_museum"]
+        rows, misses = ADDED_READERS[museum](artifact, raw_indexes[museum][artifact["source_id"]])
+        found += rows
+        missed.update(misses)
     found.sort(key=lambda row: (
         row["artifact_id"], row["entity_type"], row["field_path"], row["span_start"],
         row["span_end"], row["extraction_method"], row["mention_id"],

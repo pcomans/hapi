@@ -39,7 +39,7 @@ REPO = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO / "pipeline"))
 from pipeline.authority import graph_kings, royal_women  # noqa: E402
 from pipeline.enrich import authority_links, mentions as production_mentions  # noqa: E402
-from pipeline.enrich.inputs import check_inputs  # noqa: E402
+from pipeline.enrich.inputs import NORMALIZERS, check_inputs  # noqa: E402
 
 
 def check_inputs_code() -> dict:
@@ -86,6 +86,9 @@ def gz_rows(data: bytes) -> list[dict]:
     return [json.loads(line) for line in gzip.GzipFile(fileobj=io.BytesIO(data)).read().splitlines()]
 
 
+ARCHIVED_MUSEUMS = ("met", "brooklyn", "harvard")
+
+
 def load_corpus(archive: Path) -> tuple[list[dict], dict[str, dict[str, dict]]]:
     if sha256_path(archive) != ARCHIVE_SHA256:
         raise ValueError(f"{archive} is not the frozen corpus archive")
@@ -96,14 +99,12 @@ def load_corpus(archive: Path) -> tuple[list[dict], dict[str, dict[str, dict]]]:
                 raise ValueError(f"{name} is not a regular file")
             return handle.read()
         canonical = gz_rows(member("artifacts.ndjson.gz"))
-        raw = {museum: {str(r["object_id"]): r["data"] for r in gz_rows(member(f"raw_{museum}.ndjson.gz"))}
-               for museum in ("met", "brooklyn", "harvard")}
-    # The 2026-08-27 corpus predates Cleveland and the Walters (docs/museum-sources/cleveland.md,
-    # walters.md): their raw tables are empty, as a run reads them from a database that holds
-    # this corpus alone.
-    raw["cleveland"] = {}
-    raw["walters"] = {}
-    return canonical, raw
+        archived = {museum: {str(r["object_id"]): r["data"] for r in gz_rows(member(f"raw_{museum}.ndjson.gz"))}
+                    for museum in ARCHIVED_MUSEUMS}
+    # The 2026-08-27 corpus predates every museum added since (Cleveland, the Walters:
+    # docs/museum-sources/): their raw tables are empty, as a run reads them from a database that
+    # holds this corpus alone.
+    return canonical, {museum: {} for museum in NORMALIZERS} | archived
 
 
 def canonical_line(row: dict) -> str:

@@ -96,7 +96,7 @@ def test_the_production_extractor_gives_what_361s_gives(frozen) -> None:
 ADDED_FOR_CLEVELAND = ("JOINT_REIGN", "cleveland_reign_components", "without_trailing_dates", "cleveland_mentions",
                        "extract_all_mentions")
 ADDED_FOR_WALTERS = ("walters_reign_expression", "royal_cue_mentions", "WALTERS_REIGN_FIELD", "WALTERS_CUE_FIELDS",
-                     "walters_mentions", "ADDED_MUSEUMS")
+                     "walters_mentions", "ADDED_READERS")
 
 
 def test_every_definition_is_361s_verbatim(frozen) -> None:

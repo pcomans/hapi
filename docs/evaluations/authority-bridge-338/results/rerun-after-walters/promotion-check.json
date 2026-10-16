@@ -22,10 +22,10 @@
       "pipeline/pipeline/assets/normalize/cleveland.py": "b164689eea360bd622c2cf55f0244ad3d03eb955fbd27cc5499bea9e29bf45ce",
       "pipeline/pipeline/assets/normalize/harvard.py": "73aadf30fb49fcfdfff8f19a0c7bcc08f79a55b7f2ded0c405cfdda9aea5b61d",
       "pipeline/pipeline/assets/normalize/met.py": "69ec2be6ad27425721193dffcab53bfe1e26296ff0331bf1ceed57134469e8d1",
-      "pipeline/pipeline/assets/normalize/walters.py": "adc2e6a0024842023501c0b1775605fdfc7eef2a7bc076f08182cd896db83b54",
+      "pipeline/pipeline/assets/normalize/walters.py": "4c3aa8633f9940212733e0fa62835ccd26ffe6116955f1464af38e137e78415b",
       "pipeline/pipeline/enrich/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "pipeline/pipeline/enrich/inputs.py": "dbb71fab43807a04b7b1c9bdd430d2b68952953fb1006cebee7b74d0c5f2926c",
-      "pipeline/pipeline/enrich/mentions.py": "2e41d6cb8b14e5c400d8f7f77ae37c26e7cd4bb69eef1dccbfbe3204fcb51e36",
+      "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2",
       "pipeline/pipeline/types/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "pipeline/pipeline/types/canonical.py": "b3143fdf66f5513e8a3287fff5efd1f28da3fda07856e5a1629d47fe075223b9",
       "pipeline/pipeline/types/protocol.py": "a00c71187bcbad9d0e740e34d356b7db4bd66f066d3447c65ce82601d3fbd736",
@@ -103,21 +103,21 @@
         "pipeline/pipeline/authority/weak_sign_skeleton.py": "2f4066c9af7ce8a89c24c8b3ca77e89215d086f645084f84f816bd69cf126ac9",
         "pipeline/pipeline/enrich/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "pipeline/pipeline/enrich/authority_links.py": "da74b537cad6aac387b55c7e8efae619c257bc5106e3346079e2c7d75e1be01d",
-        "pipeline/pipeline/enrich/mentions.py": "2e41d6cb8b14e5c400d8f7f77ae37c26e7cd4bb69eef1dccbfbe3204fcb51e36",
+        "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2",
         "web-claimgraph/data/claim-graph.json": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66"
       },
       "mode": "authority",
-      "resolver_version": "fb752fce53c6f0e684347fee850e8c6816e1bcc27cbb2b37c3fbe3d2aea3c16a",
+      "resolver_version": "c5ed6250cd0d7319f5c41165029601855db036542502de9c76f6a0253b5430c8",
       "unicode": "15.0.0"
     },
     "literal": {
       "files": {
         "pipeline/pipeline/authority/resolver.py": "38c8ac8834b362be11a6c6a95bcf3f6eee7cb16bfac4a76dd609b40c0768d5d9",
         "pipeline/pipeline/enrich/authority_links.py": "da74b537cad6aac387b55c7e8efae619c257bc5106e3346079e2c7d75e1be01d",
-        "pipeline/pipeline/enrich/mentions.py": "2e41d6cb8b14e5c400d8f7f77ae37c26e7cd4bb69eef1dccbfbe3204fcb51e36"
+        "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2"
       },
       "mode": "literal",
-      "resolver_version": "f4824d95e7abebdbdbaf54dc454e920d7000e4422c86ffcad9aa2c2696960e51",
+      "resolver_version": "f5dc6b01609a2d15045ade19a657daa42b9dc9beab3094ee062f16ea91846fdf",
       "unicode": "15.0.0"
     }
   }

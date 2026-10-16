@@ -28,11 +28,27 @@
     "ROM|EGY|JWL": 3
   },
   "code_sha256": {
-    "docs/museum-sources/walters-profile/profile.py": "eaf7b862c7923ee057f92b0735deff37b50a372f9e7e78792ca7e6c6fb5efad1",
+    "docs/museum-sources/walters-profile/profile.py": "910f435371b9466317a1708ed952cb7cf07951359f15e1f6a911f7f0318d7b92",
     "pipeline/pipeline/assets/ingest/walters.py": "9fbcd15b6825de2d349cc065fec22d96f48bf1309e79c4a0abd91d3b33071180",
-    "pipeline/pipeline/assets/normalize/walters.py": "239f74090f8e82aad93c41167af349b2f1b540c46a9f44e74d2a1c16800040a5",
-    "pipeline/pipeline/enrich/mentions.py": "2e41d6cb8b14e5c400d8f7f77ae37c26e7cd4bb69eef1dccbfbe3204fcb51e36"
+    "pipeline/pipeline/assets/normalize/walters.py": "4c3aa8633f9940212733e0fa62835ccd26ffe6116955f1464af38e137e78415b",
+    "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2"
   },
+  "file_objects": 22193,
+  "file_objects_using_code_pre": {
+    "12261": "EGY|PRE | mid 4th millennium BCE (Predynastic)",
+    "16542": "CHN|PRE | 3rd millennium BC (Neolithic)",
+    "18110": "EGY|PRE | ca. 3500 BCE (Predynastic; Naqada II)",
+    "18142": "PRE | 25th-10th millenium BCE (Paleolithic)",
+    "26697": "EGY|PRE | second half 4th millennium BCE (Predynastic)",
+    "31130": "ANE|PRE | ca. 1000 BCE (?) (Iron Age)",
+    "35146": "EGY|PRE | ca. 3200 BCE (Predynastic; Naqada II)",
+    "40617": "EGY|PRE | 4th millennium BCE (Predynastic)",
+    "5597": "PRE|ARM | ca. 5000 BCE (Neolithic)",
+    "8226": "EGY|PRE | ca. 4000-3500 BCE (Predynastic; Naqada I)",
+    "8828": "CHN|PRE | 3rd millennium BCE (Neolithic)",
+    "9297": "CHN|PRE | ca. 2000 BC"
+  },
+  "file_objects_with_period": 0,
   "fixtures": {
     "hyphenated_reign.json": {
       "equals_ingested_record": true,
@@ -93,6 +109,11 @@
     "collection includes EGY": 1129,
     "no collection, culture Egyptian": 192
   },
+  "in_scope_credit_lines_naming_a_loan": [],
+  "in_scope_date_text_naming_a_reign": {
+    "of_which_without_reign": 4,
+    "records": 11
+  },
   "in_scope_dated_after_1800": [
     "14096",
     "24708",
@@ -118,6 +139,20 @@
     "cues_without_a_name": {
       "walters|object.Title": 50
     },
+    "reign_single_identity_hyphenated_pairs": [
+      "Amasis-Psammetichus III",
+      "Amasis-Psammetichus III",
+      "Amenophis IV/Akhenaten-Smenkhkare",
+      "Apries (589-570 BC)-Amasis",
+      "Psametik I-Necho II",
+      "Psametik I-Necho II",
+      "Psammetichus I-Necho I",
+      "Ramesses II-Merenptah",
+      "Taharqa-Psametik I",
+      "Thutmosis IV -Amenophis III",
+      "Thutmosis IV-Amenophis III",
+      "Tutankhamun-Horemheb"
+    ],
     "total": 141
   },
   "in_scope_with_dynasty": 796,
@@ -136,6 +171,35 @@
     "ROM | Egypto-Roman": 1,
     "ROM | Roman or Egyptian": 1
   },
+  "out_of_scope_ids": [
+    "14970",
+    "15804",
+    "22099",
+    "22718",
+    "23722",
+    "27776",
+    "30450",
+    "30576",
+    "30828",
+    "32202",
+    "33391",
+    "33580",
+    "34037",
+    "37406",
+    "39105",
+    "4886",
+    "5337",
+    "74",
+    "7962",
+    "8387"
+  ],
   "raw_records": 1341,
-  "raw_sha256": "2307c00225bbf510e33694a3969e43bec8fc8caac4bf704b29313e2b0f2de56e"
+  "raw_sha256": "2307c00225bbf510e33694a3969e43bec8fc8caac4bf704b29313e2b0f2de56e",
+  "source": {
+    "art_csv_sha256": "bd3d85ba8c871948d269aea2a51947eda4dcde0a0f1da7e87c1a34e8fafa704b",
+    "commit": "f7531ed751ac2c138eeb6f923a3b4fd325d78adf",
+    "media_csv_sha256": "a93cf8b2e7181416f301fa91f858d43742ecc4d98c0b7510d9a42b488bfa64d6",
+    "raw_table_equals_ingest_candidates": true,
+    "repository": "WaltersArtMuseum/api-thewalters-org"
+  }
 }

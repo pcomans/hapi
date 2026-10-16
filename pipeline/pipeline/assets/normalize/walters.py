@@ -18,8 +18,8 @@ from pipeline.types.protocol import MapperProtocol
 from pipeline.types.sources import MUSEUM_LICENSE, License, MuseumSource
 
 # The museum's collection codes (collections.csv), and its code for "Ancient Egypt and Nubia".
-# "PRE" is not in collections.csv but art.csv uses it, beside another code, on 12 objects that
-# are all prehistoric (Neolithic, Predynastic); its name is not published.
+# "PRE" is not in collections.csv, but art.csv uses it on 12 early objects (Paleolithic to Iron
+# Age, six of them Egyptian Predynastic; walters-profile/profile.json); its name is not published.
 COLLECTION_CODES = frozenset({
     "AME", "ANE", "ARM", "BAR", "BYZ", "CHN", "EAN", "EGY", "ETH", "GRC", "INT", "ISL", "JMA", "JPK",
     "JWL", "MED", "MIS", "MSS", "PRE", "REN", "ROM", "SAY", "SEA", "TAF",
@@ -31,6 +31,8 @@ RUN_TOGETHER_CODES = {"EGYJWL": ("EGY", "JWL")}
 # Objects in no collection are kept when the museum's culture is this (all 192 such candidates
 # on 2026-09-11 are ancient Egyptian objects).
 UNASSIGNED_EGYPTIAN_CULTURE = "Egyptian"
+# The `MediaType` values media.csv uses; only an image can be the record's image.
+MEDIA_TYPES = frozenset({"Image", "PDF"})
 
 
 def collection_codes(raw: dict) -> tuple[str, ...]:
@@ -70,6 +72,8 @@ class WaltersMapper(MapperProtocol):
         object_id = obj["ObjectID"]
         if not object_id:
             raise ValueError("Walters record without an ObjectID")
+        if not obj["ResourceURL"].startswith("https://"):
+            raise ValueError(f"walters-{object_id}: no record URL ({obj['ResourceURL']!r})")
         image_url = _primary_image(raw)
         license_ = MUSEUM_LICENSE[self.source] if image_url else License.NONE
 
@@ -122,6 +126,10 @@ def _primary_image(raw: dict) -> str | None:
     """The URL of the object's primary image: its one `media.csv` image row marked `IsPrimary`.
     With none marked, the image the museum ranks first (lowest `Rank`), which must be unique.
     More than one marked raises. No image row: None."""
+    for m in raw["media"]:
+        if m["MediaType"] not in MEDIA_TYPES or m["IsPrimary"] not in ("0", "1"):
+            raise ValueError(f"walters-{raw['object']['ObjectID']}: media row with MediaType {m['MediaType']!r}, "
+                             f"IsPrimary {m['IsPrimary']!r}")
     images = [m for m in raw["media"] if m["MediaType"] == "Image"]
     if not images:
         return None

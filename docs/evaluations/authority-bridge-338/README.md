@@ -293,9 +293,8 @@ To reproduce: `vercel env pull` in `web-claimgraph/` (linked to the project), th
 
 The Neon database no longer holds the August export alone. On 2026-10-16, Cleveland and the
 Walters were ingested into it live (`catalog.raw_cleveland`, `catalog.raw_walters` and their
-canonical rows). The loader refuses tables that
-already hold rows, Cleveland's included, so to repeat this run, load the export into an empty
-database.
+canonical rows). The loader refuses tables that already hold rows, Cleveland's and the Walters'
+included, so to repeat this run, load the export into an empty database.
 
 The proofs cover the code they recorded only:
 - `results/promotion-check.json` records `snapshot` for the resolution and

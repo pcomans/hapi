@@ -22,7 +22,7 @@
   "code_sha256": {
     "docs/museum-sources/cleveland-profile/profile.py": "052543121dda8a03a76f9893cec42b6d388bcd846256b64f74750ad4843f5467",
     "pipeline/pipeline/assets/normalize/cleveland.py": "b164689eea360bd622c2cf55f0244ad3d03eb955fbd27cc5499bea9e29bf45ce",
-    "pipeline/pipeline/enrich/mentions.py": "2e41d6cb8b14e5c400d8f7f77ae37c26e7cd4bb69eef1dccbfbe3204fcb51e36"
+    "pipeline/pipeline/enrich/mentions.py": "076ff4935101329b8dc56d5f0b9718fd90130e004687dfa86001f8dbee2c9ca2"
   },
   "culture_entries_per_record": {
     "0": 2,
