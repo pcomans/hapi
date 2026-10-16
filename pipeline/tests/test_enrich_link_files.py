@@ -137,6 +137,9 @@ def test_a_run_that_differs_from_its_files_on_disk_fails_loud_and_says_how(input
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "links-authority.ndjson.gz").write_bytes(good)
     manifest_bytes = (run / "manifest.json").read_bytes()
+    (run / "manifest.json").write_text(json.dumps({**json.loads(manifest_bytes), "records": 1}))
+    with pytest.raises(ValueError, match="manifest.json differs from what this run writes"):
+        lf.write_run(tmp_path, lambda: (canonical, raw), authority)
     (run / "manifest.json").unlink()
     with pytest.raises(ValueError, match="lacks manifest.json: it was changed after it was written"):
         lf.write_run(tmp_path, lambda: (canonical, raw), authority)

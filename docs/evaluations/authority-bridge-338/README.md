@@ -70,10 +70,12 @@ The CI tests need no private data:
     file's hash and row count, outcomes by entity type, status and reason, and the inventory of
     what is not resolved (temples and excavations with their reasons and counts, and the
     unevaluated scopes).
-- **The run ID** hashes the inputs, both resolver versions and the writer. The manifest
-  hashes each file's content: a gzip file's decompressed NDJSON, so the hash does not depend on
-  the zlib build. The same inputs and code give the same content; an existing run directory is
-  checked against it, never rewritten.
+- **The run ID** is the manifest's own digest: the SHA-256 of the manifest without its
+  `run_id`. It therefore covers the inputs, both resolver versions, the writer, the rows set
+  aside, the counts, outcomes and inventory, and every file. The manifest hashes each file's
+  content (a gzip file's decompressed NDJSON), so the hash does not depend on the zlib build. The
+  same inputs and code give the same content; an existing run directory is checked byte for
+  byte against what the run computes, never rewritten.
   - A test runs `write_run` in two interpreters with different `PYTHONHASHSEED`s and requires
     the same manifest and file contents.
 - **Writes survive a process crash.** A run is written beside its place and renamed into it,
@@ -82,8 +84,9 @@ The CI tests need no private data:
   one; these files are a working store.)
   - A run directory that lacks a file, holds a stray one or differs in content fails loud,
     with a message saying which.
-  - Before writing anything, a run checks `CURRENT` and every file of the previous run against
-    that run's manifest. A mismatch fails loud and leaves the root as it was.
+  - Before writing anything, a run checks `CURRENT` and the previous run. The previous run's
+    manifest must digest to its run ID, and its files must be exactly the ones the manifest
+    names, with the recorded content. A mismatch fails loud and leaves the root as it was.
   - A pending diff is written whole and then named. One left by a killed process is published
     if its run became current; otherwise it is discarded unread, so a truncated file never
     blocks the root.
