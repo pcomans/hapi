@@ -1,0 +1,95 @@
+{
+ "$id": "hapi-authority-control-raw-response/stage-1-reviewer-case/4",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "else": {
+    "properties": {
+     "same_entity_citations": {
+      "minItems": 1
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "same_entity": {
+      "const": "insufficient_evidence"
+     }
+    },
+    "required": [
+     "same_entity"
+    ]
+   }
+  },
+  {
+   "else": {
+    "properties": {
+     "useful_granularity_citations": {
+      "minItems": 1
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "useful_granularity": {
+      "const": "insufficient_evidence"
+     }
+    },
+    "required": [
+     "useful_granularity"
+    ]
+   }
+  }
+ ],
+ "properties": {
+  "case_id": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "reasoning": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "same_entity": {
+   "enum": [
+    "same_entity",
+    "different_entity",
+    "insufficient_evidence"
+   ]
+  },
+  "same_entity_citations": {
+   "items": {
+    "pattern": "^https?://",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "useful_granularity": {
+   "enum": [
+    "useful",
+    "too_broad",
+    "too_narrow",
+    "insufficient_evidence"
+   ]
+  },
+  "useful_granularity_citations": {
+   "items": {
+    "pattern": "^https?://",
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "case_id",
+  "same_entity",
+  "useful_granularity",
+  "reasoning",
+  "same_entity_citations",
+  "useful_granularity_citations"
+ ],
+ "title": "Stage 1 reviewer raw response for one case",
+ "type": "object",
+ "x-hapi-role": "stage_1_reviewer"
+}
