@@ -45,7 +45,8 @@ def test_the_graph_counts_one_name_otherwise_and_ahmose_ii_no_longer_reaches_ahm
 
 def test_the_committed_369_measurement_is_of_361s_ledger_and_consistent() -> None:
     """`docs/evaluations/resolver-gaps-369/results/resolver-change.json` measures #361's frozen
-    ledger against the tree #361 froze, and its counts agree with its listed changes."""
+    ledger against the tree #361 froze (its `compare_arms.BASE_COMMIT`), and its counts agree
+    with its listed changes."""
     import json
     from pathlib import Path
 
@@ -56,6 +57,8 @@ def test_the_committed_369_measurement_is_of_361s_ledger_and_consistent() -> Non
     script = (evaluations / "resolver-gaps-369/scripts/measure_resolver_change.py").read_text(encoding="utf-8")
     assert result["ledger_gzip_sha256"] == ledger_diff["ledger_gzip_sha256"]
     assert f'BASE_COMMIT = "{result["base_commit"]}"' in script
+    compare_arms = (evaluations / "ruler-reregistration-2026-10-15/scripts/compare_arms.py").read_text(encoding="utf-8")
+    assert f'BASE_COMMIT = "{result["base_commit"]}"' in compare_arms
     assert f'LEDGER_SHA256 = "{result["ledger_gzip_sha256"]}"' in script
     cued = result["royal_woman_cued_mentions"]
     assert (cued["count"], cued["changed"], len(cued["changes"])) == (194, 11, 11)
@@ -70,7 +73,7 @@ def test_the_committed_369_measurement_is_of_361s_ledger_and_consistent() -> Non
         for c in narrowed)
     assert "brooklyn-3599" in {c["artifact_id"] for c in narrowed}  # #361's Neferu d
     assert result["unread_kin"] == {"cued_mentions_with_unread_kin_names": 2,
-                                    "of_which_a_name_resolves_among_the_kings": 0,
+                                    "of_which_a_name_resolves_among_the_kings": 2,
                                     "results_reading_them_would_change": []}
     assert result["dynasty_values"] == {"distinct": 696, "newly_read_as_one_dynasty": 45, "read_differently": 0,
                                         "records_newly_read": 217}

@@ -22,7 +22,10 @@ the authority was not tuned on the cases it was judging. This change fixes them 
    Ahmose, Mother of Hatshepsut" and "Hatshepsut's Mother, Queen Ahmose".
 
 The review added a fourth change, to how an ambiguous royal-woman result is reported. It now
-names only the women the record's family and dynasty leave, not every woman of the name. When
+names only the women the record's family and dynasty leave, not every woman of the name. The
+exception is a key the authority spells differently for different women
+(`weak_sign_different_spellings`), which is ambiguous before any narrowing and still names them
+all. When
 the record's dynasty rules out every woman and the record names no family king, the result is
 unmatched (`record_dynasty_contradicts`), as it already was for a lone candidate. This
 narrowing never creates a link.
@@ -30,7 +33,8 @@ narrowing never creates a link.
 ## What it changes
 
 `results/resolver-change.json` was made by `scripts/measure_resolver_change.py`. It ran on the
-frozen corpus archive and #361's mention ledger, using the base tree and the working tree with
+frozen corpus archive and #361's mention ledger, using #361's frozen tree (`BASE_COMMIT`
+9fa4953) and the working tree with
 all four changes in force together.
 
 | Inputs compared | Changed |
@@ -61,13 +65,20 @@ alongside the two Ahmose records.
 - **A stated relative counts only if the king authority resolves the name.** The claim graph has
   no "Tao I", "Tao II" or "Taa II". So Queen Inhapi's stated relatives add nothing, and neither
   do Dodson & Hilton's own "Taa II" family links.
-- **Some phrasings are not read.** These are "Great Royal Wife of X", "wife and sister of X",
-  "wife of King X", "Mother of X, Queen Y", "Relief of X's Mother, Queen Y" (read as the name
-  "Relief of X") and a relative's name followed by a bracket.
+- **Some phrasings are not read.** The reviewers named these as common museum forms; they were
+  not found in this ledger. They are "Great Royal Wife of X", "wife and sister of X", "wife of
+  King X", "Mother of X, Queen Y", "Relief of X's Mother, Queen Y" (read as the name "Relief of
+  X") and a relative's name followed by a bracket.
   - An unread relative can do more than lose a match: the family rule outranks the dynasty rule,
     so hiding a family king can let the dynasty rule pick a different woman.
-  - The measurement counts this (`unread_kin`). A looser reading of the whole field finds unread
-    relatives' names in 2 of the 194 cued mentions. Neither name resolves as a king, so reading
-    them would change no result.
+  - The measurement counts this (`unread_kin`). It reads the whole field generously, trying
+    every run of capitalized words after a kin word as a name, so it over-reads; that makes its
+    zero the strong claim.
+    - It finds unread relatives in 2 of the 194 cued mentions, both Harvard prose on Maatkare
+      (harvard-292258).
+    - One is a cue ("God's Wife of Amun Maatkare"). The other is "daughter of the High Priest of
+      Amun Pinedjem I", which the graph spells "Pinudjem I", so "Pinedjem I" does not resolve.
+    - Read generously, some name in each resolves (for instance "Maatkare", which is also
+      Hatshepsut's throne name). Even so, adding every such king **changes no result**.
 - **The older resolver keeps the bug.** The linkability script's own resolver
   (`run_linkability.py`, hash-pinned by earlier evaluations) does not have rule 2.

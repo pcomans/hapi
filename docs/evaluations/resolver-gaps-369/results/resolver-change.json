@@ -1,5 +1,5 @@
 {
-  "base_commit": "d82b7ef9f689bbf2e01b9fdc81eb76b070fa83b4",
+  "base_commit": "9fa4953a1fb9b61da628afed06ba0d376caae42f",
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "dh_family_names": {
     "changed": 0,
@@ -259,10 +259,10 @@
     ],
     "count": 194
   },
-  "schema_version": "hapi-369-resolver-change/2",
+  "schema_version": "hapi-369-resolver-change/3",
   "unread_kin": {
     "cued_mentions_with_unread_kin_names": 2,
-    "of_which_a_name_resolves_among_the_kings": 0,
+    "of_which_a_name_resolves_among_the_kings": 2,
     "results_reading_them_would_change": []
   }
 }

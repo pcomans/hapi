@@ -237,6 +237,15 @@ def test_the_dynasty_narrows_among_several_family_matches(women) -> None:
     # A and B are family matches; of those only A is of the record's dynasty (C is not family).
     assert resolve(index, "Iset", kings={"king:amenhotep-iii"}, dynasty=18) == (
         "resolved", ["dodson_hilton:Iset A"], "dynasty")
+    # #369: two family matches and no dynasty: ambiguous between them, C (not family) left out.
+    assert resolve(index, "Iset", kings={"king:amenhotep-iii"}) == (
+        "ambiguous", ["dodson_hilton:Iset A", "dodson_hilton:Iset B"], None)
+    # A dynasty that rules out both family matches does not contradict them: a record naming her
+    # family king overrides its dynasty, so the family stay, ambiguous.
+    assert resolve(index, "Iset", kings={"king:amenhotep-iii"}, dynasty=20) == (
+        "ambiguous", ["dodson_hilton:Iset A", "dodson_hilton:Iset B"], None)
+    # Without the family king, the same dynasty rules out every Iset.
+    assert resolve(index, "Iset", dynasty=20) == ("unmatched", [], "record_dynasty_contradicts")
 
 
 def test_a_candidate_of_unknown_dynasty_is_not_ruled_out_by_the_records(women) -> None:

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """#369: what the three resolver fixes change, on the frozen corpus and #361's mention ledger.
 
-Resolves the same inputs with the resolver of `BASE_COMMIT` (main before #369, the tree #361
-froze) and with the working tree's, and compares:
+Resolves the same inputs with the resolver of `BASE_COMMIT` (the tree #361 froze; its resolver
+inputs are main's before #369) and with the working tree's, and compares:
 
 * every dynasty value of the corpus's canonical records, read by `royal_women.single_dynasty`;
 * every distinct single-identity ruler mention text of the ledger, and every Dodson & Hilton
@@ -35,7 +35,8 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[4]
-BASE_COMMIT = "d82b7ef9f689bbf2e01b9fdc81eb76b070fa83b4"
+# #361's frozen tree (`ruler-reregistration-2026-10-15/scripts/compare_arms.BASE_COMMIT`).
+BASE_COMMIT = "9fa4953a1fb9b61da628afed06ba0d376caae42f"
 ARCHIVE_SHA256 = "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
 ARTIFACTS_MEMBER = "hapi-museum-corpus-2026-08-27/data/artifacts.ndjson.gz"
 # #361's mention ledger (`ruler-reregistration-2026-10-15/results/ledger-diff.json`).
@@ -110,6 +111,18 @@ def resolve_side(root: Path, ledger: Path, values: list[str]) -> dict:
     }
 
 
+def capitalized_runs(text: str) -> set[str]:
+    """Every contiguous run of capitalized words in `text`, each with a following regnal numeral
+    if there is one ("High", "Amun Pinedjem", "Pinedjem I", ...)."""
+    runs = set()
+    for run in re.finditer(r"[A-Z][\w'’-]*(?:\s+[A-Z][\w'’-]*)*", text):
+        words = run[0].split()
+        for i in range(len(words)):
+            for j in range(i + 1, len(words) + 1):
+                runs.add(" ".join(words[i:j]))
+    return runs
+
+
 def unread_kin(rw, index, kings, ruler: list[dict], record_kings: dict[str, set[str]]) -> dict:
     """The kin `stated_kin_names` leaves unread, found by a looser reading of the whole field
     ("<kin> of [King] <Name>" and "<Name>'s <kin>" anywhere): how many cued mentions' fields hold
@@ -129,7 +142,10 @@ def unread_kin(rw, index, kings, ruler: list[dict], record_kings: dict[str, set[
         if not loose:
             continue
         with_unread += 1
-        added = {t for name in loose if (r := kings.resolve(name))["status"] == "resolved" for t in r["target_ids"]}
+        # A capture runs to the next comma or bracket ("the High Priest of Amun Pinedjem I who
+        # ..."), so every run of capitalized words in it, with a numeral after, is tried as a name.
+        names = {name for capture in loose for name in capitalized_runs(capture)}
+        added = {t for name in names if (r := kings.resolve(name))["status"] == "resolved" for t in r["target_ids"]}
         resolving += bool(added)
         kwargs = {"record_dynasty": rw.single_dynasty(m["record_dynasty"])}
         now = rw.resolve_ruler_mention(index, kings, field, m["span_start"], m["span_end"],
@@ -181,7 +197,7 @@ def measure(archive: Path, ledger: Path) -> dict:
                     if (before["cued"][k]["status"], before["cued"][k]["target_ids"])
                     != (after["cued"][k]["status"], after["cued"][k]["target_ids"])]
     return {
-        "schema_version": "hapi-369-resolver-change/2",
+        "schema_version": "hapi-369-resolver-change/3",
         "base_commit": BASE_COMMIT,
         "measured_sha256": {path: sha256_path(REPO / path) for path in MEASURED},
         "corpus_archive_sha256": ARCHIVE_SHA256,

@@ -399,8 +399,9 @@ def test_a_record_dynasty_alone_resolves_only_a_confirmable_woman_of_that_dynast
             else:
                 if f["status"] == "ambiguous" and f["context_rule"] is None:
                     # The women reported are those the record's dynasty leaves (#369).
-                    assert f["target_ids"] and all(not index.dynasties[t] or dynasty in index.dynasties[t]
-                                                   for t in f["target_ids"]), (text, dynasty)
+                    assert len(f["target_ids"]) >= 2 and set(f["target_ids"]) <= set(f["candidate_ids"]), (text, dynasty)
+                    assert all(not index.dynasties[t] or dynasty in index.dynasties[t]
+                               for t in f["target_ids"]), (text, dynasty)
                 outcomes[f["status"], f["context_rule"]] += 1
     # 197 keys x 34 dynasties: no bare key is an indexed label or claim-graph key. The five
     # withheld keys (hntt, nbt, nfr, nfrsbk, tntmn) give 170 = 5 x 34; tntmn's two dynasty
