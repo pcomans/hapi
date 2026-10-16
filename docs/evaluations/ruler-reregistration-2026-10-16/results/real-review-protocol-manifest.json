@@ -1,0 +1,94 @@
+{
+  "evaluation_date": "2026-10-16",
+  "protocol_inputs": {
+    "artifact_schema": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/review-artifact.schema.json",
+      "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
+    },
+    "browser_tool": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/open_page_server.py",
+      "sha256": "2ce814c976a3eaee31bf07614e6c82a65c8beb21453cc39b2bcc42e182264244"
+    },
+    "citable_sources": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/citable-sources.json",
+      "sha256": "4bd37e0670ecbeccd441b22e311a69e09cfe2925617a8fc1e00272396a4721d5"
+    },
+    "launcher_system_prompts": {
+      "review": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/launcher-instructions/review-system-v4.txt",
+        "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
+      }
+    },
+    "page_load_gate": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/page_load_gate.py",
+      "sha256": "3f1aeaa8c3d57e4bc17fd8964f5428c166c4f27c8fd0dc7a530adb08dde7c277"
+    },
+    "prompts": {
+      "stage_1_reconciler": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-1-reconciler-v7.txt",
+        "sha256": "5deb06f3e6092a8b3b7e484978e862babe22f2b3f929a5730958034899bbe736"
+      },
+      "stage_1_reviewer": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-1-reviewer-v7.txt",
+        "sha256": "c97e14ba4c13b2063483f0c9dc722cfc06ea1d0fb3223ab0fbd6b2474ef7b277"
+      },
+      "stage_2_reconciler": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-2-reconciler-v7.txt",
+        "sha256": "9e086d2ff7e3bb6972fb85864dbfdf460b3d3778af62c9d7eba7306e3a64ab04"
+      },
+      "stage_2_reviewer": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/prompts/stage-2-reviewer-v7.txt",
+        "sha256": "1d6963146df04ace27102c3f7d90036f15004c984adcab2bf4aeb7996d654438"
+      }
+    },
+    "protocol_version": "hapi-337-reregistration-consensus/1",
+    "raw_response_contracts": {
+      "stage_1_reconciler": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-1-reconciler-case-v3.schema.json",
+        "sha256": "f780f4b6f61225fae7511ea1374eae758ccfb9e31f522e1ba5c8873b5fd211a7"
+      },
+      "stage_1_reviewer": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-1-reviewer-case-v4.schema.json",
+        "sha256": "0b94e388454cd8c56506aac4e9c2cb856471c9813ef103da59cedb97904490be"
+      },
+      "stage_2_reconciler": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-2-reconciler-case-v3.schema.json",
+        "sha256": "dd9535da0b94a9e3770f970dda666b77740f003a9e48c6c22aa6eee362257812"
+      },
+      "stage_2_reviewer": {
+        "path": "docs/evaluations/ruler-reregistration-2026-10-16/raw-response-contracts/stage-2-reviewer-case-v3.schema.json",
+        "sha256": "b8fb1c959904bde658ae7a3a00d4a76aa788a90fc5ffe5275f2f9fea30e12ac3"
+      }
+    },
+    "runner": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/run_harness_review.py",
+      "sha256": "75f58315b9f3ac833b16b27670039616df36eefba795881e9d030c201881c5a8"
+    },
+    "scorer": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/score_review.py",
+      "sha256": "32e90079e6f5b5300fd9aa061b8aedb3b9bd8acc565ecc75b4873a59480aabf6"
+    },
+    "validator": {
+      "path": "docs/evaluations/ruler-reregistration-2026-10-16/scripts/review_protocol.py",
+      "sha256": "6eed55a85e01963119ea9ff0a21dfea17331808e6c0c7c57ac87cbc6d133d91a"
+    }
+  },
+  "queue_inputs": {
+    "stage_1_queue_sha256": "963759f1a8f5c18e5ed42f2bd847720ac0c89537a3a3f1337feed34706c4681c",
+    "stage_2_custodian_sha256": "d531dcbfb9fca2b6eac6c21540aaadb11ebb1bea1f8a47c36be25a43c9eb7a25"
+  },
+  "required_sequence": [
+    "leak_audit_every_prompt_on_composed_requests",
+    "run_two_stage_1_reviewers",
+    "prepare_stage_1_reconciliation",
+    "run_stage_1_reconciler_on_disputed_questions",
+    "freeze_stage_1_consensus",
+    "release_stage_2",
+    "run_two_stage_2_reviewers",
+    "prepare_stage_2_reconciliation",
+    "run_stage_2_reconciler_on_disputed_questions",
+    "freeze_stage_2_consensus",
+    "score"
+  ],
+  "schema_version": "hapi-authority-control-review-protocol-manifest/4"
+}

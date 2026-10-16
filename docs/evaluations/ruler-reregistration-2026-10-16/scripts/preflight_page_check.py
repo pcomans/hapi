@@ -60,7 +60,7 @@ def pages(run_dirs: list[Path]) -> list[str]:
 
 
 # The hosts of the museums added since #361's run, whose record pages no earlier run opened.
-ADDED_MUSEUM_HOSTS = ("clevelandart.org", "purl.thewalters.org")
+ADDED_MUSEUM_HOSTS = ("clevelandart.org", "art.thewalters.org", "purl.thewalters.org")
 
 
 def queue_pages(queue: Path) -> list[str]:
@@ -107,10 +107,12 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     earlier = pages(args.records)
-    rows = asyncio.run(check(earlier + [url for url in queue_pages(args.queue) if url not in earlier]))
+    from_queue = queue_pages(args.queue)
+    rows = asyncio.run(check(earlier + [url for url in from_queue if url not in earlier]))
     args.out.write_text(json.dumps({"schema_version": "hapi-337-preflight-page-check/3",
                                     "runs": [p.name for p in args.records],
                                     "stage_1_queue_sha256": sha256_path(args.queue),
+                                    "added_museum_queue_pages": sorted(u for u in from_queue if _host(u) in ADDED_MUSEUM_HOSTS),
                                     "made_with": {path.name: sha256_path(path) for path in (
                                         Path(__file__), OPEN_PAGE_SERVER_PATH, CITABLE_SOURCES_PATH)},
                                     "pages": rows},

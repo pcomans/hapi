@@ -36,19 +36,26 @@ neither museum's spellings.
    - At most 20 distinct texts fall on one side.
    - The prompts say so (v7, prompt audit `prompt-audit-2026-10-16.md`).
 4. **#358's other open items:**
-   - **Item 8, runtime binding.** Each call records the runtime's lock file and Python
-     (`run_bindings`).
+   - **Item 8, runtime binding.** Each call records the runtime's lock file (`run_bindings`).
      - Its Claude Code release is checked from its init event, as before.
      - Every page it read in the local browser must report the runtime's Chromium build
        (`CHROMIUM_VERSION`). A call that read a page with another build decides nothing.
    - **Item 10, error pages served with status 200** ("Arachne | 404") are not loaded
-     (`ERROR_PAGE_TITLE`).
+     (`ERROR_PAGE_TITLE`, in `page_loaded`). The validator re-derives `loaded` with it. The
+     browser tool uses the same test, so such a page is read again in Browserbase, like any page
+     that does not load locally.
    - **Item 11, per-question citations.** A Stage 1 reviewer cites each of its two judgments
-     separately (`same_entity_citations`, `useful_granularity_citations`; schema v4). Any
-     outcome other than insufficient_evidence needs a citation in its own list.
+     separately (`same_entity_citations`, `useful_granularity_citations`; schema v4).
+     - Any outcome other than insufficient_evidence needs a citation in its own list.
+     - If any citable page the call opened loaded, every list must name one. The validator has
+       required that since #337, and the v7 prompt now says so. Otherwise the validator would
+       reject, and the runner re-draw, an answer the prompt allowed (local code review).
 5. **Tuned-on records are counted apart.** #369's fixes were found on brooklyn-3634,
    met-566763 and brooklyn-3599. Cases that hold one are reviewed and scored, but left out of
    the registered verdict (`decision-rule.md`).
+   - For the same reason, no scope starts qualified. #361's Met–Brooklyn result hung on a case
+     the resolver was later tuned on. After this registration, the qualified ruler scopes are
+     the ones it qualifies.
 6. **Citable sources.** Cleveland and the Walters, already citable, are now case museums, and the
    Walters' permanent-link host is added (`citable-sources.json`).
 7. **New seeds** for the opaque orders, the reconciliation order and the preflight sample.
@@ -63,7 +70,11 @@ The system prompt is #361's bytes. The four prompts change only as items 3 and 4
     Neon on 2026-10-16. Each table reproduces the `raw_sha256` of its committed profile
     (`docs/museum-sources/<museum>-profile/profile.json`).
 
-  Both archives are pinned by SHA-256 in `scripts/make_run.py`.
+  Both archives are pinned by SHA-256 in `scripts/make_run.py`. The second is written by
+  `scripts/dump_added_museums.py`, the same bytes from the same tables, and kept in the
+  project's private store (`dropbox/hapi-added-museums-2026-10-16/`). Both museums' data is CC0.
+- **The run is bound to the archives.** The queue builder re-derives the run's input digest from
+  them, and recounts the run's transitions, before it builds anything.
 - **The code** is main at the merge of #381 plus this directory. The run's manifest records
   both modes' resolver versions, which digest every code and data file they read. The queue
   builder refuses to build unless this tree's code gives the same versions.
@@ -103,12 +114,16 @@ Before the run, the preflight check (`scripts/preflight_page_check.py`) opens:
 - every Cleveland and Walters record page the queue shows;
 - a sample of the other museums' record pages.
 
-It uses the review tool and no model.
+It uses the review tool and no model. Met–Walters, the one scope the rule can decide, depends
+on the Walters' record pages, which sit behind Cloudflare. So the run starts only once every
+Cleveland and Walters record page the queue shows has loaded in the preflight
+(`results/preflight-page-check.json`, tested).
 
 ## Known limitations (disclosed)
 
 - **Most changed cases are in one pair.** Met–Walters holds 11 of the 18 changed cases. Every
-  other pair has at most 3, and Met–Brooklyn has 2 once its tuned-on case is left out.
+  other pair has at most 3, and Met–Brooklyn has 2 once its tuned-on case is left out, so it
+  cannot qualify here and ends unevaluated.
 - **The extractor reads hyphenated pairs of rulers as one name** ("Psametik I-Necho II",
   docs/museum-sources/walters.md).
   - In the authority mode no ruler matches such a name, so it is a missed link, never a wrong one.

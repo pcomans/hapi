@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""#361 review protocol (#337 v10 with #358's fixes): the review agents' one way to read a web page.
+"""The ruler re-registration's review protocol (#337 v10, #361, and #358's fixes): the review agents'
+one way to read a web page.
 
 An MCP server (stdio) with a single tool, `open_page`, that loads a URL in Chromium (headful,
 on the virtual X display `xvfb-run` gives it) and returns what the page or PDF says. The Met and Brooklyn collection sites sit behind Vercel's

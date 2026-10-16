@@ -4,10 +4,10 @@
       "cleveland": "dfbc8cbfa36bd310c41b0ba885fb94818a6a5af56952915c6b086a0a6eba0a62",
       "walters": "2307c00225bbf510e33694a3969e43bec8fc8caac4bf704b29313e2b0f2de56e"
     },
-    "added_museums_archive_sha256": "61ada79d99d6b91192bc4f2d768627e71aad9911fc77e52d2e5bca14f8c89913",
+    "added_museums_archive_sha256": "f9c353f6e5a7757533739210d94550d00091fde026ca3ca9ea2ede5d7c30186e",
     "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
   },
-  "make_run_sha256": "200dcb34a6db172463988a7a501c7f2ebb58d2a09b2c67440e76471fe9c7d7fc",
+  "make_run_sha256": "e302daa047dc5e4ef6a23ca915133d4fb36e3d7714d37b09557bfc51c70b75ff",
   "manifest": {
     "canonical_rows_set_aside": [],
     "extraction": {

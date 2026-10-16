@@ -54,6 +54,8 @@ MUSEUM_HOSTS = {
     "met": ("metmuseum.org",),
     "brooklyn": ("brooklynmuseum.org",),
     "harvard": ("harvardartmuseums.org", "hvrd.art"),
+    "cleveland": ("clevelandart.org",),
+    "walters": ("art.thewalters.org", "purl.thewalters.org"),
 }
 
 
@@ -179,7 +181,8 @@ def stage_gate(stage: str, queue_path: Path, records: Path, classes_of: dict[str
         reconciler_calls += call_role.reconciler
         calls_without_a_loaded_page += not any(o["loaded"] for o in record["page_opens"])
         decision = record["decision"]
-        for url in cited_urls(decision):
+        # A Stage 1 reviewer may cite one page for both questions; it counts once per call.
+        for url in dict.fromkeys(cited_urls(decision)):
             source = citable_source_of(url)
             for transition_class in classes:
                 citations_by_class[transition_class][source["role"]] += 1

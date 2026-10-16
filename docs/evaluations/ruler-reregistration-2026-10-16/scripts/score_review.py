@@ -307,12 +307,15 @@ def record_counts(literal: set[str], authority: set[str]) -> dict:
     return result
 
 
-# Travels with the record figures (Codex review of #368): a node is judged from at most five
-# records per side, so a record figure is not a judgment of each record it counts.
+# Travels with the record figures (Codex review of #368): reviewers see every distinct field text
+# of a node's side but open only some of its records, so a record figure is not a judgment of
+# each record it counts.
 RECORD_FIGURES_NOTE = (
-    "Record figures count every record on a judged node (node membership). A node is judged from "
-    "at most five of its records per side, so they are not record-by-record judgments; the "
-    "decision rule counts cases, one label per node.")
+    "Record figures count every record on a judged node (node membership). Reviewers see every "
+    "distinct field text of a node's side, with up to five record URLs per text, and open some of "
+    "those records, so the figures are not record-by-record judgments; the decision rule counts "
+    "cases, one label per node.")
+
 
 
 def arm_outcomes(cases: list[dict]) -> dict:
@@ -384,8 +387,8 @@ CALIBRATION_OK = "calibration_control_same_useful_exact_target"
 
 def decision_rule(joined: list[dict]) -> dict:
     """`decision-rule.md`, applied in its order: calibration, safety, utility, otherwise STOP.
-    The registered verdict is this rule on the cases that hold no tuned-on record
-    (`registered_verdict`); the same rule on every case is reported beside it."""
+    `registered_decision` runs it on the cases that hold no tuned-on record (the registered
+    verdict) and on every case (reported beside it)."""
     controls = [case for case in joined if case["transition_class"] == "retained_control"]
     if not controls:
         raise ValueError("no retained controls: calibration cannot be judged")
@@ -447,17 +450,49 @@ def decision_rule(joined: list[dict]) -> dict:
     }
 
 
+def scope_dispositions(rule: dict, scopes: list[str]) -> dict[str, str]:
+    """What the registered verdict does to each scope (decision-rule.md, "What the verdict
+    changes"). No scope starts qualified: #361's Met–Brooklyn qualification rested on a case the
+    resolver was later tuned on, so it is not evidence for the current resolver.
+    - INCONCLUSIVE decides nothing: `no_decision` everywhere.
+    - A scope with a b is `unsafe`.
+    - Under REDESIGN, every other scope is `no_decision`.
+    - A scope the rule qualifies is `qualified`.
+    - A scope with at least 3 decided cases that does not qualify is `not_qualifying`.
+    - A scope with fewer is `unevaluated`."""
+    out = {}
+    for key in sorted(scopes):
+        row = rule["scopes"].get(key)
+        if rule["verdict"] == "INCONCLUSIVE":
+            out[key] = "no_decision"
+        elif row and row["b"]:
+            out[key] = "unsafe"
+        elif rule["verdict"] == "REDESIGN":
+            out[key] = "no_decision"
+        elif key in rule["qualifying_scopes"]:
+            out[key] = "qualified"
+        elif row and row["decided"] >= 3:
+            out[key] = "not_qualifying"
+        else:
+            out[key] = "unevaluated"
+    return out
+
+
 def registered_decision(joined: list[dict]) -> dict:
     """The registered verdict (decision-rule.md): the rule on the cases that hold none of the
     records #369's resolver fixes were found on. The same rule on every case is reported beside
     it and decides nothing."""
     tuned = [case for case in joined if case["tuned_on_records"]]
+    registered = decision_rule([case for case in joined if not case["tuned_on_records"]])
+    # Every scope the population has a case in, changed or not.
+    scopes = sorted({f"{case['entity_type']}__{'__'.join(case['museum_pair'])}" for case in joined})
     return {
         "tuned_on_cases": {
             "excluded_from_the_registered_verdict": len(tuned),
             "categories": dict(sorted(collections.Counter(case["decision_category"] for case in tuned).items())),
         },
-        "decision_rule": decision_rule([case for case in joined if not case["tuned_on_records"]]),
+        "decision_rule": registered,
+        "scope_dispositions": scope_dispositions(registered, scopes),
         "decision_rule_including_tuned_on_cases": decision_rule(joined),
     }
 

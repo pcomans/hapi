@@ -8,6 +8,7 @@ under `review/` (`build_review_queue.py build --out <dir>/review`)."""
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -36,12 +37,11 @@ def registered_files(run_dir: Path) -> tuple[str, ...]:
     return ("run-manifest.json", *(f"run/{run_id}/{name}" for name in RUN_FILES), *REVIEW_FILES)
 
 
-def sha256_path(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def content_sha256(path: Path) -> str:
+    """A file's SHA-256, of its decompressed content for a `.gz` file (as the run manifest hashes
+    it), so the proof does not depend on the zlib build."""
+    data = gzip.decompress(path.read_bytes()) if path.suffix == ".gz" else path.read_bytes()
+    return hashlib.sha256(data).hexdigest()
 
 
 def verify(first: Path, second: Path) -> dict:
@@ -51,8 +51,8 @@ def verify(first: Path, second: Path) -> dict:
     files = registered_files(first)
     if registered_files(second) != files:
         raise ValueError("the two runs name different runs")
-    first_hashes = {name: sha256_path(first / name) for name in files}
-    second_hashes = {name: sha256_path(second / name) for name in files}
+    first_hashes = {name: content_sha256(first / name) for name in files}
+    second_hashes = {name: content_sha256(second / name) for name in files}
     mismatches = [name for name in files if first_hashes[name] != second_hashes[name]]
     if mismatches:
         raise ValueError(f"rerun byte mismatch: {mismatches}")

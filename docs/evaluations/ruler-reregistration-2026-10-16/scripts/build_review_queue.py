@@ -189,10 +189,17 @@ def validate_run(repo_root: Path, run: Path) -> dict:
     return committed
 
 
-def load_source_urls(repo_root: Path, corpus: Path, added: Path) -> dict[str, str]:
+def load_source_urls(repo_root: Path, corpus: Path, added: Path, run: Path) -> dict[str, str]:
     """Map every canonical artifact ID to its museum's public record URL: the canonical rows of
-    the frozen inputs (`make_run.load_inputs`, which checks both archives' SHA-256)."""
-    canonical, _ = load_make_run_module(repo_root).load_inputs(corpus, added)
+    the frozen inputs (`make_run.load_inputs`, which checks both archives' SHA-256). The run must
+    have been made from exactly these inputs: the input digest it records is re-derived here, as
+    `write_run` derives it (the rows `check_inputs` keeps, and the raw payloads)."""
+    pipeline_modules(repo_root)
+    from pipeline.enrich import inputs, link_files
+    canonical, raw = load_make_run_module(repo_root).load_inputs(corpus, added)
+    kept, _ = inputs.check_inputs(canonical, raw)
+    if link_files.input_digest(kept, raw) != read_json(run / "manifest.json")["inputs_sha256"]:
+        raise ValueError("the run was not made from these archives' inputs")
     urls: dict[str, str] = {}
     for row in canonical:
         url = row.get("source_url")
@@ -492,6 +499,9 @@ def derive_candidates(
     candidates.sort(key=lambda candidate: hashlib.sha256(
         (OPAQUE_ORDER_SEED + candidate["opaque_order_binding_sha256"]).encode("utf-8")
     ).hexdigest())
+    # The committed counts are a plain field outside the run ID's digest: recount them from the run.
+    if load_make_run_module(repo_root).transition_counts(run) != committed["transition_counts"]:
+        raise ValueError("the run manifest's transition counts are not the run's")
     expected_by_pair = committed["transition_counts"]
     expected = {transition_class: {key: counts[transition_class] for key, counts in expected_by_pair.items()}
                 for transition_class in ("authority_only_transition", "literal_only_transition", "retained_control")}
@@ -786,7 +796,7 @@ def build(
     repo_root: Path, run: Path, corpus: Path, added: Path, out: Path, public_digest: Path | None = None
 ) -> dict:
     candidates, exhaustive, inputs, mentions, literal_rows = derive_candidates(repo_root, run)
-    source_urls = load_source_urls(repo_root, corpus, added)
+    source_urls = load_source_urls(repo_root, corpus, added, run)
     museum_pairs = pairs(repo_root)
     protocol_inputs = review_protocol_inputs(repo_root)
     review_units_by_binding: dict[str, dict] = {}

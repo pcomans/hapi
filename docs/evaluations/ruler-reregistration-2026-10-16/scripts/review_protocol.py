@@ -28,7 +28,6 @@ import collections
 import hashlib
 import json
 import re
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse
@@ -111,7 +110,7 @@ ROLES = {
 MODEL_INPUT_FORBIDDEN_KEYS = {
     "arm_native", "artifact_id", "artifact_ids", "artifact_ids_by_side", "case_binding_sha256",
     "mention_id", "mention_ids", "mention_ids_by_side", "proposed_target_id",
-    "stage_1_review_unit_id", "transition_class",
+    "stage_1_review_unit_id", "transition_class", "tuned_on_records",
 }
 
 
@@ -189,15 +188,14 @@ def role_inputs(role: Role) -> dict:
 def run_bindings() -> dict:
     """The files that make a call besides its composed input: the runner (command, tools,
     model) and the browser server (what `open_page` does, and its description, which the
-    model reads), and the runtime they run in: its lock file, which pins the browser and every
-    other dependency, and its Python (#358 item 8; the Claude Code release is checked from each
-    call's init event, the Chromium build from each page it read). Each stored call records them;
-    a call made by other files is not accepted."""
+    model reads), and the runtime's lock file, which pins the browser and every other dependency
+    (#358 item 8; the Claude Code release is checked from each call's init event, the Chromium
+    build from each page it read locally). Each stored call records them; a call made by other
+    files is not accepted."""
     return {
         "runner_sha256": sha256_path(EVALUATION_ROOT / "scripts" / "run_harness_review.py"),
         "browser_tool_sha256": sha256_path(OPEN_PAGE_SERVER_PATH),
         "runtime_lock_sha256": sha256_path(RUNTIME_LOCK_PATH),
-        "python_version": sys.version.split()[0],
     }
 
 

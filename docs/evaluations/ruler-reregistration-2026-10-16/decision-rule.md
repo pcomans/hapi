@@ -5,7 +5,7 @@ registration before the owner approves this file. The approval and its date will
 
 The rule is #361's (`../ruler-reregistration-2026-10-15/decision-rule.md`): #337 v10's rule, with
 #358's correction that a different-entity finding is labelled first. It is unchanged except for
-the three points below. This registration scores rulers only, so every scope is rulers × one
+the four points below. This registration scores rulers only, so every scope is rulers × one
 museum pair. There are ten pairs: every pair of the Met, Brooklyn, Harvard, Cleveland and the
 Walters.
 
@@ -26,14 +26,32 @@ Walters.
 2. **More pairs, so more scopes.** The rule is applied per scope as before, and a scope still
    needs at least 3 decided cases to qualify. A scope with fewer changed cases than that cannot
    qualify here.
-3. **What the verdict changes.**
-   - **A scope that qualifies here** is qualified for rulers (`QUALIFIED_SCOPES`).
-   - **Met–Brooklyn**, which #361 qualified, keeps that unless this registration finds a **b**
-     there (a false merge), which marks it unsafe. Without its tuned-on cases it has too few
-     changed cases to qualify again, so this registration cannot confirm it. It can only revoke
-     it, by a b.
-   - **Any other scope that does not qualify** stays unevaluated if it had fewer than 3 decided
-     cases. If it had 3 or more and failed, it is recorded as not qualifying.
+3. **No scope starts qualified.** A case the matching was adjusted on cannot also be evidence
+   that the matching works.
+   - #361 qualified Met–Brooklyn on four cases, and its margin hung on the Ahmose case.
+   - #369 then changed the resolver using that case.
+   - So #361's result is not evidence for today's resolver.
+   - This registration therefore replaces #361's ruler qualification: after it, the qualified
+     ruler scopes are exactly those it qualifies.
+   - Met–Brooklyn has 2 changed cases once its tuned-on cases are left out, too few to qualify
+     here, so it ends unevaluated unless a later registration decides it.
+4. **What the verdict changes.** The scorer gives every scope one outcome
+   (`scope_dispositions` in `scripts/score_review.py`), from the registered verdict:
+
+   | Situation | Outcome |
+   |---|---|
+   | The verdict is INCONCLUSIVE | `no_decision`, every scope |
+   | The scope has a **b** | `unsafe` |
+   | The verdict is REDESIGN, for every scope without a b | `no_decision` |
+   | The scope qualifies (step 3 of the rule) | `qualified` |
+   | It has 3 or more decided cases and does not qualify | `not_qualifying` |
+   | It has fewer than 3 decided cases | `unevaluated` |
+
+   The qualified ruler scopes after this registration (`QUALIFIED_SCOPES` in
+   `pipeline/enrich/authority_links.py`) are the `qualified` ones and no others.
+   - A **b** in a tuned-on case would show in the sensitivity result only.
+   - This population has none: its two tuned-on cases are a control and a loss, and only an
+     authority gain can be a b.
 
 ## Labels
 

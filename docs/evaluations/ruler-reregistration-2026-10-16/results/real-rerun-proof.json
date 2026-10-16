@@ -1,0 +1,21 @@
+{
+  "all_registered_files_byte_identical": true,
+  "complete_runs_compared": 2,
+  "identical_file_count": 13,
+  "schema_version": "hapi-ruler-reregistration-2026-10-16-rerun-proof/1",
+  "sha256_by_file": {
+    "review/private-answer-key.json": "d75d1a7c36be7729c2e9549d67a349c4230e7ba7f196722539bf7e4ec09fd50c",
+    "review/public-review-population-digest.json": "aab6cb4ee2bdace89c24ab502063df525602963a101a82700bf42c2175a2c2e0",
+    "review/review-population-manifest.json": "5851c54d2e7b7fa7b5177224a8f6633d72969159c0dd1840044d4d3374c92eb1",
+    "review/review-protocol-manifest.json": "0822457a0d75e2f53df6081ab609a81438272d2fd114a13e18dfc583cae09e20",
+    "review/stage-1-queue.json": "963759f1a8f5c18e5ed42f2bd847720ac0c89537a3a3f1337feed34706c4681c",
+    "review/stage-2-custodian.json": "d531dcbfb9fca2b6eac6c21540aaadb11ebb1bea1f8a47c36be25a43c9eb7a25",
+    "run-manifest.json": "121e079dfd1d74343262ff28375f258e47101ce59cf80e34618edcb479f86b68",
+    "run/868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e/links-authority.ndjson.gz": "70c9c8a36e13ea5038a1718c56e7c6e2101577af27813c966e91cc1ce91dbc4d",
+    "run/868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e/links-literal.ndjson.gz": "86a6c983088c2b181643b061ec33d282550401fb5e3a299e28063f3b1a2aedf0",
+    "run/868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e/manifest.json": "2c56406070611548ad2788d47aa491f7c1856f3658fddbe2fe8a5c3a21db08ec",
+    "run/868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e/mentions.ndjson.gz": "956154ae56894d45d37dcd2db8e7bb0c392ce087b1d5d509e8832d9f4ad0435a",
+    "run/868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e/resolutions-authority.ndjson.gz": "fe613790931e7a68c862d0d29ba0c41fca960c84f2560792ffb969dd5a37aebb",
+    "run/868f1d826e8e8eb5b8c6a892a0b259c983f7d8751dec01364f48c51fe6277a6e/resolutions-literal.ndjson.gz": "7d64c39e3ae2d1e29cdba818943dc9e7e6fa32c20e4995c7a7a7398a505a59e6"
+  }
+}

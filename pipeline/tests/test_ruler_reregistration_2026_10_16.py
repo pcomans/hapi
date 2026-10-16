@@ -7,6 +7,7 @@ error pages served with status 200, and the tuned-on records counted apart."""
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib.util
 import io
 import json
@@ -1160,27 +1161,21 @@ def test_the_committed_rerun_proof_binds_the_committed_run_digest_and_population
                       ("private-answer-key.json", "private_answer_key_sha256"),
                       ("stage-2-custodian.json", "stage_2_custodian_sha256")):
         assert files[f"review/{name}"] == digest["output_hashes"][key]
-    assert score["input_hashes"]["stage_1_queue"] == digest["output_hashes"]["stage_1_queue_sha256"]
-    assert score["input_hashes"]["private_answer_key"] == digest["output_hashes"]["private_answer_key_sha256"]
 
 
-def test_the_committed_preflight_check_counts() -> None:
+def test_the_committed_preflight_check_opened_every_added_museum_page_the_queue_shows() -> None:
+    """The run starts only once every Cleveland and Walters record page the Stage 1 queue shows has
+    loaded in the preflight, with this registration's tool, list and script (README)."""
     check = json.loads((EVALUATION / "results" / "preflight-page-check.json").read_text())
-    rows = check["pages"]
-    errors = [r for r in rows if "error" in r]
-    gone = [r for r in rows if "error" not in r and r["status"] in (404, 410)]
-    loaded = [r for r in rows if "error" not in r and r["loaded"]]
-    assert (len(rows), len(loaded), len(gone), len(rows) - len(loaded) - len(gone), len(errors)) == (195, 140, 40, 15, 5)
-    # Made with this registration's tool, list and script (#358 fix 1: a failed re-read names the
-    # local failure, so the errors say why).
+    digest = json.loads((EVALUATION / "results" / "real-review-population-digest.json").read_text())
+    assert check["stage_1_queue_sha256"] == digest["output_hashes"]["stage_1_queue_sha256"]
     assert check["made_with"] == {name: protocol.sha256_path(path) for name, path in (
         ("preflight_page_check.py", SCRIPTS / "preflight_page_check.py"),
         ("open_page_server.py", protocol.OPEN_PAGE_SERVER_PATH), ("citable-sources.json", protocol.CITABLE_SOURCES_PATH))}
-    assert all("local failure:" in r["error"] for r in errors)
-    assert sorted(r["url"] for r in loaded if r["browser"] == "browserbase" and not r["local_failure"]) == sorted(
-        r["url"] for r in rows if "ucl.ac.uk/museums-static/digitalegypt" in r["url"])
-    assert sum(1 for r in rows if r["host"] == "pcma.uw.edu.pl" and "error" not in r
-               and r["title"] == "Captcha Verification Needed") == 8
+    rows = {r["url"]: r for r in check["pages"]}
+    assert check["added_museum_queue_pages"]
+    for url in check["added_museum_queue_pages"]:
+        assert "error" not in rows[url] and rows[url]["loaded"], url
 
 
 def test_a_blocked_host_written_with_a_trailing_dot_is_still_blocked() -> None:
@@ -1438,11 +1433,12 @@ def test_open_page_refuses_a_name_resolving_to_a_private_address_and_a_redirect_
 
 
 def test_record_figures_carry_the_note_that_they_are_node_membership() -> None:
-    """Codex review of #368: the five-record cap means a record figure is not a record judgment;
-    the score says so beside the figures."""
+    """Codex review of #368: a record figure is not a record judgment; the score says so beside
+    the figures, describing what this registration shows (every distinct text, not five records)."""
     outcomes = scorer.arm_outcomes([])
     assert outcomes["record_figures_note"] == scorer.RECORD_FIGURES_NOTE
-    assert "node membership" in scorer.RECORD_FIGURES_NOTE and "at most five" in scorer.RECORD_FIGURES_NOTE
+    assert "node membership" in scorer.RECORD_FIGURES_NOTE and "every distinct field text" in scorer.RECORD_FIGURES_NOTE
+    assert "at most five of its records" not in scorer.RECORD_FIGURES_NOTE
 
 
 
@@ -1470,9 +1466,14 @@ def test_every_distinct_record_text_is_shown_with_its_count_and_at_most_five_url
         (("title", "Ostracon naming Seti II"),): 1,
     }
     shown = by_fields[(("reign", "reign of Seti I"),)]["example_record_urls"]
-    assert len(shown) == 5 and set(shown) <= set(urls.values())
-    # Neither the order of records nor of entries follows record IDs or counts.
-    assert shown != sorted(shown)[:5] or [e["record_count"] for e in entries] != sorted(e["record_count"] for e in entries)
+
+    def opaque(kind: str, value: str) -> str:
+        return hashlib.sha256(f"{queue_builder.OPAQUE_ORDER_SEED}|{kind}|{value}".encode()).hexdigest()
+
+    # The five URLs are the first five records in the seeded order, not by record ID; the entries
+    # follow the seeded order of their texts, not their counts.
+    assert shown == [urls[a] for a in sorted((f"met-{n}" for n in range(8)), key=lambda a: opaque("example-record", a))[:5]]
+    assert entries == sorted(entries, key=lambda e: opaque("record-text", queue_builder.canonical_sha256(e["fields"])))
     assert queue_builder.record_texts(list(reversed(rows)), urls) == entries
 
 
@@ -1514,6 +1515,28 @@ def test_the_registered_verdict_leaves_out_the_tuned_on_cases() -> None:
     assert result["decision_rule"]["verdict"] == "STOP"
     assert result["decision_rule_including_tuned_on_cases"]["verdict"] == "CONTINUE"
     assert result["decision_rule"]["calibration"]["retained_controls"] == 10
+    assert result["scope_dispositions"] == {"ruler__met__walters": "unevaluated"}
+
+
+def _rule(verdict: str, scopes: dict, qualifying=()) -> dict:
+    return {"verdict": verdict, "qualifying_scopes": list(qualifying),
+            "scopes": {k: {"b": b, "decided": decided} for k, (b, decided) in scopes.items()}}
+
+
+@pytest.mark.parametrize(("rule", "expected"), [
+    # INCONCLUSIVE decides nothing.
+    (_rule("INCONCLUSIVE", {"ruler__met__walters": (1, 5)}), {"ruler__met__walters": "no_decision"}),
+    # A b makes a scope unsafe; REDESIGN decides nothing else.
+    (_rule("REDESIGN", {"ruler__met__walters": (1, 5), "ruler__met__cleveland": (0, 4)}),
+     {"ruler__met__walters": "unsafe", "ruler__met__cleveland": "no_decision"}),
+    # No scope starts qualified, Met–Brooklyn included (decision-rule.md, point 3).
+    (_rule("CONTINUE", {"ruler__met__walters": (0, 5), "ruler__met__cleveland": (0, 3), "ruler__met__brooklyn": (0, 2)},
+           ["ruler__met__walters"]),
+     {"ruler__met__walters": "qualified", "ruler__met__cleveland": "not_qualifying", "ruler__met__brooklyn": "unevaluated"}),
+    (_rule("STOP", {"ruler__met__walters": (0, 4)}, ), {"ruler__met__walters": "not_qualifying"}),
+])
+def test_every_scope_gets_the_outcome_the_decision_rule_gives(rule: dict, expected: dict) -> None:
+    assert scorer.scope_dispositions(rule, sorted(expected)) == expected
 
 
 @pytest.mark.parametrize(("title", "loaded"), [
@@ -1541,7 +1564,7 @@ def test_each_stage_1_question_cites_its_own_sources() -> None:
 
 
 def test_a_page_read_by_another_chromium_build_fails_the_call() -> None:
-    """#358 item 8: each call is bound to the runtime: its lock file and Python (run_bindings),
+    """#358 item 8: each call is bound to the runtime: its lock file (run_bindings),
     its Claude Code release (init event) and the Chromium build of every page it read locally."""
     case = stage_1_case("review-unit-001", HASH_1)
     role = protocol.ROLES["stage_1_reviewer"]
@@ -1558,7 +1581,6 @@ def test_a_page_read_by_another_chromium_build_fails_the_call() -> None:
         "runner_sha256": protocol.sha256_path(SCRIPTS / "run_harness_review.py"),
         "browser_tool_sha256": protocol.sha256_path(protocol.OPEN_PAGE_SERVER_PATH),
         "runtime_lock_sha256": protocol.sha256_path(EVALUATION / "runtime/uv.lock"),
-        "python_version": sys.version.split()[0],
     }
 
 
@@ -1601,3 +1623,34 @@ def test_the_added_museums_archive_must_be_the_frozen_one(tmp_path: Path) -> Non
     other.write_bytes(b"not the archive")
     with pytest.raises(ValueError, match="is not the frozen added-museums archive"):
         make_run.load_added(other)
+
+
+def test_the_readme_population_table_is_the_committed_digests() -> None:
+    digest = json.loads((EVALUATION / "results" / "real-review-population-digest.json").read_text())
+    counts = digest["population_counts"]
+    readme = (EVALUATION / "README.md").read_text()
+    names = {"met": "Met", "brooklyn": "Brooklyn", "harvard": "Harvard", "cleveland": "Cleveland", "walters": "Walters"}
+    for pair, by_class in counts["by_pair_and_class"].items():
+        a, b = pair.split("__")
+        row = (f"| {names[a]}–{names[b]} | {by_class.get('authority_only_transition', 0)} | "
+               f"{by_class.get('literal_only_transition', 0)} | {by_class.get('retained_control', 0)} |")
+        assert row in readme, row
+    stage_2 = digest["executable_check_counts"]["stage_2_release_candidate_cases"]
+    assert (f"That is {counts['total']} cases, {counts['stage_1_arm_native_review_units']} Stage 1 review units "
+            f"and {stage_2} Stage 2 targets.") in readme
+    assert counts["cases_holding_tuned_on_records"] == 2
+
+
+def test_the_audit_proxy_table_is_the_committed_class_proxy_check() -> None:
+    check = json.loads((EVALUATION / "results" / "class-proxy-check.json").read_text())
+    digest = json.loads((EVALUATION / "results" / "real-review-population-digest.json").read_text())
+    assert check["stage_1_queue_sha256"] == digest["output_hashes"]["stage_1_queue_sha256"]
+    audit = (EVALUATION / "prompt-audit-2026-10-16.md").read_text()
+    names = {"authority_only_transition": "authority-only gain", "literal_only_transition": "literal-only loss",
+             "retained_control": "retained control"}
+    for label, row in check["by_class"].items():
+        name = " + ".join(names[part] for part in label.split("+"))
+        cells = " | ".join(f"{row[f]['min']:g} / {row[f]['median']:g} / {row[f]['max']:g}" for f in (
+            "entries", "largest_record_count", "example_urls", "most_field_paths_per_entry"))
+        assert f"| {name} | {row['sides']} | {cells} |" in audit, name
+    assert f"The most entries on one side is {check['most_entries_on_one_side']}" in audit

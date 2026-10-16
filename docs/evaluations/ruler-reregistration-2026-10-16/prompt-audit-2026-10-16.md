@@ -123,11 +123,12 @@ string in any v7 prompt (grep).
 
 ## Follow-up checks (2026-10-16, by the parent)
 
-On the trial population, which is built by the same code and inputs as the registered one:
-99 Stage 1 units, 198 museum sides.
+On the registered population: 99 Stage 1 units, from `scripts/class_proxy_check.py`
+(`results/class-proxy-check.json`). A unit is labelled by every class of the cases whose nodes it
+reviews.
 
 - **Item 1 (class proxies, P2-b): none found.** Every new visible feature overlaps across the
-  three classes. Each value is min / median / max per side:
+  classes. Each value is min / median / max per side:
 
   | Class | Sides | Entries | Largest record_count | URLs | Field paths per entry |
   |---|---|---|---|---|---|
@@ -135,12 +136,68 @@ On the trial population, which is built by the same code and inputs as the regis
   | literal-only loss | 10 | 1 / 1 / 20 | 1 / 1 / 5 | 1 / 1 / 27 | 1 / 1 / 1 |
   | retained control | 162 | 1 / 1.5 / 9 | 1 / 2 / 2749 | 1 / 3 / 25 | 1 / 1 / 3 |
 
-  The losses' small largest-count follows from their small `distinct_record_count` (median 1).
-  v6 already showed that, so it is not new information.
+  The losses' small largest-count follows from their small `distinct_record_count`. v6 already
+  showed that, so it is not new information.
 - **Item 2 (size, P2-a).** The most entries on one side is 20, and the largest Stage 1 unit is
   6,158 characters of case JSON. There is no truncation risk, so no cap on entries is added.
-- **Item 3.** The builder's blinding scan (forbidden keys, private identifiers) is 0 on the
-  registered population (`results/real-review-population-digest.json`,
-  `executable_check_counts`). The Stage 2 release is rebuilt and compared by the scorer
-  (`verify_stage_2_release`), as in #361.
+- **Item 3.** The builder's blinding scan is 0: forbidden keys 0, private identifiers
+  0 (`results/real-review-population-digest.json`, `executable_check_counts`). The Stage 2
+  release is rebuilt and compared by the scorer (`verify_stage_2_release`), as in #361.
 - **P3-a (family-name echo).** Kept, as in the 2026-10-15 audit, and disclosed in the README.
+
+## Delta audit (2026-10-16, stage-1 reviewer citation sentence)
+
+Change: in `stage-1-reviewer-v7.txt` the insufficient_evidence citation clause now reads "list
+the loaded citable pages you read for that question. If any citable page you opened loaded,
+every list must name at least one; give an empty list only if no citable page you opened
+loaded." It replaces the "...if any; if no citable page loaded, give an empty list" wording.
+
+- **Leak: none.** The sentence is a generic format rule. It names no case value, id, class or
+  count.
+- **Coherence with `review_protocol.validate`: yes.** The validator rejects any empty list when
+  some opened page loaded with both requested and final URL citable ("cites nothing although a
+  citable page it opened loaded"). The new sentence states that rule, with the same
+  definition of a usable page as earlier in the prompt (loaded, citable final_url). The old
+  wording ("if any") contradicted the validator and would have caused retries on exactly the
+  uncertain answers, which is an output-selection bias; the edit removes it.
+- **Coherence with schema v4: consistent, not identical.** The schema requires `minItems: 1`
+  only for a non-insufficient outcome and cannot know which pages loaded. The prompt is
+  stricter than the schema because the validator is, and a schema-valid empty list can still be
+  rejected. This is the intended layering.
+- **Pressure to cite an irrelevant page: small P3.** The first sentence says "pages you read
+  for that question" while the second says every list needs one if any citable page loaded, so
+  a reviewer whose only loaded page concerns the other question must still list it. The
+  consequence is cosmetic: an insufficient_evidence answer is not a basis, and the citations
+  are not scored as support. The same validator rule applied to the single list in #337/#361.
+  Optional tightening, which I do not recommend because it would change the hashed bytes
+  again: "the loaded citable pages you read, even if they did not settle it".
+- **P3: unstated second validator rule.** The validator also rejects an empty list when the
+  reviewer never tried a citable page ("cites nothing without having tried a citable page").
+  The prompt asks for research but never states this. It is rule-based and leak-free, and the
+  opens are mandated by the research sentences, so no edit is needed.
+- **Hash:** the v7 reviewer prompt bytes changed; the "Audited prompt bytes" table must be
+  generated after this edit. No other prompt changed, and the reconciler prompts are
+  unaffected (their own single `citations` list is unchanged).
+
+Verdict for the delta: fine to run, no P1.
+
+## Audited prompt bytes
+
+What the model reads in this registration, as audited above and in the delta audit:
+- the four v7 prompts (#361's v6 with the record-text description, the per-question citation
+  instruction and its validator-aligned sentence);
+- the unchanged system prompt;
+- the citable-source list (Cleveland and the Walters as case museums);
+- the browser server, whose `open_page` description is #361's (tested);
+- the Stage 1 reviewer schema v4.
+
+| File | SHA-256 |
+|---|---|
+| `stage-1-reviewer-v7.txt` | `c97e14ba4c13b2063483f0c9dc722cfc06ea1d0fb3223ab0fbd6b2474ef7b277` |
+| `stage-1-reconciler-v7.txt` | `5deb06f3e6092a8b3b7e484978e862babe22f2b3f929a5730958034899bbe736` |
+| `stage-2-reviewer-v7.txt` | `1d6963146df04ace27102c3f7d90036f15004c984adcab2bf4aeb7996d654438` |
+| `stage-2-reconciler-v7.txt` | `9e086d2ff7e3bb6972fb85864dbfdf460b3d3778af62c9d7eba7306e3a64ab04` |
+| `review-system-v4.txt` | `290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451` |
+| `citable-sources.json` | `4bd37e0670ecbeccd441b22e311a69e09cfe2925617a8fc1e00272396a4721d5` |
+| `open_page_server.py` | `2ce814c976a3eaee31bf07614e6c82a65c8beb21453cc39b2bcc42e182264244` |
+| `stage-1-reviewer-case-v4.schema.json` | `0b94e388454cd8c56506aac4e9c2cb856471c9813ef103da59cedb97904490be` |

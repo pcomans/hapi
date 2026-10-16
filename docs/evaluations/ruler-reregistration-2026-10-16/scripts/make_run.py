@@ -17,8 +17,9 @@ same file contents. The run's files carry museum text, so they are written to a 
 (`--out-run`); what is committed (`--manifest`) holds hashes, counts and target ids only.
 
 The ruler transitions it counts (`transition_counts`) are the population definition of #361's
-`build_review_queue.derive_candidates`, computed here independently, so the queue builder can
-check that it found every one.
+`build_review_queue.derive_candidates`, written a second time over the same files. That is a
+regression check, not an independent measurement: the queue builder requires the cases it
+derives to match these counts, and recounts them from the run itself.
 
     uv run python docs/evaluations/ruler-reregistration-2026-10-16/scripts/make_run.py \\
         --corpus <corpus archive> --added <added-museums archive> --out-run <private dir> \\
@@ -46,7 +47,7 @@ from check_promotion import ARCHIVE_SHA256 as CORPUS_SHA256, load_corpus  # noqa
 from pipeline.enrich import authority_links, link_files  # noqa: E402
 from pipeline.enrich.inputs import normalized  # noqa: E402
 
-ADDED_ARCHIVE_SHA256 = "61ada79d99d6b91192bc4f2d768627e71aad9911fc77e52d2e5bca14f8c89913"
+ADDED_ARCHIVE_SHA256 = "f9c353f6e5a7757533739210d94550d00091fde026ca3ca9ea2ede5d7c30186e"
 ADDED_PREFIX = "hapi-added-museums-2026-10-16/"
 ADDED_MUSEUMS = ("cleveland", "walters")
 PROFILES = {museum: REPO / f"docs/museum-sources/{museum}-profile/profile.json" for museum in ADDED_MUSEUMS}
