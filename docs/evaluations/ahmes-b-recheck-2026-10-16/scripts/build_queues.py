@@ -17,7 +17,8 @@ scripts/build_review_queue.py`), run by #361's runner and prompts unchanged:
 
     uv run python docs/evaluations/ahmes-b-recheck-2026-10-16/scripts/build_queues.py stage-1 \\
         --archive <corpus archive> --out <private dir>/stage-1/queue.json
-    uv run python .../build_queues.py stage-2 --stage-1-queue <...> --consensus <...> --out <...>
+    uv run python .../build_queues.py stage-2 --stage-1-queue <...> --consensus <...> --template <...> --out <...>
+    uv run python .../build_queues.py verify --private <private dir>
 """
 
 from __future__ import annotations
@@ -114,9 +115,20 @@ def stage_1(archive: Path, template: dict) -> tuple[dict, dict]:
     return queue, private
 
 
+def protocol():
+    spec = importlib.util.spec_from_file_location("_361_review_protocol", EVAL_361 / "scripts/review_protocol.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def stage_2(stage_1_queue: Path, consensus: Path, template: dict) -> dict:
     """The released Stage 2 case: Ahmes B as the proposed target, with the metadata #361 released
-    for a royal woman (label, dynasties, family names, representation, source)."""
+    for a royal woman (label, dynasties, family names, representation, source). Released only
+    when the Stage 1 consensus is the one the stored Stage 1 calls make (#361's
+    `verify_consensus`), so the target cannot be shown before Stage 1 is frozen."""
+    protocol().verify_consensus("1", consensus, stage_1_queue, stage_1_queue.parent)
     b = builder()
     queue_1 = json.loads(stage_1_queue.read_text(encoding="utf-8"))
     (case_1,) = queue_1["cases"]
@@ -145,6 +157,27 @@ def stage_2(stage_1_queue: Path, consensus: Path, template: dict) -> dict:
     }
 
 
+def verify(private: Path, check_path: Path) -> None:
+    """With the private records: both consensus files are what the stored calls make (#361's
+    `verify_consensus`), every stored call and file has the SHA-256 `check.json` records, and
+    `check.json`'s outcomes are the consensus decisions."""
+    rp = protocol()
+    check = json.loads(check_path.read_text(encoding="utf-8"))
+    for stage, recorded in check["stages"].items():
+        d = private / f"stage-{stage}"
+        consensus = rp.verify_consensus(stage, d / "consensus.json", d / "queue.json", d)
+        if (sha256_path(d / "queue.json"), sha256_path(d / "consensus.json")) != (recorded["queue_sha256"], recorded["consensus_sha256"]):
+            raise ValueError(f"stage {stage}: queue or consensus is not the one check.json records")
+        calls = {str(p.relative_to(d)): sha256_path(p) for p in sorted(d.rglob("*.attempt-*.json"))}
+        if calls != recorded["stored_calls_sha256"]:
+            raise ValueError(f"stage {stage}: stored calls differ from check.json")
+        (decision,) = consensus["decisions"]
+        outcome = {k: v for k, v in decision.items() if k not in ("case_id", "evidence_sha256", "field_resolutions")}
+        if outcome != recorded["outcome"]:
+            raise ValueError(f"stage {stage}: check.json's outcome is not the consensus")
+    print("verified: consensus rebuilt from the stored calls, hashes and outcomes match check.json")
+
+
 def write_new(path: Path, value: dict) -> None:
     if path.exists():
         raise FileExistsError(path)
@@ -164,7 +197,13 @@ def main() -> None:
     two.add_argument("--consensus", type=Path, required=True)
     two.add_argument("--template", type=Path, required=True, help="#361's private released Stage 2 queue")
     two.add_argument("--out", type=Path, required=True)
+    check = commands.add_parser("verify")
+    check.add_argument("--private", type=Path, required=True, help="the private records directory")
+    check.add_argument("--check", type=Path, default=Path(__file__).resolve().parents[1] / "results/check.json")
     args = parser.parse_args()
+    if args.command == "verify":
+        verify(args.private, args.check)
+        return
     template = json.loads(args.template.read_text(encoding="utf-8"))
     if args.command == "stage-1":
         queue, private = stage_1(args.archive, template)

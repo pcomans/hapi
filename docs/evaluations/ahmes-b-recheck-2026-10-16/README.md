@@ -50,5 +50,13 @@ checks are a target-name guard on Stage 1, and the prompt auditor's reading of b
   - It rated its confidence as moderate, for the same print-only reason.
 
 Every call's full record (command, prompt, event log and answer) is kept privately, as #361's
-are, in `dropbox/hapi-ahmes-b-recheck-2026-10-16/`. Their SHA-256 hashes are in
-`results/check.json` (Rule 13).
+are, in `dropbox/hapi-ahmes-b-recheck-2026-10-16/`, for #361's reason: they quote museum text
+verbatim. Their SHA-256 hashes are in `results/check.json` (Rule 13).
+
+With the private records, `scripts/build_queues.py verify --private <dir>` does three things:
+- rebuilds both consensus files from the stored calls with #361's `verify_consensus`;
+- checks every hash;
+- confirms that `check.json`'s outcomes are the consensus.
+
+It passed on 2026-10-16. The Stage 2 case is released only after `verify_consensus` accepts the
+Stage 1 consensus, so the target cannot be shown before Stage 1 is frozen.
