@@ -113,6 +113,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol
 
+from . import king_context
 from .claimgraph.normalize import NameForm, keys_for_form
 from .resolver import surface_key
 from .weak_sign_skeleton import MIN_WEAK_SIGN_CONSONANTS, consonant_count, weak_sign_skeleton
@@ -169,6 +170,9 @@ class KingAuthority(Protocol):
 
     def dynasties(self, target_id: str) -> tuple[int, ...]:
         """The dynasties the king lists give this king."""
+
+    def reign(self, target_id: str) -> tuple[int, int] | None:
+        """The span of the reign dates the king lists give this king, or None."""
 
 
 @dataclass(frozen=True)
@@ -648,14 +652,31 @@ def stated_kin_names(field_value: str, span_start: int, span_end: int) -> tuple[
 
 
 def resolve_ruler_mention(index: RoyalWomenIndex, kings: KingAuthority, field_value: str, span_start: int,
-                          span_end: int, *, record_king_ids: set[str], record_dynasty: int | None) -> dict:
+                          span_end: int, *, record_king_ids: set[str], record_dynasty: int | None,
+                          record_dates: tuple[int, int] | None, catalogued_reign: bool,
+                          refused_on_record: frozenset[str]) -> dict:
     """The ruler mention at `field_value[span_start:span_end]` by the module's rule.
     `record_king_ids` are the kings the record's other (not cued) ruler mentions resolve to; a
-    cued mention adds the kings its field names as her kin."""
+    cued mention adds the kings its field names as her kin. A king is resolved in the record's
+    context (`king_context`): its dynasty and dates; `refused_on_record` are the kings the record's
+    reign field refused."""
     text = field_value[span_start:span_end]
     if royal_woman_cued(field_value, span_start):
+        # A king the record's reign field refused is not this record's king: not as her stated kin,
+        # and not as the female ruler the cue reaches ("Queen Hatshepsut" beside a refused
+        # "reign of Hatshepsut").
         kin = {t for name in stated_kin_names(field_value, span_start, span_end)
-               if (found := kings.resolve(name))["status"] == "resolved" for t in found["target_ids"]}
+               if (found := kings.resolve(name))["status"] == "resolved" for t in found["target_ids"]} - refused_on_record
         found = resolve_royal_woman(index, text, record_king_ids=record_king_ids | kin, record_dynasty=record_dynasty)
+        refused = sorted(set(found["target_ids"]) & refused_on_record)
+        if refused:
+            # Only a resolved result names a king (`resolve_royal_woman` maps the chosen woman to
+            # the king she was); an ambiguous one lists women.
+            if found["status"] != "resolved":
+                raise ValueError(f"a refused king among unresolved royal-woman candidates: {found['target_ids']}")
+            found = {**found, "status": "unmatched", "target_ids": [], "refused_on_record": refused,
+                     "context_rule": king_context.CONFLICT_RULE}
         return {**found, "authority": "royal_women", "stated_kin_king_ids": sorted(kin)}
-    return {**kings.resolve(text), "context_rule": None, "authority": "kings"}
+    found = king_context.resolve_in_context(kings, text, record_dynasty=record_dynasty, record_dates=record_dates,
+                                            catalogued_reign=catalogued_reign, refused_on_record=refused_on_record)
+    return {**found, "authority": "kings"}

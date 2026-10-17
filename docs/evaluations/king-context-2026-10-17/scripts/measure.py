@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""What resolving kings in their record's context (`pipeline.authority.king_context`) changes, on the
+frozen inputs of the per-museum ruler test (`../ruler-per-museum-2026-10-17/`).
+
+Compares the authority-mode ruler resolutions of that test's frozen run (name only) with what this
+tree's code gives on the same mentions and records: mention by mention, and record link by record
+link (`build_links`), since a record keeps a link while any of its mentions resolves to the target.
+Writes counts, record IDs, and the mention texts with the record's dynasty field; no other museum
+text.
+
+    pipeline/.venv/bin/python docs/evaluations/king-context-2026-10-17/scripts/measure.py \\
+        --corpus <corpus archive> --added <added-museums archive> --run <frozen run dir> --out <json>
+"""
+
+from __future__ import annotations
+
+import argparse
+import collections
+import json
+import sys
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(REPO / "pipeline"))
+sys.path.insert(0, str(REPO / "docs/evaluations/ruler-per-museum-2026-10-17/scripts"))
+sys.path.insert(0, str(REPO / "docs/evaluations/authority-bridge-338/scripts"))
+import make_run  # noqa: E402
+from pipeline.enrich import authority_links as al, link_files as lf  # noqa: E402
+
+
+def candidates(row: dict) -> list[str]:
+    """A row's targets, or for an unresolved row the resolver's candidates."""
+    return row["resolution"]["target_ids"] if row["resolution"] else row["target_ids"]
+
+
+def measure(corpus: Path, added: Path, run: Path) -> dict:
+    canonical, _ = make_run.load_inputs(corpus, added)
+    records = {r["id"]: r for r in canonical}
+    found = lf.read_rows(run / "mentions.ndjson.gz")
+    old = {r["mention_id"]: r for r in lf.read_rows(run / "resolutions-authority.ndjson.gz") if r["entity_type"] == "ruler"}
+    authority = al.load_authority()
+    resolved_now = al.resolve_mentions(found, "authority", authority, al.record_dates(canonical))
+    new = {r["mention_id"]: r for r in resolved_now if r["entity_type"] == "ruler"}
+    links_before = {(l["artifact_id"], l["target_id"]) for l in lf.read_rows(run / "links-authority.ndjson.gz")
+                    if l["entity_type"] == "ruler"}
+    links_now = {(l["artifact_id"], l["target_id"]) for l in al.build_links(resolved_now) if l["entity_type"] == "ruler"}
+    changes: dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
+    for mention_id, before in old.items():
+        after = new[mention_id]
+        # An unresolved row keeps its candidates in `resolution`; compare those, so a narrowing
+        # that leaves a mention ambiguous counts too.
+        if (before["status"], candidates(before)) == (after["status"], candidates(after)):
+            continue
+        if before["status"] == "resolved" and after["status"] == "resolved":
+            kind = "retargeted"
+        elif before["status"] == "resolved":
+            kind = f"link_removed:{after['reason']}"
+        elif after["status"] == "resolved":
+            kind = f"link_added_from_{before['status']}:{after['resolution']['context_rule']}"
+        else:
+            kind = f"{before['status']}_to_{after['status']}:{len(candidates(before))}_to_{len(candidates(after))}_candidates"
+        key = f"{before['museum']}|{kind}|{before['mention_text']}|{records[before['artifact_id']].get('dynasty')}|" \
+              f"{(after['target_ids'] or [None])[0]}"
+        changes[before["museum"]][key] += 1
+    catalog = authority.kings.catalog
+    ambiguous = collections.Counter()
+    for row in new.values():
+        if row["status"] == "ambiguous" and row["authority"] == "kings":
+            labels = [catalog[t]["label"].casefold() for t in row["resolution"]["target_ids"]]
+            ambiguous["candidates_sharing_a_label" if len(set(labels)) < len(labels) else "candidates_all_labelled_apart"] += 1
+    # Exposure the rule leaves visible but does not act on (Egyptology review of #388).
+    exposure = collections.Counter()
+    for row in new.values():
+        context = (row["resolution"] or {}).get("context")
+        if row["authority"] != "kings" or context is None:
+            continue
+        mention_dates, dynasty = context["record_dates"], context["record_dynasty"]
+        for target, clash in context["candidate_clash"].items():
+            if row["evidence_role"] != al.CATALOGUED_REIGN and clash and target in row["target_ids"]:
+                later = mention_dates[0] > authority.kings.reign(target)[1]
+                exposure[f"title_keeps_clashing_king:record_{'later' if later else 'earlier'}_than_king"] += 1
+            if context["candidate_fit"][target] is False and not clash:
+                reason = "king_has_no_reign_dates" if authority.kings.reign(target) is None else (
+                    "record_has_no_dates" if mention_dates is None else "dates_within_slack")
+                exposure[f"dynasty_conflict_not_dropped:{reason}"] += 1
+        if row["evidence_role"] != al.CATALOGUED_REIGN and context.get("dropped"):
+            exposure["title_dropped_king_the_reign_field_refused"] += 1
+    return {
+        "schema_version": "hapi-king-context-measure/4",
+        "exposure": dict(sorted(exposure.items())),
+        "run_id": run.name,
+        "resolver_version_now": authority.snapshot["resolver_version"],
+        "changed_mentions": {m: sum(c.values()) for m, c in sorted(changes.items())},
+        "changes": {m: dict(sorted(c.items())) for m, c in sorted(changes.items())},
+        "record_links_removed": sorted(f"{a}|{t}" for a, t in links_before - links_now),
+        "record_links_added": sorted(f"{a}|{t}" for a, t in links_now - links_before),
+        "ambiguous_king_mentions_now": dict(sorted(ambiguous.items())),
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--corpus", type=Path, required=True)
+    parser.add_argument("--added", type=Path, required=True)
+    parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--out", type=Path, required=True)
+    args = parser.parse_args()
+    result = measure(args.corpus, args.added, args.run)
+    args.out.write_text(json.dumps(result, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

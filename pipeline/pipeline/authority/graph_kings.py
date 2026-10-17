@@ -58,6 +58,26 @@ def counted_otherwise(labels: set[str]) -> set[str]:
             if plain[name] - {numeral}}
 
 
+# King-list members whose printed reign ends before it starts, each a known printing error the
+# source documents. Kitchen prints Djed-Khons-ef-ankh as "1046–1056" for a one-year reign; the
+# source corrects it to 1046–1045 (`sources/kitchen-tipe/README.md`, `corrected_end_bce`), but the
+# claim graph carries the printed end (issue #391). Such a member is read as undated; any other
+# reversed reign raises.
+KNOWN_REVERSED_REIGNS = frozenset({"kitchen-21H.06"})
+
+
+def member_reign(node: dict) -> tuple[int, int] | None:
+    """One king-list member's reign (years, negative BCE), or None when it gives none."""
+    start, end = node["reign_start_bce"], node["reign_end_bce"]
+    if start is None or end is None:
+        return None
+    if start > end:
+        if node["id"] in KNOWN_REVERSED_REIGNS:
+            return None
+        raise ValueError(f"{node['id']}: a reign that ends before it starts: {start}..{end}")
+    return start, end
+
+
 def load_linkability(path: Path = RUN_LINKABILITY, module_name: str = "_graph_kings_run_linkability"):
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None or spec.loader is None:
@@ -117,3 +137,12 @@ class GraphKings:
     def dynasties(self, target_id: str) -> tuple[int, ...]:
         return tuple(sorted({self._node[m]["dynasty"] for m in self._catalog[target_id]["member_ids"]
                              if self._node[m]["dynasty"] is not None}))
+
+    def reign(self, target_id: str) -> tuple[int, int] | None:
+        """The span of the reign dates the king lists give this king (years, negative BCE): from the
+        earliest start to the latest end over its members that date it (`member_reign`); None when
+        none does."""
+        dated = [r for m in self._catalog[target_id]["member_ids"] if (r := member_reign(self._node[m])) is not None]
+        if not dated:
+            return None
+        return min(s for s, _ in dated), max(e for _, e in dated)

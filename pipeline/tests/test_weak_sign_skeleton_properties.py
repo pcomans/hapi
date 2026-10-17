@@ -658,8 +658,11 @@ def test_on_the_real_king_graph_both_queen_ahmose_records_reach_ahmes_b_through_
     for field in ("Queen Ahmose, Mother of Hatshepsut", "Hatshepsut's Mother, Queen Ahmose"):
         start = field.index("Ahmose")
         f = rw.resolve_ruler_mention(index, kings, field, start, start + len("Ahmose"), record_king_ids=set(),
-                                     record_dynasty=18)
+                                     record_dynasty=18, record_dates=None, catalogued_reign=False,
+                                     refused_on_record=frozenset())
         assert (f["status"], f["target_ids"], f["resolution_method"], f["context_rule"], f["stated_kin_king_ids"]) == (
             "resolved", ["dodson_hilton:Ahmes B"], "weak_sign_skeleton", "family", ["cluster-beckerath-18.05"]), field
-    f = rw.resolve_ruler_mention(index, kings, "Queen Ahmose", 6, 12, record_king_ids=set(), record_dynasty=18)
+    f = rw.resolve_ruler_mention(index, kings, "Queen Ahmose", 6, 12, record_king_ids=set(), record_dynasty=18,
+                                 record_dates=None, catalogued_reign=False,
+                                     refused_on_record=frozenset())
     assert (f["status"], f["context_rule"]) == ("unmatched", "weak_sign_unconfirmed")
