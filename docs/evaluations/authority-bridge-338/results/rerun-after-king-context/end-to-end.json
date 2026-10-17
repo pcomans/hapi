@@ -1,0 +1,2856 @@
+{
+  "ahmes_b_records": {
+    "brooklyn": {
+      "brooklyn-3634": {
+        "connected_by_plain_text": true,
+        "other_shared_authority_targets": []
+      }
+    },
+    "met": {
+      "met-547683": {
+        "connected_by_plain_text": true,
+        "other_shared_authority_targets": []
+      },
+      "met-566763": {
+        "connected_by_plain_text": true,
+        "other_shared_authority_targets": []
+      }
+    }
+  },
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "evaluation_headlines": {
+    "337": {
+      "current_authority": {
+        "brooklyn": 1156,
+        "harvard": 8,
+        "met": 14502
+      },
+      "typed_literal": {
+        "brooklyn": 2894,
+        "harvard": 534,
+        "met": 27330
+      }
+    },
+    "361": {
+      "current_authority": {
+        "brooklyn": 19,
+        "harvard": 2,
+        "met": 1955
+      },
+      "typed_literal": {
+        "brooklyn": 19,
+        "harvard": 2,
+        "met": 1981
+      }
+    }
+  },
+  "files": {
+    "links-authority.ndjson.gz": {
+      "content_sha256": "cf086f34acd691581749ac2aa8252cc3507005f01e7d9e18e73b959c69adfc28",
+      "rows": 48988
+    },
+    "links-literal.ndjson.gz": {
+      "content_sha256": "73b5b2ba99692da0c140bc198d93581ca92825bdb5a924591622b11a31c392ef",
+      "rows": 127711
+    },
+    "mentions.ndjson.gz": {
+      "content_sha256": "d07e57423666e71e36864d9a3b45a210add84e2800bdfbdefc4c09190ae0ad6a",
+      "rows": 148964
+    },
+    "resolutions-authority.ndjson.gz": {
+      "content_sha256": "90b4a9fdf1daf0c3b6552baf06ce28e7b622a2a222836136a6d8190e26958e2b",
+      "rows": 148964
+    },
+    "resolutions-literal.ndjson.gz": {
+      "content_sha256": "9c36afe50aaee6ec1f0a57e372988ad8c2e24eb480cf8f0f31943f53537f322d",
+      "rows": 148964
+    }
+  },
+  "inputs_sha256": "9bce9d7d7b03901c82b2afd1db4004fd5f440864c80a3b2fc754e8dc571fc1a5",
+  "inventory": {
+    "unevaluated_scopes": {
+      "ruler": [
+        [
+          "met",
+          "brooklyn"
+        ],
+        [
+          "met",
+          "harvard"
+        ],
+        [
+          "brooklyn",
+          "harvard"
+        ],
+        [
+          "met",
+          "cleveland"
+        ],
+        [
+          "brooklyn",
+          "cleveland"
+        ],
+        [
+          "harvard",
+          "cleveland"
+        ],
+        [
+          "brooklyn",
+          "walters"
+        ],
+        [
+          "harvard",
+          "walters"
+        ],
+        [
+          "cleveland",
+          "walters"
+        ]
+      ],
+      "site": [
+        [
+          "met",
+          "cleveland"
+        ],
+        [
+          "brooklyn",
+          "cleveland"
+        ],
+        [
+          "harvard",
+          "cleveland"
+        ],
+        [
+          "met",
+          "walters"
+        ],
+        [
+          "brooklyn",
+          "walters"
+        ],
+        [
+          "harvard",
+          "walters"
+        ],
+        [
+          "cleveland",
+          "walters"
+        ]
+      ],
+      "tomb_monument": [
+        [
+          "met",
+          "brooklyn"
+        ],
+        [
+          "met",
+          "harvard"
+        ],
+        [
+          "brooklyn",
+          "harvard"
+        ],
+        [
+          "met",
+          "cleveland"
+        ],
+        [
+          "brooklyn",
+          "cleveland"
+        ],
+        [
+          "harvard",
+          "cleveland"
+        ],
+        [
+          "met",
+          "walters"
+        ],
+        [
+          "brooklyn",
+          "walters"
+        ],
+        [
+          "harvard",
+          "walters"
+        ],
+        [
+          "cleveland",
+          "walters"
+        ]
+      ]
+    },
+    "unsupported": {
+      "excavation": {
+        "mentions": 16403,
+        "reason": "no committed canonical excavation authority"
+      },
+      "temple": {
+        "mentions": 2312,
+        "reason": "no committed canonical temple authority"
+      }
+    }
+  },
+  "matching": {
+    "by_museum": {
+      "brooklyn|ruler": {
+        "authority": {
+          "connected_records": 20,
+          "linked_records": 24
+        },
+        "literal": {
+          "connected_records": 19,
+          "linked_records": 56
+        }
+      },
+      "brooklyn|site": {
+        "authority": {
+          "connected_records": 1152,
+          "linked_records": 1235
+        },
+        "literal": {
+          "connected_records": 2890,
+          "linked_records": 2978
+        }
+      },
+      "brooklyn|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 22
+        }
+      },
+      "cleveland|ruler": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "cleveland|site": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "cleveland|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "harvard|ruler": {
+        "authority": {
+          "connected_records": 2,
+          "linked_records": 3
+        },
+        "literal": {
+          "connected_records": 2,
+          "linked_records": 3
+        }
+      },
+      "harvard|site": {
+        "authority": {
+          "connected_records": 7,
+          "linked_records": 267
+        },
+        "literal": {
+          "connected_records": 534,
+          "linked_records": 540
+        }
+      },
+      "harvard|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "met|ruler": {
+        "authority": {
+          "connected_records": 1957,
+          "linked_records": 8863
+        },
+        "literal": {
+          "connected_records": 1981,
+          "linked_records": 9165
+        }
+      },
+      "met|site": {
+        "authority": {
+          "connected_records": 14393,
+          "linked_records": 15019
+        },
+        "literal": {
+          "connected_records": 27198,
+          "linked_records": 27889
+        }
+      },
+      "met|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 3199
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 4780
+        }
+      },
+      "walters|ruler": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "walters|site": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      },
+      "walters|tomb_monument": {
+        "authority": {
+          "connected_records": 0,
+          "linked_records": 0
+        },
+        "literal": {
+          "connected_records": 0,
+          "linked_records": 0
+        }
+      }
+    },
+    "by_museum_pair": {
+      "ruler|brooklyn|cleveland": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "ruler|brooklyn|harvard": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 6,
+            "connected_literal": 6,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 2,
+            "connected_literal": 2,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [
+            "cluster-beckerath-18.10",
+            "dodson_hilton:Maatkare A"
+          ],
+          "literal": [
+            "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+            "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+          ]
+        },
+        "shared_targets_authority": 2,
+        "shared_targets_literal": 2,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.8333,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 0.8333,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ruler|brooklyn|walters": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "ruler|cleveland|walters": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "ruler|harvard|cleveland": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "ruler|harvard|walters": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "ruler|met|brooklyn": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 20,
+            "connected_literal": 19,
+            "gained": 2,
+            "lost": 1
+          },
+          "met": {
+            "connected_authority": 1957,
+            "connected_literal": 1981,
+            "gained": 33,
+            "lost": 57
+          }
+        },
+        "shared_target_ids": {
+          "authority": [
+            "cluster-beckerath-05.06",
+            "cluster-beckerath-12.05",
+            "cluster-beckerath-18.10",
+            "cluster-beckerath-18.15",
+            "cluster-beckerath-19.03",
+            "cluster-beckerath-19.07",
+            "cluster-beckerath-22.02",
+            "cluster-beckerath-26.04",
+            "cluster-beckerath-30.03",
+            "cluster-leprohon-leprohon-5.01",
+            "dodson_hilton:Ahmes B",
+            "dodson_hilton:Maatkare A",
+            "dodson_hilton:Nefertiti",
+            "dodson_hilton:Tiye A"
+          ],
+          "literal": [
+            "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+            "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+            "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+            "literal:29755d9013fc60a88e5aca3a361a4b61f48fb3f566a1e4e7f84f1e5ff41bb5ff",
+            "literal:2b3ff4c93c48f20726cdf256068858172038f1e79c84f0f5dedb6227bdb35bfd",
+            "literal:2cc409198518d14e65fe0682c9a3bdd8d11bd727ca886d29dedf67dd823c751f",
+            "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+            "literal:91cb6d55c55a8c9fddcbb7bd47aa3672a0d47d022afd199d75fa5c8fc79c2727",
+            "literal:a5437ec1f044676dcce0a1bfeb7c68b52c577c92f36123965f1bcfd0ae6b0199",
+            "literal:a7570b9e0fb995dda1cbc808bdd5e39293e58342522345b00bab63b8aa3dafce",
+            "literal:c8372425b35fe70f3841fef76dfa2d8925cda06200bedb706336cac6875b22ec",
+            "literal:d1de1bd67c1c69141d8bcf6d6adda93792c71de2a381e17bd0d816ca696defc0",
+            "literal:fded604f9cf0a1d5edc242a5dd6b17f8951962443d4b4505910b87f31813f46a"
+          ]
+        },
+        "shared_targets_authority": 14,
+        "shared_targets_literal": 13,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.25,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 0.55,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "cluster-beckerath-19.03",
+                  "dodson_hilton:Nefertiti",
+                  "cluster-beckerath-05.06",
+                  "cluster-beckerath-12.05"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.4686,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 0.9683,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "cluster-beckerath-19.03",
+                  "cluster-beckerath-19.07",
+                  "cluster-beckerath-26.04",
+                  "cluster-beckerath-18.15"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 0.2632,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 0.5789,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+                  "literal:d1de1bd67c1c69141d8bcf6d6adda93792c71de2a381e17bd0d816ca696defc0",
+                  "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.4629,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 0.9566,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1",
+                  "literal:29755d9013fc60a88e5aca3a361a4b61f48fb3f566a1e4e7f84f1e5ff41bb5ff",
+                  "literal:1077049093d136aa0aee274d648ac319a298fae0ce784f92467f74642e5cec49",
+                  "literal:91cb6d55c55a8c9fddcbb7bd47aa3672a0d47d022afd199d75fa5c8fc79c2727"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ruler|met|cleveland": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "ruler|met|harvard": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 2,
+            "connected_literal": 2,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 920,
+            "connected_literal": 921,
+            "gained": 0,
+            "lost": 1
+          }
+        },
+        "shared_target_ids": {
+          "authority": [
+            "cluster-beckerath-18.10",
+            "dodson_hilton:Maatkare A"
+          ],
+          "literal": [
+            "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+            "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+          ]
+        },
+        "shared_targets_authority": 2,
+        "shared_targets_literal": 2,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9967,
+                "target_ids": [
+                  "cluster-beckerath-18.10"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "cluster-beckerath-18.10",
+                  "dodson_hilton:Maatkare A"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": 0.5,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9957,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:12995c096b99b46334e4f16c1a084670ef04fd2387d648e3e927597b041ef29a"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ruler|met|walters": {
+        "qualified": true,
+        "records": {
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|brooklyn|cleveland": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|brooklyn|harvard": {
+        "qualified": true,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 332,
+            "connected_literal": 2881,
+            "gained": 0,
+            "lost": 2549
+          },
+          "harvard": {
+            "connected_authority": 7,
+            "connected_literal": 520,
+            "gained": 1,
+            "lost": 514
+          }
+        },
+        "shared_target_ids": {
+          "authority": [
+            "idai:2042797",
+            "idai:2042814",
+            "idai:2042819",
+            "idai:2042907"
+          ],
+          "literal": [
+            "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+            "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+            "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+            "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+            "literal:c17334039ee1ddde9b8772aef2f429c60d76893a85ca1c81bf9f29b9980ad79c",
+            "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+          ]
+        },
+        "shared_targets_authority": 4,
+        "shared_targets_literal": 6,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.9639,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.5714,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ]
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": 0.9808,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9981,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "site|brooklyn|walters": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|cleveland|walters": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|harvard|cleveland": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|harvard|walters": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|met|brooklyn": {
+        "qualified": true,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 1151,
+            "connected_literal": 2890,
+            "gained": 0,
+            "lost": 1739
+          },
+          "met": {
+            "connected_authority": 14393,
+            "connected_literal": 27198,
+            "gained": 136,
+            "lost": 12941
+          }
+        },
+        "shared_target_ids": {
+          "authority": [
+            "idai:2042789",
+            "idai:2042797",
+            "idai:2042802",
+            "idai:2042805",
+            "idai:2042811",
+            "idai:2042814",
+            "idai:2042815",
+            "idai:2042834",
+            "idai:2042846",
+            "idai:2042854",
+            "idai:2042869",
+            "idai:2042871",
+            "idai:2042876",
+            "idai:2042877",
+            "idai:2042898",
+            "idai:2042900",
+            "idai:2042907",
+            "idai:2042921",
+            "idai:2088624",
+            "idai:2088811",
+            "idai:2089516",
+            "idai:2096884",
+            "idai:2101716",
+            "idai:2106339",
+            "idai:2110510",
+            "idai:2110886",
+            "idai:2121930",
+            "idai:2178702",
+            "idai:2277744",
+            "idai:2282701",
+            "idai:2296218",
+            "idai:2379505",
+            "idai:2408810",
+            "idai:2410500",
+            "idai:2412478",
+            "idai:2751306",
+            "idai:2751313",
+            "idai:2751316",
+            "idai:2751321",
+            "idai:2751327",
+            "idai:2751330",
+            "idai:2751360",
+            "idai:2751369",
+            "idai:2751386",
+            "idai:2751494",
+            "idai:2751511",
+            "idai:2768166"
+          ],
+          "literal": [
+            "literal:01513c36ed4318b3e1519c4ed0cd87adab742c0ab34bc738d2e247d905c1c891",
+            "literal:04515838a5c99bd6dfc0758aeba694ff0d49c64ad14f8ed9297a551460f481b4",
+            "literal:0600a7e6645ec62b0571f6a15a72e2def2c6f4ed4cefa3ec9c339793a49408d3",
+            "literal:06f73e16cfbd414e297469c0dd9515fa5b500f71370027362c1d102d48779805",
+            "literal:0c6b26f984f11d7d55f1046bc1b5f8cea545402c65add6d3c1e74d9024f76f52",
+            "literal:1087dc5aca913b7f6957142b67b9950f2ec03bb8fc7b5db0ef96b2bb494bea23",
+            "literal:1257a4d94ca9d25359e1005cef0a17a0a7108b67eac91d93fa0210b6732db479",
+            "literal:14fd3c3bf4a0bfe9032df49e6f9079b9222b01539ec83d965c3c069ed441d515",
+            "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+            "literal:1bbd0e7aec707835821cc8446e5059c22b7bcb7bdd3fe57026af15f15fc4bcc0",
+            "literal:1be81498b906eb72a3380591fd9184faa7d26640e8a0276801fc793371e45008",
+            "literal:206d7425ced9db3a2814d108154a7731313503c6ead4335782b5b44d40003bce",
+            "literal:211068c4573496c1afc942fd22d4c2c017bb3eec4e3ad338b1f770f67daea214",
+            "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+            "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+            "literal:3392efce88989ac9e3b173f1f2544d84a9d9c5400307689eef2408df5456c485",
+            "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+            "literal:3e09c783cc1828418194bbb0ea80bab6233178946d79884c565bc4ef1318f0d3",
+            "literal:4778c3f8051b93aa92951168b1fedc8d4a2b823b2b13b6fc25b96daebdcbe714",
+            "literal:4abb808a202cc9d4a066a23a1244025da0bfe1093b0ab9c7518d30abbfc106ce",
+            "literal:4b0882dfa704700dc21b1c56e3ef558dbbc7a2c2d065a9d5477f512cf7c86593",
+            "literal:4d4a2a292d9bfb0275839f6b23a6590ff2008757ad68ab595eaf1c6acd58590d",
+            "literal:5aaf87bc9e38766a707cf301a682f67a6da08b5edaca93f2343c00674c0da2d4",
+            "literal:667a6b5ca1be504c5aea245b0d2bb91af819209cf39259be223593e4a7847173",
+            "literal:671e0826c4b3191e7c60e8f1632c73ba0c2f1f7e12e20f9bd7a31af8fb5538bf",
+            "literal:6d44229deee593106ad81c8d456f93f9ed0413f675bab3537fac3b68c7a22057",
+            "literal:6ee0128361fb6399293034bde098e8a7d484755ee46489e4d90670540b7a7f28",
+            "literal:6ff284165d0753e21a68e94c94ae575d134d9a8b339b05828b1d6882b88e8d4f",
+            "literal:71392ca98c83700ef9e9ba1bba5349911981edc35bdbdf7f6ede00f2378e5b72",
+            "literal:7348cf7ee3312e237188df9b60556956cc2055c9d3161c1c67874b4cb7685a46",
+            "literal:742f9fd80f7fbb2a7605d43fd9f6644f0586b64a4b45649a0955f9440fc46614",
+            "literal:7c3228dcc201ffa4856b910be1fa3d73df7dc19e89ad56d2d1408693c1277b5e",
+            "literal:811ea35b0ac852e38ea794afff36ffe2a313f963197035622acfdff52bea3f62",
+            "literal:8d6082cf8e80c4193b2c1abade62d7fb0bd3322d004fd09e7bb76ed763f2772a",
+            "literal:8f936e7895ab3732033be4bbeb6a3a9e4ec1d00cb293ddd6cfb7a9460cbbd199",
+            "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c",
+            "literal:939c99466cab6dc5d8930a26df2caff94ea2b24a81c185c74ea0fcb0f5b0e499",
+            "literal:9c09211b66662299a7a2191c0d0b89b4984f9c0ad97ffdab55d0078714db5a43",
+            "literal:9d1f95b3ef9a1de5d897a4a7b99466b6cadf29799cdfd253171c81e525762d14",
+            "literal:9e3fb48a77578743d7aceb5989aa37c3e44aae5a01de7d88b707a926639b388e",
+            "literal:9ee9f59f5d20ff4dc248f2fb4a24047903cfeee81f4cff26dc1c65c9b6beab66",
+            "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+            "literal:af5024fd240839f31205d4850bad5cfbb77b369fcc01ed9b82a32d29d3ebd691",
+            "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+            "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4",
+            "literal:bd7e5229b9f49eeed5a08f3ad3fc506610dda898d96a98b722ad91634c1b32a2",
+            "literal:bda55439bc22129daa29e994ef9b63fc46f1269b8a652cf7ca09d4f3ba24f59e",
+            "literal:bee3170863fca11f774b2d98f81e328f77c89942fbc85e6db1e0bd307d50f9da",
+            "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+            "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+            "literal:c9051c8450e1835e554facf208bd56fd5a40d7b76684b0572fe3204544995742",
+            "literal:cc3601d6a4421dbbbf22c23ba79d226f5ba6297443fd07eb53b28ca3b643bb26",
+            "literal:d1f1a9abdc1a09a0d699b09c8331cdce5bb012dee4bb7bddc01fe85852472e43",
+            "literal:de03333462354f88f6a4ecc66f0f5c95d96a9445206584342ea4f3a229ae29ff",
+            "literal:e28e042ce943999e62efa0d53c1c6146804015ba8a4afe74e32850e361d2c81f",
+            "literal:e3578a54374dcee56fa946a3e2b713f267af7533e78cf8637e7e385ba4dec6d5",
+            "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+            "literal:fc72a3c9291e0c4850fde23902121a09c1bdb0473aab82873975e11e767f2c8a"
+          ]
+        },
+        "shared_targets_authority": 47,
+        "shared_targets_literal": 58,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": 0.278,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 0.7785,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.7932,
+                "target_ids": [
+                  "idai:2379505"
+                ]
+              },
+              "5": {
+                "share": 0.7936,
+                "target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": 0.9969,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9969,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                  "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.977,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 0.9838,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                  "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "site|met|cleveland": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "site|met|harvard": {
+        "qualified": true,
+        "records": {
+          "harvard": {
+            "connected_authority": 6,
+            "connected_literal": 534,
+            "gained": 0,
+            "lost": 528
+          },
+          "met": {
+            "connected_authority": 506,
+            "connected_literal": 26628,
+            "gained": 1,
+            "lost": 26123
+          }
+        },
+        "shared_target_ids": {
+          "authority": [
+            "idai:2042797",
+            "idai:2042814",
+            "idai:2042907"
+          ],
+          "literal": [
+            "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+            "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+            "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+            "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+            "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+            "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+          ]
+        },
+        "shared_targets_authority": 3,
+        "shared_targets_literal": 6,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": 0.6667,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9012,
+                "target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ]
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ]
+              }
+            },
+            "met": {
+              "1": {
+                "share": 0.9979,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ]
+              },
+              "5": {
+                "share": 1.0,
+                "target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "site|met|walters": {
+        "qualified": false,
+        "records": {
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|brooklyn|cleveland": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|brooklyn|harvard": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|brooklyn|walters": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|cleveland|walters": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|harvard|cleveland": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|harvard|walters": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|met|brooklyn": {
+        "qualified": false,
+        "records": {
+          "brooklyn": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "brooklyn": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|met|cleveland": {
+        "qualified": false,
+        "records": {
+          "cleveland": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "cleveland": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|met|harvard": {
+        "qualified": false,
+        "records": {
+          "harvard": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "harvard": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      },
+      "tomb_monument|met|walters": {
+        "qualified": false,
+        "records": {
+          "met": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          },
+          "walters": {
+            "connected_authority": 0,
+            "connected_literal": 0,
+            "gained": 0,
+            "lost": 0
+          }
+        },
+        "shared_target_ids": {
+          "authority": [],
+          "literal": []
+        },
+        "shared_targets_authority": 0,
+        "shared_targets_literal": 0,
+        "top_targets": {
+          "authority": {
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          },
+          "literal": {
+            "met": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            },
+            "walters": {
+              "1": {
+                "share": null,
+                "target_ids": []
+              },
+              "5": {
+                "share": null,
+                "target_ids": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "records_on_shared_targets_any_type": {
+      "authority": {
+        "brooklyn": 1159,
+        "cleveland": 0,
+        "harvard": 9,
+        "met": 14523,
+        "walters": 0
+      },
+      "literal": {
+        "brooklyn": 2894,
+        "cleveland": 0,
+        "harvard": 534,
+        "met": 27330,
+        "walters": 0
+      }
+    }
+  },
+  "outcomes": {
+    "authority": {
+      "excavation|abstained|unsupported:excavation": 16403,
+      "ruler|abstained|expression:multi_or_range": 855,
+      "ruler|abstained|expression:temporal_context": 53,
+      "ruler|abstained|expression:uncertain_identity": 195,
+      "ruler|abstained|expression:unparsed_structured_value": 1149,
+      "ruler|ambiguous|authority_ambiguous": 75,
+      "ruler|ambiguous|weak_sign_different_spellings": 5,
+      "ruler|resolved|": 9009,
+      "ruler|unmatched|authority_unmatched": 281,
+      "ruler|unmatched|record_context_conflict": 9,
+      "ruler|unmatched|record_dynasty_contradicts": 5,
+      "ruler|unmatched|unreadable_mention": 7,
+      "ruler|unmatched|unreadable_numeral": 1,
+      "ruler|unmatched|weak_sign_unconfirmed": 4,
+      "site|ambiguous|authority_ambiguous": 201,
+      "site|resolved|": 36827,
+      "site|unmatched|authority_unmatched": 76710,
+      "temple|abstained|unsupported:temple": 2312,
+      "tomb_monument|resolved|": 3227,
+      "tomb_monument|unmatched|authority_unmatched": 1636
+    },
+    "literal": {
+      "excavation|abstained|unsupported:excavation": 16403,
+      "ruler|abstained|expression:multi_or_range": 855,
+      "ruler|abstained|expression:temporal_context": 53,
+      "ruler|abstained|expression:uncertain_identity": 195,
+      "ruler|abstained|expression:unparsed_structured_value": 1149,
+      "ruler|resolved|": 9396,
+      "site|resolved|": 113738,
+      "temple|abstained|unsupported:temple": 2312,
+      "tomb_monument|resolved|": 4863
+    }
+  },
+  "report_sha256": {
+    "docs/evaluations/authority-bridge-338/scripts/run_end_to_end.py": "20017f57428a570ba496264aac5b9e53876235d690d2693dcab8434ccd7cf801",
+    "pipeline/pipeline/enrich/cross_museum.py": "01e4369be623a6799a735db9e412a8db30661f4d37367d0d115b5733e234b58d"
+  },
+  "resolver_versions": {
+    "authority": "e9d78eaab593ee7ce433f61058113bff250a6806a99e67d85caa57c439942233",
+    "literal": "264327fad8e38d47232d92f462eb045326c5c3ba592e3d36be008359a443d590"
+  },
+  "review_coverage": {
+    "ruler|met|walters": {
+      "by": "no records of this pair connected in this run",
+      "qualified_by": "ruler re-registration 2026-10-16",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|brooklyn|harvard": {
+      "by": "site links identical to #337's (identity test)",
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|met|brooklyn": {
+      "by": "site links identical to #337's (identity test)",
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    },
+    "site|met|harvard": {
+      "by": "site links identical to #337's (identity test)",
+      "qualified_by": "#337 v10",
+      "review_covers_population": true,
+      "unreviewed_connected_records": []
+    }
+  },
+  "run_ids": [
+    "cbea11119cebc4f417b8b4a998787f64e9f101d96a7ea19b458ef8021a17f1a0",
+    "cbea11119cebc4f417b8b4a998787f64e9f101d96a7ea19b458ef8021a17f1a0"
+  ],
+  "schema_version": "hapi-338-end-to-end/3",
+  "tuned_on_369": [
+    "brooklyn-3599",
+    "brooklyn-3634",
+    "met-566763"
+  ],
+  "two_runs": {
+    "python_hash_seeds": [
+      "1",
+      "2"
+    ],
+    "same_manifest_contents_and_report": true
+  },
+  "writer_sha256": "32d9e1c09e68b1b9ef9e7e760e39b7cee1b94c8fff025a3736515d31f328774c"
+}

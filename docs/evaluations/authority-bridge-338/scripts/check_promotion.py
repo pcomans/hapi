@@ -37,7 +37,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO / "pipeline"))
-from pipeline.authority import graph_kings, royal_women  # noqa: E402
+from pipeline.authority import graph_kings, king_context, royal_women  # noqa: E402
 from pipeline.enrich import authority_links, mentions as production_mentions  # noqa: E402
 from pipeline.enrich.inputs import NORMALIZERS, check_inputs  # noqa: E402
 
@@ -128,8 +128,9 @@ def check(archive: Path, run: Path) -> dict:
     mention_by_id = {m["mention_id"]: m for m in found}
 
     authority = authority_links.load_authority()
-    by_id = {r["mention_id"]: r for r in authority_links.resolve_mentions(found, "authority", authority)}
-    literal = {r["mention_id"]: r for r in authority_links.resolve_mentions(found, "literal", None)}
+    dates = authority_links.record_dates(canonical)
+    by_id = {r["mention_id"]: r for r in authority_links.resolve_mentions(found, "authority", authority, dates)}
+    literal = {r["mention_id"]: r for r in authority_links.resolve_mentions(found, "literal", None, dates)}
 
     def answer(row: dict) -> tuple[str, list[str]]:
         """A production row as the evaluations' arms record a resolution: its status and the
@@ -142,7 +143,7 @@ def check(archive: Path, run: Path) -> dict:
     changes_369 = {c["artifact_id"]: c for c in json.loads(RESOLVER_CHANGE.read_text(encoding="utf-8"))
                    ["royal_woman_cued_mentions"]["changes"]}
     arm = [r for r in gz_rows((run / "current-authority-arm.ndjson.gz").read_bytes()) if r["entity_type"] == "ruler"]
-    differ_369, differ_otherwise = [], []
+    differ_369, differ_king_context, differ_otherwise = [], [], []
     for old in arm:
         new = by_id[old["mention_id"]]
         if (old["status"], old["target_ids"]) == answer(new):
@@ -154,6 +155,11 @@ def check(archive: Path, run: Path) -> dict:
                 and (change["after"]["status"], change["after"]["target_ids"], change["after"]["context_rule"])
                 == (*answer(new), new["resolution"]["context_rule"])):
             differ_369.append((old["artifact_id"], old["mention_id"]))
+        elif not cued and (new["resolution"]["context_rule"] in (king_context.CONTEXT_RULE, king_context.CONFLICT_RULE)
+                           or new["resolution"].get("context", {}).get("dropped")):
+            # A king the record's context chose, refused or dropped from the candidates
+            # (`king_context`, measured in `king-context-2026-10-17/results/measure.json`).
+            differ_king_context.append(old["mention_id"])
         else:
             differ_otherwise.append(old["mention_id"])
     met = collections.Counter(artifact for artifact, _ in differ_369)
@@ -188,13 +194,14 @@ def check(archive: Path, run: Path) -> dict:
 
     statuses = collections.Counter((r["entity_type"], r["status"]) for r in by_id.values())
     return {
-        "schema_version": "hapi-338-promotion-check/3",
+        "schema_version": "hapi-338-promotion-check/4",
         "corpus_archive_sha256": ARCHIVE_SHA256,
         "run_361_files": files,
         "snapshot": {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")},
         "mentions": {"production": len(found), "ledger_361": len(ledger), "rows_equal": mention_rows_equal},
         "rulers_vs_361_authority_arm": {
-            "compared": len(arm), "differ_as_369_measured": sorted(differ_369), "differ_otherwise": differ_otherwise,
+            "compared": len(arm), "differ_as_369_measured": sorted(differ_369),
+            "differ_by_king_context": sorted(differ_king_context), "differ_otherwise": differ_otherwise,
         },
         "places_vs_linkability_adapter": {
             "compared": dict(collections.Counter(m["entity_type"] for m in place_rows)), "differ": place_differ},

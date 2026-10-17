@@ -2,9 +2,11 @@
 """What resolving kings in their record's context (`pipeline.authority.king_context`) changes, on the
 frozen inputs of the per-museum ruler test (`../ruler-per-museum-2026-10-17/`).
 
-Compares, mention by mention, the authority-mode ruler resolutions of that test's frozen run (name
-only) with what this tree's code gives on the same mentions and records. Writes counts, and the
-mention texts with the record's dynasty field and the new target; no other museum text.
+Compares the authority-mode ruler resolutions of that test's frozen run (name only) with what this
+tree's code gives on the same mentions and records: mention by mention, and record link by record
+link (`build_links`), since a record keeps a link while any of its mentions resolves to the target.
+Writes counts, record IDs, and the mention texts with the record's dynasty field; no other museum
+text.
 
     pipeline/.venv/bin/python docs/evaluations/king-context-2026-10-17/scripts/measure.py \\
         --corpus <corpus archive> --added <added-museums archive> --run <frozen run dir> --out <json>
@@ -32,8 +34,11 @@ def measure(corpus: Path, added: Path, run: Path) -> dict:
     found = lf.read_rows(run / "mentions.ndjson.gz")
     old = {r["mention_id"]: r for r in lf.read_rows(run / "resolutions-authority.ndjson.gz") if r["entity_type"] == "ruler"}
     authority = al.load_authority()
-    new = {r["mention_id"]: r for r in al.resolve_mentions(found, "authority", authority, al.record_contexts(canonical))
-           if r["entity_type"] == "ruler"}
+    resolved_now = al.resolve_mentions(found, "authority", authority, al.record_dates(canonical))
+    new = {r["mention_id"]: r for r in resolved_now if r["entity_type"] == "ruler"}
+    links_before = {(l["artifact_id"], l["target_id"]) for l in lf.read_rows(run / "links-authority.ndjson.gz")
+                    if l["entity_type"] == "ruler"}
+    links_now = {(l["artifact_id"], l["target_id"]) for l in al.build_links(resolved_now) if l["entity_type"] == "ruler"}
     changes: dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
     for mention_id, before in old.items():
         after = new[mention_id]
@@ -50,18 +55,20 @@ def measure(corpus: Path, added: Path, run: Path) -> dict:
         key = f"{before['museum']}|{kind}|{before['mention_text']}|{records[before['artifact_id']].get('dynasty')}|" \
               f"{(after['target_ids'] or [None])[0]}"
         changes[before["museum"]][key] += 1
-    kings = authority.kings
+    catalog = authority.kings.catalog
     ambiguous = collections.Counter()
     for row in new.values():
         if row["status"] == "ambiguous" and row["authority"] == "kings":
-            labels = [kings.label(t).casefold() for t in row["resolution"]["target_ids"]]
-            ambiguous["same_label_entries" if len(set(labels)) < len(labels) else "different_kings"] += 1
+            labels = [catalog[t]["label"].casefold() for t in row["resolution"]["target_ids"]]
+            ambiguous["candidates_sharing_a_label" if len(set(labels)) < len(labels) else "candidates_all_labelled_apart"] += 1
     return {
-        "schema_version": "hapi-king-context-measure/1",
+        "schema_version": "hapi-king-context-measure/2",
         "run_id": run.name,
         "resolver_version_now": authority.snapshot["resolver_version"],
         "changed_mentions": {m: sum(c.values()) for m, c in sorted(changes.items())},
         "changes": {m: dict(sorted(c.items())) for m, c in sorted(changes.items())},
+        "record_links_removed": sorted(f"{a}|{t}" for a, t in links_before - links_now),
+        "record_links_added": sorted(f"{a}|{t}" for a, t in links_now - links_before),
         "ambiguous_king_mentions_now": dict(sorted(ambiguous.items())),
     }
 

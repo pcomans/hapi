@@ -54,9 +54,9 @@ MENTIONS = [
 ]
 
 
-def no_context(mentions: list[dict]) -> dict[str, dict]:
-    """Records that give no dynasty or date: kings resolve by name alone (`king_context`)."""
-    return {m["artifact_id"]: {"dynasty": None, "dates": None} for m in mentions}
+def no_context(mentions: list[dict]) -> dict[str, None]:
+    """Records that give no date (`authority_links.record_dates`)."""
+    return {m["artifact_id"]: None for m in mentions}
 
 
 def by_text(rows: list[dict]) -> dict[tuple[str, str, str], dict]:
@@ -175,7 +175,7 @@ sys.addaudithook(hook)
 from pipeline.enrich import mentions, authority_links as al
 mentions_ = json.loads(sys.stdin.read())
 al.resolve_mentions(mentions_, "authority", al.load_authority(),
-                   {m["artifact_id"]: {"dynasty": None, "dates": (-1500, -1400)} for m in mentions_})
+                   {m["artifact_id"]: (-1500, -1400) for m in mentions_})
 modules = sorted(str(Path(m.__file__).relative_to(repo)) for n, m in sys.modules.items()
                  if getattr(m, "__file__", None) and n.startswith(("pipeline.authority", "pipeline.enrich")))
 print(json.dumps({"modules": modules, "opened": sorted(opened)}))

@@ -114,10 +114,6 @@ class GraphKings:
     def labels(self, target_id: str) -> list[str]:
         return sorted(self._names[target_id])
 
-    def label(self, target_id: str) -> str:
-        """The king's display label in the identity catalog."""
-        return self._catalog[target_id]["label"]
-
     def dynasties(self, target_id: str) -> tuple[int, ...]:
         return tuple(sorted({self._node[m]["dynasty"] for m in self._catalog[target_id]["member_ids"]
                              if self._node[m]["dynasty"] is not None}))

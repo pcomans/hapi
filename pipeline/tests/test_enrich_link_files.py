@@ -84,7 +84,7 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
     assert lf.read_rows(run / "mentions.ndjson.gz") == found
     for mode in al.MODES:
         resolutions = lf.typed(al.resolve_mentions(found, mode, authority if mode == "authority" else None,
-                                                   al.record_contexts(canonical)))
+                                                   al.record_dates(canonical)))
         assert lf.read_rows(run / f"resolutions-{mode}.ndjson.gz") == resolutions
         assert lf.read_rows(run / f"links-{mode}.ndjson.gz") == lf.typed_links(al.build_links(resolutions), resolutions)
     version = authority.snapshot["resolver_version"]
@@ -95,9 +95,10 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
         "field_path": "reign", "mention_id": reign["mention_id"], "mention_text": "Amenhotep III", "mode": "authority",
         "museum": "met", "reason": None, "resolver_version": version, "status": "resolved",
         "target_ids": ["cluster-beckerath-18.09"], "target_kind": "king",
-        # A catalogued reign is checked against the record's context (`king_context`): Dynasty 18.
-        "resolution": {"authority": "kings", "context_rule": "record_context",
-                       "context": {"candidate_fit": {"cluster-beckerath-18.09": True}, "record_dates": None,
+        # The record's context is read (`king_context`); one king has the name, so the name decides.
+        "resolution": {"authority": "kings", "context_rule": None,
+                       "context": {"candidate_fit": {"cluster-beckerath-18.09": True},
+                                   "candidate_clash": {"cluster-beckerath-18.09": False}, "record_dates": None,
                                    "record_dynasty": 18},
                        "normalized_keys": ["amenhotepiii"],
                        "raw_exact_status": "unique", "raw_exact_target_ids": ["cluster-beckerath-18.09"],

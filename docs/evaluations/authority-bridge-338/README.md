@@ -322,6 +322,15 @@ Adding the Walters edited them again, and `results/rerun-after-walters/` is the 
 code. The same test holds it to the committed results, with the Walters' pairs and rows new and
 empty beside Cleveland's.
 
+Resolving kings in their record's context (`pipeline/pipeline/authority/king_context.py`,
+`../king-context-2026-10-17/`) edited them again; `results/rerun-after-king-context/` is the re-run.
+`check_promotion.py` now passes each record's dates. It counts a ruler mention the context chose,
+refused or narrowed apart (`differ_by_king_context`: 13), beside #369's 11, and nothing differs
+otherwise. A test holds the re-run to the previous one: only the ruler figures the measurement
+reports changed, and the ruler scope qualified by #383 (`run_end_to_end.QUALIFIED_BY` now credits
+the 2026-10-16 re-registration; the frozen corpus has no Walters records, so that pair connects
+nothing here).
+
 The committed `results/end-to-end.json` and `database-run.json` stay the records of the run they
 describe. Tests compare the committed results with the evaluations' files, not
 with the live code, so an edit does not turn main red; it leaves the result describing the code

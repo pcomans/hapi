@@ -404,7 +404,7 @@ def test_the_latest_rerun_and_the_museum_profiles_pin_the_same_code() -> None:
     code they share: the rerun's input check, its resolver snapshot and the two museum profiles
     pin each file they have in common to one hash. (Whether that version is the live code is
     checked when they are made; an edit afterwards leaves them describing the code they record.)"""
-    results = EVALUATIONS / "authority-bridge-338/results/rerun-after-walters"
+    results = EVALUATIONS / "authority-bridge-338/results/rerun-after-king-context"
     promotion = json.loads((results / "promotion-check.json").read_text(encoding="utf-8"))
     pins = [promotion["check_inputs"]["code_sha256"], promotion["snapshot"]["authority"]["files"]]
     for museum in ("cleveland", "walters"):
@@ -419,3 +419,54 @@ def test_the_latest_rerun_and_the_museum_profiles_pin_the_same_code() -> None:
     assert end_to_end["resolver_versions"] == {m: promotion["snapshot"][m]["resolver_version"] for m in al.MODES}
     assert {"pipeline/pipeline/enrich/mentions.py", "pipeline/pipeline/assets/normalize/walters.py"} <= {
         path for path in seen if sum(path in pin for pin in pins) > 1}
+
+
+def test_resolving_kings_in_context_changed_only_what_it_measured() -> None:
+    """`results/rerun-after-king-context/`: both proof scripts re-run on the frozen corpus with the
+    code that resolves kings in their record's context (`king_context`). Against the previous
+    re-run, only the ruler figures the measurement reports changed
+    (`king-context-2026-10-17/results/measure.json`), and the ruler scope qualified since (#383);
+    every other figure, sites and tombs included, is the same."""
+    results = EVALUATIONS / "authority-bridge-338/results"
+    code_named = ("code_sha256", "/files/", "resolver_version", "/run_ids", "/writer_sha256", "/run_id",
+                  "/report_sha256/")
+    expected = {
+        "promotion-check.json": {
+            "/authority_mode_statuses/ruler:ambiguous": (83, 80),
+            "/authority_mode_statuses/ruler:resolved": (9015, 9009),
+            "/authority_mode_statuses/ruler:unmatched": (298, 307),
+            "/schema_version": ("hapi-338-promotion-check/3", "hapi-338-promotion-check/4"),
+        },
+        "end-to-end.json": {
+            "/matching/by_museum/met|ruler/authority/linked_records": (8869, 8863),
+            "/matching/by_museum_pair/ruler|met|brooklyn/qualified": (True, False),
+            "/matching/by_museum_pair/ruler|met|walters/qualified": (False, True),
+            "/outcomes/authority/ruler|ambiguous|authority_ambiguous": (78, 75),
+            "/outcomes/authority/ruler|resolved|": (9015, 9009),
+            "/outcomes/authority/ruler|unmatched|record_context_conflict": (None, 9),
+        },
+    }
+    for name, changes in expected.items():
+        before = _flat(json.loads((results / "rerun-after-walters" / name).read_text(encoding="utf-8")))
+        after = _flat(json.loads((results / "rerun-after-king-context" / name).read_text(encoding="utf-8")))
+        differ = {k for k in before.keys() | after.keys() if before.get(k) != after.get(k)
+                  and not any(part in k for part in code_named)}
+        differ -= {k for k in differ if k.startswith(("/review_coverage/", "/inventory/unevaluated_scopes/ruler",
+                                                       "/rulers_vs_361_authority_arm/differ_by_king_context"))}
+        assert {k: (before.get(k), after.get(k)) for k in differ} == changes, name
+    promotion = json.loads((results / "rerun-after-king-context/promotion-check.json").read_text(encoding="utf-8"))
+    rulers = promotion["rulers_vs_361_authority_arm"]
+    assert rulers["differ_otherwise"] == []
+    assert rulers["differ_as_369_measured"] == json.loads((results / "promotion-check.json").read_text(
+        encoding="utf-8"))["rulers_vs_361_authority_arm"]["differ_as_369_measured"]
+    # The 12 mentions the measurement counts, and Menkheperre (Met, Dynasty 21), whose candidates
+    # the context narrowed from three to two (Necho I dropped) while it stays ambiguous.
+    assert len(rulers["differ_by_king_context"]) == 13
+    assert promotion["places_vs_linkability_adapter"]["differ"] == {"site": [], "tomb_monument": []}
+    assert promotion["rulers_vs_361_literal_arm"]["differ"] == promotion["places_vs_337_literal_arm"]["differ"] == []
+    assert promotion["mentions"]["rows_equal"] is True
+    end_to_end = json.loads((results / "rerun-after-king-context/end-to-end.json").read_text(encoding="utf-8"))
+    assert end_to_end["review_coverage"]["ruler|met|walters"] == {
+        "qualified_by": "ruler re-registration 2026-10-16", "unreviewed_connected_records": [],
+        "review_covers_population": True, "by": "no records of this pair connected in this run"}
+    assert end_to_end["resolver_versions"] == {m: promotion["snapshot"][m]["resolver_version"] for m in al.MODES}

@@ -132,38 +132,45 @@ def literal_target(entity_type: str, text: str) -> str:
     return "literal:" + hashlib.sha256(key.encode("utf-8")).hexdigest()
 
 
-def record_contexts(canonical: list[dict]) -> dict[str, dict]:
-    """Each record's context for its king mentions (`king_context`): its single dynasty, as the
-    royal women read it (`royal_women.single_dynasty`), and its date range."""
-    return {row["id"]: {"dynasty": royal_women.single_dynasty(row.get("dynasty")),
-                        "dates": king_context.record_range(row.get("date_start"), row.get("date_end"))}
-            for row in canonical}
+def record_dates(canonical: list[dict]) -> dict[str, tuple[int, int] | None]:
+    """Each record's date range for its king mentions (`king_context.record_range`). Its dynasty
+    is the mention's own `record_dynasty`."""
+    return {row["id"]: king_context.record_range(row.get("date_start"), row.get("date_end")) for row in canonical}
 
 
-def resolve_king(authority: Authority, m: dict, context: dict) -> dict:
-    """An uncued ruler mention among the kings, in its record's context: strictly for a catalogued
-    reign, which dates the object to the reign."""
-    return king_context.resolve_in_context(authority.kings, m["mention_text"], record_dynasty=context["dynasty"],
-                                           record_dates=context["dates"],
-                                           strict=m["evidence_role"] == CATALOGUED_REIGN)
+def resolve_king(authority: Authority, m: dict, dates: tuple[int, int] | None, refused: frozenset[str]) -> dict:
+    """An uncued ruler mention among the kings, in its record's context (`king_context`)."""
+    return king_context.resolve_in_context(
+        authority.kings, m["mention_text"], record_dynasty=royal_women.single_dynasty(m["record_dynasty"]),
+        record_dates=dates, catalogued_reign=m["evidence_role"] == CATALOGUED_REIGN, refused_on_record=refused)
+
+
+def uncued_king_mention(m: dict) -> bool:
+    return (m["entity_type"] == "ruler" and m["expression_type"] == "single_identity"
+            and not royal_women.royal_woman_cued(m["field_value"], m["span_start"]))
 
 
 def resolve_mentions(mentions: list[dict], mode: str, authority: Authority | None,
-                     contexts: dict[str, dict]) -> list[dict]:
-    """One resolution row per mention, in the mentions' order. `contexts` gives each record's
-    dynasty and dates (`record_contexts`)."""
+                     dates: dict[str, tuple[int, int] | None]) -> list[dict]:
+    """One resolution row per mention, in the mentions' order. `dates` gives each record's date
+    range (`record_dates`)."""
     if mode not in MODES:
         raise ValueError(f"unknown mode: {mode}")
     if mode == "authority" and authority is None:
         raise ValueError("the authority mode needs the authority")
     version = (authority.snapshot if mode == "authority" else snapshot("literal"))["resolver_version"]
+    # The kings a record's reign field refused (`king_context`): its other mentions may not name them.
+    refused: dict[str, frozenset[str]] = collections.defaultdict(frozenset)
     # A record's own kings: the kings its uncued single-identity ruler mentions resolve to.
     record_kings: dict[str, set[str]] = collections.defaultdict(set)
     if mode == "authority":
         for m in mentions:
-            if (m["entity_type"] == "ruler" and m["expression_type"] == "single_identity"
-                    and not royal_women.royal_woman_cued(m["field_value"], m["span_start"])):
-                found = resolve_king(authority, m, contexts[m["artifact_id"]])
+            if uncued_king_mention(m) and m["evidence_role"] == CATALOGUED_REIGN:
+                found = resolve_king(authority, m, dates[m["artifact_id"]], frozenset())
+                refused[m["artifact_id"]] |= frozenset(found.get("context", {}).get("dropped", ()))
+        for m in mentions:
+            if uncued_king_mention(m):
+                found = resolve_king(authority, m, dates[m["artifact_id"]], refused[m["artifact_id"]])
                 if found["status"] == "resolved":
                     record_kings[m["artifact_id"]].update(found["target_ids"])
     rows = []
@@ -184,11 +191,13 @@ def resolve_mentions(mentions: list[dict], mode: str, authority: Authority | Non
             rows.append({**row, "status": "resolved", "reason": None, "authority": "literal",
                          "target_ids": [literal_target(m["entity_type"], m["mention_text"])]})
         else:
-            rows.append({**row, **_resolve_one(authority, m, record_kings[m["artifact_id"]], contexts[m["artifact_id"]])})
+            rows.append({**row, **_resolve_one(authority, m, record_kings[m["artifact_id"]], dates[m["artifact_id"]],
+                                               refused[m["artifact_id"]])})
     return rows
 
 
-def _resolve_one(authority: Authority, m: dict, record_kings: set[str], context: dict) -> dict:
+def _resolve_one(authority: Authority, m: dict, record_kings: set[str], dates: tuple[int, int] | None,
+                 refused: frozenset[str]) -> dict:
     if m["entity_type"] == "site":
         found = {**authority.sites.resolve(m["mention_text"], resolver.place_norm_set), "authority": "idai"}
     elif m["entity_type"] == "tomb_monument":
@@ -197,7 +206,7 @@ def _resolve_one(authority: Authority, m: dict, record_kings: set[str], context:
         found = royal_women.resolve_ruler_mention(
             authority.women, authority.kings, m["field_value"], m["span_start"], m["span_end"],
             record_king_ids=record_kings, record_dynasty=royal_women.single_dynasty(m["record_dynasty"]),
-            record_dates=context["dates"], catalogued_reign=m["evidence_role"] == CATALOGUED_REIGN)
+            record_dates=dates, catalogued_reign=m["evidence_role"] == CATALOGUED_REIGN, refused_on_record=refused)
     status = found["status"]
     return {
         "status": status,

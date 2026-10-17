@@ -199,7 +199,7 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
          authority: authority_links.Authority | None, set_aside: list[str]) -> dict:
     authority = authority or authority_links.load_authority()
     found, extraction = mentions.extract_all_mentions(canonical, raw_indexes)
-    contexts = authority_links.record_contexts(canonical)
+    dates = authority_links.record_dates(canonical)
     snapshots = {"authority": authority.snapshot, "literal": authority_links.snapshot("literal")}
     inputs = input_digest(canonical, raw_indexes)
     writer = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
@@ -208,7 +208,7 @@ def _run(root: Path, canonical: list[dict], raw_indexes: dict[str, dict[str, dic
     by_mode = {}
     for mode in authority_links.MODES:
         resolutions = typed(authority_links.resolve_mentions(found, mode, authority if mode == "authority" else None,
-                                                             contexts))
+                                                             dates))
         links = typed_links(authority_links.build_links(resolutions), resolutions)
         by_mode[mode] = (resolutions, links)
         files[f"resolutions-{mode}.ndjson.gz"] = gzip_rows(resolutions)

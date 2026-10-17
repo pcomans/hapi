@@ -43,7 +43,8 @@ EVALUATIONS = REPO / "docs/evaluations"
 # #361's deciding case"): the two Queen Ahmose records and #361's Neferu d. A next registration
 # must flag them; this result names them, and the README sets this run beside #361's report.
 TUNED_ON_369 = frozenset({"brooklyn-3634", "met-566763", "brooklyn-3599"})
-QUALIFIED_BY = {"site": "#337 v10", "ruler": "#361"}
+# The evaluation that qualified each entity type's scopes (`authority_links.QUALIFIED_SCOPES`).
+QUALIFIED_BY = {"site": "#337 v10", "ruler": "ruler re-registration 2026-10-16"}
 # The code the report itself runs.
 REPORT_CODE = (REPO / "pipeline/pipeline/enrich/cross_museum.py", Path(__file__).resolve())
 
@@ -101,6 +102,10 @@ def review_coverage(run: Path, report: dict) -> dict:
         if entity == "site":
             out[key] = {"qualified_by": QUALIFIED_BY[entity], "unreviewed_connected_records": [],
                         "review_covers_population": True, "by": "site links identical to #337's (identity test)"}
+        elif not any(now.get((entity, x, y), empty)["records"] for x, y in ((a, b), (b, a))):
+            # Met–Walters: the frozen corpus predates the Walters, so the pair connects nothing here.
+            out[key] = {"qualified_by": QUALIFIED_BY[entity], "unreviewed_connected_records": [],
+                        "review_covers_population": True, "by": "no records of this pair connected in this run"}
         else:
             unreviewed = sorted(r for x, y in ((a, b), (b, a))
                                 for r in now.get((entity, x, y), empty)["records"] - before.get((entity, x, y), empty)["records"])
