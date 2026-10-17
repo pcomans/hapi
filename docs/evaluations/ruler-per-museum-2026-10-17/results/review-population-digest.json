@@ -1,0 +1,111 @@
+{
+ "builder_sha256": "2baef02bf6d550db03a68ed7384152edfe5da0266aa1a1bc2693df00d438fe7a",
+ "decoy_count": 20,
+ "output_sha256": {
+  "link-queue.json": "a2c6249ee4ab746507ae6cfc03338d6ce08c5c461d7eeeb026ce9077cd7dbe50",
+  "miss-queue.json": "a07b4e1700c2f18b2cb61bf413a10f48368b8f134e54fb395e2335cffc22a095",
+  "private-answer-key.json": "eb343433cd3c8e6db940a6d0977147dae6d3d2b715a252ba4fab78e533585656"
+ },
+ "population": {
+  "brooklyn": {
+   "decoy": 0,
+   "link": 16,
+   "link_records": 24,
+   "miss": 25,
+   "miss_records": 33
+  },
+  "cleveland": {
+   "decoy": 2,
+   "link": 13,
+   "link_records": 76,
+   "miss": 3,
+   "miss_records": 3
+  },
+  "harvard": {
+   "decoy": 0,
+   "link": 3,
+   "link_records": 3,
+   "miss": 0,
+   "miss_records": 0
+  },
+  "met": {
+   "decoy": 12,
+   "link": 107,
+   "link_records": 8869,
+   "miss": 99,
+   "miss_records": 319
+  },
+  "walters": {
+   "decoy": 6,
+   "link": 35,
+   "link_records": 62,
+   "miss": 34,
+   "miss_records": 49
+  }
+ },
+ "review_protocol": {
+  "browser_tool": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/open_page_server.py",
+   "sha256": "2ce814c976a3eaee31bf07614e6c82a65c8beb21453cc39b2bcc42e182264244"
+  },
+  "citable_sources": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/citable-sources.json",
+   "sha256": "4bd37e0670ecbeccd441b22e311a69e09cfe2925617a8fc1e00272396a4721d5"
+  },
+  "prompts": {
+   "link_reconciler": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/prompts/link-reconciler-v1.txt",
+    "sha256": "1d3dfd777c4745347b9645345a0992d7b67a194a6fafcdfc7c1aee8bc79b585f"
+   },
+   "link_reviewer": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/prompts/link-reviewer-v1.txt",
+    "sha256": "924ea5f7bcd18803acc18b325415593898450a25542b0658b6dde33c51920826"
+   },
+   "miss_reconciler": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/prompts/miss-reconciler-v1.txt",
+    "sha256": "362aea36cd87e0a86f23d1f0801c5aa611e343a8ba9ff032393e3bc0b3b2bad8"
+   },
+   "miss_reviewer": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/prompts/miss-reviewer-v1.txt",
+    "sha256": "f44633b9f5856768bbbbccc7972dc2abdc8ee5348702b72a3fe95d85f1f6cc6f"
+   }
+  },
+  "runner": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/run_harness_review.py",
+   "sha256": "af48d61bc2ea86ce4732e049687ec3841994850a65e4febf20c47aef577a381d"
+  },
+  "runtime_lock": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/runtime/uv.lock",
+   "sha256": "a79d7b77103eb3de232e323474213842218c3f19c8a3efb1b4f2df0cc19df5b1"
+  },
+  "schemas": {
+   "link_reconciler": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/raw-response-contracts/link-reconciler-case-v1.schema.json",
+    "sha256": "c90d6a164308f2d668e17cbd893241f5982bd68288ebbcc6a54e9f1b37fc1ed0"
+   },
+   "link_reviewer": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/raw-response-contracts/link-reviewer-case-v1.schema.json",
+    "sha256": "d682ba041eb7c0daab725dd57d798b6d5e43ddabfe07c5faab8d239d69ef0e9b"
+   },
+   "miss_reconciler": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/raw-response-contracts/miss-reconciler-case-v1.schema.json",
+    "sha256": "4a35bebef57c1a889f5a515d435578176b2c9b2f44ba5446129c3398b6bd989a"
+   },
+   "miss_reviewer": {
+    "path": "docs/evaluations/ruler-per-museum-2026-10-17/raw-response-contracts/miss-reviewer-case-v1.schema.json",
+    "sha256": "85dbdf119646c90040c2358bd0c5bf829d3869332c1033b134b08dbd14cc79ad"
+   }
+  },
+  "system_prompt": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/launcher-instructions/review-system-v4.txt",
+   "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
+  },
+  "validator": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/review_protocol.py",
+   "sha256": "8efcd6a1571733af3a4389f62302c9281b20c0c7ddbf17b096f47d9feb95972f"
+  }
+ },
+ "run_id": "00960fed1eefb24fa0ddc41f67cb759ee2f83161ed6b181ad296861db1bcdae0",
+ "schema_version": "hapi-ruler-per-museum-queue/1",
+ "seed": "hapi-ruler-per-museum-2026-10-17-v1"
+}

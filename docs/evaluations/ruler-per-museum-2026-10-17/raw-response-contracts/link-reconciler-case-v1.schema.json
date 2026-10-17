@@ -1,0 +1,71 @@
+{
+ "$id": "hapi-ruler-per-museum-raw-response/link-reconciler-case/1",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "properties": {
+  "case_id": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "resolutions": {
+   "additionalProperties": false,
+   "minProperties": 1,
+   "properties": {
+    "canonical_identity": {
+     "additionalProperties": false,
+     "else": {
+      "properties": {
+       "citations": {
+        "minItems": 1
+       }
+      }
+     },
+     "if": {
+      "properties": {
+       "outcome": {
+        "const": "insufficient_evidence"
+       }
+      },
+      "required": [
+       "outcome"
+      ]
+     },
+     "properties": {
+      "citations": {
+       "items": {
+        "pattern": "^https?://",
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "outcome": {
+       "enum": [
+        "exact_identity",
+        "different_identity",
+        "insufficient_evidence"
+       ]
+      },
+      "rationale": {
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "rationale",
+      "citations"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "case_id",
+  "resolutions"
+ ],
+ "title": "Link reconciler raw response for one case",
+ "type": "object",
+ "x-hapi-role": "link_reconciler"
+}

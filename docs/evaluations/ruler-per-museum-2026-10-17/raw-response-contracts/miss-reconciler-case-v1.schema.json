@@ -1,0 +1,105 @@
+{
+ "$id": "hapi-ruler-per-museum-raw-response/miss-reconciler-case/1",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "properties": {
+  "case_id": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "resolutions": {
+   "additionalProperties": false,
+   "minProperties": 1,
+   "properties": {
+    "names_one_ruler": {
+     "additionalProperties": false,
+     "allOf": [
+      {
+       "else": {
+        "properties": {
+         "citations": {
+          "minItems": 1
+         }
+        }
+       },
+       "if": {
+        "properties": {
+         "outcome": {
+          "const": "insufficient_evidence"
+         }
+        },
+        "required": [
+         "outcome"
+        ]
+       }
+      },
+      {
+       "else": {
+        "properties": {
+         "ruler": {
+          "maxLength": 0
+         }
+        }
+       },
+       "if": {
+        "properties": {
+         "outcome": {
+          "const": "one_ruler"
+         }
+        },
+        "required": [
+         "outcome"
+        ]
+       },
+       "then": {
+        "properties": {
+         "ruler": {
+          "minLength": 1
+         }
+        }
+       }
+      }
+     ],
+     "properties": {
+      "citations": {
+       "items": {
+        "pattern": "^https?://",
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "outcome": {
+       "enum": [
+        "one_ruler",
+        "not_one_ruler",
+        "insufficient_evidence"
+       ]
+      },
+      "rationale": {
+       "minLength": 1,
+       "type": "string"
+      },
+      "ruler": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "ruler",
+      "rationale",
+      "citations"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "case_id",
+  "resolutions"
+ ],
+ "title": "Miss reconciler raw response for one case",
+ "type": "object",
+ "x-hapi-role": "miss_reconciler"
+}
