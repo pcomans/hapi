@@ -30,9 +30,6 @@ SCHEMA_VERSION = "hapi-ruler-per-museum-score/1"
 # Calibration (decision-rule.md): the review must reject the decoys. More than this share of
 # decoys not judged different_identity makes the result INCONCLUSIVE.
 MAX_MISSED_DECOY_SHARE = (1, 5)
-# Utility of the result (decision-rule.md): a museum's links unconfirmed either way may cover at
-# most this share of its linked records for it to pass.
-MAX_UNCONFIRMED_RECORD_SHARE = (1, 10)
 
 
 def sha256_path(path: Path) -> str:
@@ -64,22 +61,15 @@ def at_most(count: int, total: int, share: tuple[int, int]) -> bool:
 
 
 def museum_outcomes(rows: dict[str, dict], calibration_passed: bool) -> dict[str, str]:
-    """Each museum's outcome (decision-rule.md):
-    - `no_decision` everywhere when the calibration failed;
-    - `fails` when any of its links is wrong;
-    - `passes` when none is wrong and its unconfirmed links cover at most
-      `MAX_UNCONFIRMED_RECORD_SHARE` of its linked records;
-    - `unconfirmed` otherwise: no wrong link found, but too many links left undecided."""
+    """Each museum's outcome (decision-rule.md): `no_decision` everywhere when the calibration
+    failed; otherwise `fails` when any of its links is wrong, else `passes`. Unconfirmed links
+    are reported and decide nothing (owner, 2026-10-17)."""
     out = {}
     for museum, row in sorted(rows.items()):
         if not calibration_passed:
             out[museum] = "no_decision"
-        elif row["wrong"]["units"]:
-            out[museum] = "fails"
-        elif at_most(row["unconfirmed"]["records"], row["link_records"], MAX_UNCONFIRMED_RECORD_SHARE):
-            out[museum] = "passes"
         else:
-            out[museum] = "unconfirmed"
+            out[museum] = "fails" if row["wrong"]["units"] else "passes"
     return out
 
 
@@ -129,8 +119,7 @@ def tally(key: list[dict], link_outcomes: dict[str, str], miss_outcomes: dict[st
                    "max_missed_share": list(MAX_MISSED_DECOY_SHARE),
                    "passed": total > 0 and at_most(decoys["missed"], total, MAX_MISSED_DECOY_SHARE)}
     return {"calibration": calibration, "museums": rows,
-            "museum_outcomes": museum_outcomes(rows, calibration["passed"]),
-            "max_unconfirmed_record_share": list(MAX_UNCONFIRMED_RECORD_SHARE)}
+            "museum_outcomes": museum_outcomes(rows, calibration["passed"])}
 
 
 def score(repo_root: Path, review: Path, records: Path, public_out: Path, private_out: Path) -> dict:

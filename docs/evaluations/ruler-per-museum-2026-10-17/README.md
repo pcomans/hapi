@@ -1,7 +1,7 @@
 # Per-museum ruler test (2026-10-17)
 
-**Status: built, not yet run.** The decision rule (`decision-rule.md`) awaits the project owner's
-approval. No model judges any case before that.
+**Status: approved, not yet run.** The project owner approved the decision rule
+(`decision-rule.md`) on 2026-10-17, before any model judged any case.
 
 ## Question
 
@@ -48,9 +48,9 @@ URLs, and for a link the ruler's label and authority metadata. Case IDs and orde
 
 ## The rule
 
-`decision-rule.md`, in short: a museum **passes** when it has no wrong link and its unconfirmed
-links cover at most 1 in 10 of its linked records. Any wrong link **fails** it. Misses never fail
-a museum; they are the fix list.
+`decision-rule.md`, in short: any wrong link **fails** a museum; otherwise it **passes**. Links
+the reviewers could not settle either way are reported and decide nothing, and misses never fail a
+museum; they are the fix list.
 
 ## Protocol
 

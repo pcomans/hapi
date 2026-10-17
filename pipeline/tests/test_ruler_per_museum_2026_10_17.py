@@ -258,27 +258,29 @@ def test_calibration_fails_when_more_than_one_in_five_decoys_are_not_rejected() 
                                          "max_missed_share": [1, 5], "passed": passed}
 
 
-def test_a_museum_with_a_wrong_link_fails_and_one_without_passes_or_stays_unconfirmed() -> None:
+def test_a_museum_with_a_wrong_link_fails_and_unconfirmed_links_decide_nothing() -> None:
     key, outcomes = decoys(0)
     key += [key_case("a", "link", "met", tuple(f"met-{n}" for n in range(10))),
             key_case("b", "link", "met", ("met-10",)),
-            key_case("c", "link", "brooklyn", tuple(f"brooklyn-{n}" for n in range(9))),
-            key_case("d", "link", "brooklyn", ("brooklyn-9",)),
             key_case("e", "link", "walters", ("walters-1",)),
             key_case("f", "link", "walters", ("walters-2",)),
             key_case("m", "miss", "walters", ("walters-3",))]
-    outcomes |= {"a": "exact_identity", "b": "different_identity",
-                 "c": "exact_identity", "d": "insufficient_evidence",
-                 "e": "exact_identity", "f": "insufficient_evidence"}
+    outcomes |= {"a": "exact_identity", "b": "different_identity", "e": "insufficient_evidence",
+                 "f": "insufficient_evidence"}
     result = scorer.tally(key, outcomes, {"m": "one_ruler"})
-    assert result["museum_outcomes"] == {"brooklyn": "passes", "met": "fails", "walters": "unconfirmed"}
+    # Walters has no confirmed link at all, and still passes: unconfirmed links decide nothing.
+    assert result["museum_outcomes"] == {"met": "fails", "walters": "passes"}
     assert result["museums"]["met"]["wrong"] == {"units": 1, "records": 1}
-    assert result["museums"]["brooklyn"]["unconfirmed"] == {"records": 1, "units": 1}  # 1 of 10: passes
+    assert result["museums"]["met"]["confirmed"] == {"units": 1, "records": 10}
+    assert result["museums"]["walters"]["unconfirmed"] == {"units": 2, "records": 2}
     assert result["museums"]["walters"]["miss"]["names_one_ruler"] == {"units": 1, "records": 1}
-    key, outcomes2 = decoys(5)
-    assert set(scorer.tally(key + key[:0], outcomes2, {})["museum_outcomes"].values()) <= {"no_decision"}
-    assert scorer.museum_outcomes(result["museums"], False) == {
-        "brooklyn": "no_decision", "met": "no_decision", "walters": "no_decision"}
+    assert scorer.museum_outcomes(result["museums"], False) == {"met": "no_decision", "walters": "no_decision"}
+
+
+def test_the_decision_rule_is_approved() -> None:
+    rule = (EVALUATION / "decision-rule.md").read_text()
+    assert rule.startswith("# Per-museum ruler test — decision rule\n\n**Approved by the project owner on 2026-10-17")
+    assert "DRAFT" not in rule and '"Don\'t count them"' in rule and '"No wrong links"' in rule
 
 
 # The committed run.

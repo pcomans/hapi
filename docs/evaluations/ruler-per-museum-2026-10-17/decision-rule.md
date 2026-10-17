@@ -1,7 +1,7 @@
 # Per-museum ruler test — decision rule
 
-**Status: DRAFT.** The project owner chose its main points on 2026-10-17 (below). No model judges
-any case before the owner approves the whole file; the approval and its date will be recorded here.
+**Approved by the project owner on 2026-10-17, before any model judged any case.** The owner chose
+each point marked below in plain-language questions the same day, and then approved running it.
 
 ## What is judged
 
@@ -31,9 +31,9 @@ Applied in this order (`scripts/score.py`):
    museum decided.
 2. **Wrong links → the museum fails.** A museum with any wrong link fails (owner's choice,
    2026-10-17: "No wrong links"). Every wrong link found is a specific error to fix.
-3. **Unconfirmed links.** A museum with no wrong link passes when its unconfirmed links cover at
-   most 1 in 10 of its linked records. Otherwise its outcome is `unconfirmed`: no wrong link
-   found, but too much left undecided to call it a pass.
+3. **Otherwise the museum passes.** Unconfirmed links (the pages a reviewer could open did not
+   settle the link either way) are reported per museum, in units and records, and decide nothing
+   (owner's choice, 2026-10-17: "Don't count them").
 4. **Misses never fail a museum.** They are reported as a fix list (owner's choice, 2026-10-17),
    with the rulers the reviewers named. Only the outcome (`one_ruler` or not) is reconciled. When
    both reviewers find one ruler, the fix list gives both names as they wrote them, unreconciled;
