@@ -4,9 +4,10 @@ The production form of what the #337 and #361 evaluations measured. Every mentio
 resolution row; a row that is not resolved says why. Two modes, the matcher's switch:
 
 * `authority`: sites among the reconciled iDAI rows, tombs among Porter & Moss's tomb rows
-  (`resolver`), rulers among the claim graph's identity clusters and, after a royal-woman cue,
-  among Dodson & Hilton's royal women (`royal_women.resolve_ruler_mention`: the record's other
-  kings and its single dynasty as context, the TLA-linked spellings in the index).
+  (`resolver`), rulers among the claim graph's identity clusters, checked against the record's
+  dynasty and dates (`king_context`; strictly for a museum's reign field), and, after a
+  royal-woman cue, among Dodson & Hilton's royal women (`royal_women.resolve_ruler_mention`: the
+  record's other kings and its single dynasty as context, the TLA-linked spellings in the index).
 * `literal`: the plain-text baseline both evaluations compared against; a mention's target is
   its NFC, whitespace-collapsed, casefolded text, typed by entity.
 
@@ -36,7 +37,7 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
-from pipeline.authority import graph_kings, resolver, royal_women, tla_links
+from pipeline.authority import graph_kings, king_context, resolver, royal_women, tla_links
 
 ENRICH = Path(__file__).resolve().parent
 AUTHORITY = ENRICH.parent / "authority"
@@ -67,10 +68,14 @@ QUALIFIED_SCOPES = {
     "tomb_monument": frozenset(),
 }
 LITERAL_METHOD = "typed_nfc_whitespace_casefold_literal_equality"
+# The evidence role of a museum's reign field (`mentions`), which dates the object to the reign;
+# its king is checked strictly against the record's context (`king_context`).
+CATALOGUED_REIGN = "catalogued_reign"
 LITERAL_FILES = (ENRICH / "mentions.py", ENRICH / "authority_links.py", AUTHORITY / "resolver.py")
 # The code and data a resolution in the authority mode reads, hashed into its version.
 AUTHORITY_FILES = LITERAL_FILES + (
     AUTHORITY / "graph_kings.py",
+    AUTHORITY / "king_context.py",
     AUTHORITY / "royal_women.py",
     AUTHORITY / "tla_links.py",
     AUTHORITY / "weak_sign_skeleton.py",
@@ -127,8 +132,26 @@ def literal_target(entity_type: str, text: str) -> str:
     return "literal:" + hashlib.sha256(key.encode("utf-8")).hexdigest()
 
 
-def resolve_mentions(mentions: list[dict], mode: str, authority: Authority | None) -> list[dict]:
-    """One resolution row per mention, in the mentions' order."""
+def record_contexts(canonical: list[dict]) -> dict[str, dict]:
+    """Each record's context for its king mentions (`king_context`): its single dynasty, as the
+    royal women read it (`royal_women.single_dynasty`), and its date range."""
+    return {row["id"]: {"dynasty": royal_women.single_dynasty(row.get("dynasty")),
+                        "dates": king_context.record_range(row.get("date_start"), row.get("date_end"))}
+            for row in canonical}
+
+
+def resolve_king(authority: Authority, m: dict, context: dict) -> dict:
+    """An uncued ruler mention among the kings, in its record's context: strictly for a catalogued
+    reign, which dates the object to the reign."""
+    return king_context.resolve_in_context(authority.kings, m["mention_text"], record_dynasty=context["dynasty"],
+                                           record_dates=context["dates"],
+                                           strict=m["evidence_role"] == CATALOGUED_REIGN)
+
+
+def resolve_mentions(mentions: list[dict], mode: str, authority: Authority | None,
+                     contexts: dict[str, dict]) -> list[dict]:
+    """One resolution row per mention, in the mentions' order. `contexts` gives each record's
+    dynasty and dates (`record_contexts`)."""
     if mode not in MODES:
         raise ValueError(f"unknown mode: {mode}")
     if mode == "authority" and authority is None:
@@ -140,7 +163,7 @@ def resolve_mentions(mentions: list[dict], mode: str, authority: Authority | Non
         for m in mentions:
             if (m["entity_type"] == "ruler" and m["expression_type"] == "single_identity"
                     and not royal_women.royal_woman_cued(m["field_value"], m["span_start"])):
-                found = authority.kings.resolve(m["mention_text"])
+                found = resolve_king(authority, m, contexts[m["artifact_id"]])
                 if found["status"] == "resolved":
                     record_kings[m["artifact_id"]].update(found["target_ids"])
     rows = []
@@ -161,11 +184,11 @@ def resolve_mentions(mentions: list[dict], mode: str, authority: Authority | Non
             rows.append({**row, "status": "resolved", "reason": None, "authority": "literal",
                          "target_ids": [literal_target(m["entity_type"], m["mention_text"])]})
         else:
-            rows.append({**row, **_resolve_one(authority, m, record_kings[m["artifact_id"]])})
+            rows.append({**row, **_resolve_one(authority, m, record_kings[m["artifact_id"]], contexts[m["artifact_id"]])})
     return rows
 
 
-def _resolve_one(authority: Authority, m: dict, record_kings: set[str]) -> dict:
+def _resolve_one(authority: Authority, m: dict, record_kings: set[str], context: dict) -> dict:
     if m["entity_type"] == "site":
         found = {**authority.sites.resolve(m["mention_text"], resolver.place_norm_set), "authority": "idai"}
     elif m["entity_type"] == "tomb_monument":
@@ -173,7 +196,8 @@ def _resolve_one(authority: Authority, m: dict, record_kings: set[str]) -> dict:
     else:
         found = royal_women.resolve_ruler_mention(
             authority.women, authority.kings, m["field_value"], m["span_start"], m["span_end"],
-            record_king_ids=record_kings, record_dynasty=royal_women.single_dynasty(m["record_dynasty"]))
+            record_king_ids=record_kings, record_dynasty=royal_women.single_dynasty(m["record_dynasty"]),
+            record_dates=context["dates"], catalogued_reign=m["evidence_role"] == CATALOGUED_REIGN)
     status = found["status"]
     return {
         "status": status,

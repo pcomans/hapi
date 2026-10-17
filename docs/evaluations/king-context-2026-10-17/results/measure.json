@@ -1,0 +1,21 @@
+{
+ "ambiguous_king_mentions_now": {
+  "different_kings": 3,
+  "same_label_entries": 56
+ },
+ "changed_mentions": {
+  "met": 13
+ },
+ "changes": {
+  "met": {
+   "met|link_added_from_ambiguous:record_context|Teti|Dynasty 6|cluster-beckerath-06.01": 3,
+   "met|link_removed:record_context_conflict|Amenhotep II|Dynasty 19|None": 1,
+   "met|link_removed:record_context_conflict|Aya|Dynasty 18|None": 7,
+   "met|link_removed:record_context_conflict|Ramesses IV|Dynasty 19|None": 1,
+   "met|link_removed:record_context_conflict|Takeloth II|Dynasty 23|None": 1
+  }
+ },
+ "resolver_version_now": "f3579bcb6766e151662c69a7f79291916a91f56d425112b325e6458c0719774e",
+ "run_id": "00960fed1eefb24fa0ddc41f67cb759ee2f83161ed6b181ad296861db1bcdae0",
+ "schema_version": "hapi-king-context-measure/1"
+}
