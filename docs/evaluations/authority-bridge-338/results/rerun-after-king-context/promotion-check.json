@@ -103,7 +103,7 @@
         "pipeline/pipeline/authority/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "pipeline/pipeline/authority/claimgraph/__init__.py": "248fc97beda726422b79607951e359e9d06859f63b57d7a452a04ffc2f5ebab0",
         "pipeline/pipeline/authority/claimgraph/normalize.py": "ca59b734db3f67511c9e58f16eaf8769e998c5e480d18c8be49a575390b16939",
-        "pipeline/pipeline/authority/graph_kings.py": "40cafea0e82e0f186522c55d44837f978fc9379cf835a1d0546c4b7b942a7693",
+        "pipeline/pipeline/authority/graph_kings.py": "e03762cedfd9f239fdd10b28cfeaaf214f1af19acbaf6ee7b2776bdc595db836",
         "pipeline/pipeline/authority/king_context.py": "ec80596e9e60d177614dc8aa989a967ac5c1203f783327b6e08c9a22af763c1e",
         "pipeline/pipeline/authority/resolver.py": "38c8ac8834b362be11a6c6a95bcf3f6eee7cb16bfac4a76dd609b40c0768d5d9",
         "pipeline/pipeline/authority/royal_women.py": "5e045da47ea89ec55865d16ea3ea7ea09973864c8204e787f25ce8c1b2453ccf",
@@ -123,7 +123,7 @@
         "web-claimgraph/data/claim-graph.json": "95e8900441828a5b9c08822d1ede9a98524896865d348320daec6ee29bdadf66"
       },
       "mode": "authority",
-      "resolver_version": "c1d69c01182aa0da7b7c3d536a2aff1a046c5a55b766365bc4f91a28371d2605",
+      "resolver_version": "eb62e3191532dab31ffa22be7990ce118416e1068c902e3a37e8af8a939e3092",
       "unicode": "15.0.0"
     },
     "literal": {

@@ -104,4 +104,4 @@ These are counted, not acted on:
   mentions, which the king context does not touch.
 - **A king list's reversed reign is read as undated** (`GraphKings.reign`). Kitchen prints
   Djed-Khons-ef-ankh as "1046–1056" for a one-year reign; the source corrects it, but the claim graph
-  carries the printed end (Codex review).
+  carries the printed end (Codex review; issue #391). Only that known entry is excused (`graph_kings.KNOWN_REVERSED_REIGNS`); any other reversed reign raises.

@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from pipeline.authority import king_context as kc
+import pytest
+
+from pipeline.authority import graph_kings, king_context as kc
 from pipeline.enrich import authority_links as al
 
 
@@ -135,10 +137,21 @@ def test_the_graph_gives_a_kings_reign_as_the_span_of_its_sources() -> None:
     assert kings.reign("cluster-beckerath-11.06") == (-1995, -1947)
     assert kings.dynasties("cluster-beckerath-11.06") == (11,)
     assert kings.reign("cluster-leprohon-leprohon-13.33") == (-1701, -1661)
-    # Kitchen's printed reversal (1046–1056 BCE) is read as undated, and never raises.
+    # Kitchen's printed reversal (1046–1056 BCE) is read as undated.
     assert kings.reign("kitchen-21H.06") is None
-    assert all(kings.reign(t) is None or kings.reign(t)[0] <= kings.reign(t)[1] for t in kings.catalog)
     assert kc.clashes(kings, "kitchen-21H.06", 22, (-900, -850)) is False
+    # It is the only reversed reign in the committed graph, and every target's reign reads.
+    assert {i for i, n in kings._node.items() if n["reign_start_bce"] is not None and n["reign_end_bce"] is not None
+            and n["reign_start_bce"] > n["reign_end_bce"]} == graph_kings.KNOWN_REVERSED_REIGNS == {"kitchen-21H.06"}
+    assert all(kings.reign(t) is None or kings.reign(t)[0] <= kings.reign(t)[1] for t in kings.catalog)
+
+
+def test_any_other_reversed_reign_fails_loud() -> None:
+    assert graph_kings.member_reign({"id": "kitchen-21H.06", "reign_start_bce": -1046, "reign_end_bce": -1056}) is None
+    assert graph_kings.member_reign({"id": "x", "reign_start_bce": -1500, "reign_end_bce": -1450}) == (-1500, -1450)
+    assert graph_kings.member_reign({"id": "x", "reign_start_bce": None, "reign_end_bce": -1450}) is None
+    with pytest.raises(ValueError, match=r"beckerath-99.01: a reign that ends before it starts: -1400..-1450"):
+        graph_kings.member_reign({"id": "beckerath-99.01", "reign_start_bce": -1400, "reign_end_bce": -1450})
 
 
 def test_a_title_mention_on_a_record_with_a_refused_reign_is_refused_end_to_end() -> None:
