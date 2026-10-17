@@ -106,6 +106,10 @@ def test_a_damaged_run_or_unknown_museum_or_mode_fails_loud(run, tmp_path) -> No
 # over today's `MUSEUM_PAIRS`.
 FROZEN_MUSEUMS = ("brooklyn", "harvard", "met")
 FROZEN_PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard"))
+# Its `qualified` flags are the policy of the code it records (#361's rulers). The 2026-10-16
+# re-registration replaced Met–Brooklyn rulers with Met–Walters (`QUALIFIED_SCOPES`); the frozen
+# report keeps the flags it was written with.
+FROZEN_QUALIFIED = {"site": set(FROZEN_PAIRS), "ruler": {("met", "brooklyn")}, "tomb_monument": set()}
 
 
 @pytest.fixture(scope="module")
@@ -127,7 +131,9 @@ def test_the_end_to_end_run_was_stable_and_of_the_proven_code(result) -> None:
         "resolutions-authority.ndjson.gz": 148964, "resolutions-literal.ndjson.gz": 148964}
     for key, row in result["matching"]["by_museum_pair"].items():
         entity, a, b = key.split("|")
-        assert row["qualified"] == ((a, b) in al.QUALIFIED_SCOPES[entity]), key
+        assert row["qualified"] == ((a, b) in FROZEN_QUALIFIED[entity]), key
+    assert {t: set(pairs) for t, pairs in al.QUALIFIED_SCOPES.items()} == {
+        **FROZEN_QUALIFIED, "ruler": {("met", "walters")}}
 
 
 def test_the_site_links_are_337s_record_for_record() -> None:

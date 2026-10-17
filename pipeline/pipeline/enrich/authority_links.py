@@ -53,15 +53,17 @@ MUSEUM_PAIRS = (("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard")
                 ("met", "walters"), ("brooklyn", "walters"), ("harvard", "walters"), ("cleveland", "walters"))
 # Where the authority beat plain text under review (`docs/evaluations/`):
 # * site, all three pairs: #337 v10 (`authority-independent-control-2026-10-11/README.md`);
-# * ruler, Met–Brooklyn: #361 (`ruler-reregistration-2026-10-15/README.md`). The Harvard pairs
-#   had no changed ruler case to review, so they are unevaluated, not failed.
+# * ruler, Met–Walters: the 2026-10-16 ruler re-registration
+#   (`ruler-reregistration-2026-10-16/README.md`), which replaced #361's. Every other ruler pair
+#   had too few changed cases to decide, so it is unevaluated, not failed. Met–Brooklyn among
+#   them: #361 qualified it on a case the resolver was later tuned on (#369).
 # Tombs are unevaluated: in #337 no tomb mention reached a node shared across museums in
 # either arm, so no tomb case was reviewed.
-# Every Cleveland and Walters pair is unevaluated: both museums were added after both reviews
-# (docs/museum-sources/cleveland.md, walters.md).
+# Every Cleveland and Walters site pair is unevaluated: #337 predates both museums, and neither
+# has site links yet (docs/museum-sources/cleveland.md, walters.md).
 QUALIFIED_SCOPES = {
     "site": frozenset({("met", "brooklyn"), ("met", "harvard"), ("brooklyn", "harvard")}),
-    "ruler": frozenset({("met", "brooklyn")}),
+    "ruler": frozenset({("met", "walters")}),
     "tomb_monument": frozenset(),
 }
 LITERAL_METHOD = "typed_nfc_whitespace_casefold_literal_equality"

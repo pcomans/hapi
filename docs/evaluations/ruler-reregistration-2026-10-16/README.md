@@ -4,8 +4,9 @@
 which qualified rulers for Met–Brooklyn on four changed cases. This registration reuses #361's
 review protocol and scripts (copies here). It changes only what is listed below.
 
-**Status: registered, not yet run.** The project owner approved the decision rule
-(`decision-rule.md`) on 2026-10-16, before any model judged any case.
+**Status: run and scored, 2026-10-17: CONTINUE, rulers Met–Walters** (Result, below). The
+project owner approved the decision rule (`decision-rule.md`) on 2026-10-16, before any model
+judged any case.
 
 ## Question
 
@@ -56,10 +57,10 @@ neither museum's spellings.
    - For the same reason, no scope starts qualified. #361's Met–Brooklyn result hung on a case
      the resolver was later tuned on. After this registration, the qualified ruler scopes are
      the ones it qualifies.
-   - Production still lists #361's Met–Brooklyn (`QUALIFIED_SCOPES` in
-     `pipeline/enrich/authority_links.py`) until this result is applied. That is on purpose:
-     `authority_links.py` is one of the files the frozen resolver versions digest, so editing it
-     now would void the frozen run. The result's PR sets the ruler scopes to this registration's.
+   - `QUALIFIED_SCOPES` in `pipeline/enrich/authority_links.py` kept #361's Met–Brooklyn until
+     this result was applied, on purpose: `authority_links.py` is one of the files the frozen
+     resolver versions digest, so editing it before the run would have voided the frozen run.
+     The result's PR set the ruler scopes to this registration's (a test binds them).
 6. **Citable sources.** Cleveland and the Walters, already citable, are now case museums, and the
    Walters' permanent-link host is added (`citable-sources.json`).
 7. **New seeds** for the opaque orders, the reconciliation order and the preflight sample.
@@ -144,3 +145,97 @@ Cleveland and Walters record page the queue shows has loaded in the preflight
 - **Walls are recognised by their titles.**
 - **Surface text correlates with case type, and the sourcing burden is unequal** (#337 and
   #361, unchanged).
+
+## Result (2026-10-17): CONTINUE, rulers Met–Walters
+
+`results/real-adjudicated-score.json`, from `decision-rule.md` applied in code, on the 85 cases
+that hold no tuned-on record:
+
+| Step | Numbers | Outcome |
+|---|---|---|
+| Calibration | 1 of 68 retained controls uncertain or wrong (limit 20%) | passed |
+| Safety | b = 0 of 13 authority gains | passed |
+| Utility | ruler, Met–Walters: a 7, b 0, c 0, d 2, e 2, f 0 (a + e = 9 > d = 2; 11 decided) | qualifies |
+
+Every other pair has at most 2 changed cases, too few to decide (`scope_dispositions`):
+
+| Pair | a | d | e | Outcome |
+|---|---|---|---|---|
+| Met–Walters | 7 | 2 | 2 | qualified |
+| Met–Brooklyn | 2 | 0 | 0 | unevaluated |
+| Met–Cleveland | 2 | 0 | 0 | unevaluated |
+| Brooklyn–Walters | 1 | 0 | 0 | unevaluated |
+| Cleveland–Walters | 1 | 0 | 0 | unevaluated |
+| the other five | 0 | 0 | 0 | unevaluated |
+
+So `QUALIFIED_SCOPES["ruler"]` is Met–Walters alone. Met–Brooklyn, which #361 qualified, is
+unevaluated.
+
+**Met–Walters' eleven changed cases** (case IDs as in the private records):
+- **Seven gains, all a.** The authority links the Walters' spellings to the Met's kings, and
+  Stage 2 found each proposed king the exact identity:
+  - Senusret I, II and III (`cluster-beckerath-12.02`, `-12.04`, `-12.05`; case-057, case-010,
+    case-059), from the Walters' "Sesostris";
+  - Amenhotep I (`-18.02`, case-087), from "Amenophis I";
+  - Seti I and II (`-19.02`, `-19.06`; case-025, case-004), from "Sety";
+  - Psamtik I (`-26.01`, case-076), from "Psammetichus I".
+- **Two correct links lost (d).** Plain text joins "Ptolemy II Philadelphos" (case-002) and
+  "Ptolemy III Euergetes I" (case-075) across the two museums; the authority gives them no
+  shared target.
+- **Two false links removed (e).** Plain text joins the title cues "a King Holding" (case-020)
+  and "the King Slaying" (case-047), which name no ruler. The reviewers found each node joins
+  different entities.
+
+**The other changed cases** are all a: Met–Brooklyn case-019 and case-069; Met–Cleveland
+case-039 and case-065; Brooklyn–Walters case-063; Cleveland–Walters case-086.
+
+**Tuned-on cases** (sensitivity, decides nothing). The two cases left out are Met–Brooklyn's
+Ahmes B control (judged correct) and its Neferu loss (case-038, judged d, as in #361). With them,
+the rule gives the same verdict and adds Met–Brooklyn (a 2 against d 1, 3 decided):
+`decision_rule_including_tuned_on_cases`.
+
+**The calibration miss** is case-060, Met–Walters' Pepi II control (`cluster-beckerath-06.05`).
+Stage 1 found too little evidence that the two sides are one king; Stage 2 judged the target
+exact.
+
+**Arm outcomes** (`adjudicated_arm_outcomes`, all 87 cases): the authority has 81 useful nodes
+against the literal arm's 68.
+
+### The run
+
+- **Calls.** Stage 1: 198 reviewer calls plus one retry (reviewer B's first answer on
+  review-unit-019 cited a non-citable page), and 5 reconciled. Stage 2: 164
+  reviewer calls, 1 reconciled. Records are private, in
+  `dropbox/hapi-ruler-reregistration-2026-10-16/review-run/`, and bound by
+  `results/real-review-records.json`. The reason is #337's: they carry museum text verbatim.
+- **Pages.** The page-load gate passed (`results/real-page-load-gate.json`): citable pages
+  loaded at most 1.51 points from the overall rate in every class (limit 5).
+
+### Two incidents, disclosed
+
+Both hit Stage 2's one reconciled case, case-021 (Met–Walters, a retained control, judged
+correct). The records
+they produced are kept, bound by `results/real-review-records.json`, outside the reconciler's
+directory, so no scorer reads them.
+
+1. **Claude Code updated itself** from 2.1.299 to 2.1.302 between the Stage 2 reviewers and the
+   reconciler. The reconciler's first call ran on 2.1.302, and the validator rejected it
+   (`stage-2/reconciler-rejected-runtime/`). A rejected call holds no answer. The runner does
+   not resume a stopped case, so the owner chose to redo the call on the pinned 2.1.299, which
+   was still installed, with auto-update off.
+2. **The browser leaked one virtual display per call.** Each call starts its browser under
+   `xvfb-run`, whose Xvfb outlived the call. By the end of Stage 2, 1,738 of them filled the
+   container's process limit (2,048), and Chromium could not start threads.
+   - The first redo of case-021's reconciler opened no page (0 of 10) and answered
+     insufficient_evidence. It was set aside for that reason alone
+     (`stage-2/reconciler-rejected-browser/`).
+   - Once the orphaned displays were closed, the second redo loaded 4 of 4 pages and decided:
+     exact_identity, with Stage 2 reviewer B.
+   - Stage 2 reviewer A's own call on case-021 was hit too: 1 of 20 pages loaded, and it
+     answered insufficient_evidence. That split is why the case went to the reconciler. The
+     call is kept as the protocol made it; the reconciler read the pages and decided.
+   - Two other Stage 2 calls lost one page each to the leak (reviewer A on case-010 and
+     case-013, 5 of 6 and 3 of 4 loaded). Both agreed with reviewer B. No Stage 1 call was hit.
+
+   The runner is frozen with this registration. A later protocol must stop the display with
+   the call.
