@@ -1,0 +1,89 @@
+{
+ "$id": "hapi-ruler-per-museum-raw-response/miss-reviewer-case/1",
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "else": {
+    "properties": {
+     "citations": {
+      "minItems": 1
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "names_one_ruler": {
+      "const": "insufficient_evidence"
+     }
+    },
+    "required": [
+     "names_one_ruler"
+    ]
+   }
+  },
+  {
+   "else": {
+    "properties": {
+     "ruler": {
+      "maxLength": 0
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "names_one_ruler": {
+      "const": "one_ruler"
+     }
+    },
+    "required": [
+     "names_one_ruler"
+    ]
+   },
+   "then": {
+    "properties": {
+     "ruler": {
+      "minLength": 1
+     }
+    }
+   }
+  }
+ ],
+ "properties": {
+  "case_id": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "citations": {
+   "items": {
+    "pattern": "^https?://",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "names_one_ruler": {
+   "enum": [
+    "one_ruler",
+    "not_one_ruler",
+    "insufficient_evidence"
+   ]
+  },
+  "reasoning": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "ruler": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "case_id",
+  "names_one_ruler",
+  "ruler",
+  "reasoning",
+  "citations"
+ ],
+ "title": "Miss reviewer raw response for one case",
+ "type": "object",
+ "x-hapi-role": "miss_reviewer"
+}
