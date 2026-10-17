@@ -89,6 +89,10 @@ def resolve_side(root: Path, ledger: Path, values: list[str]) -> dict:
             if found["status"] == "resolved":
                 record_kings[m["artifact_id"]].update(found["target_ids"])
     field_api = "field_value" in inspect.signature(rw.resolve_ruler_mention).parameters
+    # Trees since #388 resolve kings in the record's context; these mentions are royal-woman cued,
+    # which that context does not touch, so it is passed empty.
+    king_context = ({"record_dates": None, "catalogued_reign": False, "refused_on_record": frozenset()}
+                    if "refused_on_record" in inspect.signature(rw.resolve_ruler_mention).parameters else {})
     cued = {}
     for m in ruler:
         if not rw.royal_woman_cued(m["field_value"], m["span_start"]):
@@ -96,7 +100,8 @@ def resolve_side(root: Path, ledger: Path, values: list[str]) -> dict:
         dynasty = rw.single_dynasty(m["record_dynasty"])
         if field_api:
             found = rw.resolve_ruler_mention(index, kings, m["field_value"], m["span_start"], m["span_end"],
-                                             record_king_ids=record_kings[m["artifact_id"]], record_dynasty=dynasty)
+                                             record_king_ids=record_kings[m["artifact_id"]], record_dynasty=dynasty,
+                                             **king_context)
         else:
             found = rw.resolve_royal_woman(index, m["mention_text"], record_king_ids=record_kings[m["artifact_id"]],
                                            record_dynasty=dynasty)
@@ -148,6 +153,8 @@ def unread_kin(rw, index, kings, ruler: list[dict], record_kings: dict[str, set[
         added = {t for name in names if (r := kings.resolve(name))["status"] == "resolved" for t in r["target_ids"]}
         resolving += bool(added)
         kwargs = {"record_dynasty": rw.single_dynasty(m["record_dynasty"])}
+        if "refused_on_record" in inspect.signature(rw.resolve_ruler_mention).parameters:
+            kwargs |= {"record_dates": None, "catalogued_reign": False, "refused_on_record": frozenset()}
         now = rw.resolve_ruler_mention(index, kings, field, m["span_start"], m["span_end"],
                                        record_king_ids=record_kings[m["artifact_id"]], **kwargs)
         read_too = rw.resolve_ruler_mention(index, kings, field, m["span_start"], m["span_end"],

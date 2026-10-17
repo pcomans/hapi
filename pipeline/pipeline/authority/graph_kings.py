@@ -120,13 +120,15 @@ class GraphKings:
 
     def reign(self, target_id: str) -> tuple[int, int] | None:
         """The span of the reign dates the king lists give this king (years, negative BCE): from the
-        earliest start to the latest end over its members that date it; None when none does."""
+        earliest start to the latest end over its members that date it; None when none does. A
+        member whose printed reign ends before it starts is read as undated: Kitchen prints
+        Djed-Khons-ef-ankh (`kitchen-21H.06`) as "1046–1056" for a one-year reign, a typographic
+        reversal the source corrects to 1046–1045 (`sources/kitchen-tipe/README.md`,
+        `corrected_end_bce`), but the claim graph carries the printed end."""
         dated = [(self._node[m]["reign_start_bce"], self._node[m]["reign_end_bce"])
                  for m in self._catalog[target_id]["member_ids"]
-                 if self._node[m]["reign_start_bce"] is not None and self._node[m]["reign_end_bce"] is not None]
+                 if self._node[m]["reign_start_bce"] is not None and self._node[m]["reign_end_bce"] is not None
+                 and self._node[m]["reign_start_bce"] <= self._node[m]["reign_end_bce"]]
         if not dated:
             return None
-        start, end = min(s for s, _ in dated), max(e for _, e in dated)
-        if start > end:
-            raise ValueError(f"{target_id}: a reign that ends before it starts: {dated}")
-        return start, end
+        return min(s for s, _ in dated), max(e for _, e in dated)

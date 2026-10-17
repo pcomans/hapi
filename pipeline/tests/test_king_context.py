@@ -135,6 +135,10 @@ def test_the_graph_gives_a_kings_reign_as_the_span_of_its_sources() -> None:
     assert kings.reign("cluster-beckerath-11.06") == (-1995, -1947)
     assert kings.dynasties("cluster-beckerath-11.06") == (11,)
     assert kings.reign("cluster-leprohon-leprohon-13.33") == (-1701, -1661)
+    # Kitchen's printed reversal (1046–1056 BCE) is read as undated, and never raises.
+    assert kings.reign("kitchen-21H.06") is None
+    assert all(kings.reign(t) is None or kings.reign(t)[0] <= kings.reign(t)[1] for t in kings.catalog)
+    assert kc.clashes(kings, "kitchen-21H.06", 22, (-900, -850)) is False
 
 
 def test_a_title_mention_on_a_record_with_a_refused_reign_is_refused_end_to_end() -> None:

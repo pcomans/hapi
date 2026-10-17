@@ -99,6 +99,9 @@ These are counted, not acted on:
 
   The re-run also corrects a stale label that #383 left behind: the qualified ruler scope is
   credited to the 2026-10-16 re-registration, not #361.
-- **#369's measurement script** (`../resolver-gaps-369/scripts/measure_resolver_change.py`)
-  calls the resolver as it was then, so it no longer runs on this tree. Its committed result
-  records that code; its tests read the result, not the script.
+- **#369's measurement script** (`../resolver-gaps-369/scripts/measure_resolver_change.py`) passes
+  the new context arguments, empty, when the tree it runs on takes them. It measures royal-woman-cued
+  mentions, which the king context does not touch.
+- **A king list's reversed reign is read as undated** (`GraphKings.reign`). Kitchen prints
+  Djed-Khons-ef-ankh as "1046–1056" for a one-year reign; the source corrects it, but the claim graph
+  carries the printed end (Codex review).
