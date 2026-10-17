@@ -57,6 +57,12 @@ class Kings:
     def dynasties(self, target_id: str) -> tuple[int, ...]:
         return self.NAMES[target_id][1]
 
+    def reign(self, target_id: str) -> tuple[int, int] | None:
+        return None
+
+    def label(self, target_id: str) -> str:
+        return self.NAMES[target_id][0][0]
+
 
 KINGS = Kings()
 
@@ -75,14 +81,16 @@ def resolve(index, text, *, cue=True, kings=frozenset(), dynasty=None):
     """`text` as a museum field gives it: after "Queen " when cued, alone when not."""
     prefix = "Queen " if cue else ""
     found = rw.resolve_ruler_mention(index, KINGS, prefix + text, len(prefix), len(prefix) + len(text),
-                                     record_king_ids=set(kings), record_dynasty=dynasty)
+                                     record_king_ids=set(kings), record_dynasty=dynasty,
+                                     record_dates=None, catalogued_reign=False)
     return found["status"], found["target_ids"], found["context_rule"]
 
 
 def resolve_field(index, field, mention, *, kings=frozenset(), dynasty=None):
     start = field.index(mention)
     found = rw.resolve_ruler_mention(index, KINGS, field, start, start + len(mention),
-                                     record_king_ids=set(kings), record_dynasty=dynasty)
+                                     record_king_ids=set(kings), record_dynasty=dynasty,
+                                     record_dates=None, catalogued_reign=False)
     return found["status"], found["target_ids"], found["context_rule"], found.get("stated_kin_king_ids")
 
 

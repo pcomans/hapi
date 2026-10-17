@@ -54,12 +54,17 @@ MENTIONS = [
 ]
 
 
+def no_context(mentions: list[dict]) -> dict[str, dict]:
+    """Records that give no dynasty or date: kings resolve by name alone (`king_context`)."""
+    return {m["artifact_id"]: {"dynasty": None, "dates": None} for m in mentions}
+
+
 def by_text(rows: list[dict]) -> dict[tuple[str, str, str], dict]:
     return {(r["artifact_id"], r["field_path"], r["mention_text"]): r for r in rows}
 
 
 def test_each_mention_gets_one_row_that_says_what_it_resolved_to_or_why_not(authority) -> None:
-    rows = al.resolve_mentions(MENTIONS, "authority", authority)
+    rows = al.resolve_mentions(MENTIONS, "authority", authority, no_context(MENTIONS))
     assert [r["mention_id"] for r in rows] == [m["mention_id"] for m in MENTIONS]
     version = authority.snapshot["resolver_version"]
     assert {r["resolver_version"] for r in rows} == {version} and {r["mode"] for r in rows} == {"authority"}
@@ -104,7 +109,7 @@ def test_each_mention_gets_one_row_that_says_what_it_resolved_to_or_why_not(auth
 
 
 def test_the_literal_mode_is_the_plain_text_baseline() -> None:
-    rows = by_text(al.resolve_mentions(MENTIONS, "literal", None))
+    rows = by_text(al.resolve_mentions(MENTIONS, "literal", None, no_context(MENTIONS)))
     reign, title = rows["met-1", "reign", "Amenhotep III"], rows["met-1", "title", "Amenhotep III"]
     assert reign["target_ids"] == title["target_ids"] == [al.literal_target("ruler", "amenhotep  III")]
     assert (reign["status"], reign["authority"], reign["resolver_version"], reign["mode"], reign["resolution"]) == (
@@ -119,7 +124,7 @@ def test_the_literal_mode_is_the_plain_text_baseline() -> None:
 
 
 def test_a_link_joins_a_record_to_a_target_on_its_resolved_mentions(authority) -> None:
-    rows = al.resolve_mentions(MENTIONS, "authority", authority)
+    rows = al.resolve_mentions(MENTIONS, "authority", authority, no_context(MENTIONS))
     version = authority.snapshot["resolver_version"]
     ids = {(r["artifact_id"], r["field_path"], r["mention_text"]): r["mention_id"] for r in rows}
     assert al.build_links(rows) == [
@@ -145,11 +150,11 @@ def test_a_link_joins_a_record_to_a_target_on_its_resolved_mentions(authority) -
 
 def test_bad_input_fails_loud(authority) -> None:
     with pytest.raises(ValueError, match="unknown mode"):
-        al.resolve_mentions(MENTIONS, "fuzzy", authority)
+        al.resolve_mentions(MENTIONS, "fuzzy", authority, no_context(MENTIONS))
     with pytest.raises(ValueError, match="needs the authority"):
-        al.resolve_mentions(MENTIONS, "authority", None)
+        al.resolve_mentions(MENTIONS, "authority", None, no_context(MENTIONS))
     with pytest.raises(ValueError, match="unclassified entity type: dynasty"):
-        al.resolve_mentions([{**MENTIONS[0], "entity_type": "dynasty"}], "literal", None)
+        al.resolve_mentions([{**MENTIONS[0], "entity_type": "dynasty"}], "literal", None, no_context([{**MENTIONS[0], "entity_type": "dynasty"}]))
 
 
 def test_the_resolver_version_covers_every_module_and_file_the_resolution_reads(authority) -> None:
@@ -169,7 +174,8 @@ def hook(event, args):
 sys.addaudithook(hook)
 from pipeline.enrich import mentions, authority_links as al
 mentions_ = json.loads(sys.stdin.read())
-al.resolve_mentions(mentions_, "authority", al.load_authority())
+al.resolve_mentions(mentions_, "authority", al.load_authority(),
+                   {m["artifact_id"]: {"dynasty": None, "dates": (-1500, -1400)} for m in mentions_})
 modules = sorted(str(Path(m.__file__).relative_to(repo)) for n, m in sys.modules.items()
                  if getattr(m, "__file__", None) and n.startswith(("pipeline.authority", "pipeline.enrich")))
 print(json.dumps({"modules": modules, "opened": sorted(opened)}))

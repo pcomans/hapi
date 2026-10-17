@@ -114,6 +114,23 @@ class GraphKings:
     def labels(self, target_id: str) -> list[str]:
         return sorted(self._names[target_id])
 
+    def label(self, target_id: str) -> str:
+        """The king's display label in the identity catalog."""
+        return self._catalog[target_id]["label"]
+
     def dynasties(self, target_id: str) -> tuple[int, ...]:
         return tuple(sorted({self._node[m]["dynasty"] for m in self._catalog[target_id]["member_ids"]
                              if self._node[m]["dynasty"] is not None}))
+
+    def reign(self, target_id: str) -> tuple[int, int] | None:
+        """The span of the reign dates the king lists give this king (years, negative BCE): from the
+        earliest start to the latest end over its members that date it; None when none does."""
+        dated = [(self._node[m]["reign_start_bce"], self._node[m]["reign_end_bce"])
+                 for m in self._catalog[target_id]["member_ids"]
+                 if self._node[m]["reign_start_bce"] is not None and self._node[m]["reign_end_bce"] is not None]
+        if not dated:
+            return None
+        start, end = min(s for s, _ in dated), max(e for _, e in dated)
+        if start > end:
+            raise ValueError(f"{target_id}: a reign that ends before it starts: {dated}")
+        return start, end
