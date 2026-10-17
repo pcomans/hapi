@@ -286,6 +286,31 @@ def test_a_woman_who_later_reigned_is_the_king(index) -> None:
         "resolved", ["king:sobekneferu"], None)
 
 
+def test_a_king_the_records_reign_field_refused_is_not_restored_by_a_cue(index) -> None:
+    field = "Queen Hatshepsut"
+    found = rw.resolve_ruler_mention(index, KINGS, field, 6, len(field), record_king_ids=set(), record_dynasty=18,
+                                     record_dates=None, catalogued_reign=False, refused_on_record=frozenset())
+    assert (found["status"], found["target_ids"]) == ("resolved", ["king:hatshepsut"])
+    found = rw.resolve_ruler_mention(index, KINGS, field, 6, len(field), record_king_ids=set(), record_dynasty=18,
+                                     record_dates=None, catalogued_reign=False,
+                                     refused_on_record=frozenset({"king:hatshepsut"}))
+    assert (found["status"], found["target_ids"], found["context_rule"], found["refused_on_record"]) == (
+        "unmatched", [], "record_context_conflict", ["king:hatshepsut"])
+
+
+def test_a_refused_king_named_as_her_kin_does_not_choose_her(index) -> None:
+    field = "Queen Ahhotep, wife of Taa II"
+    start = field.index("Ahhotep")
+
+    def kin(refused):
+        return rw.resolve_ruler_mention(index, KINGS, field, start, start + len("Ahhotep"), record_king_ids=set(),
+                                        record_dynasty=None, record_dates=None, catalogued_reign=False,
+                                        refused_on_record=frozenset(refused))["stated_kin_king_ids"]
+
+    assert kin(()) == ["king:taa-ii"]
+    assert kin({"king:taa-ii"}) == []
+
+
 def test_a_female_ruler_only_the_king_lists_hold_is_reached_by_the_cue(index) -> None:
     assert resolve(index, "Arsinoe II") == ("resolved", ["king:arsinoe-ii"], None)
     assert resolve(index, "Cleopatra VII") == ("resolved", ["king:cleopatra-vii-p"], None)

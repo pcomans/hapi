@@ -662,9 +662,18 @@ def resolve_ruler_mention(index: RoyalWomenIndex, kings: KingAuthority, field_va
     reign field refused."""
     text = field_value[span_start:span_end]
     if royal_woman_cued(field_value, span_start):
+        # A king the record's reign field refused is not this record's king: not as her stated kin,
+        # and not as the female ruler the cue reaches ("Queen Hatshepsut" beside a refused
+        # "reign of Hatshepsut").
         kin = {t for name in stated_kin_names(field_value, span_start, span_end)
-               if (found := kings.resolve(name))["status"] == "resolved" for t in found["target_ids"]}
+               if (found := kings.resolve(name))["status"] == "resolved" for t in found["target_ids"]} - refused_on_record
         found = resolve_royal_woman(index, text, record_king_ids=record_king_ids | kin, record_dynasty=record_dynasty)
+        refused = sorted(set(found["target_ids"]) & refused_on_record)
+        if refused:
+            kept = [t for t in found["target_ids"] if t not in refused_on_record]
+            status = "resolved" if len(kept) == 1 else "ambiguous" if kept else "unmatched"
+            found = {**found, "status": status, "target_ids": kept, "refused_on_record": refused,
+                     "context_rule": found["context_rule"] if kept else king_context.CONFLICT_RULE}
         return {**found, "authority": "royal_women", "stated_kin_king_ids": sorted(kin)}
     found = king_context.resolve_in_context(kings, text, record_dynasty=record_dynasty, record_dates=record_dates,
                                             catalogued_reign=catalogued_reign, refused_on_record=refused_on_record)
