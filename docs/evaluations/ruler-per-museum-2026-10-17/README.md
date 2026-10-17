@@ -1,6 +1,7 @@
 # Per-museum ruler test (2026-10-17)
 
-**Status: approved, not yet run.** The project owner approved the decision rule
+**Status: run and scored, 2026-10-17.** Brooklyn, Cleveland, Harvard and the Walters pass; the Met
+fails on two wrong links (Result, below). The project owner approved the decision rule
 (`decision-rule.md`) on 2026-10-17, before any model judged any case.
 
 ## Question
@@ -85,3 +86,65 @@ raw tables as ingested on 2026-10-16), run through today's main by `scripts/make
 under different hash seeds, with identical output. The queues are built by
 `scripts/build_queue.py`; `results/review-population-digest.json` binds them, the answer key and
 every file the review runs on.
+
+## Result (2026-10-17)
+
+`results/score.json`, from `decision-rule.md` applied in code (`scripts/score.py`).
+
+**Calibration passed.** The review rejected all 20 decoys (20 counted, none set aside for an
+unconfirmed twin).
+
+| Museum | Links confirmed | Wrong | Unconfirmed | Outcome |
+|---|---|---|---|---|
+| Met | 103 (8,844 records) | 2 (24 records) | 2 (3 records) | **fails** |
+| Brooklyn | 16 (24 records) | 0 | 0 | passes |
+| Harvard | 3 (3 records) | 0 | 0 | passes |
+| Cleveland | 13 (76 records) | 0 | 0 | passes |
+| Walters | 35 (62 records) | 0 | 0 | passes |
+
+A record can carry more than one link, so a museum's records per column can add up to more than
+its linked records.
+
+**The Met's two wrong links.** Both reviewers agreed on each.
+- **"Aya"** (link-054, 11 records → `cluster-leprohon-leprohon-13.33`, the Dynasty 13 king
+  Merneferre Aya). The Met writes "Aya" for two kings: the Dynasty 13 king, and the Dynasty 18 Ay,
+  successor of Tutankhamun ("Scarab of Pharaoh Aya (II)"). Most of the 11 records are the
+  Dynasty 18 king. The resolver merges them because the text alone does not tell them apart.
+- **"Mentuhotep III"** (link-079, 13 records → `cluster-beckerath-11.06`, Sankhkare
+  Mentuhotep III). The Met's reign field says "Mentuhotep III" also on Deir el-Bahri
+  foundation-deposit records of Nebhepetre Mentuhotep II, under an older numbering; the Met's
+  own sibling records name him Mentuhotep II. The link is right for some of the 13 records and
+  wrong for others.
+
+**Unconfirmed** (decide nothing): the Met's "Neferu-sherit" (1 record) and "Merytamun" (2 records,
+reconciled as insufficient_evidence), two royal women whose Dodson & Hilton entries no reviewer
+can open.
+
+**The fix list** (private, `fix-list.json`, with the rulers the reviewers named): of the 161 miss
+texts, 99 name one specific ruler the authority missed, on 316 records: Met 69, Walters 15,
+Brooklyn 13, Cleveland 2. The largest are the Met's "Djoser" (47 records), "Ahmose" (29, Ahmose I
+in these records), "Shabaqo" (28), "Khasekhemui" (21), "Painedjem II" (19), "Painedjem I" (13)
+and "Sebekhotep IV" (13), and the Walters' "Ptolemy II Philadelphos" (6) and "Thutmosis III"
+(5). 55 name no single ruler, and 7 are unconfirmed.
+
+### The run
+
+- **Calls.** 720 stored calls:
+  - link: 388 reviews, 2 retries and 1 reconciliation;
+  - miss: 322 reviews, 2 retries and 5 reconciliations.
+
+  All four retries were Wikidata appearing in search results (link-026 A, link-064 B, miss-131 A
+  and B). No case went without an answer, and nothing was set aside (`set-asides.json` is empty).
+- **The display fix held.** One virtual display per running reviewer. No call failed for the
+  browser, and every deciding call loaded at least one page.
+- **Records** are private, in `dropbox/hapi-ruler-per-museum-2026-10-17/records/`. Each stored call
+  is bound by its hash in `results/score.json` (`records_sha256`).
+
+### What this means
+
+The authority's ruler links are right in four of the five museums, and in 103 of the Met's 107
+distinct links. The two wrong ones are both one text naming two kings within the Met's records,
+which only the record's own context (its dynasty, its date) can separate. They are the next
+resolver fix, together with the fix list of famous kings it misses (Djoser, Shabaqo, Khasekhemui,
+Painedjem I and II, Sebekhotep IV, Thutmosis III, …). Each fix is researched and sourced on its
+own, and the Met is tested again after it.

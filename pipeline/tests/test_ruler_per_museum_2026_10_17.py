@@ -498,3 +498,46 @@ def test_every_preflight_page_loaded_before_the_run() -> None:
         by_host[page["host"]] = by_host.get(page["host"], 0) + 1
     assert by_host == {"brooklynmuseum.org": 55, "clevelandart.org": 44, "harvardartmuseums.org": 3,
                        "metmuseum.org": 60, "purl.thewalters.org": 108}
+
+
+# The run's committed result (2026-10-17).
+
+def test_the_committed_score_follows_from_its_own_counts() -> None:
+    score = json.loads((EVALUATION / "results/score.json").read_text())
+    digest = json.loads((EVALUATION / "results/review-population-digest.json").read_text())
+    assert score["scorer_sha256"] == builder.sha256_path(SCRIPTS / "score.py") == digest["review_protocol"]["scorer"]["sha256"]
+    assert score["population_digest_sha256"] == builder.sha256_path(EVALUATION / "results/review-population-digest.json")
+    assert score["set_asides_sha256"] == builder.sha256_path(EVALUATION / "set-asides.json")
+    assert json.loads((EVALUATION / "set-asides.json").read_text())["set_asides"] == []
+    assert score["calibration"] == {"decoys": 20, "caught": 20, "missed": 0, "set_aside_twin_not_confirmed": 0,
+                                    "by_outcome": {"different_identity": 20}, "max_missed_share": [1, 5],
+                                    "min_counted_decoys": 15, "passed": True}
+    assert scorer.museum_outcomes(score["museums"], score["calibration"]["passed"]) == score["museum_outcomes"] == {
+        "brooklyn": "passes", "cleveland": "passes", "harvard": "passes", "met": "fails", "walters": "passes"}
+    met = score["museums"]["met"]
+    assert (met["confirmed"], met["wrong"], met["unconfirmed"], met["link_records"]) == (
+        {"units": 103, "records": 8844}, {"units": 2, "records": 24}, {"units": 2, "records": 3}, 8869)
+    assert {m: r["confirmed"]["units"] for m, r in score["museums"].items()} == {
+        "brooklyn": 16, "cleveland": 13, "harvard": 3, "met": 103, "walters": 35}
+    assert {m: r["miss"]["names_one_ruler"] for m, r in score["museums"].items()} == {
+        "brooklyn": {"units": 13, "records": 11}, "cleveland": {"units": 2, "records": 2},
+        "harvard": {"units": 0, "records": 0}, "met": {"units": 69, "records": 275},
+        "walters": {"units": 15, "records": 28}}
+    assert score["cases_without_an_answer"] == {"link": {}, "miss": {}}
+    assert [score["page_opens"][s]["calls_without_a_loaded_page"] for s in ("link", "miss")] == [0, 0]
+    assert sum(".attempt-" in name for name in score["records_sha256"]) == 720
+
+
+def test_the_readme_states_the_committed_result() -> None:
+    score = json.loads((EVALUATION / "results/score.json").read_text())
+    readme = " ".join((EVALUATION / "README.md").read_text().split())
+    assert "## Result (2026-10-17)" in readme and "The review rejected all 20 decoys" in readme
+    met = score["museums"]["met"]
+    assert (f"| Met | {met['confirmed']['units']} (8,844 records) | {met['wrong']['units']} (24 records) | "
+            f"{met['unconfirmed']['units']} (3 records) | **fails** |") in readme
+    for museum, label in (("brooklyn", "Brooklyn"), ("harvard", "Harvard"), ("cleveland", "Cleveland"), ("walters", "Walters")):
+        row = score["museums"][museum]
+        assert f"| {label} | {row['confirmed']['units']} ({row['link_records']} records) | 0 | 0 | passes |" in readme
+    misses = [r["miss"]["names_one_ruler"] for r in score["museums"].values()]
+    assert (sum(m["units"] for m in misses), sum(m["records"] for m in misses)) == (99, 316)
+    assert "99 name one specific ruler the authority missed, on 316 records" in readme
