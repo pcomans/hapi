@@ -113,7 +113,7 @@ its linked records.
   at least for the Dynasty 18 records. The text alone does not tell the two apart.
 - **"Mentuhotep III"** (link-079, 13 records → `cluster-beckerath-11.06`, Sankhkare
   Mentuhotep III). The Met's reign field says "Mentuhotep III" also on foundation-deposit records
-  from the Deir el-Bahri temple of Nebhepetre, whom the Met's own records call Mentuhotep II. The
+  from the Deir el-Bahri temple of Nebhepetre, whom the Met's sibling records call Mentuhotep II. The
   link is right for some of the 13 records and wrong for others.
 
 **Unconfirmed** (decide nothing): the Met's "Neferu-sherit" (1 record) and "Merytamun" (2 records),
