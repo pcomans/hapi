@@ -187,18 +187,23 @@ print(json.dumps({"modules": modules, "opened": sorted(opened)}))
 
 
 def test_the_qualified_scopes_are_the_evaluations_verdicts() -> None:
-    """`QUALIFIED_SCOPES` is the union of the scopes #337 and #361 published as qualifying
-    (`decision_rule.qualifying_scopes`); #361's ruler Met–Brooklyn supersedes #337's, which did
-    not qualify. Every other scope of a resolved type is unevaluated."""
+    """`QUALIFIED_SCOPES` holds the sites #337 published as qualifying
+    (`decision_rule.qualifying_scopes`) and the rulers the 2026-10-16 re-registration qualified
+    (`scope_dispositions`), which replaced #361's ruler qualification and #337's ruler result.
+    Every other scope of a resolved type is unevaluated."""
     evaluations = al.REPO / "docs/evaluations"
-    published = set()
-    for run in ("authority-independent-control-2026-10-11", "ruler-reregistration-2026-10-15"):
-        score = json.loads((evaluations / run / "results/real-adjudicated-score.json").read_text(encoding="utf-8"))
-        assert score["decision_rule"]["verdict"] == "CONTINUE"
-        published |= {tuple(scope.split("__")) for scope in score["decision_rule"]["qualifying_scopes"]}
+    sites = json.loads((evaluations / "authority-independent-control-2026-10-11/results/real-adjudicated-score.json")
+                       .read_text(encoding="utf-8"))
+    rulers = json.loads((evaluations / "ruler-reregistration-2026-10-16/results/real-adjudicated-score.json")
+                        .read_text(encoding="utf-8"))
+    assert sites["decision_rule"]["verdict"] == rulers["decision_rule"]["verdict"] == "CONTINUE"
+    published = {tuple(scope.split("__")) for scope in sites["decision_rule"]["qualifying_scopes"]
+                 if scope.startswith("site__")}
+    published |= {tuple(scope.split("__")) for scope, outcome in rulers["scope_dispositions"].items()
+                  if outcome == "qualified"}
     ours = {(t, *pair) for t, pairs in al.QUALIFIED_SCOPES.items() for pair in pairs}
     assert ours == published == {("site", "met", "brooklyn"), ("site", "met", "harvard"),
-                                 ("site", "brooklyn", "harvard"), ("ruler", "met", "brooklyn")}
+                                 ("site", "brooklyn", "harvard"), ("ruler", "met", "walters")}
     assert set(al.QUALIFIED_SCOPES) == set(al.RESOLVED_TYPES)
     assert all(pair in al.MUSEUM_PAIRS for pairs in al.QUALIFIED_SCOPES.values() for pair in pairs)
 

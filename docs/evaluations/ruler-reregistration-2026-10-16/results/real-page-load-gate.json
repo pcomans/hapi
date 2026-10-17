@@ -1,0 +1,322 @@
+{
+ "inputs": {
+  "private_answer_key_sha256": "d75d1a7c36be7729c2e9549d67a349c4230e7ba7f196722539bf7e4ec09fd50c",
+  "stage_1_queue_sha256": "963759f1a8f5c18e5ed42f2bd847720ac0c89537a3a3f1337feed34706c4681c",
+  "stage_2_queue_sha256": "3e712702d7ad9d623c9552c682d95589b49540ca2eb7ca7763b605e8e3636751"
+ },
+ "max_class_deviation_percentage_points": 5,
+ "passed": true,
+ "schema_version": "hapi-337-page-load-gate/11",
+ "stages": {
+  "1": {
+   "all_opens": {
+    "loaded": 642,
+    "opened": 643
+   },
+   "all_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 88,
+     "opened": 89
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 25,
+     "opened": 25
+    },
+    "ruler/retained_control": {
+     "loaded": 529,
+     "opened": 529
+    }
+   },
+   "all_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": -0.97,
+    "ruler/literal_only_transition": 0.16,
+    "ruler/retained_control": 0.16
+   },
+   "calls_without_a_loaded_page": 0,
+   "citable_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 88,
+     "opened": 89
+    },
+    "ruler/literal_only_transition": {
+     "loaded": 25,
+     "opened": 25
+    },
+    "ruler/retained_control": {
+     "loaded": 528,
+     "opened": 528
+    }
+   },
+   "citable_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": -0.97,
+    "ruler/literal_only_transition": 0.16,
+    "ruler/retained_control": 0.16
+   },
+   "citations_by_transition_class_and_role": {
+    "ruler/authority_only_transition": {
+     "case_input": 72,
+     "independent": 11
+    },
+    "ruler/literal_only_transition": {
+     "case_input": 25
+    },
+    "ruler/retained_control": {
+     "case_input": 504,
+     "independent": 3
+    }
+   },
+   "citations_by_transition_class_and_source": {
+    "ruler/authority_only_transition": {
+     "art.thewalters.org": 22,
+     "britishmuseum.org": 1,
+     "brooklynmuseum.org": 6,
+     "clevelandart.org": 8,
+     "escholarship.org": 1,
+     "globalegyptianmuseum.org": 1,
+     "louvre.fr": 1,
+     "metmuseum.org": 36,
+     "thebanmappingproject.com": 1,
+     "ucl.ac.uk/museums-static/digitalegypt": 6
+    },
+    "ruler/literal_only_transition": {
+     "art.thewalters.org": 9,
+     "brooklynmuseum.org": 2,
+     "metmuseum.org": 14
+    },
+    "ruler/retained_control": {
+     "art.thewalters.org": 127,
+     "brooklynmuseum.org": 69,
+     "clevelandart.org": 65,
+     "harvardartmuseums.org": 19,
+     "metmuseum.org": 212,
+     "purl.thewalters.org": 12,
+     "ucl.ac.uk/museums-static/digitalegypt": 3
+    }
+   },
+   "classes_without_citable_opens": [],
+   "deciding_reconciler_calls": 5,
+   "deciding_reviewer_calls": 198,
+   "loaded_without_load_event_by_host": {
+    "metmuseum.org": 3
+   },
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 1298
+   },
+   "not_loaded_opens_by_host": {
+    "metmuseum.org": 1
+   },
+   "opens_by_browser": {
+    "browserbase": {
+     "loaded": 9,
+     "opened": 9
+    },
+    "local": {
+     "loaded": 633,
+     "opened": 634
+    }
+   },
+   "opens_by_citation_role": {
+    "case_input": {
+     "loaded": 626,
+     "opened": 627
+    },
+    "independent": {
+     "loaded": 15,
+     "opened": 15
+    },
+    "not_citable": {
+     "loaded": 1,
+     "opened": 1
+    }
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 82,
+     "opened": 82
+    },
+    "cleveland": {
+     "loaded": 75,
+     "opened": 75
+    },
+    "harvard": {
+     "loaded": 19,
+     "opened": 19
+    },
+    "met": {
+     "loaded": 264,
+     "opened": 265
+    },
+    "other": {
+     "loaded": 16,
+     "opened": 16
+    },
+    "walters": {
+     "loaded": 186,
+     "opened": 186
+    }
+   },
+   "passed": true,
+   "retried_after_local_failure_by_host": {},
+   "retried_after_local_failure_by_transition_class": {}
+  },
+  "2": {
+   "all_opens": {
+    "loaded": 556,
+    "opened": 583
+   },
+   "all_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 98,
+     "opened": 101
+    },
+    "ruler/retained_control": {
+     "loaded": 458,
+     "opened": 482
+    }
+   },
+   "all_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": 1.66,
+    "ruler/retained_control": -0.35
+   },
+   "calls_without_a_loaded_page": 0,
+   "citable_opens_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 98,
+     "opened": 101
+    },
+    "ruler/retained_control": {
+     "loaded": 456,
+     "opened": 479
+    }
+   },
+   "citable_opens_class_deviation_percentage_points": {
+    "ruler/authority_only_transition": 1.51,
+    "ruler/retained_control": -0.32
+   },
+   "citations_by_transition_class_and_role": {
+    "ruler/authority_only_transition": {
+     "case_input": 83,
+     "independent": 9
+    },
+    "ruler/retained_control": {
+     "case_input": 428,
+     "independent": 18
+    }
+   },
+   "citations_by_transition_class_and_source": {
+    "ruler/authority_only_transition": {
+     "art.thewalters.org": 16,
+     "britishmuseum.org": 1,
+     "brooklynmuseum.org": 6,
+     "clevelandart.org": 7,
+     "metmuseum.org": 47,
+     "nmec.gov.eg": 1,
+     "purl.thewalters.org": 7,
+     "thebanmappingproject.com": 2,
+     "ucl.ac.uk/museums-static/digitalegypt": 5
+    },
+    "ruler/retained_control": {
+     "art.thewalters.org": 81,
+     "brooklynmuseum.org": 62,
+     "clevelandart.org": 54,
+     "giza.fas.harvard.edu": 2,
+     "globalegyptianmuseum.org": 5,
+     "harvardartmuseums.org": 14,
+     "louvre.fr": 1,
+     "metmuseum.org": 191,
+     "purl.thewalters.org": 26,
+     "thebanmappingproject.com": 3,
+     "ucl.ac.uk/museums-static/digitalegypt": 7
+    }
+   },
+   "classes_without_citable_opens": [],
+   "deciding_reconciler_calls": 1,
+   "deciding_reviewer_calls": 164,
+   "loaded_without_load_event_by_host": {
+    "metmuseum.org": 1
+   },
+   "local_host_opens_in_any_stored_call": {
+    "local": [],
+    "urls_scanned": 1169
+   },
+   "not_loaded_opens_by_host": {
+    "art.thewalters.org": 4,
+    "clevelandart.org": 1,
+    "collections.mfa.org": 3,
+    "metmuseum.org": 12,
+    "pharaoh.se": 1,
+    "purl.thewalters.org": 5,
+    "thebanmappingproject.com": 1
+   },
+   "opens_by_browser": {
+    "browserbase": {
+     "loaded": 17,
+     "opened": 20
+    },
+    "local": {
+     "loaded": 539,
+     "opened": 541
+    }
+   },
+   "opens_by_citation_role": {
+    "case_input": {
+     "loaded": 523,
+     "opened": 545
+    },
+    "independent": {
+     "loaded": 31,
+     "opened": 35
+    },
+    "not_citable": {
+     "loaded": 2,
+     "opened": 3
+    }
+   },
+   "opens_by_museum_host": {
+    "brooklyn": {
+     "loaded": 77,
+     "opened": 77
+    },
+    "cleveland": {
+     "loaded": 61,
+     "opened": 62
+    },
+    "harvard": {
+     "loaded": 14,
+     "opened": 14
+    },
+    "met": {
+     "loaded": 240,
+     "opened": 252
+    },
+    "other": {
+     "loaded": 33,
+     "opened": 38
+    },
+    "walters": {
+     "loaded": 131,
+     "opened": 140
+    }
+   },
+   "passed": true,
+   "retried_after_local_failure_by_host": {
+    "brooklynmuseum.org": 1,
+    "clevelandart.org": 1,
+    "collections.mfa.org": 3,
+    "metmuseum.org": 1,
+    "opencollection.brooklynmuseum.org": 1
+   },
+   "retried_after_local_failure_by_transition_class": {
+    "ruler/authority_only_transition": {
+     "loaded": 2,
+     "opened": 3
+    },
+    "ruler/retained_control": {
+     "loaded": 2,
+     "opened": 4
+    }
+   }
+  }
+ }
+}

@@ -6,6 +6,11 @@ scripts. This work moves that logic into the pipeline package, so production can
 links. Per the owner's decision of 2026-10-16, the links are written to files first; a
 database table comes later.
 
+**Later (2026-10-17).** The ruler re-registration of 2026-10-16
+(`../ruler-reregistration-2026-10-16/`) replaced #361's ruler result: rulers now qualify in
+Met–Walters only, and Met–Brooklyn rulers are unevaluated (`QUALIFIED_SCOPES`). The frozen
+reports here keep the flags of the code they record.
+
 ## Step 1 (#372): promote and prove
 
 - **`pipeline/pipeline/enrich/mentions.py`**: #361's mention extractor, copied verbatim (its

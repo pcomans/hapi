@@ -71,7 +71,8 @@ def test_a_run_writes_both_modes_and_a_manifest_that_inventories_what_is_not_res
         "unsupported": {"excavation": {"reason": "no committed canonical excavation authority", "mentions": 4},
                         "temple": {"reason": "no committed canonical temple authority", "mentions": 1}},
         "unevaluated_scopes": {
-            "ruler": [["met", "harvard"], ["brooklyn", "harvard"], *ADDED_PAIRS],
+            "ruler": [["met", "brooklyn"], ["met", "harvard"], ["brooklyn", "harvard"],
+                      *[pair for pair in ADDED_PAIRS if pair != ["met", "walters"]]],
             "site": ADDED_PAIRS,
             "tomb_monument": [["met", "brooklyn"], ["met", "harvard"], ["brooklyn", "harvard"], *ADDED_PAIRS]},
     }

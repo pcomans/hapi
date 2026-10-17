@@ -19,6 +19,8 @@ from pathlib import Path
 
 import pytest
 
+from pipeline.enrich import authority_links
+
 ROOT = Path(__file__).resolve().parents[2]
 EVALUATION = ROOT / "docs" / "evaluations" / "ruler-reregistration-2026-10-16"
 SCRIPTS = EVALUATION / "scripts"
@@ -1654,3 +1656,189 @@ def test_the_audit_proxy_table_is_the_committed_class_proxy_check() -> None:
             "entries", "largest_record_count", "example_urls", "most_field_paths_per_entry"))
         assert f"| {name} | {row['sides']} | {cells} |" in audit, name
     assert f"The most entries on one side is {check['most_entries_on_one_side']}" in audit
+
+
+# The run's committed results (2026-10-17).
+
+def _results(name: str) -> dict:
+    return json.loads((EVALUATION / "results" / name).read_text())
+
+
+def test_committed_page_load_gate_is_class_neutral_and_binds_the_scored_queue() -> None:
+    gate, score = _results("real-page-load-gate.json"), _results("real-adjudicated-score.json")
+    assert gate["schema_version"] == "hapi-337-page-load-gate/11"
+    assert gate["inputs"]["stage_1_queue_sha256"] == score["input_hashes"]["stage_1_queue"]
+    assert gate["inputs"]["stage_2_queue_sha256"] == score["input_hashes"]["stage_2_queue"]
+    assert gate["inputs"]["private_answer_key_sha256"] == score["input_hashes"]["private_answer_key"]
+    assert gate["max_class_deviation_percentage_points"] == 5
+    stages = gate["stages"]
+    assert [(stages[s]["deciding_reviewer_calls"], stages[s]["deciding_reconciler_calls"],
+             stages[s]["calls_without_a_loaded_page"]) for s in "12"] == [(198, 5, 0), (164, 1, 0)]
+    assert stages["1"]["citable_opens_class_deviation_percentage_points"] == {
+        "ruler/authority_only_transition": -0.97, "ruler/literal_only_transition": 0.16,
+        "ruler/retained_control": 0.16}
+    assert stages["2"]["citable_opens_class_deviation_percentage_points"] == {
+        "ruler/authority_only_transition": 1.51, "ruler/retained_control": -0.32}
+    assert [stages[s]["classes_without_citable_opens"] for s in "12"] == [[], []]
+    scans = [stages[s]["local_host_opens_in_any_stored_call"] for s in "12"]
+    assert [scan["local"] for scan in scans] == [[], []]
+    assert [scan["urls_scanned"] for scan in scans] == [1298, 1169]
+    assert [stages[s]["opens_by_citation_role"] for s in "12"] == [
+        {"case_input": {"loaded": 626, "opened": 627}, "independent": {"loaded": 15, "opened": 15},
+         "not_citable": {"loaded": 1, "opened": 1}},
+        {"case_input": {"loaded": 523, "opened": 545}, "independent": {"loaded": 31, "opened": 35},
+         "not_citable": {"loaded": 2, "opened": 3}}]
+    assert [stages[s]["opens_by_browser"] for s in "12"] == [
+        {"browserbase": {"loaded": 9, "opened": 9}, "local": {"loaded": 633, "opened": 634}},
+        {"browserbase": {"loaded": 17, "opened": 20}, "local": {"loaded": 539, "opened": 541}}]
+    assert stages["2"]["retried_after_local_failure_by_host"] == {
+        "brooklynmuseum.org": 1, "clevelandart.org": 1, "collections.mfa.org": 3, "metmuseum.org": 1,
+        "opencollection.brooklynmuseum.org": 1}
+    # The scorer recomputes the gate from the same records and names the result it recomputed.
+    assert score["page_load_gate"] == {"passed": True, "sha256": scorer.canonical_sha256(gate)}
+    assert [stages[s]["passed"] for s in "12"] == [True, True] and gate["passed"] is True
+
+
+def test_committed_score_verdict_follows_from_its_own_counts() -> None:
+    """The registered verdict is the rule on the untuned cases, recomputed from the score's own
+    counts; Met–Walters is the one qualified ruler scope."""
+    score = _results("real-adjudicated-score.json")
+    rule = score["decision_rule"]
+    letters = {category[0]: category for category in scorer.PRIMARY_CATEGORIES}
+    tuned = score["tuned_on_cases"]
+    assert tuned == {"excluded_from_the_registered_verdict": 2, "categories": {
+        OK: 1, "d_literal_only_same_useful_connection_lost": 1}}
+    untuned_controls = {c: n - tuned["categories"].get(c, 0) for c, n in score["calibration_control_counts"].items()}
+    joined = [joined_case(CONTROL, c, "ruler", ("met", "walters"))
+              for c, n in untuned_controls.items() for _ in range(n)]
+    for key, row in rule["scopes"].items():
+        entity, *pair = key.split("__")
+        for letter, category in letters.items():
+            joined += [joined_case(LOSS if letter in "de" else GAIN, category, entity, pair)] * row[letter]
+    assert scorer.decision_rule(joined) == rule
+    assert (rule["verdict"], rule["qualifying_scopes"]) == ("CONTINUE", ["ruler__met__walters"])
+    assert rule["calibration"] == {"passed": True, "retained_controls": 68, "uncertain_or_wrong": 1}
+    assert rule["safety"] == {"authority_gains": 13, "b": 0, "passed": True, "unsafe_scopes": []}
+    row = lambda a, d, e: {"a": a, "b": 0, "c": 0, "changed": a + d + e, "d": d, "decided": a + d + e,
+                           "e": e, "f": 0, "qualifies": False}
+    assert rule["scopes"] == {
+        "ruler__brooklyn__walters": row(1, 0, 0), "ruler__cleveland__walters": row(1, 0, 0),
+        "ruler__met__brooklyn": row(2, 0, 0), "ruler__met__cleveland": row(2, 0, 0),
+        "ruler__met__walters": {**row(7, 2, 2), "qualifies": True}}
+    pairs = [f"ruler__{a}__{b}" for a, b in authority_links.MUSEUM_PAIRS]
+    assert score["scope_dispositions"] == scorer.scope_dispositions(rule, pairs) == {
+        key: "qualified" if key == "ruler__met__walters" else "unevaluated" for key in pairs}
+    # With the tuned-on cases (decides nothing), Met–Brooklyn would qualify too.
+    assert score["decision_rule_including_tuned_on_cases"]["qualifying_scopes"] == [
+        "ruler__met__brooklyn", "ruler__met__walters"]
+    assert score["primary_decision_counts"] == {
+        "a_authority_only_same_useful_exact_target": 13,
+        "b_authority_only_useful_but_wrong_or_nonidentity": 0,
+        "c_authority_only_false_or_not_useful_gain": 0,
+        "d_literal_only_same_useful_connection_lost": 3,
+        "e_literal_only_false_or_not_useful_removal": 2,
+        "f_transition_uncertainty": 0,
+    }
+    assert score["scorer_sha256"] == protocol.sha256_path(SCRIPTS / "score_review.py")
+    assert score["review_status"] == "COMPLETE_TRACEABLE"
+
+
+def test_the_qualified_ruler_scopes_are_this_registrations() -> None:
+    score = _results("real-adjudicated-score.json")
+    assert authority_links.QUALIFIED_SCOPES["ruler"] == {
+        tuple(key.split("__")[1:]) for key, outcome in score["scope_dispositions"].items() if outcome == "qualified"}
+
+
+def test_the_readme_states_the_scored_result() -> None:
+    """The README's result is the committed score's, not a retelling of it."""
+    score = _results("real-adjudicated-score.json")
+    readme = " ".join((EVALUATION / "README.md").read_text().split())
+    rule = score["decision_rule"]
+    row = rule["scopes"]["ruler__met__walters"]
+    assert f"ruler, Met–Walters: a {row['a']}, b {row['b']}, c {row['c']}, d {row['d']}, e {row['e']}, f {row['f']}" in readme
+    assert rule["verdict"] == "CONTINUE" and "## Result (2026-10-17): CONTINUE, rulers Met–Walters" in readme
+    calibration, safety = rule["calibration"], rule["safety"]
+    assert f"{calibration['uncertain_or_wrong']} of {calibration['retained_controls']} retained controls uncertain or wrong" in readme
+    assert f"b = {safety['b']} of {safety['authority_gains']} authority gains" in readme
+    useful = score["adjudicated_arm_outcomes"]["useful_nodes_by_arm"]
+    assert useful == {"authority_treatment": 81, "literal_baseline": 68, "net_treatment_minus_baseline": 13}
+    assert f"the authority has {useful['authority_treatment']} useful nodes against the literal arm's {useful['literal_baseline']}" in readme
+
+
+def test_the_scorer_accepts_only_the_committed_records(tmp_path: Path) -> None:
+    committed = _results("real-review-records.json")
+    stages = committed["stages"]
+    assert [sum(".attempt-" in name for name in stages[s]) for s in "12"] == [204, 167]
+    # The two set-aside reconciler calls on case-021 are bound with the rest (README, incidents).
+    assert sorted(name for name in stages["2"] if "rejected" in name) == [
+        "reconciler-rejected-browser/case-021.attempt-1.json", "reconciler-rejected-runtime/case-021.attempt-1.json"]
+    assert stages["2"]["reconciler-rejected-runtime/case-021.attempt-1.json"] == (
+        "a4b1889fb7cb4de7e6d9db7be9332bfcb2e014660dd744ec083a833d64771695")
+    assert stages["2"]["reconciler-rejected-browser/case-021.attempt-1.json"] == (
+        "c46abd42cd7a0de09366660fd67beedfa335e6e1fb8569114e23ca0e0cf6a0ca")
+    score = _results("real-adjudicated-score.json")
+    assert stages["1"]["consensus.json"] == score["input_hashes"]["stage_1_consensus"]
+    assert stages["2"]["consensus.json"] == score["input_hashes"]["stage_2_consensus"]
+    assert stages["2"]["queue.json"] == score["input_hashes"]["stage_2_queue"]
+    (tmp_path / "stage-1").mkdir()
+    (tmp_path / "stage-2").mkdir()
+    with pytest.raises(ValueError, match="stage 1 records differ from the committed"):
+        scorer.require_committed_records(ROOT, {"1": tmp_path / "stage-1", "2": tmp_path / "stage-2"})
+
+
+def test_the_scorer_refuses_a_run_that_failed_the_page_load_gate() -> None:
+    gate = _results("real-page-load-gate.json")
+    scorer.require_page_load_gate(gate)
+    failed = copy.deepcopy(gate)
+    failed["stages"]["1"]["citable_opens_class_deviation_percentage_points"]["ruler/authority_only_transition"] = -7.3
+    failed["stages"]["1"]["passed"] = failed["passed"] = False
+    with pytest.raises(ValueError, match=r'the page-load gate failed on these records: .*"ruler/authority_only_transition": -7\.3'):
+        scorer.require_page_load_gate(failed)
+
+
+def test_the_committed_rerun_proof_binds_the_scored_digest_and_population() -> None:
+    proof, digest = _results("real-rerun-proof.json"), _results("real-review-population-digest.json")
+    score = _results("real-adjudicated-score.json")
+    files = proof["sha256_by_file"]
+    assert files["review/public-review-population-digest.json"] == protocol.sha256_path(
+        EVALUATION / "results/real-review-population-digest.json") == score["input_hashes"]["review_population_digest"]
+    for name, key in (("stage-1-queue.json", "stage_1_queue_sha256"),
+                      ("private-answer-key.json", "private_answer_key_sha256"),
+                      ("stage-2-custodian.json", "stage_2_custodian_sha256")):
+        assert files[f"review/{name}"] == digest["output_hashes"][key]
+    assert score["input_hashes"]["stage_1_queue"] == digest["output_hashes"]["stage_1_queue_sha256"]
+    assert score["input_hashes"]["private_answer_key"] == digest["output_hashes"]["private_answer_key_sha256"]
+
+
+def test_the_set_aside_reconciler_answer_would_not_change_the_result() -> None:
+    """README, "Two incidents, and a deviation": had case-021's second reconciler answer
+    (insufficient_evidence, no page loaded) stood, the case would be a calibration miss. The
+    verdict and every scope's outcome are the same either way."""
+    score = _results("real-adjudicated-score.json")
+    rule = score["decision_rule"]
+    tuned = score["tuned_on_cases"]["categories"]
+    controls = {c: n - tuned.get(c, 0) for c, n in score["calibration_control_counts"].items()}
+    controls[OK] -= 1
+    controls[UNCERTAIN] += 1
+    joined = [joined_case(CONTROL, c, "ruler", ("met", "walters")) for c, n in controls.items() for _ in range(n)]
+    letters = {category[0]: category for category in scorer.PRIMARY_CATEGORIES}
+    for key, row in rule["scopes"].items():
+        entity, *pair = key.split("__")
+        for letter, category in letters.items():
+            joined += [joined_case(LOSS if letter in "de" else GAIN, category, entity, pair)] * row[letter]
+    alternative = scorer.decision_rule(joined)
+    assert alternative["calibration"] == {"passed": True, "retained_controls": 68, "uncertain_or_wrong": 2}
+    assert {k: v for k, v in alternative.items() if k != "calibration"} == {
+        k: v for k, v in rule.items() if k != "calibration"}
+    pairs = [f"ruler__{a}__{b}" for a, b in authority_links.MUSEUM_PAIRS]
+    assert scorer.scope_dispositions(alternative, pairs) == score["scope_dispositions"]
+
+
+def test_the_page_load_gate_would_pass_had_the_set_aside_answer_stood() -> None:
+    alternative = _results("sensitivity-page-load-gate-second-call-stands.json")
+    committed = _results("real-page-load-gate.json")
+    assert alternative["passed"] is True and alternative["inputs"] == committed["inputs"]
+    assert alternative["stages"]["1"] == committed["stages"]["1"]
+    assert alternative["stages"]["2"]["citable_opens_class_deviation_percentage_points"] == {
+        "ruler/authority_only_transition": 3.17, "ruler/retained_control": -0.66}
+    assert alternative["stages"]["2"]["calls_without_a_loaded_page"] == 1
