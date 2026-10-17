@@ -1832,3 +1832,13 @@ def test_the_set_aside_reconciler_answer_would_not_change_the_result() -> None:
         k: v for k, v in rule.items() if k != "calibration"}
     pairs = [f"ruler__{a}__{b}" for a, b in authority_links.MUSEUM_PAIRS]
     assert scorer.scope_dispositions(alternative, pairs) == score["scope_dispositions"]
+
+
+def test_the_page_load_gate_would_pass_had_the_set_aside_answer_stood() -> None:
+    alternative = _results("sensitivity-page-load-gate-second-call-stands.json")
+    committed = _results("real-page-load-gate.json")
+    assert alternative["passed"] is True and alternative["inputs"] == committed["inputs"]
+    assert alternative["stages"]["1"] == committed["stages"]["1"]
+    assert alternative["stages"]["2"]["citable_opens_class_deviation_percentage_points"] == {
+        "ruler/authority_only_transition": 3.17, "ruler/retained_control": -0.66}
+    assert alternative["stages"]["2"]["calls_without_a_loaded_page"] == 1

@@ -232,8 +232,9 @@ only one the scorer counts as a decision.
      review's 371 calls among them. Chromium could then not start threads, and every page open
      failed.
    - **The second reconciler call** opened none of its 10 pages and answered
-     insufficient_evidence. The frozen validator accepted it: with no page loaded, the prompt
-     makes insufficient_evidence the only valid answer.
+     insufficient_evidence. The frozen validator accepted it: with no page loaded, the schema
+     and validator make insufficient_evidence the only valid answer (any other outcome needs a
+     citation, and a citation must be a page the call opened and that loaded).
    - **The deviation.** Under the frozen runner, that answer was the reconciler's decision.
      Claude (the agent running the review) set it aside on 2026-10-17, after its answer was
      printed, and moved it to `stage-2/reconciler-rejected-browser/`. Claude then closed the
@@ -256,7 +257,9 @@ would be a calibration miss:
 - Met–Walters' a 7, d 2, e 2 is untouched, so the verdict and every scope's outcome stay the
   same (tested);
 - the Stage 2 page-load gate would still pass, with the authority class's deviation at 3.17
-  points instead of 1.51 (limit 5), and one deciding call without a loaded page.
+  points instead of 1.51 (limit 5), and one deciding call without a loaded page
+  (`results/sensitivity-page-load-gate-second-call-stands.json`: the gate run on a copy of the
+  Stage 2 records in which the second call is the deciding one).
 
 The runner is frozen with this registration. A later protocol must stop the display with the
 call, and record set-asides in a committed list the scorer reads, not in directory names.
