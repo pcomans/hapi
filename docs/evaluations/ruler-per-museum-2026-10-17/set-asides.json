@@ -1,0 +1,5 @@
+{
+ "schema_version": "hapi-ruler-per-museum-set-asides/1",
+ "rule": "decision-rule.md, \"Calls that give no answer\": a stored call is set aside only when it holds no decision and stopped the run for a reason that does not depend on any answer (a release, model or runtime failure). Each entry names the call, its SHA-256, the reason, who set it aside and when, and is disclosed in the README.",
+ "set_asides": []
+}

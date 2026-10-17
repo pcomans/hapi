@@ -61,10 +61,16 @@ citable sources that they opened and that loaded. Every call is stored complete 
 from its events. Changes from that registration:
 
 - **#384 fixed.** The runner starts one virtual display for the whole run and stops it when the
-  run ends, instead of one per call that outlived the call. A call during which the browser tool
-  returned an error is no decision and is retried.
+  run ends (also on SIGTERM), instead of one per call that outlived the call. A call in which
+  every page open returned an error read nothing; it is no decision and is retried.
 - **The Claude Code release is called by its installed path**, with auto-update off, so an update
   mid-run cannot change it (the 2026-10-16 run's case-021).
+- **What happens when a call gives no answer is fixed in advance** (`decision-rule.md`, "Calls
+  that give no answer"). A case with no valid answer in three tries is settled as unconfirmed,
+  and the run goes on. A call that stopped the run can be set aside only through the committed
+  ledger `set-asides.json`, never by moving files. The 2026-10-16 README asked for both.
+- **The scorer and the decision rule are bound** by the population digest, like every file the
+  review runs on, so neither can change after the cases are built.
 - **New prompts** for the two questions (`prompts/*-v1.txt`), audited for answer leakage
   (`prompt-audit-2026-10-17.md`).
 

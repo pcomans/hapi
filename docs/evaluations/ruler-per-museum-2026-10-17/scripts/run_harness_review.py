@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import signal
 import json
 import os
 import subprocess
@@ -44,8 +45,10 @@ import tempfile
 from pathlib import Path
 
 from review_protocol import (
-    BROWSER_TOOL_FAILURE,
     CLAUDE_CODE_VERSION,
+    MAX_ATTEMPTS,
+    SESSION_LIMIT_FAILURE,
+    gave_no_answer,
     ROLES,
     TOOLS,
     OPEN_PAGE_SERVER,
@@ -56,8 +59,10 @@ from review_protocol import (
     calls_by_latest_attempt,
     compose_user_content,
     read_json,
+    retryable,
     role_inputs,
     run_bindings,
+    set_asides,
     sha256_bytes,
     validate,
     write_new,
@@ -65,19 +70,10 @@ from review_protocol import (
 
 MODEL_ALIAS = "sonnet"
 EFFORT = "high"
-# A malformed answer (not JSON, schema-invalid, a miscopied case ID, or a reconciler
-# answer that resolves other than the disputed questions), an answer citing a page the call
-# did not open or a non-citable source, or a run whose search results or opened pages touched a blocked domain (the
-# search tool cannot exclude them), is retried, up to this many attempts per case. Every attempt is kept; a
-# case's decision is its one valid attempt (the run stops retrying a case once it has one).
-MAX_ATTEMPTS = 3
-# A call during which the browser tool failed (an `open_page` call that returned an error, not a
-# page) is retried too: the model researched with a broken tool, so its answer is no finding
-# (#384: in the 2026-10-16 run, leaked displays left the browser unable to start).
-FORMAT_FAILURES = (
-    "invalid decision:", "decision does not echo", "blocked domain used:", "cites a page it did not open:",
-    "cites a non-citable source:", BROWSER_TOOL_FAILURE,
-)
+# A call that fails for a retryable reason (`review_protocol.RETRYABLE_FAILURES`) is retried, up
+# to MAX_ATTEMPTS calls per case. Every attempt is kept; a case's decision is its one valid
+# attempt (the run stops retrying a case once it has one). A case with no valid answer in
+# MAX_ATTEMPTS calls gives none, and the run goes on (`decision-rule.md`).
 # The browser server runs from the evaluation's own interpreter (the recorded runtime), on the
 # one virtual X display this run starts and stops (`virtual_display`), so the browser can run
 # headful (open_page_server.py). `xvfb-run` per call left its display running after every call
@@ -89,7 +85,6 @@ MCP_CONFIG = json.dumps({"mcpServers": {OPEN_PAGE_SERVER: {
 # auto-update repoints mid-run (2026-10-16 run, case-021); auto-update is also off in its
 # environment. A missing release fails loud.
 CLAUDE_BINARY = Path.home() / ".local/share/claude/versions" / CLAUDE_CODE_VERSION
-SESSION_LIMIT_FAILURE = "Claude Code session limit"
 RECORD_KEYS = (
     "case_id", "evidence_sha256", "requested_model", "parameters", "command", "system_prompt",
     "user_content", "user_content_sha256", "run_bindings", "exit_code", "stderr", "events", "reviewer",
@@ -181,19 +176,22 @@ def recheck_calls(case: dict, role: Role, inputs: dict, out: Path, tag: str) -> 
 
 
 def review_case(case: dict, role: Role, inputs: dict, out: Path, label: str | None, tag: str) -> None:
-    calls = recheck_calls(case, role, inputs, out, tag)
+    aside = set_asides(out)
+    calls = {name: record for name, record in recheck_calls(case, role, inputs, out, tag).items() if name not in aside}
     if any("decision" in record for record in calls.values()):
         return
     if calls:
         newest = calls[max(calls, key=lambda name: attempt_number(Path(name)))]
         failure = newest.get("failure", "")
-        if not failure.startswith(FORMAT_FAILURES + (SESSION_LIMIT_FAILURE,)):
-            # A stop (e.g. no research) is not re-drawn by resuming the run.
+        if not (retryable(failure) or failure.startswith(SESSION_LIMIT_FAILURE)):
+            # A stop (e.g. a wrong release) is not re-drawn by resuming the run; only a set-aside
+            # entry in the committed ledger lets the case run again (`decision-rule.md`).
             raise ProtocolFailure(f"{case['case_id']}: stopped on {failure!r}; not resumed automatically")
-    format_calls = sum(r.get("failure", "").startswith(FORMAT_FAILURES) for r in calls.values())
+    failures = [r.get("failure", "") for r in calls.values()]
     while True:
-        if format_calls >= MAX_ATTEMPTS:
-            raise ProtocolFailure(f"{case['case_id']}: no valid answer in {MAX_ATTEMPTS} attempts")
+        if gave_no_answer(failures):
+            print(f"{tag} {case['case_id']}: no valid answer in {MAX_ATTEMPTS} attempts; it gives none", flush=True)
+            return
         path = next_path(out, case["case_id"])
         record = call(case, inputs)
         if "failure" not in record:
@@ -207,9 +205,9 @@ def review_case(case: dict, role: Role, inputs: dict, out: Path, label: str | No
               f"{len(record.get('page_opens', []))} loaded", flush=True)
         if "failure" not in record:
             return
-        if not record["failure"].startswith(FORMAT_FAILURES):
+        if not retryable(record["failure"]):
             raise ProtocolFailure(f"{case['case_id']}: {record['failure']} (record: {path})")
-        format_calls += 1
+        failures.append(record["failure"])
 
 
 def main() -> int:
@@ -247,7 +245,8 @@ def main() -> int:
 @contextlib.contextmanager
 def virtual_display():
     """One Xvfb for the whole run, on a free display number it reports itself (`-displayfd`),
-    stopped when the run ends however it ends. Every call's browser server inherits `DISPLAY`."""
+    stopped when the run ends however it ends: an exception, Ctrl-C, or SIGTERM/SIGHUP (turned
+    into SystemExit here so the cleanup runs). Every call's browser server inherits `DISPLAY`."""
     read_end, write_end = os.pipe()
     xvfb = subprocess.Popen(["Xvfb", "-displayfd", str(write_end), "-screen", "0", "1280x1024x24", "-nolisten", "tcp"],
                             pass_fds=(write_end,), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -257,12 +256,28 @@ def virtual_display():
     if not number.isdigit():
         xvfb.kill()
         raise ProtocolFailure(f"Xvfb reported no display number (exit {xvfb.poll()})")
+    previous_display = os.environ.get("DISPLAY")
+    previous_handlers = {sig: signal.signal(sig, _exit_on_signal) for sig in (signal.SIGTERM, signal.SIGHUP)}
     os.environ["DISPLAY"] = f":{number}"
     try:
         yield xvfb
     finally:
+        for sig, handler in previous_handlers.items():
+            signal.signal(sig, handler)
+        if previous_display is None:
+            os.environ.pop("DISPLAY")
+        else:
+            os.environ["DISPLAY"] = previous_display
         xvfb.terminate()
-        xvfb.wait(timeout=30)
+        try:
+            xvfb.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            xvfb.kill()
+            xvfb.wait()
+
+
+def _exit_on_signal(signum, _frame):
+    raise SystemExit(128 + signum)
 
 
 if __name__ == "__main__":

@@ -97,13 +97,23 @@ def test_the_browser_server_runs_on_the_runs_own_display_not_one_per_call() -> N
     assert "xvfb-run" not in runner.MCP_CONFIG
 
 
-def test_the_runner_calls_the_pinned_release_with_auto_update_off() -> None:
+def test_the_runner_calls_the_pinned_release_with_auto_update_off(monkeypatch) -> None:
     assert runner.CLAUDE_BINARY == Path.home() / ".local/share/claude/versions" / "2.1.302"
     assert protocol.CLAUDE_CODE_VERSION == "2.1.302"
-    argv = runner.command("system", "user")
-    assert argv[:3] == [str(runner.CLAUDE_BINARY), "-p", "user"]
-    source = (SCRIPTS / "run_harness_review.py").read_text()
-    assert 'env["DISABLE_AUTOUPDATER"] = "1"' in source
+    seen = {}
+
+    def fake_run(argv, **kwargs):
+        seen.update(argv=argv, env=kwargs["env"])
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(runner.subprocess, "run", fake_run)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "billed")
+    monkeypatch.setenv("DISPLAY", ":42")
+    record = runner.call(LINK_CASE, protocol.role_inputs(protocol.ROLES["link_reviewer"]))
+    assert seen["argv"][:2] == [str(runner.CLAUDE_BINARY), "-p"]
+    assert (seen["env"]["DISABLE_AUTOUPDATER"], seen["env"]["DISPLAY"]) == ("1", ":42")
+    assert "ANTHROPIC_API_KEY" not in seen["env"]
+    assert record["command"][:2] == ["claude", "-p"] and record["command"][2] == "<user_content>"
 
 
 @pytest.mark.skipif(shutil.which("Xvfb") is None, reason="needs Xvfb")
@@ -116,14 +126,20 @@ def test_the_virtual_display_is_stopped_when_the_run_ends() -> None:
     assert xvfb.poll() is not None
 
 
-def test_a_call_whose_browser_tool_failed_is_retried_not_a_decision() -> None:
+def test_a_call_that_read_nothing_is_retried_not_a_decision() -> None:
     answer = {"case_id": "link-001", "canonical_identity": "insufficient_evidence", "reasoning": "nothing loaded",
               "citations": []}
-    record = validate(LINK_CASE, "link_reviewer", answer, opens=("Error executing tool open_page",))
+    record = validate(LINK_CASE, "link_reviewer", answer, opens=("Error executing tool open_page",) * 2)
     assert "decision" not in record
-    assert record["failure"] == (f"{protocol.BROWSER_TOOL_FAILURE} 1 open_page call(s) returned an error: "
-                                 f"['{OPENED}']")
-    assert record["failure"].startswith(runner.FORMAT_FAILURES)
+    assert record["failure"] == (f"{protocol.BROWSER_TOOL_FAILURE} all 2 open_page call(s) returned an error: "
+                                 f"['{OPENED}', '{OPENED}']")
+    assert protocol.retryable(record["failure"])
+
+
+def test_a_call_that_read_a_page_decides_despite_another_open_failing() -> None:
+    answer = {"case_id": "link-001", "canonical_identity": "exact_identity", "reasoning": "r", "citations": [OPENED]}
+    record = validate(LINK_CASE, "link_reviewer", answer, opens=("Error executing tool open_page", opened_page()))
+    assert record["decision"] == answer
 
 
 # Roles, prompts and schemas.
@@ -177,6 +193,112 @@ def test_a_miss_reconciler_sees_each_reviews_named_ruler(tmp_path: Path) -> None
     assert sorted((r["names_one_ruler"], r["ruler"]) for r in item["reviews"]) == [
         ("insufficient_evidence", ""), ("one_ruler", "Djoser")]
     assert sorted(item["reviews"][0]) == ["citations", "label", "names_one_ruler", "reasoning", "ruler"]
+
+
+def store(directory: Path, role_name: str, case: dict, n: int, answer: dict | None, session_id: str,
+          failure_opens: bool = False) -> Path:
+    """Write one stored call: a valid answer, or (answer None) a call whose browser read nothing."""
+    role = protocol.ROLES[role_name]
+    inputs = protocol.role_inputs(role)
+    directory.mkdir(parents=True, exist_ok=True)
+    body = answer or {"case_id": case["case_id"], "canonical_identity": "insufficient_evidence",
+                      "reasoning": "r", "citations": []}
+    record = {"case_id": case["case_id"], "system_prompt": inputs["system_prompt"],
+              "user_content": protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"]),
+              "run_bindings": protocol.run_bindings(), "exit_code": 0,
+              "events": events(body, ("Error executing tool open_page",) if answer is None else (opened_page(),), session_id)}
+    record = protocol.validate(record, case, role, inputs["schema"])
+    path = directory / f"{case['case_id']}.attempt-{n}.json"
+    protocol.write_new(path, record)
+    return path
+
+
+def link_answer(outcome: str) -> dict:
+    return {"case_id": "link-001", "canonical_identity": outcome, "reasoning": "r", "citations": [OPENED]}
+
+
+def test_a_reviewer_with_no_answer_in_three_tries_leaves_the_case_unsettled(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(protocol, "SET_ASIDES_PATH", EVALUATION / "set-asides.json")
+    records = tmp_path / "link"
+    for n in (1, 2, 3):
+        store(records / "reviewer-A", "link_reviewer", LINK_CASE, n, None, f"a{n}")
+    store(records / "reviewer-B", "link_reviewer", LINK_CASE, 1, link_answer("exact_identity"), "b1")
+    queue = tmp_path / "link-queue.json"
+    queue.write_text(json.dumps({"cases": [LINK_CASE]}))
+    assert protocol.reconciliation_queue("link", {"cases": [LINK_CASE]}, records)["cases"] == []
+    [decision] = protocol.build_consensus("link", queue, records)["decisions"]
+    assert decision["canonical_identity"] == "insufficient_evidence"
+    assert decision["field_resolutions"] == {"canonical_identity": {
+        "method": "no_valid_review", "reviewers_without_an_answer": ["A"]}}
+    # Two failed tries are not three: the review is still owed, and the consensus refuses.
+    (records / "reviewer-A" / "link-001.attempt-3.json").unlink()
+    with pytest.raises(protocol.ProtocolFailure, match="valid calls"):
+        protocol.build_consensus("link", queue, records)
+
+
+def test_a_removed_attempt_fails_loud(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(protocol, "SET_ASIDES_PATH", EVALUATION / "set-asides.json")
+    directory = tmp_path / "link" / "reviewer-A"
+    store(directory, "link_reviewer", LINK_CASE, 1, None, "a1")
+    store(directory, "link_reviewer", LINK_CASE, 2, link_answer("exact_identity"), "a2")
+    (directory / "link-001.attempt-1.json").rename(tmp_path / "moved.json")
+    role = protocol.ROLES["link_reviewer"]
+    with pytest.raises(protocol.ProtocolFailure, match=r"attempts \['link-001.attempt-2.json'\] are not 1..n"):
+        protocol.decided_record(directory, LINK_CASE, role, protocol.role_inputs(role))
+
+
+def test_only_a_ledger_entry_sets_a_call_aside_and_never_a_decided_or_retryable_one(tmp_path: Path, monkeypatch) -> None:
+    directory = tmp_path / "link" / "reviewer-A"
+    stopped = store(directory, "link_reviewer", LINK_CASE, 1, None, "a1")
+    retried = protocol.read_json(stopped)
+    protocol.write_atomic(stopped, {**retried, "failure": "Claude Code '2.1.299', not '2.1.302'"})
+    decided = store(directory, "link_reviewer", LINK_CASE, 2, link_answer("exact_identity"), "a2")
+    ledger = tmp_path / "set-asides.json"
+    monkeypatch.setattr(protocol, "SET_ASIDES_PATH", ledger)
+    entry = {"stage": "link", "directory": "reviewer-A", "file": stopped.name, "sha256": protocol.sha256_path(stopped),
+             "reason": "test"}
+    ledger.write_text(json.dumps({"set_asides": [entry]}))
+    assert protocol.set_asides(directory) == {stopped.name: entry["sha256"]}
+    role = protocol.ROLES["link_reviewer"]
+    assert protocol.decided_record(directory, LINK_CASE, role, protocol.role_inputs(role))[1]["decision"] == link_answer("exact_identity")
+    ledger.write_text(json.dumps({"set_asides": [{**entry, "sha256": "0" * 64}]}))
+    with pytest.raises(protocol.ProtocolFailure, match="missing or changed"):
+        protocol.set_asides(directory)
+    ledger.write_text(json.dumps({"set_asides": [{**entry, "file": decided.name, "sha256": protocol.sha256_path(decided)}]}))
+    with pytest.raises(protocol.ProtocolFailure, match="a call with a decision is never set aside"):
+        protocol.set_asides(directory)
+    retryable_call = store(directory, "link_reviewer", LINK_CASE, 3, None, "a3")
+    ledger.write_text(json.dumps({"set_asides": [{**entry, "file": retryable_call.name,
+                                                  "sha256": protocol.sha256_path(retryable_call)}]}))
+    with pytest.raises(protocol.ProtocolFailure, match="a retryable failure is never set aside"):
+        protocol.set_asides(directory)
+
+
+def test_the_runner_gives_up_on_a_case_after_three_retryable_failures(tmp_path: Path, monkeypatch, capsys) -> None:
+    monkeypatch.setattr(protocol, "SET_ASIDES_PATH", EVALUATION / "set-asides.json")
+    role = protocol.ROLES["link_reviewer"]
+    inputs = protocol.role_inputs(role)
+    calls = []
+
+    def fake_call(case, inputs_):
+        calls.append(case["case_id"])
+        n = len(calls)
+        user = protocol.compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"])
+        return {"case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"], "system_prompt": inputs["system_prompt"],
+                "user_content": user, "run_bindings": protocol.run_bindings(), "exit_code": 0,
+                "events": events({"case_id": "link-001", "canonical_identity": "insufficient_evidence",
+                                  "reasoning": "r", "citations": []}, ("Error executing tool open_page",), f"s{n}")}
+
+    monkeypatch.setattr(runner, "call", fake_call)
+    out = tmp_path / "link" / "reviewer-A"
+    out.mkdir(parents=True)
+    runner.review_case(LINK_CASE, role, inputs, out, "A", "[t]")
+    assert len(calls) == 3 and sorted(p.name for p in out.iterdir()) == [
+        f"link-001.attempt-{n}.json" for n in (1, 2, 3)]
+    assert "link-001: no valid answer in 3 attempts; it gives none" in capsys.readouterr().out
+    runner.review_case(LINK_CASE, role, inputs, out, "A", "[t]")  # resuming makes no new call
+    assert len(calls) == 3
+    assert protocol.decided_record(out, LINK_CASE, role, inputs) is None
 
 
 # The queue builder.
@@ -235,18 +357,27 @@ def test_ruler_counts_group_resolutions_by_text_and_target(tmp_path: Path) -> No
     assert make_run.ruler_counts(tmp_path) == {"met": {
         "linked": {"units": 1, "records": 2, "mentions": 2},
         "missed": {"units": 2, "records": 2, "mentions": 2}}}
+    with gzip.open(tmp_path / "resolutions-authority.ndjson.gz", "wt") as handle:
+        handle.write(json.dumps({**rows[0], "status": "deferred", "mention_id": "m-9"}) + "\n")
+    with pytest.raises(ValueError, match="a ruler resolution with an unknown status: 'deferred' \\(m-9\\)"):
+        make_run.ruler_counts(tmp_path)
 
 
 # The scorer.
 
-def key_case(case_id: str, kind: str, museum: str = "met", records: tuple = ("met-1",)) -> dict:
-    return {"case_id": case_id, "unit_kind": kind, "decoy": kind == "decoy", "museum": museum,
-            "artifact_ids": list(records)}
+def key_case(case_id: str, kind: str, museum: str = "met", records: tuple = ("met-1",), unit_id: str | None = None) -> dict:
+    return {"case_id": case_id, "unit_id": unit_id or f"unit-{case_id}", "unit_kind": kind, "decoy": kind == "decoy",
+            "museum": museum, "artifact_ids": list(records)}
 
 
 def decoys(missed: int, total: int = 20) -> tuple[list[dict], dict[str, str]]:
-    key = [key_case(f"d-{n}", "decoy") for n in range(total)]
-    return key, {c["case_id"]: ("exact_identity" if n < missed else "different_identity") for n, c in enumerate(key)}
+    """`total` decoys, each with a confirmed twin link in another museum ("twins"), `missed` of
+    them not rejected."""
+    key, outcomes = [], {}
+    for n in range(total):
+        key += [key_case(f"d-{n}", "decoy", unit_id=f"u-{n}"), key_case(f"t-{n}", "link", "twins", unit_id=f"u-{n}")]
+        outcomes |= {f"d-{n}": "exact_identity" if n < missed else "different_identity", f"t-{n}": "exact_identity"}
+    return key, outcomes
 
 
 def test_calibration_fails_when_more_than_one_in_five_decoys_are_not_rejected() -> None:
@@ -254,6 +385,7 @@ def test_calibration_fails_when_more_than_one_in_five_decoys_are_not_rejected() 
         key, outcomes = decoys(missed)
         result = scorer.tally(key, outcomes, {})
         assert result["calibration"] == {"decoys": 20, "caught": 20 - missed, "missed": missed,
+                                         "set_aside_twin_not_confirmed": 0, "min_counted_decoys": 15,
                                          "by_outcome": {"different_identity": 20 - missed, "exact_identity": missed},
                                          "max_missed_share": [1, 5], "passed": passed}
 
@@ -269,12 +401,36 @@ def test_a_museum_with_a_wrong_link_fails_and_unconfirmed_links_decide_nothing()
                  "f": "insufficient_evidence"}
     result = scorer.tally(key, outcomes, {"m": "one_ruler"})
     # Walters has no confirmed link at all, and still passes: unconfirmed links decide nothing.
-    assert result["museum_outcomes"] == {"met": "fails", "walters": "passes"}
+    assert result["museum_outcomes"] == {"met": "fails", "twins": "passes", "walters": "passes"}
     assert result["museums"]["met"]["wrong"] == {"units": 1, "records": 1}
     assert result["museums"]["met"]["confirmed"] == {"units": 1, "records": 10}
     assert result["museums"]["walters"]["unconfirmed"] == {"units": 2, "records": 2}
     assert result["museums"]["walters"]["miss"]["names_one_ruler"] == {"units": 1, "records": 1}
-    assert scorer.museum_outcomes(result["museums"], False) == {"met": "no_decision", "walters": "no_decision"}
+    assert scorer.museum_outcomes(result["museums"], False) == {
+        "met": "no_decision", "twins": "no_decision", "walters": "no_decision"}
+
+
+def test_a_decoy_whose_twin_was_not_confirmed_does_not_calibrate() -> None:
+    key, outcomes = decoys(4)
+    outcomes |= {"t-0": "insufficient_evidence", "t-1": "different_identity"}  # twins of two missed decoys
+    calibration = scorer.tally(key, outcomes, {})["calibration"]
+    assert (calibration["decoys"], calibration["missed"], calibration["set_aside_twin_not_confirmed"]) == (18, 2, 2)
+    assert calibration["passed"] is True
+    # Fewer than 15 counted decoys is inconclusive, even with none missed.
+    key, outcomes = decoys(0)
+    outcomes |= {f"t-{n}": "insufficient_evidence" for n in range(6)}
+    calibration = scorer.tally(key, outcomes, {})["calibration"]
+    assert (calibration["decoys"], calibration["missed"], calibration["passed"]) == (14, 0, False)
+
+
+def test_the_runner_and_the_scorer_give_up_on_one_rule() -> None:
+    retry = f"{protocol.BROWSER_TOOL_FAILURE} all 1 open_page call(s) returned an error: []"
+    limit = "Claude Code session limit: you've hit your session limit"
+    assert protocol.gave_no_answer([retry] * 3) is True
+    assert protocol.gave_no_answer([retry] * 2) is False
+    assert protocol.gave_no_answer([limit, retry, retry, retry]) is True   # a session limit is not counted
+    assert protocol.gave_no_answer([limit, retry, retry]) is False
+    assert protocol.gave_no_answer(["Claude Code '2.1.299', not '2.1.302'", retry, retry, retry]) is False
 
 
 def test_the_decision_rule_is_approved() -> None:
@@ -306,8 +462,9 @@ def test_the_committed_population_is_the_runs_and_binds_the_audited_protocol() -
     assert digest["builder_sha256"] == builder.sha256_path(SCRIPTS / "build_queue.py")
     assert {m: {"link": c["link"], "miss": c["miss"]} for m, c in digest["population"].items()} == {
         m: {"link": c["linked"]["units"], "miss": c["missed"]["units"]} for m, c in run["ruler_counts"].items()}
-    assert {m: c["link_records"] for m, c in digest["population"].items()} == {
-        m: c["linked"]["records"] for m, c in run["ruler_counts"].items()}
+    assert {m: (c["link_records"], c["miss_records"]) for m, c in digest["population"].items()} == {
+        m: (c["linked"]["records"], c["missed"]["records"]) for m, c in run["ruler_counts"].items()}
+    assert set(digest["review_protocol"]) >= {"scorer", "decision_rule", "validator", "runner", "browser_tool"}
     assert sum(c["decoy"] for c in digest["population"].values()) == 20
     bound = digest["review_protocol"]
     for binding in [*bound["prompts"].values(), *bound["schemas"].values(),
@@ -332,6 +489,8 @@ def test_every_preflight_page_loaded_before_the_run() -> None:
     check = json.loads((EVALUATION / "results/preflight-page-check.json").read_text())
     digest = json.loads((EVALUATION / "results/review-population-digest.json").read_text())
     assert check["queue_sha256"] == {n: digest["output_sha256"][n] for n in ("link-queue.json", "miss-queue.json")}
+    assert check["made_with"] == {path.name: builder.sha256_path(path) for path in (
+        SCRIPTS / "preflight_page_check.py", protocol.OPEN_PAGE_SERVER_PATH, protocol.CITABLE_SOURCES_PATH)}
     pages = check["pages"]
     assert len(pages) == 270 and all(page.get("loaded") is True for page in pages)
     by_host: dict[str, int] = {}

@@ -30,6 +30,9 @@ SCHEMA_VERSION = "hapi-ruler-per-museum-score/1"
 # Calibration (decision-rule.md): the review must reject the decoys. More than this share of
 # decoys not judged different_identity makes the result INCONCLUSIVE.
 MAX_MISSED_DECOY_SHARE = (1, 5)
+# ... and fewer than this many counted decoys (those whose twin was confirmed) makes it
+# INCONCLUSIVE too (owner, 2026-10-17).
+MIN_COUNTED_DECOYS = 15
 
 
 def sha256_path(path: Path) -> str:
@@ -81,7 +84,10 @@ MISS_CATEGORY = {"one_ruler": "names_one_ruler", "not_one_ruler": "names_no_sing
 def tally(key: list[dict], link_outcomes: dict[str, str], miss_outcomes: dict[str, str]) -> dict:
     """The rule's counts from the answer key and each case's consensus outcome."""
     museums: dict[str, dict] = {}
-    decoys = {"caught": 0, "missed": 0, "by_outcome": collections.Counter()}
+    decoys = {"caught": 0, "missed": 0, "by_outcome": collections.Counter(), "twin_not_confirmed": 0}
+    # A decoy is surely wrong only if its real twin (the same unit with its own target) is right,
+    # so only decoys whose twin was confirmed calibrate the review (decision-rule.md).
+    twin = {case["unit_id"]: link_outcomes[case["case_id"]] for case in key if case["unit_kind"] == "link"}
     for case in key:
         side = museums.setdefault(case["museum"], {
             **{c: {"units": 0, "records": set()} for c in ("confirmed", "wrong", "unconfirmed")},
@@ -89,6 +95,9 @@ def tally(key: list[dict], link_outcomes: dict[str, str], miss_outcomes: dict[st
             "miss": {c: {"units": 0, "records": set()} for c in MISS_CATEGORY.values()},
         })
         if case["unit_kind"] == "decoy":
+            if twin[case["unit_id"]] != "exact_identity":
+                decoys["twin_not_confirmed"] += 1
+                continue
             outcome = link_outcomes[case["case_id"]]
             decoys["by_outcome"][outcome] += 1
             decoys["caught" if outcome == "different_identity" else "missed"] += 1
@@ -115,9 +124,10 @@ def tally(key: list[dict], link_outcomes: dict[str, str], miss_outcomes: dict[st
     }
     total = decoys["caught"] + decoys["missed"]
     calibration = {"decoys": total, "caught": decoys["caught"], "missed": decoys["missed"],
+                   "set_aside_twin_not_confirmed": decoys["twin_not_confirmed"],
                    "by_outcome": dict(sorted(decoys["by_outcome"].items())),
-                   "max_missed_share": list(MAX_MISSED_DECOY_SHARE),
-                   "passed": total > 0 and at_most(decoys["missed"], total, MAX_MISSED_DECOY_SHARE)}
+                   "max_missed_share": list(MAX_MISSED_DECOY_SHARE), "min_counted_decoys": MIN_COUNTED_DECOYS,
+                   "passed": total >= MIN_COUNTED_DECOYS and at_most(decoys["missed"], total, MAX_MISSED_DECOY_SHARE)}
     return {"calibration": calibration, "museums": rows,
             "museum_outcomes": museum_outcomes(rows, calibration["passed"])}
 
@@ -142,8 +152,17 @@ def score(repo_root: Path, review: Path, records: Path, public_out: Path, privat
     key = read_json(review / "private-answer-key.json")["cases"]
     result = tally(key, outcomes["link"], outcomes["miss"])
     result["page_opens"] = {stage: page_opens(protocol, stage, review, records / stage, key) for stage in consensus}
+    unanswered = {stage: dict(sorted(collections.Counter(
+        r["method"] for d in c["decisions"] for r in d["field_resolutions"].values()
+        if r["method"] in ("no_valid_review", "no_valid_reconciliation")).items())) for stage, c in consensus.items()}
     public = {
         "schema_version": SCHEMA_VERSION,
+        "cases_without_an_answer": unanswered,
+        # Every stored call, attempt and consensus by hash, and the set-aside ledger: the records
+        # this score was made from (2026-10-16's `real-review-records.json`).
+        "records_sha256": {path.relative_to(records).as_posix(): sha256_path(path)
+                           for path in sorted(records.rglob("*.json")) if path.parent != records},
+        "set_asides_sha256": sha256_path(protocol.SET_ASIDES_PATH),
         "scorer_sha256": sha256_path(Path(__file__).resolve()),
         "population_digest_sha256": sha256_path(repo_root / DIGEST),
         "consensus_sha256": {stage: sha256_path(records / stage / "consensus.json") for stage in consensus},
@@ -174,12 +193,14 @@ def page_opens(protocol, stage: str, review: Path, records: Path, key: list[dict
     load hampers both alike."""
     kind = {c["case_id"]: (c["museum"], c["unit_kind"]) for c in key}
     queue = read_json(review / f"{stage}-queue.json")
-    calls = [(case_id, record) for case_id, by_label in protocol.reviewer_decisions(stage, queue, records).items()
-             for _, record in by_label.values()]
+    calls = [(case_id, review[1]) for case_id, by_label in protocol.reviewer_decisions(stage, queue, records).items()
+             for review in by_label.values() if review is not None]
     role = protocol.ROLES[f"{stage}_reconciler"]
     inputs = protocol.role_inputs(role)
     for case in protocol.reconciliation_queue(stage, queue, records)["cases"]:
-        calls.append((case["case_id"], protocol.decided_record(records / "reconciler", case, role, inputs)[1]))
+        decided = protocol.decided_record(records / "reconciler", case, role, inputs)
+        if decided is not None:
+            calls.append((case["case_id"], decided[1]))
     out: dict[str, dict] = {}
     without = 0
     for case_id, record in calls:
@@ -195,8 +216,12 @@ def page_opens(protocol, stage: str, review: Path, records: Path, key: list[dict
 
 def rulers_named(protocol, records: Path, case: dict, reconcile_case: dict | None, decision: dict) -> list[str]:
     """The rulers the deciding calls named (`review_protocol.decided_record`): both reviewers'
-    when they agreed, the reconciler's when it settled the question."""
-    if decision["field_resolutions"]["names_one_ruler"]["method"] == "agreement":
+    when they agreed, the reconciler's when it settled the question, none when no call gave an
+    answer."""
+    method = decision["field_resolutions"]["names_one_ruler"]["method"]
+    if method in ("no_valid_review", "no_valid_reconciliation"):
+        return []
+    if method == "agreement":
         role = protocol.ROLES["miss_reviewer"]
         inputs = protocol.role_inputs(role)
         return [protocol.decided_record(records / f"reviewer-{label}", case, role, inputs)[1]["decision"]["ruler"]

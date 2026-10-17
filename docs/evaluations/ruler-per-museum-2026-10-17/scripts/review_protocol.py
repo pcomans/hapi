@@ -118,9 +118,25 @@ MODEL_INPUT_FORBIDDEN_KEYS = {
     "artifact_id", "artifact_ids", "case_binding_sha256", "decoy", "mention_id", "mention_ids",
     "proposed_target_id", "resolved_target_ids", "unit_id", "unit_kind",
 }
-# The validator's failure for a call during which `open_page` returned an error instead of a
-# page: the browser was broken, so the answer is no finding (#384). The runner retries it.
+# The validator's failure for a call in which every `open_page` call returned an error and none a
+# page: the call could read nothing, so its answer is no finding (#384; the line the 2026-10-16
+# run drew by hand). A call that read at least one page decides as usual.
 BROWSER_TOOL_FAILURE = "browser tool failed:"
+# Failures the runner retries, up to MAX_ATTEMPTS calls per case: a malformed answer (not JSON,
+# schema-invalid, a miscopied case ID, or a reconciler answer that resolves other than the
+# disputed questions), an answer citing a page the call did not open or a non-citable source, a
+# call whose search results, opened pages or citations touched a blocked domain, and a call whose
+# browser read nothing.
+RETRYABLE_FAILURES = (
+    "invalid decision:", "decision does not echo", "blocked domain used:", "cites a page it did not open:",
+    "cites a non-citable source:", BROWSER_TOOL_FAILURE,
+)
+MAX_ATTEMPTS = 3
+SESSION_LIMIT_FAILURE = "Claude Code session limit"
+# The committed ledger of stored calls set aside (`decision-rule.md`, "Calls that give no
+# answer"). It is not a protocol binding: it may grow during the run, and every entry is
+# disclosed with its reason.
+SET_ASIDES_PATH = EVALUATION_ROOT / "set-asides.json"
 
 
 class ProtocolFailure(RuntimeError):
@@ -406,10 +422,6 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
                     **({"local_failure": opened["local_failure"]} if "local_failure" in opened else {}),
                     "reported_loaded": opened["loaded"], "loaded": page_loaded(opened["status"], opened["title"], opened["text"]),
                 })
-    failed_opens = [o["url"] for o in record["page_opens"] if "error" in o]
-    if failed_opens:
-        record["failure"] = f"{BROWSER_TOOL_FAILURE} {len(failed_opens)} open_page call(s) returned an error: {failed_opens[:5]}"
-        return record
     other_builds = sorted({o["browser_version"] for o in record["page_opens"]
                            if o.get("browser") == "local" and o["browser_version"] != CHROMIUM_VERSION})
     if other_builds:
@@ -441,6 +453,10 @@ def validate(record: dict, case: dict, role: Role, schema: dict) -> dict:
     record["final_text"] = final_text
     if SESSION_LIMIT_TEXT in final_text:
         record["failure"] = f"Claude Code session limit: {final_text}"
+        return record
+    if record["page_opens"] and all("error" in o for o in record["page_opens"]):
+        record["failure"] = (f"{BROWSER_TOOL_FAILURE} all {len(record['page_opens'])} open_page call(s) "
+                             f"returned an error: {[o['url'] for o in record['page_opens']][:5]}")
         return record
     # A process that exited unsuccessfully decides nothing, whatever it answered: here, the one
     # check every path reads (a new call, a re-check, a decided record, the gate) (#358 item 9);
@@ -534,7 +550,38 @@ def calls_by_latest_attempt(directory: Path, case_id: str) -> dict[str, Path]:
     return latest
 
 
-def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tuple[str, dict]:
+def set_asides(directory: Path) -> dict[str, str]:
+    """The calls of one record directory (`<stage>/<reviewer-A|reviewer-B|reconciler>`) the
+    committed ledger sets aside: file name to SHA-256. Each listed file must be there with its
+    hash."""
+    ledger = read_json(SET_ASIDES_PATH)
+    listed = {entry["file"]: entry["sha256"] for entry in ledger["set_asides"]
+              if (entry["stage"], entry["directory"]) == (directory.parent.name, directory.name)}
+    for name, sha in listed.items():
+        if not (directory / name).is_file() or sha256_path(directory / name) != sha:
+            raise ProtocolFailure(f"{directory / name}: set aside in the ledger, but missing or changed")
+        stored = read_json(directory / name)
+        if "decision" in stored:
+            raise ProtocolFailure(f"{directory / name}: a call with a decision is never set aside")
+        if retryable(stored.get("failure", "")):
+            raise ProtocolFailure(f"{directory / name}: a retryable failure is never set aside; it counts toward giving up")
+    return listed
+
+
+def retryable(failure: str) -> bool:
+    return failure.startswith(RETRYABLE_FAILURES)
+
+
+def gave_no_answer(failures: list[str]) -> bool:
+    """Whether a case's calls (none of them valid) mean it gives no answer: at least MAX_ATTEMPTS
+    retryable failures, and every other failure a session limit, which a resumed run retries
+    without counting. The runner stops trying a case, and `decided_record` settles it, on this
+    one rule (`decision-rule.md`, "Calls that give no answer")."""
+    return (sum(retryable(f) for f in failures) >= MAX_ATTEMPTS
+            and all(retryable(f) or f.startswith(SESSION_LIMIT_FAILURE) for f in failures))
+
+
+def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tuple[str, dict] | None:
     """The one stored call that decided `case`, re-validated from its events under the current rules.
 
     Every attempt is re-checked. A re-check attempt (`revalidated_from`) is the same model
@@ -546,6 +593,11 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
     paths = sorted(directory.glob(f"{case['case_id']}.attempt-*.json"), key=attempt_number)
     if not paths:
         raise ProtocolFailure(f"no record for {case['case_id']} in {directory}")
+    # Attempts are numbered 1..n with no gap: a removed or moved attempt fails loud.
+    if [attempt_number(p) for p in paths] != list(range(1, len(paths) + 1)):
+        raise ProtocolFailure(f"{case['case_id']} in {directory}: attempts {[p.name for p in paths]} are not 1..n")
+    aside = set_asides(directory)
+    paths = [p for p in paths if p.name not in aside]
     user_content = compose_user_content(case, inputs["prompt"], inputs["schema"], inputs["citable_sources"])
     latest, valid_calls = {}, set()
     for path in paths:
@@ -577,6 +629,10 @@ def decided_record(directory: Path, case: dict, role: Role, inputs: dict) -> tup
     for call, (path, stored, recheck) in latest.items():
         if stored.get("decision") != recheck.get("decision"):
             raise ProtocolFailure(f"{path}: stored outcome differs from its re-check under the current rules")
+    if not valid_calls and gave_no_answer([recheck.get("failure", "") for _, _, recheck in latest.values()]):
+        # No valid answer in MAX_ATTEMPTS retryable calls: the review gives none
+        # (`decision-rule.md`, "Calls that give no answer").
+        return None
     if len(valid_calls) != 1:
         raise ProtocolFailure(f"{case['case_id']} in {directory}: valid calls {sorted(valid_calls)}")
     path, stored, _ = latest[valid_calls.pop()]
@@ -595,10 +651,11 @@ def session_id(record: dict) -> str:
     return init["session_id"]
 
 
-def reviewer_decisions(stage: str, queue: dict, records: Path) -> dict[str, dict[str, tuple[str, dict]]]:
-    """Each case's two independent reviews. Every deciding call must be its own session: the
-    same stored call under both labels (or under two cases) would turn one judgment into an
-    agreement, so a repeated session fails loud."""
+def reviewer_decisions(stage: str, queue: dict, records: Path) -> dict[str, dict[str, tuple[str, dict] | None]]:
+    """Each case's two independent reviews (None for a reviewer that gave no answer in
+    MAX_ATTEMPTS retryable calls). Every deciding call must be its own session: the same stored
+    call under both labels (or under two cases) would turn one judgment into an agreement, so a
+    repeated session fails loud."""
     role = ROLES[f"{stage}_reviewer"]
     inputs = role_inputs(role)
     decisions = {
@@ -609,7 +666,7 @@ def reviewer_decisions(stage: str, queue: dict, records: Path) -> dict[str, dict
         for case in queue["cases"]
     }
     sessions = collections.Counter(
-        session_id(record) for by_label in decisions.values() for _, record in by_label.values()
+        session_id(review[1]) for by_label in decisions.values() for review in by_label.values() if review
     )
     repeated = sorted(session for session, count in sessions.items() if count > 1)
     if repeated:
@@ -624,6 +681,8 @@ def reconciliation_queue(stage: str, queue: dict, records: Path) -> dict:
     items = []
     for case in queue["cases"]:
         by_label = reviews[case["case_id"]]
+        if None in by_label.values():
+            continue  # settled without a reconciler (build_consensus)
         disputed = [
             field for field in fields
             if by_label["A"][1]["decision"][field] != by_label["B"][1]["decision"][field]
@@ -667,6 +726,15 @@ def build_consensus(stage: str, queue_path: Path, records: Path) -> dict:
             )
         decision = {"case_id": case["case_id"], "evidence_sha256": case["evidence_sha256"]}
         resolutions = {}
+        if None in by_label.values():
+            # A reviewer gave no answer: the case is unsettled (`decision-rule.md`).
+            for field in fields:
+                decision[field] = "insufficient_evidence"
+                resolutions[field] = {"method": "no_valid_review", "reviewers_without_an_answer": sorted(
+                    label for label, review in by_label.items() if review is None)}
+            decision["field_resolutions"] = resolutions
+            decisions.append(decision)
+            continue
         for field in fields:
             sources = sorted(
                 ({"review_sha256": sha, "outcome": record["decision"][field]}
@@ -676,6 +744,11 @@ def build_consensus(stage: str, queue_path: Path, records: Path) -> dict:
             if sources[0]["outcome"] == sources[1]["outcome"]:
                 decision[field] = sources[0]["outcome"]
                 resolutions[field] = {"method": "agreement", "source_outcomes": sources}
+                continue
+            if override is None:
+                # The reconciler gave no answer: the disputed question is unsettled.
+                decision[field] = "insufficient_evidence"
+                resolutions[field] = {"method": "no_valid_reconciliation", "source_outcomes": sources}
                 continue
             resolution = override[1]["decision"]["resolutions"][field]
             decision[field] = resolution["outcome"]

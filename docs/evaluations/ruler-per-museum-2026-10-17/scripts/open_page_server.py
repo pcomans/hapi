@@ -3,7 +3,7 @@
 one way to read a web page.
 
 An MCP server (stdio) with a single tool, `open_page`, that loads a URL in Chromium (headful,
-on the virtual X display `xvfb-run` gives it) and returns what the page or PDF says. The Met and Brooklyn collection sites sit behind Vercel's
+on the run's virtual X display, `run_harness_review.virtual_display`) and returns what the page or PDF says. The Met and Brooklyn collection sites sit behind Vercel's
 JavaScript "Security Checkpoint", which answers every request that cannot run JavaScript with
 HTTP 429; Claude Code's WebFetch is such a request, so in the v3 run 69% of Met and 96% of
 Brooklyn fetches were refused and most judgments about those records rested on search
@@ -29,7 +29,8 @@ pages an analytics script (piwik.dainst.org) never finishes loading, although th
 rendered within seconds, so every open of the record the Stage 2 reviewers were judging timed
 out. A page whose `load` fires is read exactly as before.
 
-Launched once per review call by `run_harness_review.py` (`--mcp-config`, under `xvfb-run`).
+Launched once per review call by `run_harness_review.py` (`--mcp-config`), on the one virtual display
+the runner starts for the whole run.
 """
 
 from __future__ import annotations
@@ -90,7 +91,7 @@ async def _page() -> Page:
     global _browser
     async with _launching:  # parallel first calls would each launch a browser
         if _browser is None:
-            # Headful (on the X display `xvfb-run` provides): bot walls (Anubis, Cloudflare's
+            # Headful (on the runner's virtual X display): bot walls (Anubis, Cloudflare's
             # interstitial) refuse a browser that announces itself as HeadlessChrome.
             _browser = await (await _playwright_driver()).chromium.launch(headless=False)
     return await _browser.new_page()

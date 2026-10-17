@@ -6,7 +6,7 @@
  },
  "made_with": {
   "preflight_page_check.py": "271fbd533cdc61425d816e9b7a0e0bdd1001946214dc24c880ef3c7d0a611355",
-  "open_page_server.py": "2ce814c976a3eaee31bf07614e6c82a65c8beb21453cc39b2bcc42e182264244",
+  "open_page_server.py": "3d2aa58cc25c109b0064391591927c1790a858846670fdb079db21e469f01b4a",
   "citable-sources.json": "4bd37e0670ecbeccd441b22e311a69e09cfe2925617a8fc1e00272396a4721d5"
  },
  "pages": [
@@ -512,7 +512,7 @@
    "status": 200,
    "title": "Sphinx of King Psamtik II, 664-589 BCE (Late Period). Acquired by Henry Walters, 1909, 22.104 | The Walters Art Museum",
    "loaded": true,
-   "load_event": true,
+   "load_event": false,
    "browser": "local",
    "local_failure": null
   },
@@ -1217,8 +1217,8 @@
    "title": "Scarab with the Name of King Siptah (1194/1193-1186/1185 BCE), 1193-1188 BCE (New Kingdom, Dynasty 19). Acquired by Henry Walters, 42.34 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "local",
-   "local_failure": null
+   "browser": "browserbase",
+   "local_failure": "status 429, title 'Just a moment...'"
   },
   {
    "url": "https://purl.thewalters.org/art/42.376",
@@ -1228,8 +1228,8 @@
    "title": "Scarab, 1388-1351 BCE (New Kingdom). Acquired by Henry Walters, 1930, 42.376 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "local",
-   "local_failure": null
+   "browser": "browserbase",
+   "local_failure": "status 429, title 'Just a moment...'"
   },
   {
    "url": "https://purl.thewalters.org/art/42.377",
@@ -1239,8 +1239,8 @@
    "title": "Spacer Bead, 6th century BCE (Late Period). Acquired by Henry Walters, 42.377 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "local",
-   "local_failure": null
+   "browser": "browserbase",
+   "local_failure": "status 429, title 'Just a moment...'"
   },
   {
    "url": "https://purl.thewalters.org/art/42.381",
@@ -1250,8 +1250,8 @@
    "title": "Scarab with a King Holding a Captive, 1279-1213 BCE (New Kingdom). Acquired by Henry Walters, 42.381 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "local",
-   "local_failure": null
+   "browser": "browserbase",
+   "local_failure": "status 429, title 'Just a moment...'"
   },
   {
    "url": "https://purl.thewalters.org/art/42.385",
@@ -1261,8 +1261,8 @@
    "title": "Seal Ring with the Name of Amenophis lll, ca. 1388-1350 BCE (New Kingdom). Acquired by Henry Walters, 42.385 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "local",
-   "local_failure": null
+   "browser": "browserbase",
+   "local_failure": "status 429, title 'Just a moment...'"
   },
   {
    "url": "https://purl.thewalters.org/art/42.386",
@@ -1426,8 +1426,8 @@
    "title": "Scarab of Thutmose IV, 1397-1388 BCE (New Kingdom, Dynasty 18). Acquired by Henry Walters, 42.73 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "browserbase",
-   "local_failure": "status 429, title 'Just a moment...'"
+   "browser": "local",
+   "local_failure": null
   },
   {
    "url": "https://purl.thewalters.org/art/42.74",
@@ -1437,8 +1437,8 @@
    "title": "Scarab with Bird and Papyrus, 1525-1504 BCE (New Kingdom, Dynasty 18). Acquired by Henry Walters, 42.74 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "browserbase",
-   "local_failure": "status 429, title 'Just a moment...'"
+   "browser": "local",
+   "local_failure": null
   },
   {
    "url": "https://purl.thewalters.org/art/42.76",
@@ -1448,8 +1448,8 @@
    "title": "Scarab with King as Bull Motif, 1479-1425 BCE (New Kingdom, Dynasty 18). Acquired by Henry Walters, 1929, 42.76 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "browserbase",
-   "local_failure": "status 429, title 'Just a moment...'"
+   "browser": "local",
+   "local_failure": null
   },
   {
    "url": "https://purl.thewalters.org/art/42.77",
@@ -1459,8 +1459,8 @@
    "title": "Scarab with the Throne Name of Thutmosis III (1479-1425 BCE), 1479-1425 BCE (New Kingdom, Dynasty 18). Acquired by Henry Walters, 42.77 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "browserbase",
-   "local_failure": "status 429, title 'Just a moment...'"
+   "browser": "local",
+   "local_failure": null
   },
   {
    "url": "https://purl.thewalters.org/art/42.80",
@@ -1470,8 +1470,8 @@
    "title": "Scarab with the Throne Name of Amenophis III (1388-1351/1350 BCE), 1388-1351 BCE (New Kingdom, Dynasty 18). Acquired by Henry Walters, 1929, 42.80 | The Walters Art Museum",
    "loaded": true,
    "load_event": true,
-   "browser": "browserbase",
-   "local_failure": "status 429, title 'Just a moment...'"
+   "browser": "local",
+   "local_failure": null
   },
   {
    "url": "https://purl.thewalters.org/art/42.85",
@@ -2339,8 +2339,8 @@
    "title": "Relief fragment with king Khufu's cattle - Old Kingdom - The Metropolitan Museum of Art",
    "loaded": true,
    "load_event": true,
-   "browser": "local",
-   "local_failure": null
+   "browser": "browserbase",
+   "local_failure": "Page.goto: net::ERR_TIMED_OUT at https://www.metmuseum.org/art/collection/search/543890"
   },
   {
    "url": "https://www.metmuseum.org/art/collection/search/543968",

@@ -7,7 +7,7 @@
     "added_museums_archive_sha256": "f9c353f6e5a7757533739210d94550d00091fde026ca3ca9ea2ede5d7c30186e",
     "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b"
   },
-  "make_run_sha256": "a017695f627fed574c4d611edf6ad339895dcc92f318cefd7238568869df065c",
+  "make_run_sha256": "2fe5bb6ffd40bb8badbfc516a382a0c87bdaf87ea671d455d949e4bc855a7c74",
   "manifest": {
     "canonical_rows_set_aside": [],
     "extraction": {

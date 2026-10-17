@@ -1,5 +1,5 @@
 {
- "builder_sha256": "2baef02bf6d550db03a68ed7384152edfe5da0266aa1a1bc2693df00d438fe7a",
+ "builder_sha256": "207a7449a8046226427402759006c4db422ecbc25d976bc3e1c4a9f4c8ea5a62",
  "decoy_count": 20,
  "output_sha256": {
   "link-queue.json": "a2c6249ee4ab746507ae6cfc03338d6ce08c5c461d7eeeb026ce9077cd7dbe50",
@@ -46,11 +46,15 @@
  "review_protocol": {
   "browser_tool": {
    "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/open_page_server.py",
-   "sha256": "2ce814c976a3eaee31bf07614e6c82a65c8beb21453cc39b2bcc42e182264244"
+   "sha256": "3d2aa58cc25c109b0064391591927c1790a858846670fdb079db21e469f01b4a"
   },
   "citable_sources": {
    "path": "docs/evaluations/ruler-per-museum-2026-10-17/citable-sources.json",
    "sha256": "4bd37e0670ecbeccd441b22e311a69e09cfe2925617a8fc1e00272396a4721d5"
+  },
+  "decision_rule": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/decision-rule.md",
+   "sha256": "98207b092a176e8ebce674931067b69d6800937d78564a012eaa9520556ea8fa"
   },
   "prompts": {
    "link_reconciler": {
@@ -72,7 +76,7 @@
   },
   "runner": {
    "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/run_harness_review.py",
-   "sha256": "af48d61bc2ea86ce4732e049687ec3841994850a65e4febf20c47aef577a381d"
+   "sha256": "1dd021ecfc2d4bec6fbb4b738f821b13cfa1e67536a7fa4ec5b955d8b3e62298"
   },
   "runtime_lock": {
    "path": "docs/evaluations/ruler-per-museum-2026-10-17/runtime/uv.lock",
@@ -96,13 +100,17 @@
     "sha256": "85dbdf119646c90040c2358bd0c5bf829d3869332c1033b134b08dbd14cc79ad"
    }
   },
+  "scorer": {
+   "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/score.py",
+   "sha256": "87f677911f8a3753bec60bc32e9549899d5db5ce472648c53f192e742134b878"
+  },
   "system_prompt": {
    "path": "docs/evaluations/ruler-per-museum-2026-10-17/launcher-instructions/review-system-v4.txt",
    "sha256": "290ab72e433d8cbbd167d4f906e874fee1d6994c38201bfe10d01e7cd3116451"
   },
   "validator": {
    "path": "docs/evaluations/ruler-per-museum-2026-10-17/scripts/review_protocol.py",
-   "sha256": "8efcd6a1571733af3a4389f62302c9281b20c0c7ddbf17b096f47d9feb95972f"
+   "sha256": "7bfbcaf19c406470f240c16509a80febedf9b2f06019602d60f8115a6d7d080b"
   }
  },
  "run_id": "00960fed1eefb24fa0ddc41f67cb759ee2f83161ed6b181ad296861db1bcdae0",

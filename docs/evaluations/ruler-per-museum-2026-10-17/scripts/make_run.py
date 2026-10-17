@@ -98,7 +98,7 @@ def write_once(corpus: Path, added: Path, root: Path) -> dict:
 # What the test reviews of a museum's ruler mentions: the resolved ones (links) and those the
 # authority could not settle. An abstained mention (a list, a range, a doubt, a field the parser
 # does not read) is not a single ruler by the extractor's own grammar and is not reviewed.
-LINKED, MISSED = ("resolved",), ("unmatched", "ambiguous")
+LINKED, MISSED, NOT_REVIEWED = ("resolved",), ("unmatched", "ambiguous"), ("abstained",)
 
 
 def ruler_counts(run: Path) -> dict:
@@ -106,7 +106,11 @@ def ruler_counts(run: Path) -> dict:
     mentions, and distinct unmatched or ambiguous mention texts with theirs."""
     out = {}
     for row in link_files.read_rows(run / "resolutions-authority.ndjson.gz"):
-        if row["entity_type"] != ENTITY or row["status"] not in LINKED + MISSED:
+        if row["entity_type"] != ENTITY:
+            continue
+        if row["status"] not in LINKED + MISSED + NOT_REVIEWED:
+            raise ValueError(f"a ruler resolution with an unknown status: {row['status']!r} ({row['mention_id']})")
+        if row["status"] in NOT_REVIEWED:
             continue
         side = out.setdefault(row["museum"], {"linked": {}, "missed": {}})
         if row["status"] in LINKED:

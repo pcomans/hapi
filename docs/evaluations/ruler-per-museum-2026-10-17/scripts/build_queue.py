@@ -219,6 +219,8 @@ def units(run: Path, mentions: dict[str, dict], link_files) -> tuple[list[dict],
             linked[(row["museum"], row["mention_text"], tuple(row["target_ids"]))].append(mention)
         elif row["status"] in ("unmatched", "ambiguous"):
             missed[(row["museum"], row["mention_text"])].append(mention)
+        elif row["status"] != "abstained":
+            raise ValueError(f"a ruler resolution with an unknown status: {row['status']!r} ({row['mention_id']})")
     link_units = [{"museum": m, "mention_text": text, "resolved_target_ids": list(targets), "rows": rows}
                   for (m, text, targets), rows in linked.items()]
     miss_units = [{"museum": m, "mention_text": text, "rows": rows} for (m, text), rows in missed.items()]
@@ -359,6 +361,8 @@ def review_protocol_bindings(repo_root: Path) -> dict:
         "citable_sources": binding(protocol.CITABLE_SOURCES_PATH),
         "system_prompt": binding(protocol.SYSTEM_PROMPT_PATH),
         "runtime_lock": binding(protocol.RUNTIME_LOCK_PATH),
+        "scorer": binding(root / "scripts/score.py"),
+        "decision_rule": binding(root / "decision-rule.md"),
         "prompts": {name: binding(role.prompt) for name, role in sorted(protocol.ROLES.items())},
         "schemas": {name: binding(role.schema) for name, role in sorted(protocol.ROLES.items())},
     }
