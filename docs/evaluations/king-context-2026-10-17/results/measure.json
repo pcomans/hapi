@@ -4,14 +4,21 @@
   "candidates_sharing_a_label": 56
  },
  "changed_mentions": {
-  "met": 12
+  "met": 13
  },
  "changes": {
   "met": {
+   "met|ambiguous_to_ambiguous:3_to_2_candidates|Menkheperre|Dynasty 21|None": 1,
    "met|link_added_from_ambiguous:record_context|Teti|Dynasty 6|cluster-beckerath-06.01": 3,
    "met|link_removed:record_context_conflict|Amenhotep II|Dynasty 19|None": 1,
    "met|link_removed:record_context_conflict|Aya|Dynasty 18|None": 8
   }
+ },
+ "exposure": {
+  "dynasty_conflict_not_dropped:dates_within_slack": 2,
+  "dynasty_conflict_not_dropped:king_has_no_reign_dates": 3,
+  "title_dropped_king_the_reign_field_refused": 2,
+  "title_keeps_clashing_king:record_later_than_king": 1
  },
  "record_links_added": [
   "met-543897|cluster-beckerath-06.01",
@@ -27,7 +34,7 @@
   "met-557787|cluster-leprohon-leprohon-13.33",
   "met-567754|cluster-leprohon-leprohon-13.33"
  ],
- "resolver_version_now": "e9d78eaab593ee7ce433f61058113bff250a6806a99e67d85caa57c439942233",
+ "resolver_version_now": "ec80016a51680d4e77b5fda8eedcdc352fc7b3d0e328e00c0824380de3aab60a",
  "run_id": "00960fed1eefb24fa0ddc41f67cb759ee2f83161ed6b181ad296861db1bcdae0",
- "schema_version": "hapi-king-context-measure/2"
+ "schema_version": "hapi-king-context-measure/4"
 }

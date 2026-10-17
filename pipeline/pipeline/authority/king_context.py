@@ -18,8 +18,9 @@ The rule, for the candidates the name gives (`Kings.resolve`):
   record's single dynasty is not the king's, and the record's date range lies clear of the king's
   reign widened by `DATE_SLACK_YEARS` on each side. A dynasty number alone is not a date: museums
   number by different chronologies (the Met puts Takeloth II in Aston's Theban Dynasty 23; three
-  of the authority's four king lists put him in 22), and museum dates alone are loose (191 Met
-  "reign of Ramesses IV" records carry the single year 1295 BCE). Two independent signals that
+  of the authority's four king lists put him in 22), and museum dates alone are loose (Met
+  "reign of Ramesses IV" records of Dynasty 20 carry a single year in Dynasty 19). Two independent
+  signals that
   agree are evidence; either alone is not (owner's choice, 2026-10-17).
 - **A catalogued reign drops a clashing candidate.** A museum's reign field ("reign of Aya") dates
   the object to the reign. If every candidate clashes, the mention is unmatched
@@ -27,8 +28,8 @@ The rule, for the candidates the name gives (`Kings.resolve`):
 - **Any other mention** (a royal cue in a title, "Scarab of King Thutmose III") may postdate the
   king it names: scarabs bearing Thutmose III's name were made for centuries after his reign. It
   never drops a candidate for clashing, except one that the same record's reign field dropped
-  (`refused_on_record`): the record has already said the object is not of that king's reign, and
-  its title names him with the same name.
+  (`refused_on_record`), whatever spelling the title uses: the record has already said the object
+  is not of that king's reign.
 - **Otherwise the name alone decides** as before: one candidate resolves, several are ambiguous.
   So a record with no dynasty links only when one king has the name (owner's choice, 2026-10-17).
 

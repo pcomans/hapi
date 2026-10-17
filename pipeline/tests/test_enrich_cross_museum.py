@@ -451,7 +451,8 @@ def test_resolving_kings_in_context_changed_only_what_it_measured() -> None:
         after = _flat(json.loads((results / "rerun-after-king-context" / name).read_text(encoding="utf-8")))
         differ = {k for k in before.keys() | after.keys() if before.get(k) != after.get(k)
                   and not any(part in k for part in code_named)}
-        differ -= {k for k in differ if k.startswith(("/review_coverage/", "/inventory/unevaluated_scopes/ruler",
+        # The ruler scope qualified since (#383) and the list of context changes are checked below.
+        differ -= {k for k in differ if k.startswith(("/review_coverage/ruler|", "/inventory/unevaluated_scopes/ruler",
                                                        "/rulers_vs_361_authority_arm/differ_by_king_context"))}
         assert {k: (before.get(k), after.get(k)) for k in differ} == changes, name
     promotion = json.loads((results / "rerun-after-king-context/promotion-check.json").read_text(encoding="utf-8"))
@@ -459,13 +460,21 @@ def test_resolving_kings_in_context_changed_only_what_it_measured() -> None:
     assert rulers["differ_otherwise"] == []
     assert rulers["differ_as_369_measured"] == json.loads((results / "promotion-check.json").read_text(
         encoding="utf-8"))["rulers_vs_361_authority_arm"]["differ_as_369_measured"]
-    # The 12 mentions the measurement counts, and Menkheperre (Met, Dynasty 21), whose candidates
-    # the context narrowed from three to two (Necho I dropped) while it stays ambiguous.
-    assert len(rulers["differ_by_king_context"]) == 13
+    # The 13 Met mentions the measurement counts (`king-context-2026-10-17/results/measure.json`):
+    # 8 Aya, 3 Teti, 1 Amenhotep II, and Menkheperre narrowed from three candidates to two.
+    assert rulers["differ_by_king_context"] == [
+        "mention-16b6fa427f43a06bcbe8", "mention-278c1258d1bb98e2504d", "mention-372127de767eb0c0a834",
+        "mention-49e1d7485e29fe95142a", "mention-568c6fd791775218958a", "mention-6027c1ff663888c2b8ca",
+        "mention-7130cafcd688f8239cf4", "mention-89e5fad83c636c06d2a8", "mention-acc38183f304cfdb25bb",
+        "mention-c5459106a78505483a39", "mention-c9c3f0e68271c4d6089a", "mention-da0f9bd67630764155db",
+        "mention-f0329260aea6bed82869"]
+    assert sum(json.loads((EVALUATIONS / "king-context-2026-10-17/results/measure.json").read_text(
+        encoding="utf-8"))["changed_mentions"].values()) == len(rulers["differ_by_king_context"])
     assert promotion["places_vs_linkability_adapter"]["differ"] == {"site": [], "tomb_monument": []}
     assert promotion["rulers_vs_361_literal_arm"]["differ"] == promotion["places_vs_337_literal_arm"]["differ"] == []
     assert promotion["mentions"]["rows_equal"] is True
     end_to_end = json.loads((results / "rerun-after-king-context/end-to-end.json").read_text(encoding="utf-8"))
+    assert sorted(k for k in end_to_end["review_coverage"] if k.startswith("ruler|")) == ["ruler|met|walters"]
     assert end_to_end["review_coverage"]["ruler|met|walters"] == {
         "qualified_by": "ruler re-registration 2026-10-16", "unreviewed_connected_records": [],
         "review_covers_population": True, "by": "no records of this pair connected in this run"}

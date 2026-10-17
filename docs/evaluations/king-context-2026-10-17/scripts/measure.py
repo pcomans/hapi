@@ -28,6 +28,11 @@ import make_run  # noqa: E402
 from pipeline.enrich import authority_links as al, link_files as lf  # noqa: E402
 
 
+def candidates(row: dict) -> list[str]:
+    """A row's targets, or for an unresolved row the resolver's candidates."""
+    return row["resolution"]["target_ids"] if row["resolution"] else row["target_ids"]
+
+
 def measure(corpus: Path, added: Path, run: Path) -> dict:
     canonical, _ = make_run.load_inputs(corpus, added)
     records = {r["id"]: r for r in canonical}
@@ -42,7 +47,9 @@ def measure(corpus: Path, added: Path, run: Path) -> dict:
     changes: dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
     for mention_id, before in old.items():
         after = new[mention_id]
-        if (before["status"], before["target_ids"]) == (after["status"], after["target_ids"]):
+        # An unresolved row keeps its candidates in `resolution`; compare those, so a narrowing
+        # that leaves a mention ambiguous counts too.
+        if (before["status"], candidates(before)) == (after["status"], candidates(after)):
             continue
         if before["status"] == "resolved" and after["status"] == "resolved":
             kind = "retargeted"
@@ -51,7 +58,7 @@ def measure(corpus: Path, added: Path, run: Path) -> dict:
         elif after["status"] == "resolved":
             kind = f"link_added_from_{before['status']}:{after['resolution']['context_rule']}"
         else:
-            kind = f"{before['status']}_to_{after['status']}"
+            kind = f"{before['status']}_to_{after['status']}:{len(candidates(before))}_to_{len(candidates(after))}_candidates"
         key = f"{before['museum']}|{kind}|{before['mention_text']}|{records[before['artifact_id']].get('dynasty')}|" \
               f"{(after['target_ids'] or [None])[0]}"
         changes[before["museum"]][key] += 1
@@ -61,8 +68,26 @@ def measure(corpus: Path, added: Path, run: Path) -> dict:
         if row["status"] == "ambiguous" and row["authority"] == "kings":
             labels = [catalog[t]["label"].casefold() for t in row["resolution"]["target_ids"]]
             ambiguous["candidates_sharing_a_label" if len(set(labels)) < len(labels) else "candidates_all_labelled_apart"] += 1
+    # Exposure the rule leaves visible but does not act on (Egyptology review of #388).
+    exposure = collections.Counter()
+    for row in new.values():
+        context = (row["resolution"] or {}).get("context")
+        if row["authority"] != "kings" or context is None:
+            continue
+        mention_dates, dynasty = context["record_dates"], context["record_dynasty"]
+        for target, clash in context["candidate_clash"].items():
+            if row["evidence_role"] != al.CATALOGUED_REIGN and clash and target in row["target_ids"]:
+                later = mention_dates[0] > authority.kings.reign(target)[1]
+                exposure[f"title_keeps_clashing_king:record_{'later' if later else 'earlier'}_than_king"] += 1
+            if context["candidate_fit"][target] is False and not clash:
+                reason = "king_has_no_reign_dates" if authority.kings.reign(target) is None else (
+                    "record_has_no_dates" if mention_dates is None else "dates_within_slack")
+                exposure[f"dynasty_conflict_not_dropped:{reason}"] += 1
+        if row["evidence_role"] != al.CATALOGUED_REIGN and context.get("dropped"):
+            exposure["title_dropped_king_the_reign_field_refused"] += 1
     return {
-        "schema_version": "hapi-king-context-measure/2",
+        "schema_version": "hapi-king-context-measure/4",
+        "exposure": dict(sorted(exposure.items())),
         "run_id": run.name,
         "resolver_version_now": authority.snapshot["resolver_version"],
         "changed_mentions": {m: sum(c.values()) for m, c in sorted(changes.items())},

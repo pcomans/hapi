@@ -160,9 +160,13 @@ def test_a_title_mention_on_a_record_with_a_refused_reign_is_refused_end_to_end(
 def test_the_committed_measure_is_the_reported_effect() -> None:
     root = Path(__file__).resolve().parents[2] / "docs/evaluations/king-context-2026-10-17"
     measure = json.loads((root / "results/measure.json").read_text())
-    assert measure["schema_version"] == "hapi-king-context-measure/2"
-    assert measure["changed_mentions"] == {"met": 12}
+    assert measure["schema_version"] == "hapi-king-context-measure/4"
+    assert measure["exposure"] == {
+        "dynasty_conflict_not_dropped:dates_within_slack": 2, "dynasty_conflict_not_dropped:king_has_no_reign_dates": 3,
+        "title_dropped_king_the_reign_field_refused": 2, "title_keeps_clashing_king:record_later_than_king": 1}
+    assert measure["changed_mentions"] == {"met": 13}
     assert measure["changes"]["met"] == {
+        "met|ambiguous_to_ambiguous:3_to_2_candidates|Menkheperre|Dynasty 21|None": 1,
         "met|link_added_from_ambiguous:record_context|Teti|Dynasty 6|cluster-beckerath-06.01": 3,
         "met|link_removed:record_context_conflict|Amenhotep II|Dynasty 19|None": 1,
         "met|link_removed:record_context_conflict|Aya|Dynasty 18|None": 8,
@@ -174,7 +178,7 @@ def test_the_committed_measure_is_the_reported_effect() -> None:
     assert measure["record_links_added"] == ["met-543897|cluster-beckerath-06.01", "met-543922|cluster-beckerath-06.01"]
     assert measure["ambiguous_king_mentions_now"] == {"candidates_all_labelled_apart": 3, "candidates_sharing_a_label": 56}
     readme = (root / "README.md").read_text()
-    assert "12 Met mentions change; no other\nmuseum changes." in readme
+    assert "13 Met mentions change; no other\nmuseum changes" in readme
     for record in ("met-550059", "-567754", "met-543897", "met-549239"):
         assert record in readme
 
