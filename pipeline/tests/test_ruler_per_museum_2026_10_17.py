@@ -3,6 +3,7 @@ with decoys as calibration. Tests run against the evaluation's own scripts."""
 
 from __future__ import annotations
 
+import collections
 import gzip
 import importlib.util
 import json
@@ -526,6 +527,14 @@ def test_the_committed_score_follows_from_its_own_counts() -> None:
     assert score["cases_without_an_answer"] == {"link": {}, "miss": {}}
     assert [score["page_opens"][s]["calls_without_a_loaded_page"] for s in ("link", "miss")] == [0, 0]
     assert sum(".attempt-" in name for name in score["records_sha256"]) == 720
+    # README "The run": the calls per stage and role, and the four retries.
+    calls = collections.Counter(name.split("/")[:2][0] + "/" + name.split("/")[1]
+                                for name in score["records_sha256"] if ".attempt-" in name)
+    assert calls == {"link/reviewer-A": 195, "link/reviewer-B": 195, "link/reconciler": 1,
+                     "miss/reviewer-A": 162, "miss/reviewer-B": 162, "miss/reconciler": 5}
+    assert sorted(n for n in score["records_sha256"] if ".attempt-2" in n) == [
+        "link/reviewer-A/link-026.attempt-2.json", "link/reviewer-B/link-064.attempt-2.json",
+        "miss/reviewer-A/miss-131.attempt-2.json", "miss/reviewer-B/miss-131.attempt-2.json"]
 
 
 def test_the_readme_states_the_committed_result() -> None:
@@ -537,7 +546,15 @@ def test_the_readme_states_the_committed_result() -> None:
             f"{met['unconfirmed']['units']} (3 records) | **fails** |") in readme
     for museum, label in (("brooklyn", "Brooklyn"), ("harvard", "Harvard"), ("cleveland", "Cleveland"), ("walters", "Walters")):
         row = score["museums"][museum]
-        assert f"| {label} | {row['confirmed']['units']} ({row['link_records']} records) | 0 | 0 | passes |" in readme
+        assert row["wrong"] == row["unconfirmed"] == {"units": 0, "records": 0}
+        assert f"| {label} | {row['confirmed']['units']} ({row['confirmed']['records']} records) | 0 | 0 | passes |" in readme
+    misses = {m: r["miss"] for m, r in score["museums"].items()}
+    assert {m: c["names_one_ruler"]["units"] for m, c in misses.items() if c["names_one_ruler"]["units"]} == {
+        "met": 69, "walters": 15, "brooklyn": 13, "cleveland": 2}
+    assert "Met 69, Walters 15, Brooklyn 13, Cleveland 2" in readme
+    assert (sum(c["names_no_single_ruler"]["units"] for c in misses.values()),
+            sum(c["unconfirmed"]["units"] for c in misses.values())) == (55, 7)
+    assert "55 name no single ruler, and 7 are unconfirmed" in readme
     misses = [r["miss"]["names_one_ruler"] for r in score["museums"].values()]
     assert (sum(m["units"] for m in misses), sum(m["records"] for m in misses)) == (99, 316)
     assert "99 name one specific ruler the authority missed, on 316 records" in readme

@@ -108,21 +108,24 @@ its linked records.
 **The Met's two wrong links.** Both reviewers agreed on each.
 - **"Aya"** (link-054, 11 records → `cluster-leprohon-leprohon-13.33`, the Dynasty 13 king
   Merneferre Aya). The Met writes "Aya" for two kings: the Dynasty 13 king, and the Dynasty 18 Ay,
-  successor of Tutankhamun ("Scarab of Pharaoh Aya (II)"). Most of the 11 records are the
-  Dynasty 18 king. The resolver merges them because the text alone does not tell them apart.
+  successor of Tutankhamun. Of the 11 records the reviewers opened 6: three are the Dynasty 18
+  king and three the Dynasty 13 one. The link puts all 11 on the Dynasty 13 king, so it is wrong
+  at least for the Dynasty 18 records. The text alone does not tell the two apart.
 - **"Mentuhotep III"** (link-079, 13 records → `cluster-beckerath-11.06`, Sankhkare
-  Mentuhotep III). The Met's reign field says "Mentuhotep III" also on Deir el-Bahri
-  foundation-deposit records of Nebhepetre Mentuhotep II, under an older numbering; the Met's
-  own sibling records name him Mentuhotep II. The link is right for some of the 13 records and
-  wrong for others.
+  Mentuhotep III). The Met's reign field says "Mentuhotep III" also on foundation-deposit records
+  from the Deir el-Bahri temple of Nebhepetre, whom the Met's own records call Mentuhotep II. The
+  link is right for some of the 13 records and wrong for others.
 
-**Unconfirmed** (decide nothing): the Met's "Neferu-sherit" (1 record) and "Merytamun" (2 records,
-reconciled as insufficient_evidence), two royal women whose Dodson & Hilton entries no reviewer
-can open.
+**Unconfirmed** (decide nothing): the Met's "Neferu-sherit" (1 record) and "Merytamun" (2 records),
+two royal women. For each, the reviewers found no citable page documenting the proposed target.
+On Merytamun one reviewer judged the link exact and the other could not tell; the reconciler could
+not tell either.
 
 **The fix list** (private, `fix-list.json`, with the rulers the reviewers named): of the 161 miss
 texts, 99 name one specific ruler the authority missed, on 316 records: Met 69, Walters 15,
-Brooklyn 13, Cleveland 2. The largest are the Met's "Djoser" (47 records), "Ahmose" (29, Ahmose I
+Brooklyn 13, Cleveland 2. "Ruler" is the prompt's royal person: they include queens (Ahmose-
+Nefertari) and Dynasty 21 high priests of Amun (Painedjem II), whom the authority may rightly not
+hold as kings. The largest are the Met's "Djoser" (47 records), "Ahmose" (29, Ahmose I
 in these records), "Shabaqo" (28), "Khasekhemui" (21), "Painedjem II" (19), "Painedjem I" (13)
 and "Sebekhotep IV" (13), and the Walters' "Ptolemy II Philadelphos" (6) and "Thutmosis III"
 (5). 55 name no single ruler, and 7 are unconfirmed.
@@ -135,16 +138,23 @@ and "Sebekhotep IV" (13), and the Walters' "Ptolemy II Philadelphos" (6) and "Th
 
   All four retries were Wikidata appearing in search results (link-026 A, link-064 B, miss-131 A
   and B). No case went without an answer, and nothing was set aside (`set-asides.json` is empty).
-- **The display fix held.** One virtual display per running reviewer. No call failed for the
-  browser, and every deciding call loaded at least one page.
+- **The display fix held.** No call failed for the browser (no stored call carries a browser
+  failure), and every deciding call loaded at least one page.
 - **Records** are private, in `dropbox/hapi-ruler-per-museum-2026-10-17/records/`. Each stored call
   is bound by its hash in `results/score.json` (`records_sha256`).
 
 ### What this means
 
-The authority's ruler links are right in four of the five museums, and in 103 of the Met's 107
-distinct links. The two wrong ones are both one text naming two kings within the Met's records,
-which only the record's own context (its dynasty, its date) can separate. They are the next
-resolver fix, together with the fix list of famous kings it misses (Djoser, Shabaqo, Khasekhemui,
-Painedjem I and II, Sebekhotep IV, Thutmosis III, …). Each fix is researched and sourced on its
-own, and the Met is tested again after it.
+In Brooklyn, Cleveland, Harvard and the Walters the review found no wrong ruler link, and every
+link was confirmed. In the Met, 103 of 107 distinct links were confirmed and two are wrong. A pass
+means no wrong link was found (`decision-rule.md`). The decoys show the reviewers reject a ruler of
+the same name and another number; they do not test subtler errors, and Brooklyn and Harvard had no
+decoys of their own.
+
+The two wrong links are both one text the Met uses for two rulers, which only the record's own
+context (its dynasty, its date) can separate. They are the next resolver fix, together with the fix
+list (Djoser, Ahmose I, Shabaqo, Khasekhemui, Sebekhotep IV, Thutmosis III, Ptolemy II, …). Each fix
+is researched and sourced on its own, and the Met is tested again after it.
+
+The fix list can be re-derived from the bound records: run `scripts/score.py` with
+`--public-out` and `--private-out` in a temporary directory, and compare.
