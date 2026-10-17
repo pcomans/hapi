@@ -1808,3 +1808,27 @@ def test_the_committed_rerun_proof_binds_the_scored_digest_and_population() -> N
         assert files[f"review/{name}"] == digest["output_hashes"][key]
     assert score["input_hashes"]["stage_1_queue"] == digest["output_hashes"]["stage_1_queue_sha256"]
     assert score["input_hashes"]["private_answer_key"] == digest["output_hashes"]["private_answer_key_sha256"]
+
+
+def test_the_set_aside_reconciler_answer_would_not_change_the_result() -> None:
+    """README, "Two incidents, and a deviation": had case-021's second reconciler answer
+    (insufficient_evidence, no page loaded) stood, the case would be a calibration miss. The
+    verdict and every scope's outcome are the same either way."""
+    score = _results("real-adjudicated-score.json")
+    rule = score["decision_rule"]
+    tuned = score["tuned_on_cases"]["categories"]
+    controls = {c: n - tuned.get(c, 0) for c, n in score["calibration_control_counts"].items()}
+    controls[OK] -= 1
+    controls[UNCERTAIN] += 1
+    joined = [joined_case(CONTROL, c, "ruler", ("met", "walters")) for c, n in controls.items() for _ in range(n)]
+    letters = {category[0]: category for category in scorer.PRIMARY_CATEGORIES}
+    for key, row in rule["scopes"].items():
+        entity, *pair = key.split("__")
+        for letter, category in letters.items():
+            joined += [joined_case(LOSS if letter in "de" else GAIN, category, entity, pair)] * row[letter]
+    alternative = scorer.decision_rule(joined)
+    assert alternative["calibration"] == {"passed": True, "retained_controls": 68, "uncertain_or_wrong": 2}
+    assert {k: v for k, v in alternative.items() if k != "calibration"} == {
+        k: v for k, v in rule.items() if k != "calibration"}
+    pairs = [f"ruler__{a}__{b}" for a, b in authority_links.MUSEUM_PAIRS]
+    assert scorer.scope_dispositions(alternative, pairs) == score["scope_dispositions"]

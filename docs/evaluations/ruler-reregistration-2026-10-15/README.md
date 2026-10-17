@@ -186,6 +186,11 @@ earlier runs had tried, with the fixed tool and no model (`results/preflight-pag
 
 ## Result (2026-10-15): CONTINUE, rulers Met–Brooklyn
 
+**Later (2026-10-17).** The ruler re-registration of 2026-10-16
+(`../ruler-reregistration-2026-10-16/`) replaced this result. This one's margin hung on the
+Ahmose case, which #369 then tuned the resolver on. Rulers now qualify in Met–Walters only, and
+Met–Brooklyn rulers are unevaluated.
+
 `results/real-adjudicated-score.json`, from `decision-rule.md` applied in code:
 
 | Step | Numbers | Outcome |

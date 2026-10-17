@@ -211,31 +211,58 @@ against the literal arm's 68.
 - **Pages.** The page-load gate passed (`results/real-page-load-gate.json`): citable pages
   loaded at most 1.51 points from the overall rate in every class (limit 5).
 
-### Two incidents, disclosed
+### Two incidents, and a deviation from the registration
 
-Both hit Stage 2's one reconciled case, case-021 (Met–Walters, a retained control, judged
-correct). The records
-they produced are kept, bound by `results/real-review-records.json`, outside the reconciler's
-directory, so no scorer reads them.
+Both incidents hit Stage 2's one reconciled case, case-021 (Met–Walters, a retained control,
+judged correct). Three reconciler calls were made on it. All three are kept and hashed in
+`results/real-review-records.json`. Only the third sits in `stage-2/reconciler/`, so it is the
+only one the scorer counts as a decision.
 
 1. **Claude Code updated itself** from 2.1.299 to 2.1.302 between the Stage 2 reviewers and the
-   reconciler. The reconciler's first call ran on 2.1.302, and the validator rejected it
-   (`stage-2/reconciler-rejected-runtime/`). A rejected call holds no answer. The runner does
-   not resume a stopped case, so the owner chose to redo the call on the pinned 2.1.299, which
-   was still installed, with auto-update off.
-2. **The browser leaked one virtual display per call.** Each call starts its browser under
-   `xvfb-run`, whose Xvfb outlived the call. By the end of Stage 2, 1,738 of them filled the
-   container's process limit (2,048), and Chromium could not start threads.
-   - The first redo of case-021's reconciler opened no page (0 of 10) and answered
-     insufficient_evidence. It was set aside for that reason alone
-     (`stage-2/reconciler-rejected-browser/`).
-   - Once the orphaned displays were closed, the second redo loaded 4 of 4 pages and decided:
-     exact_identity, with Stage 2 reviewer B.
-   - Stage 2 reviewer A's own call on case-021 was hit too: 1 of 20 pages loaded, and it
-     answered insufficient_evidence. That split is why the case went to the reconciler. The
-     call is kept as the protocol made it; the reconciler read the pages and decided.
-   - Two other Stage 2 calls lost one page each to the leak (reviewer A on case-010 and
-     case-013, 5 of 6 and 3 of 4 loaded). Both agreed with reviewer B. No Stage 1 call was hit.
+   reconciler.
+   - The reconciler's first call ran on 2.1.302, and the validator rejected it
+     (`stage-2/reconciler-rejected-runtime/`). A rejected call has no decision.
+   - That call was also hit by incident 2: every page it tried to open failed.
+   - The runner does not resume a stopped case. The owner chose to redo the call on the pinned
+     2.1.299, which was still installed, with auto-update off.
+2. **The browser's virtual displays leaked.** Each call starts its browser under `xvfb-run`,
+   and the Xvfb it starts outlived the call.
+   - By the reconciler's redo, 1,738 leaked displays had filled the container's process limit
+     (2,048). They had piled up from every browser run in this container since 2026-10-13, this
+     review's 371 calls among them. Chromium could then not start threads, and every page open
+     failed.
+   - **The second reconciler call** opened none of its 10 pages and answered
+     insufficient_evidence. The frozen validator accepted it: with no page loaded, the prompt
+     makes insufficient_evidence the only valid answer.
+   - **The deviation.** Under the frozen runner, that answer was the reconciler's decision.
+     Claude (the agent running the review) set it aside on 2026-10-17, after its answer was
+     printed, and moved it to `stage-2/reconciler-rejected-browser/`. Claude then closed the
+     orphaned displays and made a third call, under the owner's instruction to redo the call;
+     the owner was not asked about this second set-aside.
+     - The line drawn was "no page loaded". A call that loads nothing can only answer
+       insufficient_evidence, so the line does not depend on what it answered.
+   - **The third call** loaded 4 of 4 pages and decided exact_identity, agreeing with Stage 2
+     reviewer B.
+   - **Calls the leak hit and that were kept.** Stage 2 reviewer A's own call on case-021
+     loaded 1 of 20 pages and answered insufficient_evidence. That split is why the case went
+     to the reconciler. It loaded a page, so the line above does not reach it, and it stands as
+     the protocol made it. Two other Stage 2 calls lost one page each (reviewer A on case-010
+     and case-013: 5 of 6 and 3 of 4 loaded); both agreed with reviewer B. No Stage 1 call
+     was hit.
 
-   The runner is frozen with this registration. A later protocol must stop the display with
-   the call.
+**The deviation does not change the result.** Had the second call's answer stood, case-021
+would be a calibration miss:
+- calibration would be 2 of 68 (limit 20%);
+- Met–Walters' a 7, d 2, e 2 is untouched, so the verdict and every scope's outcome stay the
+  same (tested);
+- the Stage 2 page-load gate would still pass, with the authority class's deviation at 3.17
+  points instead of 1.51 (limit 5), and one deciding call without a loaded page.
+
+The runner is frozen with this registration. A later protocol must stop the display with the
+call, and record set-asides in a committed list the scorer reads, not in directory names.
+
+### Reproducing the run
+
+The frozen run and queues are rebuilt on the tree this registration was approved on, main at
+#382's merge (68ecbc3). This result's PR edits `QUALIFIED_SCOPES` in `authority_links.py`, a
+file the resolver versions digest, so on later trees the queue builder refuses the frozen run.

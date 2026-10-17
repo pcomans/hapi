@@ -120,7 +120,7 @@ It does not read:
 - `Description` or `Inscriptions`;
 - find places, of which there are none as fields.
 
-So the Walters has no site links. Every Walters pair is unevaluated in `QUALIFIED_SCOPES`.
+So the Walters has no site links. Every Walters site pair is unevaluated in `QUALIFIED_SCOPES`; for rulers, Met–Walters qualified in the 2026-10-16 re-registration (`docs/evaluations/ruler-reregistration-2026-10-16/`).
 
 The resolver was not tuned on these spellings. They are left as they are, so the Walters can serve as a clean test of the ruler authority.
 
